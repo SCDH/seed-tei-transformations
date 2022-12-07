@@ -10,7 +10,10 @@ http://www.saxonica.com/documentation/index/configuration-file.html
      <xsltPackages>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl"
-               version="*" sourceLocation="xsl/libi18n.xsl"/>
+               version="0.1.0" sourceLocation="xsl/libi18n.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
+               version="1.0.0" sourceLocation="xsl/common/libbetween.xsl"/>
      </xsltPackages>
 
 </configuration>
