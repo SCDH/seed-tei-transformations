@@ -16,6 +16,8 @@ mapping for the packages defined in this directory.
 The configuration file can be loaded from the commandline or in an
 Oxygen project.
 
+Please note, that the package names cannot be mapped to locations
+through an XML catalog.
 
 #### Oxygen
 
@@ -32,10 +34,11 @@ see below. If you want to use the packages from the plugin use
 your transformations even when your offline, the former requires you
 to access the internet for each transformation based on the packages.
 
-`<PAGES-CONFIG-URL>`: `https://TODO/saxon.xml`
 
-`<PLUGIN-CONFIG-URL>`: `${pluginDir(TODO)}/saxon.xml`
-
+```{txt}
+PAGES-CONFIG-URL: https://TODO/saxon.xml
+PLUGIN-CONFIG-URL: ${pluginDir(TODO)}/saxon.xml
+```
 
 ##### Project-wide configuration
 
@@ -78,7 +81,29 @@ For example the name of the package in
 `https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl`.
 
 
-## Namespaces
+## Conventions
+
+### Debugging
+
+For performance reasons, debugging messages should be turned on or off
+at compile time, not by a stylesheet parameter. We are using the
+following compile time switch throughout the packages and stylesheets:
+
+```
+xsl:use-when="system-property('debug') eq 'true'"
+```
+
+To turn on debugging messages add `-Ddebug=true` when running the
+program. E.g. for Saxon write:
+
+```{shell}
+java -Ddebug=true -jar saxon.jar ...
+```
+
+The same command line switch can be used for Oxygen.
+
+
+### Namespaces
 
 | scdh | |
 | i18n | http://scdh.wwu.de/transform/i18n# | 
