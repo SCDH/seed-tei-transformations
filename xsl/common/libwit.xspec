@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Unit tests (regression tests) for libwit.xsl -->
+
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
+  xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:scdh="http://scdh.wwu.de/oxygen#ALEA"
+  stylesheet="libwit.xsl" run-as="external">
+
+  <x:variable name="x:saxon-config">
+    <configuration xmlns="http://saxon.sf.net/ns/configuration">
+      <xsltPackages>
+        <package
+          name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+          package-version="1.0.0" sourceLocation="libwit.xsl"/>
+      </xsltPackages>
+    </configuration>
+  </x:variable>
+
+  <x:scenario label="getting siglum from witness catalogue">
+    <x:context href="../../test/samples/witnesses.xml"/>
+    <x:call function="wit:getWitnessSiglum">
+      <x:param select="'#W'"/>
+    </x:call>
+    <x:expect label="arabic VEH" test="normalize-space(.) = 'ڤ'"/>
+  </x:scenario>
+
+
+  <x:scenario label="getting siglum for empty string ID from witness catalogue">
+    <x:context href="../../test/samples/witnesses.xml"/>
+    <x:call function="wit:getWitnessSiglum">
+      <x:param select="''"/>
+    </x:call>
+    <x:expect label="corner case" test="normalize-space(.) = ''"/>
+  </x:scenario>
+
+  <x:scenario label="no separator for single siglum">
+    <x:context href="../../test/samples/witnesses.xml"/>
+    <x:call function="wit:getWitnessSiglum">
+      <x:param select="'#W'"/>
+      <x:param select="'HAL'"/>
+    </x:call>
+    <x:expect label="arabic VEH, nothing else" test="normalize-space(.) = 'ڤ'"/>
+  </x:scenario>
+
+  <x:scenario label="getting multiple sigla with separator">
+    <x:context href="../../test/samples/witnesses.xml"/>
+    <x:call function="wit:getWitnessSiglum">
+      <x:param select="'#W #S'"/>
+      <x:param select="'HAL'"/>
+    </x:call>
+    <x:expect label="arabic VEH and SEEN separated by 'HAL'" test="normalize-space(.) = 'ڤHALس'"/>
+  </x:scenario>
+
+  <x:scenario label="getting multiple sigla without separator">
+    <x:context href="../../test/samples/witnesses.xml"/>
+    <x:call function="wit:getWitnessSiglum">
+      <x:param select="'#W #S'"/>
+    </x:call>
+    <x:expect label="arabic VEH and SEEN separated by space" test="normalize-space(.) = 'ڤ س'"/>
+  </x:scenario>
+
+  <x:scenario label="getting siglum sequence from witness catalogue">
+    <x:context href="../../test/samples/witnesses.xml"/>
+    <x:call function="wit:get-witness-siglum-seq">
+      <x:param select="'#W  #S    HAL'"/>
+    </x:call>
+    <!-- TODO: make this test work! -->
+    <!--x:expect
+	label="sequence of 3 strings"
+	test="count(.) = 3"/-->
+    <x:expect label="equals to sequence" select="'ڤ', 'س', 'HAL'"/>
+  </x:scenario>
+
+</x:description>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Handschriftenverzeichnis</title>
+         </titleStmt>
+         <publicationStmt>
+            <publisher>-</publisher>
+         </publicationStmt>
+         <sourceDesc>
+            <listWit>
+               <head>Handschriften</head>
+               <listWit>
+                  <head>Dīwān 1</head>
+                  <witness xml:id="K">
+                     <abbr type="siglum" xml:lang="ar">ك</abbr>=<abbr type="siglum" xml:lang="de">K</abbr>= Köprülü</witness>
+                  <witness xml:id="B">
+                     <abbr type="siglum" xml:lang="ar">ب</abbr>=<abbr type="siglum" xml:lang="de">B</abbr>= Berlin</witness>
+                  <witness xml:id="Y">
+                     <abbr type="siglum" xml:lang="ar">ي</abbr>=<abbr type="siglum" xml:lang="de">Y</abbr>= Aya Sofya 2292</witness>
+               </listWit>
+               <listWit>
+                  <head>Dīwān 1</head>
+                  <witness xml:id="A">
+                     <abbr type="siglum" xml:lang="ar">ٓا</abbr>=<abbr type="siglum" xml:lang="de">A</abbr>= Aya Sofya 3891</witness>
+                  <witness xml:id="M">
+                     <abbr type="siglum" xml:lang="ar">م</abbr>=<abbr type="siglum" xml:lang="de">M</abbr>= Marsh</witness>
+               </listWit>
+               <listWit>
+                  <head/>
+                  <witness xml:id="W">
+                     <abbr type="siglum" xml:lang="ar">ڤ</abbr>=<abbr type="siglum" xml:lang="de">W</abbr>= Wien</witness>
+                  <witness xml:id="S">
+                     <abbr type="siglum" xml:lang="ar">س</abbr>=<abbr type="siglum" xml:lang="de">S</abbr>= SOAS</witness>
+                  <witness xml:id="GH">
+                     <abbr type="siglum" xml:lang="ar">غ</abbr>=<abbr type="siglum" xml:lang="de">GH</abbr>= Gotha</witness>
+                  <witness xml:id="QH">
+                     <abbr type="siglum" xml:lang="ar">ﮫﻗ</abbr>=<abbr type="siglum" xml:lang="de">QH</abbr>= Kairo</witness>
+               </listWit>
+               <listWit>
+                  <head>Dīwān 4</head>
+                  <witness xml:id="T">
+                     <abbr type="siglum" xml:lang="ar">ت</abbr>=<abbr type="siglum" xml:lang="de">T</abbr>= Taymūr</witness>
+                  <witness xml:id="D">
+                     <abbr type="siglum" xml:lang="ar">د</abbr>=<abbr type="siglum" xml:lang="de">D</abbr>= Dublin</witness>
+                  <witness xml:id="N">
+                     <abbr type="siglum" xml:lang="ar">ن</abbr>=<abbr type="siglum" xml:lang="de">N</abbr>= Nurosmaniya</witness>
+                  <witness xml:id="BR">
+                     <abbr type="siglum" xml:lang="ar">رﺑ</abbr>=<abbr type="siglum" xml:lang="de">BR</abbr>= Berlin 7862 (al-Māridīnī)</witness>
+                  <witness xml:id="P">
+                     <abbr type="siglum" xml:lang="ar">پ</abbr>=<abbr type="siglum" xml:lang="de">P</abbr>= Uppsala (al-Māridīnī)</witness>
+                  <witness xml:id="L">
+                     <abbr type="siglum" xml:lang="ar">ل</abbr>=<abbr type="siglum" xml:lang="de">L</abbr>= British Library OR 2912</witness>
+               </listWit>
+               <listWit>
+                  <head>Ergänzungen</head>
+                  <witness xml:id="HT">
+                     <abbr type="siglum" xml:lang="ar">تﺣ</abbr>=<abbr type="siglum" xml:lang="de">HT</abbr>= Erg. Ibn Ḥaǧar, Tübingen</witness>
+                  <witness xml:id="HR">
+                     <abbr type="siglum" xml:lang="ar">رﺣ</abbr>=<abbr type="siglum" xml:lang="de">HR</abbr>= Erg. Ibn Ḥaǧar, Reisülküttap</witness>
+               </listWit>
+               <listWit>
+                  <head>Jagdurǧūzah und andere Texte</head>
+                  <witness xml:id="SA">
+                     <abbr type="siglum" xml:lang="ar">ص</abbr>=<abbr type="siglum" xml:lang="de">SA</abbr>= aṣ-Ṣafadī: Taḏkirah Bd. 1</witness>
+                  <witness xml:id="R">
+                     <abbr type="siglum" xml:lang="ar">ر</abbr>=<abbr type="siglum" xml:lang="de">R</abbr>= Šihābaddīn al-Ḥiǧāzī: Rawḍ al-adab Berlin</witness>
+                  <witness xml:id="DH">
+                     <abbr type="siglum" xml:lang="ar">ذ</abbr>=<abbr type="siglum" xml:lang="de">DH</abbr>= pseudo-Taḏkirah an-Nawāǧī, de facto Auszug aus der Taḏkirat aṣ-Ṣafadī</witness>
+                  <witness xml:id="AN">
+                     <abbr type="siglum" xml:lang="ar">ع</abbr>=<abbr type="siglum" xml:lang="de">AN</abbr>= Bagdad, al-Matḥaf al-ʿIrāqī 3674,Šihābaddīn al-Ḥiǧāzī: Rawḍ al-ādāb</witness>
+                  <witness xml:id="KH">
+                     <abbr type="siglum" xml:lang="ar">خ</abbr>=<abbr type="siglum" xml:lang="de">KH</abbr>= Ibn Ḥiǧǧah al-Ḥamawī: Ḫizānat al adab, Ed.</witness>
+               </listWit>
+            </listWit>
+         </sourceDesc>
+      </fileDesc>
+   </teiHeader>
+   <text>
+      <body>
+         <p> </p>
+      </body>
+   </text>
+</TEI>
