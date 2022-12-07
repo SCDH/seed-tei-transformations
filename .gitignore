@@ -1,0 +1,6 @@
+# editor backup files
+*~
+
+# build artifacts
+/target
+*.sef
