@@ -27,7 +27,7 @@ See i18next documentation for more info: https://www.i18next.com
     <!ENTITY newline "&#xa;" >
 ]>
 <xsl:package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl"
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
     package-version="0.1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
     exclude-result-prefixes="xs i18n" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
