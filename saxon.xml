@@ -17,6 +17,12 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
                version="0.1.0" sourceLocation="xsl/common/libcommon.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+               version="1.0.0" sourceLocation="xsl/common/libwit.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
+               version="1.0.0" sourceLocation="xsl/html/libwit.xsl"/>
      </xsltPackages>
 
 </configuration>
