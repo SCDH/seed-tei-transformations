@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This is a Saxon configuration file.
+
+For documentation on the contents of a Saxon configuration file, see
+http://www.saxonica.com/documentation/index/configuration-file.html
+-->
+<configuration edition="EE" xmlns="http://saxon.sf.net/ns/configuration">
+
+     <xsltPackages>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl"
+               version="*" sourceLocation="xsl/libi18n.xsl"/>
+     </xsltPackages>
+
+</configuration>
