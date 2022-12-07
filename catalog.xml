@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
+    <uri name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl" uri="xsl/libi18n.xsl"/>
+    <system systemId="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl" uri="xsl/libi18n.xsl"/>
+
+    <rewriteSystem
+        systemIdStartString="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/"
+        rewritePrefix="file:./"/>
+    
+    <rewriteURI uriStartString="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/" rewritePrefix="file:./"/>
+
+</catalog>
