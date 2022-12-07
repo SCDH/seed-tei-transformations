@@ -21,7 +21,6 @@ See i18next documentation for more info: https://www.i18next.com
 
 -->
 <!DOCTYPE package [
-    <!ENTITY baseurl "https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/" >
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
     <!ENTITY pdf "&#x202c;" >
@@ -56,8 +55,7 @@ See i18next documentation for more info: https://www.i18next.com
     <!-- how to get the default language. E.g. say $locales[1] or 'de' here. -->
     <xsl:param name="i18n:default-language-xpath" as="xs:string" select="'/TEI/@xml:lang'"/>
 
-    <xsl:param name="debug" as="xs:boolean" select="false()"/>
-
+    <xsl:expose visibility="public" component="function" names="i18n:*"/>
 
     <xsl:variable name="default-language" as="xs:string" visibility="private">
         <xsl:evaluate as="xs:string" context-item="/" expand-text="true"
@@ -131,9 +129,8 @@ See i18next documentation for more info: https://www.i18next.com
                 </button>
                 <xsl:text> </xsl:text>
             </xsl:for-each>
-            <xsl:if test="$debug">
-                <button onclick="i18next.changeLanguage('dev')"> Dev </button>
-            </xsl:if>
+            <button onclick="i18next.changeLanguage('dev')"
+                xsl:use-when="system-property('debug') eq 'true'"> Dev </button>
         </section>
     </xsl:template>
 
@@ -158,13 +155,13 @@ See i18next documentation for more info: https://www.i18next.com
     </xsl:function>
 
     <!-- better use standard XPath function instead -->
-    <xsl:function name="i18n:language">
+    <xsl:function name="i18n:language" visibility="public">
         <xsl:param name="context" as="node()"/>
         <xsl:value-of select="i18n:language($context, $default-language)"/>
     </xsl:function>
 
     <!-- get the direction CSS code for the context's language -->
-    <xsl:function name="i18n:language-direction">
+    <xsl:function name="i18n:language-direction" visibility="public">
         <xsl:param name="context" as="node()"/>
         <xsl:param name="default" as="xs:string"/>
         <xsl:variable name="lang" as="xs:string" select="i18n:language($context, $default)"/>
@@ -182,7 +179,7 @@ See i18next documentation for more info: https://www.i18next.com
         </xsl:choose>
     </xsl:function>
 
-    <xsl:function name="i18n:language-direction">
+    <xsl:function name="i18n:language-direction" visibility="public">
         <xsl:param name="context" as="node()"/>
         <xsl:value-of select="i18n:language-direction($context, $default-language)"/>
     </xsl:function>
@@ -219,7 +216,7 @@ See i18next documentation for more info: https://www.i18next.com
     </xsl:function>
 
     <!-- deprecated -->
-    <xsl:function name="i18n:language-align" visibility="private">
+    <xsl:function name="i18n:language-align">
         <xsl:param name="context" as="node()"/>
         <xsl:value-of select="i18n:language-align($context, $default-language)"/>
     </xsl:function>
