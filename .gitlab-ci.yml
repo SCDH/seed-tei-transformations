@@ -10,6 +10,7 @@ cache:
 before_script:
   - apt-get update
   - apt-get -y install ant
+  - apt-get -y install unzip
 
 # For merge requests do not `deploy` but only run `verify`.
 .verify: &verify
@@ -36,3 +37,19 @@ deploy:jdk11:
   only:
     - master
     - tags
+
+pages:
+  image: busybox:latest
+  stage: deploy
+  script:
+    - mkdir -p public
+    - ls -la
+    - unzip target/*-package.zip -d public
+    - cp -v target/*-package.zip public/
+  artifacts:
+    paths:
+      - public
+  only:
+    # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/27818
+    variables:
+      - $CI_COMMIT_TAG =~ /^v\d+.\d+.\d+$/
