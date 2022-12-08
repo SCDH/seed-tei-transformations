@@ -7,6 +7,10 @@ cache:
   paths:
     - .m2/repository
 
+before_script:
+  - apt-get update
+  - apt-get -y install ant
+
 # For merge requests do not `deploy` but only run `verify`.
 .verify: &verify
   stage: test
