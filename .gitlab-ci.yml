@@ -1,0 +1,34 @@
+# based on the template from
+# https://gitlab.com/gitlab-org/gitlab-foss/-/blob/master/lib/gitlab/ci/templates/Maven.gitlab-ci.yml
+
+image: maven:3.6-jdk-11
+
+cache:
+  paths:
+    - .m2/repository
+
+# For merge requests do not `deploy` but only run `verify`.
+.verify: &verify
+  stage: test
+  script:
+    - 'mvn verify -s ci_settings.xml'
+    - './test.sh'
+  except:
+    - master
+
+# Verify merge requests
+verify:jdk11:
+  <<: *verify
+
+# deploy using ci_settings.xml as maven settings
+# see https://gitlab.com/help/user/packages/maven_repository/index.md#creating-maven-packages-with-gitlab-cicd-using-maven
+deploy:jdk11:
+  script:
+    - 'mvn verify -s ci_settings.xml'
+    - './test.sh'
+  artifacts:
+    paths:
+      - target
+  only:
+    - master
+    - tags
