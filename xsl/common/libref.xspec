@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Unit tests (regression tests) for libref.xsl -->
+
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
+  xmlns:ref="http://scdh.wwu.de/transform/ref#" stylesheet="libref.xsl" run-as="external">
+
+  <x:variable name="x:saxon-config">
+    <configuration xmlns="http://saxon.sf.net/ns/configuration">
+      <xsltPackages>
+        <package
+          name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+          package-version="1.0.0" sourceLocation="libref.xsl"/>
+      </xsltPackages>
+    </configuration>
+  </x:variable>
+
+  <x:scenario label="replace local URI prefix">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:process-reference">
+      <x:param select="'psn:unknown'"/>
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:persName[1]"/>
+    </x:call>
+    <x:expect label="psn:unknown"
+      test="matches(., '^file:/.*/test/samples/personography.xml#unknown$')"/>
+  </x:scenario>
+
+  <x:scenario label="replace local URI prefix in XML base property context of occurrence" pending="FIXME">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:process-reference">
+      <x:param select="'plc:Saviniacum'"/>
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:placeName[1]"/>
+    </x:call>
+    <x:expect label="plc:Saviniacum"
+      test="matches(., '^file:/.*/test/samples/higher/geography.xml#Saviniacum$')"/>
+  </x:scenario>
+
+  <x:scenario label="keep same doc reference as is">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:process-reference">
+      <x:param select="'#unknown'"/>
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:persName[1]"/>
+    </x:call>
+    <x:expect label="#unknown" test=". = '#unknown'"/>
+  </x:scenario>
+
+  <x:scenario label="keep absolute reference as is">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:process-reference">
+      <x:param select="'http://example.de'"/>
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:persName[1]"/>
+    </x:call>
+    <x:expect label="http://example.de" test=". = 'http://example.de'"/>
+  </x:scenario>
+
+  <x:scenario label="keep unknown reference type as is">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:process-reference">
+      <x:param select="'off:unknown'"/>
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:persName[1]"/>
+    </x:call>
+    <x:expect label="off:unknown" test=". = 'off:unknown'"/>
+  </x:scenario>
+
+  <x:scenario label="ref:references-from-attribute: persName">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:references-from-attribute">
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:persName[1]/@ref"/>
+    </x:call>
+    <x:expect label="personography.xml#FCSavigny"
+      test="matches(., '^file:/.*/test/samples/personography.xml#FCSavigny$')"/>
+  </x:scenario>
+
+  <x:scenario label="ref:references-from-attribute: placeName" pending="FIXME">
+    <x:context href="../../test/samples/fatherandson.xml"/>
+    <x:call function="ref:references-from-attribute">
+      <x:param href="../../test/samples/fatherandson.xml"
+        select="/*:TEI/*:text/*:body/*:p[1]/*:placeName[1]/@ref"/>
+    </x:call>
+    <x:expect label="higher/geography.xml#FCSaviniacum"
+      test="matches(., '^file:/.*/test/samples/higher/geography.xml#Saviniacum$')"/>
+  </x:scenario>
+
+
+</x:description>

@@ -18,6 +18,9 @@
        <antcall target="xspec.xspec" inheritall="false">
 	  <param name="xspec.xml" location="${basedir}/xsl/common/libwit.xspec"/>
        </antcall>
+       <antcall target="xspec.xspec" inheritall="false">
+	  <param name="xspec.xml" location="${basedir}/xsl/common/libref.xspec"/>
+       </antcall>
     </target>
 
 </project>
