@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.wwu.scdh.tei</groupId>
+    <artifactId>transformations</artifactId>
+    <version>0.0.1</version>
+
+    <name>TEI transformations</name>
+    <url>https://github.com/scdh/tei-transformations</url>
+
+    <developers>
+        <developer>
+            <name>Christian Lück</name>
+            <organization>SCDH, University of Münster</organization>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Service Center of Digital Humanities, ULB, University of Münster</name>
+        <url>https://www.uni-muenster.de/SCDH/</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3</name>
+            <url>https://gplv3.fsf.org/</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/scdh/tei-transformations.git</connection>
+        <developerConnection>scm:git:https://github.com/scdh/tei-transformations.git</developerConnection>
+        <url>scm:git:https://github.com/scdh/tei-transformations.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <saxon.version>11.4</saxon.version>
+        <xmlresolver.version>4.5.1</xmlresolver.version>
+        <xspec.version>2.2.4</xspec.version>
+        <xspec.version.OLD>1.6.0</xspec.version.OLD>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <!-- required by Saxon >= 11, XSpec maven plugin 2.2.0 -->
+            <groupId>org.xmlresolver</groupId>
+            <artifactId>xmlresolver</artifactId>
+            <version>${xmlresolver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>${saxon.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <!-- We want a jar file without version number, because that's
+             easier to pack into the framework zip. -->
+        <finalName>${project.artifactId}</finalName>
+
+        <plugins>
+
+            <!-- run XSpec regression tests -->
+            <!-- <plugin> -->
+            <!--        <groupId>io.xspec.maven</groupId> -->
+            <!--        <artifactId>xspec-maven-plugin</artifactId> -->
+            <!--        <version>2.2.0</version> -->
+            <!--        <configuration> -->
+            <!--         <!-\-coverage>true</coverage-\-> -->
+            <!--            <generateSurefireReport>true</generateSurefireReport> -->
+            <!--            <testDir>xsl/common</testDir> -->
+            <!--        </configuration> -->
+            <!--        <executions> -->
+            <!--         <execution> -->
+            <!--                <phase>test</phase> -->
+            <!--                <goals> -->
+            <!--                 <goal>run-xspec</goal> -->
+            <!--                </goals> -->
+            <!--         </execution> -->
+            <!--        </executions> -->
+            <!--        <dependencies> -->
+            <!--            <dependency> -->
+            <!--                <groupId>net.sf.saxon</groupId> -->
+            <!--                <artifactId>Saxon-HE</artifactId> -->
+            <!--                <version>${saxon.version}</version> -->
+            <!--            </dependency> -->
+            <!--            <dependency> -->
+            <!--               <groupId>org.xmlresolver</groupId> -->
+            <!--               <artifactId>xmlresolver</artifactId> -->
+            <!--               <version>${xmlresolver.version}</version> -->
+            <!--            </dependency> -->
+            <!--            <dependency> -->
+            <!--                <groupId>io.xspec</groupId> -->
+            <!--                <artifactId>xspec</artifactId> -->
+            <!--                <version>${xspec.version}</version> -->
+            <!--            </dependency> -->
+            <!--            <dependency> -->
+            <!--               <!-\- https://github.com/xspec/xspec-maven-plugin-1/issues/73 -\-> -->
+            <!--               <groupId>commons-io</groupId> -->
+            <!--               <artifactId>commons-io</artifactId> -->
+            <!--               <version>2.11.0</version> -->
+            <!--            </dependency> -->
+            <!--        </dependencies> -->
+            <!-- </plugin> -->
+
+            <plugin>
+               <artifactId>maven-dependency-plugin</artifactId>
+               <executions>
+                  <execution>
+                     <id>copy-jars</id>
+                     <phase>process-test-resources</phase>
+                     <goals>
+                        <goal>copy-dependencies</goal>
+                     </goals>
+                     <configuration>
+                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        <includeArtifactIds>Saxon-HE,xmlresolver</includeArtifactIds>
+                     </configuration>
+                  </execution>
+                  <execution>
+                     <id>unpack-xspec</id>
+                     <phase>process-test-resources</phase>
+                     <goals>
+                        <goal>unpack</goal>
+                     </goals>
+                     <configuration>
+                        <artifactItems>
+                           <artifactItem>
+                              <groupId>io.xspec</groupId>
+                              <artifactId>xspec</artifactId>
+                              <version>${xspec.version}</version>
+                              <classifier>enduser-files</classifier>
+                              <type>zip</type><!-- "tar.gz" is also available -->
+                           </artifactItem>
+                        </artifactItems>
+                     </configuration>
+                  </execution>
+               </executions>
+            </plugin>
+
+            <!-- <plugin> -->
+            <!--    <groupId>org.apache.maven.plugins</groupId> -->
+            <!--    <artifactId>maven-antrun-plugin</artifactId> -->
+            <!--    <version>1.7</version> -->
+            <!--    <executions> -->
+            <!--          <execution> -->
+            <!--             <phase>test</phase> -->
+            <!--             <configuration> -->
+            <!--                <target> -->
+            <!--                   <ant -->
+            <!--                       antfile="${project.basedir}/build.xml"> -->
+            <!--                      <target name="test"/> -->
+            <!--                   </ant> -->
+            <!--                </target> -->
+            <!--             </configuration> -->
+            <!--             <goals> -->
+            <!--                <goal>run</goal> -->
+            <!--             </goals> -->
+            <!--          </execution> -->
+            <!--    </executions> -->
+            <!-- </plugin> -->
+
+            <plugin>
+               <artifactId>maven-resources-plugin</artifactId>
+               <version>3.0.2</version>
+               <executions>
+                  <execution>
+                     <id>properties-to-resources</id>
+                     <phase>generate-resources</phase>
+                     <goals>
+                        <goal>copy-resources</goal>
+                     </goals>
+                     <configuration>
+                        <outputDirectory>${project.basedir}</outputDirectory>
+                        <resources>
+                           <resource>
+                              <directory>${project.basedir}/test</directory>
+                              <includes>
+                                 <include>test.sh</include>
+                              </includes>
+                              <filtering>true</filtering>
+                           </resource>
+                        </resources>
+                     </configuration>
+                  </execution>
+               </executions>
+            </plugin>
+
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-antrun-plugin</artifactId>
+               <version>1.6</version>
+               <executions>
+                  <execution>
+                     <id>set-permissions</id>
+                     <phase>test</phase>
+                     <configuration>
+                        <target>
+                           <chmod file="${project.basedir}/test.sh" perm="755"/>
+                        </target>
+                     </configuration>
+                     <goals>
+                        <goal>run</goal>
+                     </goals>
+                  </execution>
+               </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
