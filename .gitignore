@@ -3,4 +3,12 @@
 
 # build artifacts
 /target
+/public
 *.sef
+*.xsef
+/test.sh
+
+# xspec reports
+*-report.html
+*-result.html
+xspec
