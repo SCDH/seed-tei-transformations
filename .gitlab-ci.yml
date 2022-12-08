@@ -39,7 +39,6 @@ deploy:jdk11:
     - tags
 
 pages:
-  image: busybox:latest
   stage: deploy
   script:
     - mkdir -p public
