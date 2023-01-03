@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="witnesses.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config">
+        <configuration xmlns="http://saxon.sf.net/ns/configuration">
+            <xsltPackages>
+                <package
+                    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+                    package-version="1.0.0" sourceLocation="xsl/common/libwit.xsl"/>
+            </xsltPackages>
+        </configuration>
+    </x:variable>
+
+    
+    <x:scenario label="Witnesses from crit.xml">
+        <x:context href="../../test/samples/crit.xml"/>
+        <x:expect label="The result should be a document equal to crit-witnesses.json"/>
+    </x:scenario>
+
+
+
+</x:description>

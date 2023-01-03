@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Title</title>
+         </titleStmt>
+         <publicationStmt>
+            <p>Publication Information</p>
+         </publicationStmt>
+         <sourceDesc>
+            <listWit>
+               <listWit xml:id="BA">
+                  <head>Bashtaki Alpha</head>
+                  <witness xml:id="GT1253"><abbr type="siglum">G</abbr>: Gotha 1253</witness>
+               </listWit>
+               <listWit xml:id="BB">
+                  <head>Bashtaki Beta</head>
+                  <witness xml:id="BR7862"><abbr type="siglum">B</abbr>: Berlin 7862</witness>
+                  <witness xml:id="BL2912"><abbr type="siglum">L</abbr>: British Library OR
+                     2912</witness>
+               </listWit>
+            </listWit>
+         </sourceDesc>
+      </fileDesc>
+   </teiHeader>
+   <text>
+      <body>
+         <p>Some text here.</p>
+      </body>
+   </text>
+</TEI>

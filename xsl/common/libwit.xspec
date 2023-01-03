@@ -4,7 +4,7 @@
 
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
   xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
-  xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:scdh="http://scdh.wwu.de/oxygen#ALEA"
+  xmlns:wit="http://scdh.wwu.de/transform/wit#"  xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:scdh="http://scdh.wwu.de/oxygen#ALEA"
   stylesheet="libwit.xsl" run-as="external">
 
   <x:variable name="x:saxon-config">
@@ -16,10 +16,11 @@
       </xsltPackages>
     </configuration>
   </x:variable>
+  
 
   <x:scenario label="getting siglum from witness catalogue">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:getWitnessSiglum">
+    <x:call function="wit:get-witness-siglum">
       <x:param select="'#W'"/>
     </x:call>
     <x:expect label="arabic VEH" test="normalize-space(.) = 'ڤ'"/>
@@ -28,7 +29,7 @@
 
   <x:scenario label="getting siglum for empty string ID from witness catalogue">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:getWitnessSiglum">
+    <x:call function="wit:get-witness-siglum">
       <x:param select="''"/>
     </x:call>
     <x:expect label="corner case" test="normalize-space(.) = ''"/>
@@ -36,7 +37,7 @@
 
   <x:scenario label="no separator for single siglum">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:getWitnessSiglum">
+    <x:call function="wit:get-witness-siglum">
       <x:param select="'#W'"/>
       <x:param select="'HAL'"/>
     </x:call>
@@ -45,7 +46,7 @@
 
   <x:scenario label="getting multiple sigla with separator">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:getWitnessSiglum">
+    <x:call function="wit:get-witness-siglum">
       <x:param select="'#W #S'"/>
       <x:param select="'HAL'"/>
     </x:call>
@@ -54,7 +55,7 @@
 
   <x:scenario label="getting multiple sigla without separator">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:getWitnessSiglum">
+    <x:call function="wit:get-witness-siglum">
       <x:param select="'#W #S'"/>
     </x:call>
     <x:expect label="arabic VEH and SEEN separated by space" test="normalize-space(.) = 'ڤ س'"/>
