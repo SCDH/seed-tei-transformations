@@ -7,6 +7,7 @@
 *.sef
 *.xsef
 /test.sh
+/xslt.sh
 
 # xspec reports
 *-report.html
