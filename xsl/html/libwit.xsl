@@ -11,6 +11,7 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:app="http://scdh.wwu.de/transform/app#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.0">
 
@@ -23,6 +24,7 @@
     </xsl:use-package>
 
     <xsl:expose component="template" names="wit:sigla" visibility="public"/>
+    <xsl:expose component="template" names="app:sigla" visibility="public"/>
 
     <xsl:template name="wit:sigla">
         <xsl:param name="wit" as="node()"/>
@@ -34,6 +36,14 @@
                 </xsl:if>
             </xsl:for-each>
         </span>
+    </xsl:template>
+
+    <!-- this can be used to override the named template in libapp2.xsl -->
+    <xsl:template name="app:sigla" visibility="public">
+        <xsl:param name="wit" as="node()"/>
+        <xsl:call-template name="wit:sigla">
+            <xsl:with-param name="wit" select="$wit"/>
+        </xsl:call-template>
     </xsl:template>
 
 </xsl:package>
