@@ -120,7 +120,7 @@ See i18next documentation for more info: https://www.i18next.com
     </xsl:template>
 
     <!-- language chooser  -->
-    <xsl:template name="i18n:language-chooser-html">
+    <xsl:template name="i18n:language-chooser">
         <section class="i18n-language-chooser">
             <xsl:for-each select="$i18n:locales">
                 <button onclick="i18next.changeLanguage('{.}')">
