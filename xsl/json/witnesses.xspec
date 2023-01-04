@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="witnesses.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config">
+        <configuration xmlns="http://saxon.sf.net/ns/configuration">
+            <xsltPackages>
+                <package
+                    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+                    package-version="1.0.0" sourceLocation="xsl/common/libwit.xsl"/>
+            </xsltPackages>
+        </configuration>
+    </x:variable>
+
+
+    <x:scenario label="Witnesses from crit.xml, flattened (default)">
+        <x:context href="../../test/samples/crit.xml"/>
+        <x:expect href="../../test/samples/expected-json.xml"
+            select="id('xsl_json_witnesses_xsl_flattened')/text()"
+            label="The result should be equal to something laid down in test/samples/expected-json.xml"
+        />
+    </x:scenario>
+
+    <x:scenario label="Witnesses from crit.xml, flattened">
+        <x:param name="wit:flatten" select="true()"/>
+        <x:context href="../../test/samples/crit.xml"/>
+        <x:expect href="../../test/samples/expected-json.xml"
+            select="id('xsl_json_witnesses_xsl_flattened')/text()"
+            label="The result should be equal to ..."/>
+    </x:scenario>
+
+    <x:scenario label="Witnesses from crit.xml, not flattened">
+        <x:param name="wit:flatten" select="false()"/>
+        <x:context href="../../test/samples/crit.xml"/>
+        <x:expect href="../../test/samples/expected-json.xml"
+            select="id('xsl_json_witnesses_xsl_not_flattened')/text()"
+            label="The result should be equal to ..."/>
+    </x:scenario>
+
+    <x:scenario label="Witnesses from crit.xml, flattened, with catalog">
+        <x:param name="wit:flatten" select="true()"/>
+        <x:param name="wit:catalog" select="'../../test/samples/witnesses.xml'"/>
+        <x:context href="../../test/samples/crit.xml"/>
+        <x:expect href="../../test/samples/expected-json.xml"
+            select="id('xsl_json_witnesses_xsl_flattened_catalog')/text()"
+            label="The result should be equal to ... "/>
+    </x:scenario>
+
+</x:description>

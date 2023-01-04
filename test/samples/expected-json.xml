@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expectations>
+    <expected xml:id="xsl_json_witnesses_xsl_flattened"
+        >{"GT1253":{"type":"witness","siglum":"G","description":"G: Gotha 1253","list":["BA"]},"BR":{"type":"witness","siglum":"B","description":"B: Berlin 7862","list":["BB"]},"BL2912":{"type":"witness","siglum":"L","description":"L: British Library OR 2912","list":["BB"]}}</expected>
+    
+    <expected xml:id="xsl_json_witnesses_xsl_not_flattened"
+        >{"BA":{"type":"list","witnesses":{"GT1253":{"type":"witness","siglum":"G","description":"G: Gotha 1253","list":["BA"]}}},"BB":{"type":"list","witnesses":{"BR":{"type":"witness","siglum":"B","description":"B: Berlin 7862","list":["BB"]},"BL2912":{"type":"witness","siglum":"L","description":"L: British Library OR 2912","list":["BB"]}}}}</expected>
+
+    <expected xml:id="xsl_json_witnesses_xsl_flattened_catalog"
+        >{"GT1253":{"type":"witness","siglum":"G","description":"G: Gotha 1253","list":["BA"]},"BR":{"type":"witness","siglum":"رﺑ","description":"رﺑ=BR= Berlin 7862 (al-Māridīnī)","list":["BB"]},"BL2912":{"type":"witness","siglum":"L","description":"L: British Library OR 2912","list":["BB"]}}</expected>
+
+</expectations>

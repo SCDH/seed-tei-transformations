@@ -66,7 +66,13 @@ thing.
 java -jar saxon.jar -config:PATH/TO/saxon.xml ...
 ```
 
-You can also tell Saxon about every single package with the `-lib` option. 
+You can also tell Saxon about every single package with the `-lib` option.
+
+#### XSpec
+
+For testing a stylesheet that uses a package, put a configuration into
+the XSpec file, see [XSpec issue
+762](https://github.com/xspec/xspec/issues/762).
 
 
 ### Package names
@@ -99,11 +105,38 @@ program. E.g. for Saxon write:
 ```{shell}
 java -Ddebug=true -jar saxon.jar ...
 ```
-
 The same command line switch can be used for Oxygen.
 
 
-### Namespaces
+### Qualified names and namespaces
+
+**Every component** from package, that is accessible from the outside,
+**must** have a *qualified* name! The same holds true for
+parameters. This avoids name conflicts.
 
 | scdh | |
-| i18n | http://scdh.wwu.de/transform/i18n# | 
+| i18n | http://scdh.wwu.de/transform/i18n# |
+
+To set a parameter value, use `{NAMESPACE}LNAME=...` to specify its
+qualified name.
+
+
+
+## Convenience
+
+### `jar` files in `target/lib`
+
+If you once ran `mvn package`, then `jar` files are present on `target/lib`.
+
+```{shell}
+java -cp target/lib/Saxon-HE-11.4.jar:target/lib/xmlresolver-4.5.1.jar net.sf.saxon.Transform ...
+```
+
+### Wrapper scripts
+
+If you once ran `mvn package`, then the following wrapper scripts are
+present in the project directory:
+
+- `test.sh` is a wrapper around ant to run all the tests.
+
+- `xslt.sh` is a wrapper around Saxon to run a transformation.
