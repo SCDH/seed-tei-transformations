@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- libwit.xsl has an abstract variable and thus cannot be tested! -->
 <!-- Unit tests (regression tests) for libwit.xsl -->
 
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
   xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
-  xmlns:wit="http://scdh.wwu.de/transform/wit#"  xmlns:t="http://www.tei-c.org/ns/1.0" xmlns:scdh="http://scdh.wwu.de/oxygen#ALEA"
+  xmlns:wit="http://scdh.wwu.de/transform/wit#"  xmlns:t="http://www.tei-c.org/ns/1.0"
   stylesheet="libwit.xsl" run-as="external">
 
   <x:variable name="x:saxon-config">
@@ -20,7 +21,7 @@
 
   <x:scenario label="getting siglum from witness catalogue">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:get-witness-siglum">
+    <x:call function="wit:sigla-for-idrefs">
       <x:param select="'#W'"/>
     </x:call>
     <x:expect label="arabic VEH" test="normalize-space(.) = 'ڤ'"/>
@@ -29,7 +30,7 @@
 
   <x:scenario label="getting siglum for empty string ID from witness catalogue">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:get-witness-siglum">
+    <x:call function="wit:sigla-for-idrefs">
       <x:param select="''"/>
     </x:call>
     <x:expect label="corner case" test="normalize-space(.) = ''"/>
@@ -37,7 +38,7 @@
 
   <x:scenario label="no separator for single siglum">
     <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:get-witness-siglum">
+    <x:call function="wit:sigla-for-idrefs">
       <x:param select="'#W'"/>
       <x:param select="'HAL'"/>
     </x:call>

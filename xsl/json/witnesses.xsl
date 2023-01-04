@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- get the text witnesses from a TEI document, output in JSON format -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2005/xpath-functions"
     xmlns:wit="http://scdh.wwu.de/transform/wit#"
@@ -10,15 +11,28 @@
     <!-- whether to flatten or to keep the nested structure of <listWit> elements -->
     <xsl:param name="wit:flatten" as="xs:boolean" select="true()"/>
 
+    <!-- optional: the URI of the projects central witness catalogue -->
+    <xsl:param name="wit:catalog" as="xs:string" select="string()"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
         package-version="1.0.0">
-
         <xsl:override>
-            <xsl:variable name="wit:witnesses" as="element()*"
-                select="//sourceDesc//witness[@xml:id]"/>
+            <xsl:variable name="wit:witnesses" as="element()*">
+                <xsl:choose>
+                    <xsl:when test="$wit:catalog eq string()">
+                        <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <!-- a sequence from external and local witnesses -->
+                        <xsl:sequence select="
+                                (doc($wit:catalog)/descendant::witness[@xml:id],
+                                //sourceDesc//witness[@xml:id])"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
         </xsl:override>
-
+        <xsl:accept component="function" names="wit:*" visibility="public"/>
     </xsl:use-package>
 
 
@@ -60,13 +74,12 @@
         <map key="{@xml:id}">
             <string key="type">witness</string>
             <string key="siglum">
-                <xsl:value-of select="string-join(wit:get-witness-siglum-seq(@xml:id), ', ')"/>
+                <xsl:value-of select="string-join(wit:sigla-for-ids(@xml:id), ', ')"/>
             </string>
             <string key="description">
-                <xsl:value-of select="string-join(wit:get-witness-description-seq(@xml:id), ' | ')"
-                />
+                <xsl:value-of select="string-join(wit:descriptions-for-ids(@xml:id), ' | ')"/>
             </string>
-            <xsl:variable name="list" as="xs:string*" select="ancestor::listWit[@xml:id]/@xml:id"/>
+            <xsl:variable name="list" as="xs:string*" select="ancestor::listWit/@xml:id"/>
             <xsl:if test="$list">
                 <array key="list">
                     <xsl:for-each select="$list">
