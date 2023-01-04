@@ -33,6 +33,10 @@ See i18next documentation for more info: https://www.i18next.com
     exclude-result-prefixes="xs i18n" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     version="3.0">
 
+    <xsl:expose visibility="public" component="function" names="i18n:*"/>
+    <xsl:expose visibility="public" component="template" names="i18n:*"/>
+    <xsl:expose visibility="abstract" component="variable" names="i18n:default-language"/>
+
     <!-- If true, this an extra space is added on the end of an ltr-to-rtl changeover. -->
     <xsl:param name="i18n:ltr-to-rtl-extra-space" as="xs:boolean" select="true()" required="no"/>
 
@@ -52,22 +56,17 @@ See i18next documentation for more info: https://www.i18next.com
     <!-- name of i18next JSON translations file in $locales-directory/LOCALE/ -->
     <xsl:param name="i18n:default-namespace" select="'translation'"/>
 
-    <!-- how to get the default language. E.g. say $locales[1] or 'de' here. -->
-    <xsl:param name="i18n:default-language-xpath" as="xs:string" select="'/TEI/@xml:lang'"/>
 
-    <xsl:expose visibility="public" component="function" names="i18n:*"/>
 
-    <xsl:variable name="default-language" as="xs:string" visibility="private">
-        <xsl:evaluate as="xs:string" context-item="/" expand-text="true"
-            xpath="$i18n:default-language-xpath"/>
-    </xsl:variable>
+    <!-- a sensible value is e.g. /TEI/@xml:lang -->
+    <xsl:variable name="i18n:default-language" as="xs:string" visibility="abstract"/>
 
 
 
     <!-- tempates for generating java script needed for i18next -->
 
     <!-- this template makes java script code for inlining the translation files into a <script> block (strict loading) -->
-    <xsl:template name="i18n-language-resources-inline">
+    <xsl:template name="i18n:language-resources-inline">
         <xsl:param name="directory" as="xs:string"/>
         <xsl:param name="namespace" as="xs:string"/>
         <xsl:text>&newline;</xsl:text>
@@ -92,14 +91,14 @@ See i18next documentation for more info: https://www.i18next.com
         <xsl:text>', {});&newline;</xsl:text>
     </xsl:template>
 
-    <xsl:template name="i18n-initialisation">
+    <xsl:template name="i18n:initialisation">
         <xsl:text>&newline;</xsl:text>
         <xsl:text>const defaultNamespace = '</xsl:text>
         <xsl:value-of select="$i18n:default-namespace"/>
         <xsl:text>';&newline;</xsl:text>
         <xsl:text>const defaultLanguage = 'dev';&newline;</xsl:text>
         <xsl:text>const initialLanguage = '</xsl:text>
-        <xsl:value-of select="$default-language"/>
+        <xsl:value-of select="$i18n:default-language"/>
         <xsl:text>';&newline;</xsl:text>
     </xsl:template>
 
@@ -107,13 +106,13 @@ See i18next documentation for more info: https://www.i18next.com
     <xsl:template name="i18n:load-javascript">
         <script src="{$i18n:i18next}"/>
         <script>
-            <xsl:call-template name="i18n-initialisation"/>
+            <xsl:call-template name="i18n:initialisation"/>
         </script>
         <script src="{$i18n:js}">
             <!--xsl:value-of select="unparsed-text(resolve-uri($i18n, static-base-uri()))"/-->
         </script>
         <script type="module">
-            <xsl:call-template name="i18n-language-resources-inline">
+            <xsl:call-template name="i18n:language-resources-inline">
                 <xsl:with-param name="directory" select="$i18n:locales-directory"/>
                 <xsl:with-param name="namespace" select="$i18n:default-namespace"/>
             </xsl:call-template>
@@ -157,7 +156,7 @@ See i18next documentation for more info: https://www.i18next.com
     <!-- better use standard XPath function instead -->
     <xsl:function name="i18n:language" visibility="public">
         <xsl:param name="context" as="node()"/>
-        <xsl:value-of select="i18n:language($context, $default-language)"/>
+        <xsl:value-of select="i18n:language($context, $i18n:default-language)"/>
     </xsl:function>
 
     <!-- get the direction CSS code for the context's language -->
@@ -181,7 +180,7 @@ See i18next documentation for more info: https://www.i18next.com
 
     <xsl:function name="i18n:language-direction" visibility="public">
         <xsl:param name="context" as="node()"/>
-        <xsl:value-of select="i18n:language-direction($context, $default-language)"/>
+        <xsl:value-of select="i18n:language-direction($context, $i18n:default-language)"/>
     </xsl:function>
 
     <!-- get a Unicode bidi embedding for the language at context. You should pop directional formatting (pdf) afterwards! -->
@@ -218,7 +217,7 @@ See i18next documentation for more info: https://www.i18next.com
     <!-- deprecated -->
     <xsl:function name="i18n:language-align">
         <xsl:param name="context" as="node()"/>
-        <xsl:value-of select="i18n:language-align($context, $default-language)"/>
+        <xsl:value-of select="i18n:language-align($context, $i18n:default-language)"/>
     </xsl:function>
 
     <!-- make HTML5 and XHTML language attributes reflecting the language at $context -->
