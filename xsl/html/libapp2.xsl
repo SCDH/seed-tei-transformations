@@ -8,7 +8,8 @@
     <!ENTITY emsp "&#x2003;" >
     <!ENTITY lb "&#xa;" >
 ]>
-<xsl:package name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
+<xsl:package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
@@ -36,21 +37,30 @@
             visibility="private"/>
     </xsl:use-package>
 
+
     <xsl:expose component="mode" names="*" visibility="public"/>
+    <xsl:expose component="template" names="app:*" visibility="public"/>
+    <xsl:expose component="variable" names="app:*" visibility="public"/>
+    <xsl:expose component="function" names="app:*" visibility="public"/>
 
 
     <!-- whether or not the first text node from a lemma determines the line number of the entry -->
     <xsl:param name="app:lemma-first-text-node-line-crit" as="xs:boolean" select="true()"
         required="false"/>
 
-    <!-- parameters that determine, what shows up in the apparatus
-        Please note that you can bypass them e.g. when you want multiple apparatus. -->
+    <!--
+        Variables that determine, what shows up in the apparatus, by describing
+        apparatus entries with XPath expressions.
 
+        You may want to override them in order to put more or less on the apparatus.
+
+        Please note that you can bypass them e.g. when you want multiple apparatus.
+    -->
+
+    <!-- apparatus entries made for parallel segementation -->
     <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string"
-        visibility="abstract">
-        <!--
+        visibility="public">
         <xsl:value-of>
-            <!-/- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -/->
             <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
@@ -60,14 +70,12 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
+    <!-- XPath describing apparatus entries made for internal double end-point variant encoding -->
     <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string"
-        visibility="abstract">
-        <!--
+        visibility="public">
         <xsl:value-of>
-            <!-/- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -/->
             <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
@@ -77,12 +85,11 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
+    <!-- XPath describing apparatus entries made for external double end-point variant encoding -->
     <xsl:variable name="app:entries-xpath-external-double-end-point" as="xs:string"
-        visibility="abstract">
-        <!--
+        visibility="public">
         <xsl:value-of>
             <xsl:text>descendant::app</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
@@ -93,11 +100,10 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
-    <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string" visibility="abstract">
-        <!--
+    <!-- when no variant encoding is present -->
+    <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string" visibility="public">
         <xsl:value-of>
             <xsl:text>descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
@@ -106,36 +112,31 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
+
 
     <!-- XPath how to get a pLike container given an app entry.
         Note: this should not evaluate to an empty sequence. -->
-    <xsl:variable name="app:entry-container-xpath" as="xs:string" visibility="abstract">
-        <!--
+    <xsl:variable name="app:entry-container-xpath" as="xs:string" visibility="public">
         <xsl:value-of>
             <xsl:text>ancestor::p</xsl:text>
             <xsl:text>| ancestor::l</xsl:text>
             <xsl:text>| ancestor::head</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
-    <xsl:variable name="app:text-nodes-mutet-ancestors" as="xs:string" visibility="abstract">
-        <!--
+    <xsl:variable name="app:text-nodes-mutet-ancestors" as="xs:string" visibility="public">
         <xsl:value-of>
             <xsl:text>ancestor::rdg</xsl:text>
             <xsl:text>| ancestor::sic[parent::choice]</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
+
     <!-- for convenience this will be '@location-@method' -->
-    <!-- TODO: the global context item will be missing! -->
-    <xsl:function name="app:variant-encoding" visibility="private">
+    <xsl:function name="app:variant-encoding" visibility="public">
         <xsl:param name="context" as="node()"/>
-        <xsl:variable name="ve"
-            select="root($context)//teiHeader/encodingDesc/variantEncoding"/>
+        <xsl:variable name="ve" select="root($context)//teiHeader/encodingDesc/variantEncoding"/>
         <xsl:value-of select="concat($ve/@location, '-', $ve/@method)"/>
     </xsl:function>
 
