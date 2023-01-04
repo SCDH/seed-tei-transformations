@@ -132,35 +132,13 @@
 
     <!-- for convenience this will be '@location-@method' -->
     <!-- TODO: the global context item will be missing! -->
-    <xsl:variable name="variant-encoding" visibility="private">
+    <xsl:function name="app:variant-encoding" visibility="private">
+        <xsl:param name="context" as="node()"/>
         <xsl:variable name="ve"
-            select="/TEI/teiHeader/encodingDesc/variantEncoding | /teiCorpus/teiHeader/encodingDesc/variantEncoding"/>
+            select="root($context)//teiHeader/encodingDesc/variantEncoding"/>
         <xsl:value-of select="concat($ve/@location, '-', $ve/@method)"/>
-    </xsl:variable>
+    </xsl:function>
 
-    <!-- select the right XPath for generating apparatus entries -->
-    <xsl:variable name="app-entries-xpath" visibility="final">
-        <xsl:choose>
-            <xsl:when test="$variant-encoding eq 'internal-double-end-point'">
-                <xsl:value-of select="$app:entries-xpath-internal-double-end-point"/>
-            </xsl:when>
-            <xsl:when test="$variant-encoding eq 'external-double-end-point'">
-                <xsl:value-of select="$app:entries-xpath-internal-double-end-point"/>
-            </xsl:when>
-            <xsl:when test="$variant-encoding eq 'internal-parallel-segmentation'">
-                <xsl:value-of select="$app:entries-xpath-internal-parallel-segmentation"/>
-            </xsl:when>
-            <xsl:when test="$variant-encoding eq '-'">
-                <xsl:value-of select="$app:entries-xpath-no-textcrit"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:message terminate="yes">
-                    <xsl:text>This variant encoding is not supported: </xsl:text>
-                    <xsl:value-of select="$variant-encoding"/>
-                </xsl:message>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:variable>
 
 
 
@@ -171,6 +149,30 @@
     -->
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
+        <!-- select the right XPath for generating apparatus entries -->
+        <xsl:variable name="variant-encoding" select="app:variant-encoding($context)"/>
+        <xsl:variable name="app-entries-xpath">
+            <xsl:choose>
+                <xsl:when test="$variant-encoding eq 'internal-double-end-point'">
+                    <xsl:value-of select="$app:entries-xpath-internal-double-end-point"/>
+                </xsl:when>
+                <xsl:when test="$variant-encoding eq 'external-double-end-point'">
+                    <xsl:value-of select="$app:entries-xpath-internal-double-end-point"/>
+                </xsl:when>
+                <xsl:when test="$variant-encoding eq 'internal-parallel-segmentation'">
+                    <xsl:value-of select="$app:entries-xpath-internal-parallel-segmentation"/>
+                </xsl:when>
+                <xsl:when test="$variant-encoding eq '-'">
+                    <xsl:value-of select="$app:entries-xpath-no-textcrit"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:message terminate="yes">
+                        <xsl:text>This variant encoding is not supported: </xsl:text>
+                        <xsl:value-of select="$variant-encoding"/>
+                    </xsl:message>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
         <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath)"/>
     </xsl:function>
@@ -484,7 +486,7 @@
         match="rdg | choice[corr]/sic | choice[reg]/orig | span | index | note | witDetail"/>
 
     <xsl:template mode="lemma-text-nodes"
-        match="lem[matches($variant-encoding, '^(in|ex)ternal-double-end-point')]"/>
+        match="lem[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
 
     <!-- The mode apparatus-reading-text is for printing the text of a reading etc.
@@ -492,12 +494,12 @@
     <xsl:mode name="apparatus-reading-text" on-no-match="shallow-skip" visibility="public"/>
 
     <xsl:template mode="apparatus-reading-text"
-        match="app[$variant-encoding eq 'internal-parallel-segmentation']">
+        match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
         <xsl:apply-templates mode="apparatus-reading-text" select="lem"/>
     </xsl:template>
 
     <xsl:template mode="apparatus-reading-text"
-        match="app[matches($variant-encoding, '^(in|ex)ternal-double-end-point')]"/>
+        match="app[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
     <xsl:template mode="apparatus-reading-text" match="choice[sic and corr]">
         <xsl:apply-templates mode="apparatus-reading-text" select="corr"/>
@@ -536,12 +538,12 @@
     <!-- app -->
 
     <xsl:template mode="lemma-text-nodes-dspt"
-        match="app[$variant-encoding eq 'internal-parallel-segmentation']">
+        match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
         <xsl:apply-templates mode="lemma-text-nodes" select="lem"/>
     </xsl:template>
 
     <xsl:template mode="lemma-text-nodes-dspt"
-        match="app[@from and $variant-encoding eq 'internal-double-end-point']">
+        match="app[@from and app:variant-encoding(.) eq 'internal-double-end-point']">
         <xsl:variable name="limit-id" select="substring(@from, 2)"/>
         <xsl:variable name="limit" select="//*[@xml:id eq $limit-id]"/>
         <xsl:apply-templates mode="lemma-text-nodes"
@@ -549,7 +551,7 @@
     </xsl:template>
 
     <xsl:template mode="lemma-text-nodes-dspt"
-        match="app[@to and $variant-encoding eq 'internal-double-end-point']">
+        match="app[@to and app:variant-encoding(.) eq 'internal-double-end-point']">
         <xsl:variable name="limit-id" select="substring(@to, 2)"/>
         <xsl:variable name="limit" select="//*[@xml:id eq $limit-id]"/>
         <xsl:apply-templates mode="lemma-text-nodes"
@@ -557,7 +559,7 @@
     </xsl:template>
 
     <xsl:template mode="lemma-text-nodes-dspt"
-        match="app[@from and @to and $variant-encoding eq 'external-double-end-point']">
+        match="app[@from and @to and app:variant-encoding(.) eq 'external-double-end-point']">
         <xsl:variable name="from-id" select="substring(@from, 2)"/>
         <xsl:variable name="from" select="//*[@xml:id eq $from-id]"/>
         <xsl:variable name="to-id" select="substring(@to, 2)"/>
@@ -567,7 +569,7 @@
     </xsl:template>
 
     <xsl:template mode="lemma-text-nodes-dspt"
-        match="app[$variant-encoding eq 'internal-location-referenced']">
+        match="app[app:variant-encoding(.) eq 'internal-location-referenced']">
         <xsl:apply-templates mode="lemma-text-nodes" select="lem"/>
     </xsl:template>
 
