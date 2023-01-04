@@ -1,4 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+A generic implementation of a critical apparatus that works for
+all of the following three variant encodings:
+
+- parallel segmentation
+- internal double end-point
+- external double end-point
+
+To deal with double end-point variant encodings the apparatus does the following:
+
+1) Get a collection of all apparatus entries.
+2) For each entry, get the text nodes that make up the lemma. White space text nodes are ignored.
+3) Group the apparatus entries by the sequence of text nodes, that they are made of. This way,
+   entries that originate from the same text nodes are grouped together.
+4) Output the lemma once per group.
+5) Output the readings and other annotations that make up the group.
+
+The apparatus can be used on a document-wide basis, as used e.g. for short poems. And it can be used
+on a part-of-document basis, as used e.g. for pages of a long prose work.
+
+There are several modes that controle
+- the selection of lemma text nodes
+- the presentation of the lemma
+- the presentation of the readings etc.
+
+These modes are public and can be extended to your needs.
+
+The static strings––e.g. separators, scholaraly phrases like "omisit"––can be overridden and translated
+using the libi18n.xsl package.
+
+
+The apparatus is configurable through variables with XPath expression that determine
+which encoding cristalls go into the apparatus.
+
+Usage:
+
+Most generic usage needs 2 components
+- the function app:apparatus-entries#2 to generate a map of apparatus entries and pass this map to
+- the template app:apparatus
+The funtion takes a context to determine the extension of the apparatus (doc or part) and an XPath
+expression to determine its features.
+
+For convenience there are also predefined XPath expressions and the template
+- app:appararus-for-context
+that does the two more generic steps.
+
+Example:
+see xsl/projects/alea/preview.xsl
+
+-->
 <!DOCTYPE stylesheet [
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
@@ -188,14 +238,15 @@
 
 
 
-    <!-- generic implementation of the apparatus
+    <!--
+        Generic implementation of the apparatus.
         The XPath expressions from above are not hard-wired anywhere below.
     -->
 
-    <!-- generate apparatus elements for a given context, e.g. / and prepare mappings for them.
+
+    <!-- Generate apparatus elements for a given context, e.g. / and prepare mappings for them.
         The second argument is an XPath expression that tells what elements should go into the apparatus.
-        It is evaluated in the context given by the parameter 'context'.
-    -->
+        It is evaluated in the context given by the parameter 'context'. -->
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <xsl:param name="app-entries-xpath" as="xs:string"/>
@@ -249,7 +300,7 @@
     </xsl:template>
 
     <!-- the template for an entry -->
-    <xsl:template name="app:apparatus-entry" visibility="private">
+    <xsl:template name="app:apparatus-entry" visibility="public">
         <xsl:param name="entries" as="map(*)*"/>
         <span class="apparatus-entry">
             <xsl:call-template name="app:apparatus-lemma">
