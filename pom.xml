@@ -66,47 +66,47 @@
 
         <plugins>
 
-            <!-- run XSpec regression tests -->
+            <!-- <!-\- run XSpec regression tests -\-> -->
             <!-- <plugin> -->
-            <!--        <groupId>io.xspec.maven</groupId> -->
-            <!--        <artifactId>xspec-maven-plugin</artifactId> -->
-            <!--        <version>2.2.0</version> -->
-            <!--        <configuration> -->
-            <!--         <!-\-coverage>true</coverage-\-> -->
-            <!--            <generateSurefireReport>true</generateSurefireReport> -->
-            <!--            <testDir>xsl/common</testDir> -->
-            <!--        </configuration> -->
-            <!--        <executions> -->
-            <!--         <execution> -->
-            <!--                <phase>test</phase> -->
-            <!--                <goals> -->
-            <!--                 <goal>run-xspec</goal> -->
-            <!--                </goals> -->
-            <!--         </execution> -->
-            <!--        </executions> -->
-            <!--        <dependencies> -->
-            <!--            <dependency> -->
-            <!--                <groupId>net.sf.saxon</groupId> -->
-            <!--                <artifactId>Saxon-HE</artifactId> -->
-            <!--                <version>${saxon.version}</version> -->
-            <!--            </dependency> -->
-            <!--            <dependency> -->
-            <!--               <groupId>org.xmlresolver</groupId> -->
-            <!--               <artifactId>xmlresolver</artifactId> -->
-            <!--               <version>${xmlresolver.version}</version> -->
-            <!--            </dependency> -->
-            <!--            <dependency> -->
-            <!--                <groupId>io.xspec</groupId> -->
-            <!--                <artifactId>xspec</artifactId> -->
-            <!--                <version>${xspec.version}</version> -->
-            <!--            </dependency> -->
-            <!--            <dependency> -->
-            <!--               <!-\- https://github.com/xspec/xspec-maven-plugin-1/issues/73 -\-> -->
-            <!--               <groupId>commons-io</groupId> -->
-            <!--               <artifactId>commons-io</artifactId> -->
-            <!--               <version>2.11.0</version> -->
-            <!--            </dependency> -->
-            <!--        </dependencies> -->
+            <!--    <groupId>io.xspec.maven</groupId> -->
+            <!--    <artifactId>xspec-maven-plugin</artifactId> -->
+            <!--    <version>2.2.0</version> -->
+            <!--    <configuration> -->
+            <!--       <!-\-coverage>true</coverage-\-> -->
+            <!--       <generateSurefireReport>true</generateSurefireReport> -->
+            <!--       <testDir>xsl/common</testDir> -->
+            <!--    </configuration> -->
+            <!--    <executions> -->
+            <!--       <execution> -->
+            <!--          <phase>test</phase> -->
+            <!--          <goals> -->
+            <!--             <goal>run-xspec</goal> -->
+            <!--          </goals> -->
+            <!--       </execution> -->
+            <!--    </executions> -->
+            <!--    <dependencies> -->
+            <!--       <dependency> -->
+            <!--          <groupId>net.sf.saxon</groupId> -->
+            <!--          <artifactId>Saxon-HE</artifactId> -->
+            <!--          <version>${saxon.version}</version> -->
+            <!--       </dependency> -->
+            <!--       <dependency> -->
+            <!--          <groupId>org.xmlresolver</groupId> -->
+            <!--          <artifactId>xmlresolver</artifactId> -->
+            <!--          <version>${xmlresolver.version}</version> -->
+            <!--       </dependency> -->
+            <!--       <dependency> -->
+            <!--          <groupId>io.xspec</groupId> -->
+            <!--          <artifactId>xspec</artifactId> -->
+            <!--          <version>${xspec.version}</version> -->
+            <!--       </dependency> -->
+            <!--       <dependency> -->
+            <!--          <!-\- https://github.com/xspec/xspec-maven-plugin-1/issues/73 -\-> -->
+            <!--          <groupId>commons-io</groupId> -->
+            <!--          <artifactId>commons-io</artifactId> -->
+            <!--          <version>2.11.0</version> -->
+            <!--       </dependency> -->
+            <!--    </dependencies> -->
             <!-- </plugin> -->
 
             <plugin>
@@ -144,28 +144,6 @@
                </executions>
             </plugin>
 
-            <!-- <plugin> -->
-            <!--    <groupId>org.apache.maven.plugins</groupId> -->
-            <!--    <artifactId>maven-antrun-plugin</artifactId> -->
-            <!--    <version>1.7</version> -->
-            <!--    <executions> -->
-            <!--          <execution> -->
-            <!--             <phase>test</phase> -->
-            <!--             <configuration> -->
-            <!--                <target> -->
-            <!--                   <ant -->
-            <!--                       antfile="${project.basedir}/build.xml"> -->
-            <!--                      <target name="test"/> -->
-            <!--                   </ant> -->
-            <!--                </target> -->
-            <!--             </configuration> -->
-            <!--             <goals> -->
-            <!--                <goal>run</goal> -->
-            <!--             </goals> -->
-            <!--          </execution> -->
-            <!--    </executions> -->
-            <!-- </plugin> -->
-
             <plugin>
                <artifactId>maven-resources-plugin</artifactId>
                <version>3.0.2</version>
@@ -196,7 +174,7 @@
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-antrun-plugin</artifactId>
-               <version>1.6</version>
+               <version>3.1.0</version>
                <executions>
                   <execution>
                      <id>set-permissions</id>
@@ -211,7 +189,38 @@
                         <goal>run</goal>
                      </goals>
                   </execution>
+               <!--    <execution> -->
+               <!--       <phase>test</phase> -->
+               <!--       <configuration> -->
+               <!--          <target> -->
+	       <!-- 		   <property name="compile_classpath" refid="maven.compile.classpath"/> -->
+	       <!-- 		   <property name="runtime_classpath" refid="maven.runtime.classpath"/> -->
+	       <!-- 		   <property name="test_classpath" refid="maven.test.classpath"/> -->
+	       <!-- 		   <property name="plugin_classpath" refid="maven.plugin.classpath"/> -->
+               <!--             <ant -->
+               <!--                 antfile="${project.basedir}/build.xml"> -->
+               <!--                <target name="test"/> -->
+               <!--             </ant> -->
+               <!--          </target> -->
+               <!--       </configuration> -->
+               <!--       <goals> -->
+               <!--          <goal>run</goal> -->
+               <!--       </goals> -->
+               <!--    </execution> -->
                </executions>
+	       <dependencies>
+		  <dependency>
+		     <!-- required by Saxon >= 11, XSpec maven plugin 2.2.0 -->
+		     <groupId>org.xmlresolver</groupId>
+		     <artifactId>xmlresolver</artifactId>
+		     <version>${xmlresolver.version}</version>
+		  </dependency>
+		  <dependency>
+		     <groupId>net.sf.saxon</groupId>
+		     <artifactId>Saxon-HE</artifactId>
+		     <version>${saxon.version}</version>
+		  </dependency>
+	       </dependencies>
             </plugin>
 
 	    <!-- make framework package -->

@@ -14,6 +14,10 @@
     <echo>basedir: ${basedir}</echo>
     <echo>using XSpec ${xspec.version}</echo>
 
+    <echo>classpath: ${java.class.path}</echo>
+    <echo>ext.dirs: ${java.ext.dirs}</echo>
+
+
     <target name="test">
         <!-- xsl/common/libwit.xsl has an abstract variable
         <antcall target="xspec.xspec" inheritall="false">
