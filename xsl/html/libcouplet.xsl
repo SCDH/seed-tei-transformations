@@ -162,8 +162,10 @@
 
     <!-- nodes that contain caesura: recursively output everything preceding caesura -->
     <xsl:template match="*[descendant::caesura]" mode="before-caesura">
-        <xsl:message>Entered before-caesura mode: <xsl:value-of select="local-name()"
-            /></xsl:message>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>Entered before-caesura mode: </xsl:text>
+            <xsl:value-of select="local-name()"/>
+        </xsl:message>
         <!-- output of nodes that preced caesura -->
         <xsl:apply-templates
             select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except text:non-lemma-nodes(.)"/>
@@ -173,7 +175,10 @@
 
     <!-- nodes that contain caesura: recursively output everything following caesura -->
     <xsl:template match="*[descendant::caesura]" mode="after-caesura">
-        <xsl:message>Entered after-caesura mode: <xsl:value-of select="local-name()"/></xsl:message>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>Entered after-caesura mode: </xsl:text>
+            <xsl:value-of select="local-name()"/>
+        </xsl:message>
         <!-- recursively handle nodes, that contain caesura -->
         <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
         <!-- output nodes that follow caesura -->
@@ -291,12 +296,16 @@
     </xsl:template>
 
     <xsl:template match="choice[child::sic and child::corr]" mode="before-caesura" priority="1">
-        <xsl:message>entered choice in before-caesura mode</xsl:message>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>entered choice in before-caesura mode</xsl:text>
+        </xsl:message>
         <xsl:apply-templates select="corr" mode="before-caesura"/>
     </xsl:template>
 
     <xsl:template match="choice[child::sic and child::corr]" mode="after-caesura" priority="1">
-        <xsl:message>entered choice in after-caesura mode</xsl:message>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>entered choice in after-caesura mode</xsl:text>
+        </xsl:message>
         <xsl:apply-templates select="corr" mode="after-caesura"/>
     </xsl:template>
 
