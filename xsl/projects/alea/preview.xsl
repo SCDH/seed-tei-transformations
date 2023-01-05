@@ -11,11 +11,30 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:common="http://scdh.wwu.de/transform/common#" xmlns:scdh="http://scdh.wwu.de/oxygen#ALEA"
-    xmlns:scdhx="http://scdh.wwu.de/xslt#" exclude-result-prefixes="xs xi scdh scdhx"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
+    xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
+
+    <!-- optional: the URI of the projects central witness catalogue -->
+    <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
+
+    <xsl:variable name="witnesses" as="element()*">
+        <xsl:choose>
+            <xsl:when test="$wit-catalog eq string()">
+                <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- a sequence from external and local witnesses -->
+                <xsl:sequence select="
+                        (doc($wit-catalog)/descendant::witness[@xml:id],
+                        //sourceDesc//witness[@xml:id])"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -109,10 +128,17 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
         package-version="1.0.0"> </xsl:use-package>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/libmeta.xsl"
+        package-version="1.0.0">
+        <xsl:override>
+            <xsl:variable name="wit:witnesses" as="element()*" select="$witnesses"/>
+        </xsl:override>
+    </xsl:use-package>
+
 
     <!-- 
     <xsl:import href="libnote2.xsl"/>
-    <xsl:include href="libmeta.xsl"/>
     <xsl:import href="libwit.xsl"/>
     <xsl:import href="libbiblio.xsl"/>
     <xsl:include href="libsurah.xsl"/>
@@ -223,12 +249,10 @@
                 </style>
             </head>
             <body>
-                <!--
                 <section class="metadata">
-                    <xsl:apply-templates select="/TEI/teiHeader" mode="metadata"/>
+                    <xsl:apply-templates select="/TEI/teiHeader" mode="meta:data"/>
                 </section>
                 <hr/>
-                -->
                 <section class="content">
                     <xsl:apply-templates select="/TEI/text/body" mode="text:text"/>
                 </section>
