@@ -88,10 +88,22 @@
     <!-- get the siglum for a given witness -->
     <xsl:function name="wit:siglum" as="xs:string*" visibility="public">
         <xsl:param name="witness" as="element()"/>
-        <xsl:sequence>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>witness </xsl:text>
+            <xsl:value-of select="$witness/@xml:id"/>
+        </xsl:message>
+        <xsl:variable name="siglum">
             <xsl:evaluate as="xs:string*" xpath="$wit:siglum-xpath" context-item="$witness"
                 expand-text="true"/>
-        </xsl:sequence>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$siglum and $siglum ne ''">
+                <xsl:value-of select="$siglum"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$witness/@xml:id"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
 
     <!-- get the description for a given witness -->
