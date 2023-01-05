@@ -1,4 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+A generic implementation of a critical apparatus that works for
+all of the following three variant encodings:
+
+- parallel segmentation
+- internal double end-point
+- external double end-point
+
+To deal with double end-point variant encodings the apparatus does the following:
+
+1) Get a collection of all apparatus entries.
+2) For each entry, get the text nodes that make up the lemma. White space text nodes are ignored.
+3) Group the apparatus entries by the sequence of text nodes, that they are made of. This way,
+   entries that originate from the same text nodes are grouped together.
+4) Output the lemma once per group.
+5) Output the readings and other annotations that make up the group.
+
+The apparatus can be used on a document-wide basis, as used e.g. for short poems. And it can be used
+on a part-of-document basis, as used e.g. for pages of a long prose work.
+
+There are several modes that controle
+- the selection of lemma text nodes
+- the presentation of the lemma
+- the presentation of the readings etc.
+
+These modes are public and can be extended to your needs.
+
+The static strings––e.g. separators, scholaraly phrases like "omisit"––can be overridden and translated
+using the libi18n.xsl package.
+
+
+The apparatus is configurable through variables with XPath expression that determine
+which encoding cristalls go into the apparatus.
+
+Usage:
+
+Most generic usage needs 2 components
+- the function app:apparatus-entries#2 to generate a map of apparatus entries and pass this map to
+- the template app:apparatus
+The funtion takes a context to determine the extension of the apparatus (doc or part) and an XPath
+expression to determine its features.
+
+For convenience there are also predefined XPath expressions and the template
+- app:appararus-for-context
+that does the two more generic steps.
+
+Example:
+see xsl/projects/alea/preview.xsl
+
+-->
 <!DOCTYPE stylesheet [
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
@@ -8,7 +58,8 @@
     <!ENTITY emsp "&#x2003;" >
     <!ENTITY lb "&#xa;" >
 ]>
-<xsl:package name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
+<xsl:package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
@@ -36,21 +87,30 @@
             visibility="private"/>
     </xsl:use-package>
 
+
     <xsl:expose component="mode" names="*" visibility="public"/>
+    <xsl:expose component="template" names="app:*" visibility="public"/>
+    <xsl:expose component="variable" names="app:*" visibility="public"/>
+    <xsl:expose component="function" names="app:*" visibility="public"/>
 
 
     <!-- whether or not the first text node from a lemma determines the line number of the entry -->
     <xsl:param name="app:lemma-first-text-node-line-crit" as="xs:boolean" select="true()"
         required="false"/>
 
-    <!-- parameters that determine, what shows up in the apparatus
-        Please note that you can bypass them e.g. when you want multiple apparatus. -->
+    <!--
+        Variables that determine, what shows up in the apparatus, by describing
+        apparatus entries with XPath expressions.
 
+        You may want to override them in order to put more or less on the apparatus.
+
+        Please note that you can bypass them e.g. when you want multiple apparatus.
+    -->
+
+    <!-- apparatus entries made for parallel segementation -->
     <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string"
-        visibility="abstract">
-        <!--
+        visibility="public">
         <xsl:value-of>
-            <!-/- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -/->
             <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
@@ -60,14 +120,12 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
+    <!-- XPath describing apparatus entries made for internal double end-point variant encoding -->
     <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string"
-        visibility="abstract">
-        <!--
+        visibility="public">
         <xsl:value-of>
-            <!-/- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -/->
             <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
@@ -77,12 +135,11 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
+    <!-- XPath describing apparatus entries made for external double end-point variant encoding -->
     <xsl:variable name="app:entries-xpath-external-double-end-point" as="xs:string"
-        visibility="abstract">
-        <!--
+        visibility="public">
         <xsl:value-of>
             <xsl:text>descendant::app</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
@@ -93,11 +150,10 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
-    <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string" visibility="abstract">
-        <!--
+    <!-- when no variant encoding is present -->
+    <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string" visibility="public">
         <xsl:value-of>
             <xsl:text>descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
@@ -106,36 +162,31 @@
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
+
 
     <!-- XPath how to get a pLike container given an app entry.
         Note: this should not evaluate to an empty sequence. -->
-    <xsl:variable name="app:entry-container-xpath" as="xs:string" visibility="abstract">
-        <!--
+    <xsl:variable name="app:entry-container-xpath" as="xs:string" visibility="public">
         <xsl:value-of>
             <xsl:text>ancestor::p</xsl:text>
             <xsl:text>| ancestor::l</xsl:text>
             <xsl:text>| ancestor::head</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
-    <xsl:variable name="app:text-nodes-mutet-ancestors" as="xs:string" visibility="abstract">
-        <!--
+    <xsl:variable name="app:text-nodes-mutet-ancestors" as="xs:string" visibility="public">
         <xsl:value-of>
             <xsl:text>ancestor::rdg</xsl:text>
             <xsl:text>| ancestor::sic[parent::choice]</xsl:text>
         </xsl:value-of>
-        -->
     </xsl:variable>
 
+
     <!-- for convenience this will be '@location-@method' -->
-    <!-- TODO: the global context item will be missing! -->
-    <xsl:function name="app:variant-encoding" visibility="private">
+    <xsl:function name="app:variant-encoding" visibility="public">
         <xsl:param name="context" as="node()"/>
-        <xsl:variable name="ve"
-            select="root($context)//teiHeader/encodingDesc/variantEncoding"/>
+        <xsl:variable name="ve" select="root($context)//teiHeader/encodingDesc/variantEncoding"/>
         <xsl:value-of select="concat($ve/@location, '-', $ve/@method)"/>
     </xsl:function>
 
@@ -187,14 +238,15 @@
 
 
 
-    <!-- generic implementation of the apparatus
+    <!--
+        Generic implementation of the apparatus.
         The XPath expressions from above are not hard-wired anywhere below.
     -->
 
-    <!-- generate apparatus elements for a given context, e.g. / and prepare mappings for them.
+
+    <!-- Generate apparatus elements for a given context, e.g. / and prepare mappings for them.
         The second argument is an XPath expression that tells what elements should go into the apparatus.
-        It is evaluated in the context given by the parameter 'context'.
-    -->
+        It is evaluated in the context given by the parameter 'context'. -->
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <xsl:param name="app-entries-xpath" as="xs:string"/>
@@ -248,7 +300,7 @@
     </xsl:template>
 
     <!-- the template for an entry -->
-    <xsl:template name="app:apparatus-entry" visibility="private">
+    <xsl:template name="app:apparatus-entry" visibility="public">
         <xsl:param name="entries" as="map(*)*"/>
         <span class="apparatus-entry">
             <xsl:call-template name="app:apparatus-lemma">
@@ -256,7 +308,7 @@
             </xsl:call-template>
             <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
             <xsl:for-each select="$entries">
-                <xsl:apply-templates mode="apparatus-reading-dspt" select="map:get(., 'entry')">
+                <xsl:apply-templates mode="app:reading-dspt" select="map:get(., 'entry')">
                     <xsl:with-param name="apparatus-entry-map" as="map(*)" select="." tunnel="true"
                     />
                 </xsl:apply-templates>
@@ -315,7 +367,7 @@
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
         <xsl:variable name="lemma-text-nodes" as="text()*">
-            <xsl:apply-templates select="$entry" mode="lemma-text-nodes-dspt"/>
+            <xsl:apply-templates select="$entry" mode="app:lemma-text-nodes-dspt"/>
         </xsl:variable>
         <xsl:sequence select="seed:mk-entry-map($entry, $lemma-text-nodes)"/>
     </xsl:function>
@@ -454,7 +506,7 @@
 
     <xsl:function name="app:lemma-text-nodes" as="text()*" visibility="public">
         <xsl:param name="element" as="element()"/>
-        <xsl:apply-templates select="$element" mode="lemma-text-nodes"/>
+        <xsl:apply-templates select="$element" mode="app:lemma-text-nodes"/>
     </xsl:function>
 
     <!-- Returns true if the text() node is in the edited text (lemma) -->
@@ -470,51 +522,51 @@
 
 
     <!-- the mode lemma-text-nodes is for grouping apparatus entries by the text repeated from the base text -->
-    <xsl:mode name="lemma-text-nodes" on-no-match="shallow-skip" visibility="public"/>
+    <xsl:mode name="app:lemma-text-nodes" on-no-match="shallow-skip" visibility="public"/>
 
-    <xsl:template mode="lemma-text-nodes" match="text()" as="text()">
+    <xsl:template mode="app:lemma-text-nodes" match="text()" as="text()">
         <xsl:sequence select="."/>
     </xsl:template>
 
     <!-- caesura is replaced with a space. Override this if needed! -->
-    <xsl:template mode="lemma-text-nodes" match="caesura" as="text()">
+    <xsl:template mode="app:lemma-text-nodes" match="caesura" as="text()">
         <xsl:text>&#x20;</xsl:text>
     </xsl:template>
 
     <!-- things that do not go into the base text -->
-    <xsl:template mode="lemma-text-nodes"
+    <xsl:template mode="app:lemma-text-nodes"
         match="rdg | choice[corr]/sic | choice[reg]/orig | span | index | note | witDetail"/>
 
-    <xsl:template mode="lemma-text-nodes"
+    <xsl:template mode="app:lemma-text-nodes"
         match="lem[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
 
     <!-- The mode apparatus-reading-text is for printing the text of a reading etc.
         Typically it is entred from a template in the mode apparatus-reading -->
-    <xsl:mode name="apparatus-reading-text" on-no-match="shallow-skip" visibility="public"/>
+    <xsl:mode name="app:reading-text" on-no-match="shallow-skip" visibility="public"/>
 
-    <xsl:template mode="apparatus-reading-text"
+    <xsl:template mode="app:reading-text"
         match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
-        <xsl:apply-templates mode="apparatus-reading-text" select="lem"/>
+        <xsl:apply-templates mode="app:reading-text" select="lem"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-text"
+    <xsl:template mode="app:reading-text"
         match="app[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
-    <xsl:template mode="apparatus-reading-text" match="choice[sic and corr]">
-        <xsl:apply-templates mode="apparatus-reading-text" select="corr"/>
+    <xsl:template mode="app:reading-text" match="choice[sic and corr]">
+        <xsl:apply-templates mode="app:reading-text" select="corr"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-text" match="caesura">
+    <xsl:template mode="app:reading-text" match="caesura">
         <xsl:text> || </xsl:text>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-text" match="l[preceding-sibling::l]">
+    <xsl:template mode="app:reading-text" match="l[preceding-sibling::l]">
         <xsl:text> / </xsl:text>
-        <xsl:apply-templates mode="apparatus-reading-text"/>
+        <xsl:apply-templates mode="app:reading-text"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-text" match="text()">
+    <xsl:template mode="app:reading-text" match="text()">
         <xsl:value-of select="."/>
     </xsl:template>
 
@@ -527,59 +579,59 @@
     <!-- mode 'lemma-text-nodes-dspt' is a dispatcher for various element types.
         The templates have to select nodes that go into the lemma. Typically they
         apply the rules from 'lemma-text-nodes' on them. -->
-    <xsl:mode name="lemma-text-nodes-dspt" on-no-match="shallow-skip" visibility="public"/>
+    <xsl:mode name="app:lemma-text-nodes-dspt" on-no-match="shallow-skip" visibility="public"/>
 
     <!-- The mode apparatus-reading-dspt is for the entries after the lemma (readings, etc.).
         It serves as a dispatcher for different types of entries.
         All templates should leave it again to get the text of the reading etc. -->
-    <xsl:mode name="apparatus-reading" on-no-match="shallow-skip" visibility="public"/>
+    <xsl:mode name="app:reading" on-no-match="shallow-skip" visibility="public"/>
 
 
     <!-- app -->
 
-    <xsl:template mode="lemma-text-nodes-dspt"
+    <xsl:template mode="app:lemma-text-nodes-dspt"
         match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
-        <xsl:apply-templates mode="lemma-text-nodes" select="lem"/>
+        <xsl:apply-templates mode="app:lemma-text-nodes" select="lem"/>
     </xsl:template>
 
-    <xsl:template mode="lemma-text-nodes-dspt"
+    <xsl:template mode="app:lemma-text-nodes-dspt"
         match="app[@from and app:variant-encoding(.) eq 'internal-double-end-point']">
         <xsl:variable name="limit-id" select="substring(@from, 2)"/>
         <xsl:variable name="limit" select="//*[@xml:id eq $limit-id]"/>
-        <xsl:apply-templates mode="lemma-text-nodes"
+        <xsl:apply-templates mode="app:lemma-text-nodes"
             select="seed:subtrees-between-anchors($limit, .)"/>
     </xsl:template>
 
-    <xsl:template mode="lemma-text-nodes-dspt"
+    <xsl:template mode="app:lemma-text-nodes-dspt"
         match="app[@to and app:variant-encoding(.) eq 'internal-double-end-point']">
         <xsl:variable name="limit-id" select="substring(@to, 2)"/>
         <xsl:variable name="limit" select="//*[@xml:id eq $limit-id]"/>
-        <xsl:apply-templates mode="lemma-text-nodes"
+        <xsl:apply-templates mode="app:lemma-text-nodes"
             select="seed:subtrees-between-anchors(., $limit)"/>
     </xsl:template>
 
-    <xsl:template mode="lemma-text-nodes-dspt"
+    <xsl:template mode="app:lemma-text-nodes-dspt"
         match="app[@from and @to and app:variant-encoding(.) eq 'external-double-end-point']">
         <xsl:variable name="from-id" select="substring(@from, 2)"/>
         <xsl:variable name="from" select="//*[@xml:id eq $from-id]"/>
         <xsl:variable name="to-id" select="substring(@to, 2)"/>
         <xsl:variable name="to" select="//*[@xml:id eq $to-id]"/>
-        <xsl:apply-templates mode="lemma-text-nodes"
+        <xsl:apply-templates mode="app:lemma-text-nodes"
             select="seed:subtrees-between-anchors($from, $to)"/>
     </xsl:template>
 
-    <xsl:template mode="lemma-text-nodes-dspt"
+    <xsl:template mode="app:lemma-text-nodes-dspt"
         match="app[app:variant-encoding(.) eq 'internal-location-referenced']">
-        <xsl:apply-templates mode="lemma-text-nodes" select="lem"/>
+        <xsl:apply-templates mode="app:lemma-text-nodes" select="lem"/>
     </xsl:template>
 
-    <xsl:mode name="apparatus-reading-dspt" on-no-match="shallow-skip" visibility="public"/>
+    <xsl:mode name="app:reading-dspt" on-no-match="shallow-skip" visibility="public"/>
 
-    <xsl:template mode="apparatus-reading-dspt" match="app">
-        <xsl:apply-templates mode="apparatus-reading-dspt" select="rdg | witDetail | note"/>
+    <xsl:template mode="app:reading-dspt" match="app">
+        <xsl:apply-templates mode="app:reading-dspt" select="rdg | witDetail | note"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="rdg[normalize-space(.) ne '']">
+    <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) ne '']">
         <span class="reading">
             <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
             <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
@@ -619,7 +671,7 @@
             select="map:get($apparatus-entry-map, 'lemma-text-nodes') => app:shorten-lemma()"/>
         <xsl:choose>
             <xsl:when test="$full-lemma ne ''">
-                <xsl:apply-templates mode="apparatus-reading-text" select="$reading"/>
+                <xsl:apply-templates mode="app:reading-text" select="$reading"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="lemma-replacement"
@@ -628,23 +680,23 @@
                     <xsl:when test="map:get($lemma-replacement, 'position') eq 'preceding'">
                         <xsl:value-of select="map:get($lemma-replacement, 'text')"/>
                         <xsl:text> </xsl:text>
-                        <xsl:apply-templates mode="apparatus-reading-text" select="$reading"/>
+                        <xsl:apply-templates mode="app:reading-text" select="$reading"/>
                     </xsl:when>
                     <xsl:when test="map:get($lemma-replacement, 'position') eq 'following'">
-                        <xsl:apply-templates mode="apparatus-reading-text" select="$reading"/>
+                        <xsl:apply-templates mode="app:reading-text" select="$reading"/>
                         <xsl:text> </xsl:text>
                         <xsl:value-of select="map:get($lemma-replacement, 'text')"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <!-- in this case we still printed 'empty' in the lemma -->
-                        <xsl:apply-templates mode="apparatus-reading-text" select="$reading"/>
+                        <xsl:apply-templates mode="app:reading-text" select="$reading"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="rdg[normalize-space(.) eq '']">
+    <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) eq '']">
         <span class="reading">
             <span class="static-text" data-i18n-key="omisit">&lre;om.&pdf;</span>
             <xsl:if test="@wit">
@@ -661,9 +713,9 @@
         </span>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="app/note">
+    <xsl:template mode="app:reading-dspt" match="app/note">
         <span class="reading reading-note">
-            <xsl:apply-templates mode="apparatus-reading-text" select="node()"/>
+            <xsl:apply-templates mode="app:reading-text" select="node()"/>
             <xsl:if test="position() ne last()">
                 <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
                     >;</span>
@@ -674,15 +726,15 @@
 
     <!-- witDetail -->
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="witDetail[not(parent::app)]">
-        <xsl:apply-templates mode="lemma-text-nodes" select="parent::*"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="witDetail[not(parent::app)]">
+        <xsl:apply-templates mode="app:lemma-text-nodes" select="parent::*"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="witDetail">
+    <xsl:template mode="app:reading-dspt" match="witDetail">
         <span class="reading note-text witDetail" lang="{i18n:language(.)}"
             style="direction:{i18n:language-direction(.)}; text-align:{i18n:language-align(.)};">
             <xsl:value-of select="i18n:direction-embedding(.)"/>
-            <xsl:apply-templates select="node()" mode="apparatus-reading-text"/>
+            <xsl:apply-templates select="node()" mode="app:reading-text"/>
             <xsl:text>&pdf;</xsl:text>
             <xsl:if test="@wit">
                 <span class="apparatus-sep" style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
@@ -701,43 +753,43 @@
 
     <!-- corr -->
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="corr">
-        <xsl:apply-templates mode="lemma-text-nodes"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="corr">
+        <xsl:apply-templates mode="app:lemma-text-nodes"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="corr">
+    <xsl:template mode="app:reading-dspt" match="corr">
         <span class="static-text" data-i18n-key="conieci">&lre;coniec.&pdf;</span>
     </xsl:template>
 
 
     <!-- sic -->
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="sic[not(parent::choice)]">
-        <xsl:apply-templates mode="lemma-text-nodes"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="sic[not(parent::choice)]">
+        <xsl:apply-templates mode="app:lemma-text-nodes"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="sic[not(parent::choice)]">
+    <xsl:template mode="app:reading-dspt" match="sic[not(parent::choice)]">
         <span class="static-text" data-i18n-key="sic">&lre;sic!&pdf;</span>
     </xsl:template>
 
 
     <!-- choice -->
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="choice[corr and sic]">
-        <xsl:apply-templates mode="lemma-text-nodes" select="corr"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice[corr and sic]">
+        <xsl:apply-templates mode="app:lemma-text-nodes" select="corr"/>
     </xsl:template>
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="choice[unclear]">
-        <xsl:apply-templates mode="lemma-text-nodes" select="unclear[1]"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice[unclear]">
+        <xsl:apply-templates mode="app:lemma-text-nodes" select="unclear[1]"/>
     </xsl:template>
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="choice[orig and reg]">
-        <xsl:apply-templates mode="lemma-text-nodes" select="reg"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice[orig and reg]">
+        <xsl:apply-templates mode="app:lemma-text-nodes" select="reg"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="choice/sic">
+    <xsl:template mode="app:reading-dspt" match="choice/sic">
         <span class="reading">
-            <xsl:apply-templates mode="apparatus-reading-text"/>
+            <xsl:apply-templates mode="app:reading-text"/>
             <xsl:if test="@source">
                 <span class="apparatus-sep" style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
                     >:</span>
@@ -752,11 +804,11 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="choice[corr and sic]">
+    <xsl:template mode="app:reading-dspt" match="choice[corr and sic]">
         <span class="reading">
-            <xsl:apply-templates select="corr" mode="apparatus-reading-dspt"/>
+            <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
             <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep">;</span>
-            <xsl:apply-templates select="sic" mode="apparatus-reading-dspt"/>
+            <xsl:apply-templates select="sic" mode="app:reading-dspt"/>
         </span>
         <xsl:if test="position() ne last()">
             <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
@@ -765,11 +817,11 @@
     </xsl:template>
 
     <!-- ALEA's old encoding of conjectures -->
-    <xsl:template mode="apparatus-reading-dspt" match="choice[corr and sic/app]" priority="2">
+    <xsl:template mode="app:reading-dspt" match="choice[corr and sic/app]" priority="2">
         <span class="reading">
-            <xsl:apply-templates select="corr" mode="apparatus-reading-dspt"/>
+            <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
             <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep">;</span>
-            <xsl:apply-templates select="sic/app" mode="apparatus-reading-dspt"/>
+            <xsl:apply-templates select="sic/app" mode="app:reading-dspt"/>
         </span>
         <xsl:if test="position() ne last()">
             <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep">;</span>
@@ -779,11 +831,11 @@
 
     <!-- unclear -->
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="unclear[not(parent::choice)]">
-        <xsl:apply-templates mode="lemma-text-nodes"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="unclear[not(parent::choice)]">
+        <xsl:apply-templates mode="app:lemma-text-nodes"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="unclear[not(parent::choice)]">
+    <xsl:template mode="app:reading-dspt" match="unclear[not(parent::choice)]">
         <span class="reading unclear">
             <xsl:choose>
                 <xsl:when test="@reason">
@@ -805,9 +857,9 @@
     <!-- gap -->
 
     <!-- handle <gap> as empty, what ever occurs -->
-    <xsl:template mode="lemma-text-nodes-dspt" match="gap"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="gap"/>
 
-    <xsl:template mode="apparatus-reading-dspt" match="gap">
+    <xsl:template mode="app:reading-dspt" match="gap">
         <span class="reading gap">
             <xsl:choose>
                 <xsl:when test="@reason">
@@ -838,22 +890,22 @@
 
     <!-- default rules -->
 
-    <xsl:template mode="lemma-text-nodes-dspt" match="*">
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="*">
         <xsl:message>
             <xsl:text>WARNING: </xsl:text>
             <xsl:text>No rule in mode 'lemma-text-nodes-dspt' for apparatus element: </xsl:text>
             <xsl:value-of select="name(.)"/>
         </xsl:message>
-        <xsl:apply-templates mode="lemma-text-nodes"/>
+        <xsl:apply-templates mode="app:lemma-text-nodes"/>
     </xsl:template>
 
-    <xsl:template mode="apparatus-reading-dspt" match="*">
+    <xsl:template mode="app:reading-dspt" match="*">
         <xsl:message>
             <xsl:text>WARNING: </xsl:text>
             <xsl:text>No rule for in mode 'apparatus-reading-dspt' for apparatur element: </xsl:text>
             <xsl:value-of select="name(.)"/>
         </xsl:message>
-        <xsl:apply-templates mode="apparatus-reading-text"/>
+        <xsl:apply-templates mode="app:reading-text"/>
     </xsl:template>
 
 
