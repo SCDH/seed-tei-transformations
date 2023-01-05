@@ -10,7 +10,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:seed="http://scdh.wwu.de/transform/seed#"
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#" xmlns:scdh="http://scdh.wwu.de/oxygen#ALEA"
     xmlns:scdhx="http://scdh.wwu.de/xslt#" exclude-result-prefixes="xs xi scdh scdhx"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
@@ -101,9 +101,16 @@
         </xsl:override>
     </xsl:use-package>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libcouplet.xsl"
+        package-version="1.0.0"> </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
+        package-version="1.0.0"> </xsl:use-package>
+
+
     <!-- 
-    <xsl:include href="libtext.xsl"/>
-    <xsl:include href="librend.xsl"/>
     <xsl:import href="libnote2.xsl"/>
     <xsl:include href="libmeta.xsl"/>
     <xsl:import href="libwit.xsl"/>
@@ -221,11 +228,11 @@
                     <xsl:apply-templates select="/TEI/teiHeader" mode="metadata"/>
                 </section>
                 <hr/>
+                -->
                 <section class="content">
-                    <xsl:apply-templates select="/TEI/text/body" mode="text"/>
+                    <xsl:apply-templates select="/TEI/text/body" mode="text:text"/>
                 </section>
                 <hr/>
-                -->
                 <section class="variants">
                     <xsl:call-template name="app:apparatus-for-context">
                         <xsl:with-param name="app-context" select="/"/>
