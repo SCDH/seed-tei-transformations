@@ -45,6 +45,10 @@
     </xsl:use-package>
 
     <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
+        package-version="1.0.0"/>
+
+    <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
         <xsl:override>
@@ -116,6 +120,14 @@
                     <xsl:text>| ancestor::sic[parent::choice]</xsl:text>
                 </xsl:value-of>
             </xsl:variable>
+
+            <!-- use libwit in apparatus -->
+            <xsl:template name="app:sigla">
+                <xsl:param name="wit" as="node()"/>
+                <xsl:call-template name="wit:sigla">
+                    <xsl:with-param name="wit" select="$wit"/>
+                </xsl:call-template>
+            </xsl:template>
 
         </xsl:override>
     </xsl:use-package>
