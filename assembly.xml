@@ -23,6 +23,8 @@
 			<outputDirectory>/xsl</outputDirectory>
 			<includes>
 				<include>**/*.xsl</include>
+				<include>**/*.json</include>
+				<include>**/*.js</include>
 			</includes>
 			<excludes>
 				<exclude>**/xspec/**.xsl</exclude>
