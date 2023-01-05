@@ -140,3 +140,9 @@ present in the project directory:
 - `test.sh` is a wrapper around ant to run all the tests.
 
 - `xslt.sh` is a wrapper around Saxon to run a transformation.
+
+Example: run ALEA preview:
+
+```{shell}
+./xslt.sh -s:test/samples/BAlam53.tei.xml -xsl:xsl/projects/alea/preview.xsl -lib:xsl/html/libapp2.xsl:xsl/html/libi18n.xsl:xsl/common/libbetween.xsl:xsl/common/libcommon.xsl:xsl/html/libcouplet.xsl:xsl/html/librend.xsl:xsl/projects/alea/libmeta.xsl:xsl/html/libwit.xsl:xsl/common/libwit.xsl
+```
