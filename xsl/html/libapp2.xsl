@@ -229,10 +229,18 @@ see xsl/projects/alea/preview.xsl
         <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath)"/>
     </xsl:function>
 
-    <!-- generate the apparatus for a given context, e.g. / -->
-    <xsl:template name="app:apparatus-for-context" visibility="public">
+    <!-- generate a line-based apparatus for a given context, e.g. / -->
+    <xsl:template name="app:line-based-apparatus-for-context" visibility="public">
         <xsl:param name="app-context" as="node()*"/>
-        <xsl:call-template name="app:apparatus">
+        <xsl:call-template name="app:line-based-apparatus">
+            <xsl:with-param name="entries" select="app:apparatus-entries($app-context)"/>
+        </xsl:call-template>
+    </xsl:template>
+
+    <!-- generate a note-based apparatus for a given context, e.g. / -->
+    <xsl:template name="app:note-based-apparatus-for-context" visibility="public">
+        <xsl:param name="app-context" as="node()*"/>
+        <xsl:call-template name="app:note-based-apparatus">
             <xsl:with-param name="entries" select="app:apparatus-entries($app-context)"/>
         </xsl:call-template>
     </xsl:template>
@@ -273,7 +281,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>Elements for apparatus: </xsl:text>
             <xsl:value-of select="$entry-elements ! name()"/>
         </xsl:message>
-        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(.)"/>
+        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position())"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a sequence of prepared maps -->
@@ -316,6 +324,35 @@ see xsl/projects/alea/preview.xsl
             </xsl:for-each-group>
         </div>
     </xsl:template>
+
+    <!-- generate a note-based apparatus for a sequence of prepared maps -->
+    <xsl:template name="app:note-based-apparatus" visibility="public">
+        <xsl:param name="entries" as="map(*)*"/>
+        <div>
+            <xsl:for-each-group select="$entries" group-by="map:get(., 'lemma-grouping-ids')">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>Joining </xsl:text>
+                    <xsl:value-of select="count(current-group())"/>
+                    <xsl:text> apparatus entries referencing text nodes </xsl:text>
+                    <xsl:value-of select="current-grouping-key()"/>
+                </xsl:message>
+                <div class="apparatus-line">
+                    <span class="apparatus-note-number note-number">
+                        <xsl:variable name="entry-number"
+                            select="map:get(current-group()[1], 'number')"/>
+                        <a name="{$entry-number}">
+                            <xsl:value-of select="$entry-number"/>
+                        </a>
+                    </span>
+                    <!-- call the template that outputs an apparatus entries -->
+                    <xsl:call-template name="app:apparatus-entry">
+                        <xsl:with-param name="entries" select="current-group()"/>
+                    </xsl:call-template>
+                </div>
+            </xsl:for-each-group>
+        </div>
+    </xsl:template>
+
 
     <!-- the template for an entry -->
     <xsl:template name="app:apparatus-entry" visibility="public">
@@ -384,14 +421,16 @@ see xsl/projects/alea/preview.xsl
         with all there is needed for grouping and creating the entry -->
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
+        <xsl:param name="number" as="xs:integer"/>
         <xsl:variable name="lemma-text-nodes" as="text()*">
             <xsl:apply-templates select="$entry" mode="app:lemma-text-nodes-dspt"/>
         </xsl:variable>
-        <xsl:sequence select="seed:mk-entry-map($entry, $lemma-text-nodes)"/>
+        <xsl:sequence select="seed:mk-entry-map($entry, $number, $lemma-text-nodes)"/>
     </xsl:function>
 
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
+        <xsl:param name="number" as="xs:integer"/>
         <xsl:param name="lemma-text-nodes" as="text()*"/>
         <xsl:variable name="non-whitespace-text-nodes" as="text()*"
             select="$lemma-text-nodes[normalize-space(.) ne '']"/>
@@ -518,7 +557,8 @@ see xsl/projects/alea/preview.xsl
                     'lemma-text-nodes': $lemma-text-nodes,
                     'lemma-grouping-ids': $lemma-grouping-ids,
                     'lemma-replacement': $lemma-replacement,
-                    'line-number': $line-number
+                    'line-number': $line-number,
+                    'number': $number
                 }"/>
     </xsl:function>
 
