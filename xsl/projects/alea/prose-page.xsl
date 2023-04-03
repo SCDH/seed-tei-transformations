@@ -91,7 +91,7 @@
             <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
                 <xsl:value-of>
                     <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
-                    <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
+                    <xsl:text>descendant-or-self::app[not(parent::sic[parent::choice])]</xsl:text>
                     <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
                     <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
@@ -105,7 +105,7 @@
             <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string">
                 <xsl:value-of>
                     <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
-                    <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
+                    <xsl:text>descendant-or-self::app[not(parent::sic[parent::choice])]</xsl:text>
                     <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
                     <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
@@ -118,7 +118,7 @@
 
             <xsl:variable name="app:entries-xpath-external-double-end-point" as="xs:string">
                 <xsl:value-of>
-                    <xsl:text>descendant::app</xsl:text>
+                    <xsl:text>descendant-or-self::app</xsl:text>
                     <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
                     <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
@@ -251,7 +251,7 @@
                         vertical-align:top;
                         padding-left: 10px;
                         }
-                    .line-number, .apparatus-line-number, .editor-note-number {
+                    .line-number, .apparatus-line-number, .apparatus-note-number, .editor-note-number {
                         text-align:right;
                         font-size: 0.7em;
                         padding-top: 0.3em;
@@ -299,7 +299,7 @@
             <body>
                 <xsl:variable name="root" select="/*"/>
                 <xsl:if test="true()">
-                    <xsl:message>
+                    <xsl:message use-when="system-property('debug') eq 'true'">
                         <xsl:text>Transformed page: </xsl:text>
                         <xsl:value-of select="$pages"/>
                     </xsl:message>
@@ -334,8 +334,8 @@
                 </section>
                 <hr/>
                 <section class="variants">
-                    <xsl:call-template name="app:apparatus-for-context">
-                        <xsl:with-param name="app-context" select="/"/>
+                    <xsl:call-template name="app:note-based-apparatus-for-context">
+                        <xsl:with-param name="app-context" select="$current"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
