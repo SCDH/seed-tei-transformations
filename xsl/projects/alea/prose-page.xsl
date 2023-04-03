@@ -45,8 +45,7 @@
             </xsl:choose>
         </xsl:message>
         <xsl:sequence use-when="function-available('obt:current-node')"
-            select="obt:current-node(base-uri())/preceding::pb[1]/@n">
-        </xsl:sequence>
+            select="obt:current-node(base-uri())/preceding::pb[1]/@n"> </xsl:sequence>
         <xsl:sequence use-when="not(function-available('obt:current-node'))" select="()"/>
     </xsl:param>
 
@@ -87,6 +86,10 @@
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
+
+        <xsl:accept component="function" names="app:note-based-apparatus-nodes-map#2"
+            visibility="public"/>
+
         <xsl:override>
             <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
                 <xsl:value-of>
@@ -168,9 +171,41 @@
         </xsl:override>
     </xsl:use-package>
 
+    <xsl:variable name="current" as="node()*">
+        <xsl:variable name="root" select="/"/>
+        <xsl:choose>
+            <!-- When there's a page number or several page numbers,
+                            then this take the nodes between the pb with the page number and the next pb. -->
+            <xsl:when test="not(empty($pages))">
+                <xsl:for-each select="$pages">
+                    <xsl:variable name="page-number" as="xs:string" select="."/>
+                    <xsl:variable name="pb" as="node()" select="$root//pb[@n eq $page-number]"/>
+                    <xsl:variable name="next-pb" as="node()*" select="$pb/following::pb[1]"/>
+                    <xsl:sequence select="$pb, seed:subtrees-between-anchors($pb, $next-pb)"/>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- otherwise transform the whole document -->
+                <xsl:sequence select="root()"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="apparatus-entries" as="map(*)*" select="app:apparatus-entries($current)"/>
+
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
-        package-version="1.0.0"> </xsl:use-package>
+        package-version="1.0.0">
+
+        <xsl:override>
+
+            <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))"
+                select="app:note-based-apparatus-nodes-map($apparatus-entries, true())"/>
+
+        </xsl:override>
+
+    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
@@ -304,27 +339,6 @@
                         <xsl:value-of select="$pages"/>
                     </xsl:message>
                 </xsl:if>
-                <xsl:variable name="current" as="node()*">
-                    <xsl:choose>
-                        <!-- When there's a page number or several page numbers,
-                            then this take the nodes between the pb with the page number and the next pb. -->
-                        <xsl:when test="not(empty($pages))">
-                            <xsl:for-each select="$pages">
-                                <xsl:variable name="page-number" as="xs:string" select="."/>
-                                <xsl:variable name="pb" as="node()"
-                                    select="$root//pb[@n eq $page-number]"/>
-                                <xsl:variable name="next-pb" as="node()*"
-                                    select="$pb/following::pb[1]"/>
-                                <xsl:sequence
-                                    select="$pb, seed:subtrees-between-anchors($pb, $next-pb)"/>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <!-- otherwise transform the whole document -->
-                            <xsl:sequence select="root()"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
                 <section class="metadata">
                     <xsl:apply-templates select="/TEI/teiHeader" mode="meta:data"/>
                 </section>
