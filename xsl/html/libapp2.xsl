@@ -201,7 +201,8 @@ see xsl/projects/alea/preview.xsl
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <!-- select the right XPath for generating apparatus entries -->
-        <xsl:variable name="variant-encoding" select="app:variant-encoding($context)"/>
+        <!-- since $context may be a sequence, we only take the first item to get the variant encoding -->
+        <xsl:variable name="variant-encoding" select="app:variant-encoding($context[1])"/>
         <xsl:variable name="app-entries-xpath">
             <xsl:choose>
                 <xsl:when test="$variant-encoding eq 'internal-double-end-point'">
@@ -252,14 +253,31 @@ see xsl/projects/alea/preview.xsl
         <xsl:param name="app-entries-xpath" as="xs:string"/>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
         <xsl:variable name="entry-elements" as="element()*">
-            <xsl:evaluate as="element()*" context-item="$context" expand-text="true"
-                xpath="$app-entries-xpath"/>
+            <xsl:choose>
+                <xsl:when test="count($context) eq 1">
+                    <xsl:evaluate as="element()*" context-item="$context" expand-text="true"
+                        xpath="$app-entries-xpath"/>
+                </xsl:when>
+                <xsl:when test="empty($context)">
+                    <xsl:sequence select="()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each select="$context">
+                        <xsl:evaluate as="element()*" context-item="." expand-text="true"
+                            xpath="$app-entries-xpath"/>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>Elements for apparatus: </xsl:text>
+            <xsl:value-of select="$entry-elements ! name()"/>
+        </xsl:message>
         <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(.)"/>
     </xsl:function>
 
-    <!-- generate the apparatus for a sequence of prepared maps -->
-    <xsl:template name="app:apparatus" visibility="public">
+    <!-- generate a line-based apparatus for a sequence of prepared maps -->
+    <xsl:template name="app:line-based-apparatus" visibility="public">
         <xsl:param name="entries" as="map(*)*"/>
         <div>
             <!-- we first group the entries by line number -->
