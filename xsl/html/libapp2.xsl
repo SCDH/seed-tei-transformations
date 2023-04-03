@@ -338,10 +338,10 @@ see xsl/projects/alea/preview.xsl
                 </xsl:message>
                 <div class="apparatus-line">
                     <span class="apparatus-note-number note-number">
-                        <xsl:variable name="entry-number"
-                            select="map:get(current-group()[1], 'number')"/>
-                        <a name="{$entry-number}">
-                            <xsl:value-of select="$entry-number"/>
+
+                        <xsl:variable name="entry" select="current-group()[1]"/>
+                        <a name="{map:get($entry, 'entry-id')}">
+                            <xsl:value-of select="map:get($entry, 'number')"/>
                         </a>
                     </span>
                     <!-- call the template that outputs an apparatus entries -->
@@ -561,6 +561,40 @@ see xsl/projects/alea/preview.xsl
                     'number': $number
                 }"/>
     </xsl:function>
+
+    <!-- make a map that can be used to add apparatus footnote signs into the main (edited) text -->
+    <xsl:function name="app:note-based-apparatus-nodes-map" as="map(xs:string, map(*))" visibilty="public">
+        <xsl:param name="entries" as="map(*)*"/>
+        <xsl:param name="after" as="xs:boolean"/>
+        <xsl:map>
+            <xsl:for-each-group select="$entries" group-by="map:get(., 'lemma-grouping-ids')">
+                <xsl:variable name="entry" select="current-group()[1]"/>
+                <xsl:variable name="text-node-id" as="xs:string">
+                    <xsl:choose>
+                        <xsl:when test="$after">
+                            <xsl:value-of
+                                select="(map:get($entry, 'lemma-grouping-ids') => tokenize('-'))[last()]"
+                            />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of
+                                select="(map:get($entry, 'lemma-grouping-ids') => tokenize('-'))[1]"
+                            />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="element-node-id" select="map:get($entry, 'entry-id')"/>
+                <xsl:map-entry key="$element-node-id">
+                    <xsl:map>
+                        <xsl:map-entry key="'entry-id'" select="map:get($entry, 'entry-id')"/>
+                        <xsl:map-entry key="'number'" select="map:get($entry, 'number')"/>
+                        <xsl:map-entry key="'after'" select="$after"/>
+                    </xsl:map>
+                </xsl:map-entry>
+            </xsl:for-each-group>
+        </xsl:map>
+    </xsl:function>
+
 
     <xsl:function name="app:lemma-text-nodes" as="text()*" visibility="public">
         <xsl:param name="element" as="element()"/>
