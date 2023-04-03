@@ -16,6 +16,7 @@
         package-version="1.0.0">
 
         <xsl:accept component="mode" names="text:text" visibility="public"/>
+        <xsl:accept component="variable" names="text:apparatus-entries" visibility="public"/>
 
         <xsl:override>
 
