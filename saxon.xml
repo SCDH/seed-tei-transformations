@@ -30,6 +30,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
                version="1.0.0" sourceLocation="xsl/html/librend.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
+               version="1.0.0" sourceLocation="xsl/html/libtext.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libcouplet.xsl"
                version="1.0.0" sourceLocation="xsl/html/libcouplet.xsl"/>
           <package
