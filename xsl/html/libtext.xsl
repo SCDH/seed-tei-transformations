@@ -3,9 +3,11 @@
 <xsl:package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
-    xmlns:text="http://scdh.wwu.de/transform/text#" exclude-result-prefixes="#all"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -14,6 +16,10 @@
         package-version="0.1.0">
         <xsl:accept component="function" names="i18n:language#1" visibility="private"/>
     </xsl:use-package>
+
+    <!-- override this with a map when you need footnote signs to apparatus entries. See app:note-apparatus-nodes#2 -->
+    <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
+        visibility="public"/>
 
     <xsl:mode name="text:text" visibility="public"/>
 
@@ -33,6 +39,7 @@
 
     <xsl:template match="app">
         <xsl:apply-templates select="lem"/>
+        <xsl:call-template name="text:apparatus-links"/>
     </xsl:template>
 
     <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
@@ -83,6 +90,16 @@
         <xsl:if test="@xml:lang">
             <xsl:attribute name="lang" select="@xml:lang"/>
             <xsl:attribute name="xml:lang" select="@xml:lang"/>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="text:apparatus-links">
+        <xsl:variable name="element-id" select="generate-id()"/>
+        <xsl:if test="map:contains($text:apparatus-entries, $element-id)">
+            <xsl:variable name="entry" select="map:get($text:apparatus-entries, $element-id)"/>
+            <a name="text-{$element-id}" href="#{$element-id}">
+                <xsl:value-of select="map:get($entry, 'number')"/>
+            </a>
         </xsl:if>
     </xsl:template>
 
