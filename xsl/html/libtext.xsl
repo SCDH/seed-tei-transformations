@@ -93,13 +93,16 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template name="text:apparatus-links">
+    <!-- make a link to an apparatus entry if there is one for the context element -->
+    <xsl:template name="text:apparatus-links" visibility="public">
         <xsl:variable name="element-id" select="generate-id()"/>
         <xsl:if test="map:contains($text:apparatus-entries, $element-id)">
             <xsl:variable name="entry" select="map:get($text:apparatus-entries, $element-id)"/>
-            <a name="text-{$element-id}" href="#{$element-id}">
-                <xsl:value-of select="map:get($entry, 'number')"/>
-            </a>
+            <sup class="apparatus-footnote-mark footnote-mark">
+                <a name="text-{$element-id}" href="#{$element-id}">
+                    <xsl:value-of select="map:get($entry, 'number')"/>
+                </a>
+            </sup>
         </xsl:if>
     </xsl:template>
 
