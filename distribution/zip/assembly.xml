@@ -30,6 +30,13 @@
 				<exclude>**/xspec/**.xsl</exclude>
 			</excludes>
 		</fileSet>
+		<fileSet>
+		   <directory>${project.build.directory}/generated-resources/xml/xslt</directory>
+		   <outputDirectory>/</outputDirectory>
+		   <includes>
+		      <include>saxon.*.xml</include>
+		   </includes>
+		</fileSet>
 	</fileSets>
 
 </assembly>
