@@ -144,6 +144,87 @@
                </executions>
             </plugin>
 
+
+	    <plugin>
+	       <groupId>org.codehaus.mojo</groupId>
+	       <artifactId>xml-maven-plugin</artifactId>
+	       <version>1.0.2</version>
+	       <executions>
+		  <execution>
+		     <goals>
+			<goal>transform</goal>
+		     </goals>
+		     <phase>generate-resources</phase>
+		  </execution>
+	       </executions>
+	       <configuration>
+		  <transformationSets>
+		     <!-- make a saxon configurations for HE, PE and EE -->
+		     <transformationSet>
+			<dir>${project.basedir}</dir>
+			<includes>
+			   <include>saxon.xml</include>
+			</includes>
+			<stylesheet>utils/saxon-config-edition.xsl</stylesheet>
+			<parameters>
+			   <parameter>
+			      <name>edition</name>
+			      <value>HE</value>
+			   </parameter>
+			</parameters>
+			<fileMappers>
+			   <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+			      <targetExtension>.he.xml</targetExtension>
+			   </fileMapper>
+			</fileMappers>
+		     </transformationSet>
+		     <transformationSet>
+			<dir>${project.basedir}</dir>
+			<includes>
+			   <include>saxon.xml</include>
+			</includes>
+			<stylesheet>utils/saxon-config-edition.xsl</stylesheet>
+			<parameters>
+			   <parameter>
+			      <name>edition</name>
+			      <value>PE</value>
+			   </parameter>
+			</parameters>
+			<fileMappers>
+			   <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+			      <targetExtension>.pe.xml</targetExtension>
+			   </fileMapper>
+			</fileMappers>
+		     </transformationSet>
+		     <transformationSet>
+			<dir>${project.basedir}</dir>
+			<includes>
+			   <include>saxon.xml</include>
+			</includes>
+			<stylesheet>utils/saxon-config-edition.xsl</stylesheet>
+			<parameters>
+			   <parameter>
+			      <name>edition</name>
+			      <value>EE</value>
+			   </parameter>
+			</parameters>
+			<fileMappers>
+			   <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+			      <targetExtension>.ee.xml</targetExtension>
+			   </fileMapper>
+			</fileMappers>
+		     </transformationSet>
+		  </transformationSets>
+	       </configuration>
+	       <dependencies>
+		  <dependency>
+		     <groupId>net.sf.saxon</groupId>
+		     <artifactId>Saxon-HE</artifactId>
+		     <version>10.2</version>
+		  </dependency>
+	       </dependencies>
+	    </plugin>
+
             <plugin>
                <artifactId>maven-resources-plugin</artifactId>
                <version>3.0.2</version>

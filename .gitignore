@@ -8,6 +8,7 @@
 *.xsef
 /test.sh
 /xslt.sh
+/saxon.*.xml
 
 # xspec reports
 *-report.html
