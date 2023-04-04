@@ -1,6 +1,8 @@
 # editor backup files
 *~
 
+/frameworks
+
 # build artifacts
 /target
 /public

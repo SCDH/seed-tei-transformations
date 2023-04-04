@@ -1,3 +1,6 @@
 #!/bin/sh
 
-java -Ddebug="true" -cp target/lib/Saxon-HE-${saxon.version}.jar:target/lib/xmlresolver-${xmlresolver.version}.jar net.sf.saxon.Transform $@
+JARS=${project.build.directory}/lib/Saxon-HE-${saxon.version}.jar
+JARS=$JARS:${project.build.directory}/lib/xmlresolver-${xmlresolver.version}.jar
+
+java -Ddebug="true" -cp $JARS net.sf.saxon.Transform $@
