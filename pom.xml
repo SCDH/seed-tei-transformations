@@ -43,6 +43,7 @@
         <xspec.version>2.2.4</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
 	<xslt.dir>${project.basedir}/xsl</xslt.dir>
+	<release.url></release.url>
     </properties>
 
     <dependencies>
@@ -226,6 +227,26 @@
 	       </dependencies>
 	    </plugin>
 
+	    <plugin>
+               <artifactId>maven-antrun-plugin</artifactId>
+               <version>3.1.0</version>
+               <executions>
+                  <execution>
+                     <phase>generate-sources</phase>
+                     <goals>
+                        <goal>run</goal>
+                     </goals>
+                     <configuration>
+                        <target>
+                           <loadfile property="license" srcFile="LICENSE"/>
+                        </target>
+                        <exportAntProperties>true</exportAntProperties>
+                     </configuration>
+                  </execution>
+               </executions>
+            </plugin>
+
+
             <plugin>
                <artifactId>maven-resources-plugin</artifactId>
                <version>3.0.2</version>
@@ -244,6 +265,25 @@
                               <includes>
                                  <include>test.sh</include>
                                  <include>xslt.sh</include>
+                              </includes>
+                              <filtering>true</filtering>
+                           </resource>
+                        </resources>
+                     </configuration>
+                  </execution>
+                  <execution>
+                     <id>properties-to-oxygen-plugin-descriptor</id>
+                     <phase>generate-resources</phase>
+                     <goals>
+                        <goal>copy-resources</goal>
+                     </goals>
+                     <configuration>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                        <resources>
+                           <resource>
+                              <directory>${project.basedir}/distribution/oxygen</directory>
+                              <includes>
+                                 <include>descriptor.xml</include>
                               </includes>
                               <filtering>true</filtering>
                            </resource>
