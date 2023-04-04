@@ -302,7 +302,7 @@
                         text-indent: -3em;
                     }
                     */
-                    span.line-number {
+                    span.line-number, span.note-number {
                         display: inline-block;
                         min-width: 3em;
                     }
