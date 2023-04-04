@@ -43,6 +43,7 @@
         <xspec.version>2.2.4</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
 	<xslt.dir>${project.basedir}/xsl</xslt.dir>
+	<release.url></release.url>
     </properties>
 
     <dependencies>
@@ -145,6 +146,107 @@
                </executions>
             </plugin>
 
+
+	    <plugin>
+	       <groupId>org.codehaus.mojo</groupId>
+	       <artifactId>xml-maven-plugin</artifactId>
+	       <version>1.0.2</version>
+	       <executions>
+		  <execution>
+		     <goals>
+			<goal>transform</goal>
+		     </goals>
+		     <phase>generate-resources</phase>
+		  </execution>
+	       </executions>
+	       <configuration>
+		  <transformationSets>
+		     <!-- make a saxon configurations for HE, PE and EE -->
+		     <transformationSet>
+			<dir>${project.basedir}</dir>
+			<includes>
+			   <include>saxon.xml</include>
+			</includes>
+			<stylesheet>utils/saxon-config-edition.xsl</stylesheet>
+			<parameters>
+			   <parameter>
+			      <name>edition</name>
+			      <value>HE</value>
+			   </parameter>
+			</parameters>
+			<fileMappers>
+			   <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+			      <targetExtension>.he.xml</targetExtension>
+			   </fileMapper>
+			</fileMappers>
+		     </transformationSet>
+		     <transformationSet>
+			<dir>${project.basedir}</dir>
+			<includes>
+			   <include>saxon.xml</include>
+			</includes>
+			<stylesheet>utils/saxon-config-edition.xsl</stylesheet>
+			<parameters>
+			   <parameter>
+			      <name>edition</name>
+			      <value>PE</value>
+			   </parameter>
+			</parameters>
+			<fileMappers>
+			   <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+			      <targetExtension>.pe.xml</targetExtension>
+			   </fileMapper>
+			</fileMappers>
+		     </transformationSet>
+		     <transformationSet>
+			<dir>${project.basedir}</dir>
+			<includes>
+			   <include>saxon.xml</include>
+			</includes>
+			<stylesheet>utils/saxon-config-edition.xsl</stylesheet>
+			<parameters>
+			   <parameter>
+			      <name>edition</name>
+			      <value>EE</value>
+			   </parameter>
+			</parameters>
+			<fileMappers>
+			   <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+			      <targetExtension>.ee.xml</targetExtension>
+			   </fileMapper>
+			</fileMappers>
+		     </transformationSet>
+		  </transformationSets>
+	       </configuration>
+	       <dependencies>
+		  <dependency>
+		     <groupId>net.sf.saxon</groupId>
+		     <artifactId>Saxon-HE</artifactId>
+		     <version>10.2</version>
+		  </dependency>
+	       </dependencies>
+	    </plugin>
+
+	    <plugin>
+               <artifactId>maven-antrun-plugin</artifactId>
+               <version>3.1.0</version>
+               <executions>
+                  <execution>
+                     <phase>generate-sources</phase>
+                     <goals>
+                        <goal>run</goal>
+                     </goals>
+                     <configuration>
+                        <target>
+                           <loadfile property="license" srcFile="LICENSE"/>
+                        </target>
+                        <exportAntProperties>true</exportAntProperties>
+                     </configuration>
+                  </execution>
+               </executions>
+            </plugin>
+
+
             <plugin>
                <artifactId>maven-resources-plugin</artifactId>
                <version>3.0.2</version>
@@ -156,13 +258,32 @@
                         <goal>copy-resources</goal>
                      </goals>
                      <configuration>
-                        <outputDirectory>${project.basedir}</outputDirectory>
+                        <outputDirectory>${project.build.directory}/bin</outputDirectory>
                         <resources>
                            <resource>
                               <directory>${project.basedir}/test</directory>
                               <includes>
                                  <include>test.sh</include>
                                  <include>xslt.sh</include>
+                              </includes>
+                              <filtering>true</filtering>
+                           </resource>
+                        </resources>
+                     </configuration>
+                  </execution>
+                  <execution>
+                     <id>properties-to-oxygen-plugin-descriptor</id>
+                     <phase>generate-resources</phase>
+                     <goals>
+                        <goal>copy-resources</goal>
+                     </goals>
+                     <configuration>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                        <resources>
+                           <resource>
+                              <directory>${project.basedir}/distribution/oxygen</directory>
+                              <includes>
+                                 <include>descriptor.xml</include>
                               </includes>
                               <filtering>true</filtering>
                            </resource>
@@ -182,8 +303,25 @@
                      <phase>test</phase>
                      <configuration>
                         <target>
-                           <chmod file="${project.basedir}/test.sh" perm="755"/>
-                           <chmod file="${project.basedir}/xslt.sh" perm="755"/>
+                           <chmod file="${project.build.directory}/bin/test.sh" perm="755"/>
+                           <chmod file="${project.build.directory}/bin/xslt.sh" perm="755"/>
+                        </target>
+                     </configuration>
+                     <goals>
+                        <goal>run</goal>
+                     </goals>
+                  </execution>
+                  <execution>
+                     <id>copy-saxon-configurations</id>
+                     <phase>test</phase>
+                     <configuration>
+                        <target>
+                           <copy todir="${project.basedir}">
+			      <fileset
+				  dir="${project.build.directory}/generated-resources/xml/xslt">
+				 <include name="saxon.*.xml"/>
+			      </fileset>
+			   </copy>
                         </target>
                      </configuration>
                      <goals>

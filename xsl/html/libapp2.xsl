@@ -201,7 +201,8 @@ see xsl/projects/alea/preview.xsl
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <!-- select the right XPath for generating apparatus entries -->
-        <xsl:variable name="variant-encoding" select="app:variant-encoding($context)"/>
+        <!-- since $context may be a sequence, we only take the first item to get the variant encoding -->
+        <xsl:variable name="variant-encoding" select="app:variant-encoding($context[1])"/>
         <xsl:variable name="app-entries-xpath">
             <xsl:choose>
                 <xsl:when test="$variant-encoding eq 'internal-double-end-point'">
@@ -228,10 +229,18 @@ see xsl/projects/alea/preview.xsl
         <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath)"/>
     </xsl:function>
 
-    <!-- generate the apparatus for a given context, e.g. / -->
-    <xsl:template name="app:apparatus-for-context" visibility="public">
+    <!-- generate a line-based apparatus for a given context, e.g. / -->
+    <xsl:template name="app:line-based-apparatus-for-context" visibility="public">
         <xsl:param name="app-context" as="node()*"/>
-        <xsl:call-template name="app:apparatus">
+        <xsl:call-template name="app:line-based-apparatus">
+            <xsl:with-param name="entries" select="app:apparatus-entries($app-context)"/>
+        </xsl:call-template>
+    </xsl:template>
+
+    <!-- generate a note-based apparatus for a given context, e.g. / -->
+    <xsl:template name="app:note-based-apparatus-for-context" visibility="public">
+        <xsl:param name="app-context" as="node()*"/>
+        <xsl:call-template name="app:note-based-apparatus">
             <xsl:with-param name="entries" select="app:apparatus-entries($app-context)"/>
         </xsl:call-template>
     </xsl:template>
@@ -252,14 +261,31 @@ see xsl/projects/alea/preview.xsl
         <xsl:param name="app-entries-xpath" as="xs:string"/>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
         <xsl:variable name="entry-elements" as="element()*">
-            <xsl:evaluate as="element()*" context-item="$context" expand-text="true"
-                xpath="$app-entries-xpath"/>
+            <xsl:choose>
+                <xsl:when test="count($context) eq 1">
+                    <xsl:evaluate as="element()*" context-item="$context" expand-text="true"
+                        xpath="$app-entries-xpath"/>
+                </xsl:when>
+                <xsl:when test="empty($context)">
+                    <xsl:sequence select="()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:for-each select="$context">
+                        <xsl:evaluate as="element()*" context-item="." expand-text="true"
+                            xpath="$app-entries-xpath"/>
+                    </xsl:for-each>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
-        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(.)"/>
+        <xsl:message use-when="system-property('debug') eq 'true'">
+            <xsl:text>Elements for apparatus: </xsl:text>
+            <xsl:value-of select="$entry-elements ! name()"/>
+        </xsl:message>
+        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position())"/>
     </xsl:function>
 
-    <!-- generate the apparatus for a sequence of prepared maps -->
-    <xsl:template name="app:apparatus" visibility="public">
+    <!-- generate a line-based apparatus for a sequence of prepared maps -->
+    <xsl:template name="app:line-based-apparatus" visibility="public">
         <xsl:param name="entries" as="map(*)*"/>
         <div>
             <!-- we first group the entries by line number -->
@@ -298,6 +324,35 @@ see xsl/projects/alea/preview.xsl
             </xsl:for-each-group>
         </div>
     </xsl:template>
+
+    <!-- generate a note-based apparatus for a sequence of prepared maps -->
+    <xsl:template name="app:note-based-apparatus" visibility="public">
+        <xsl:param name="entries" as="map(*)*"/>
+        <div>
+            <xsl:for-each-group select="$entries" group-by="map:get(., 'lemma-grouping-ids')">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>Joining </xsl:text>
+                    <xsl:value-of select="count(current-group())"/>
+                    <xsl:text> apparatus entries referencing text nodes </xsl:text>
+                    <xsl:value-of select="current-grouping-key()"/>
+                </xsl:message>
+                <div class="apparatus-line">
+                    <span class="apparatus-note-number note-number">
+
+                        <xsl:variable name="entry" select="current-group()[1]"/>
+                        <a name="{map:get($entry, 'entry-id')}" href="#text-{map:get($entry, 'entry-id')}">
+                            <xsl:value-of select="map:get($entry, 'number')"/>
+                        </a>
+                    </span>
+                    <!-- call the template that outputs an apparatus entries -->
+                    <xsl:call-template name="app:apparatus-entry">
+                        <xsl:with-param name="entries" select="current-group()"/>
+                    </xsl:call-template>
+                </div>
+            </xsl:for-each-group>
+        </div>
+    </xsl:template>
+
 
     <!-- the template for an entry -->
     <xsl:template name="app:apparatus-entry" visibility="public">
@@ -366,14 +421,16 @@ see xsl/projects/alea/preview.xsl
         with all there is needed for grouping and creating the entry -->
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
+        <xsl:param name="number" as="xs:integer"/>
         <xsl:variable name="lemma-text-nodes" as="text()*">
             <xsl:apply-templates select="$entry" mode="app:lemma-text-nodes-dspt"/>
         </xsl:variable>
-        <xsl:sequence select="seed:mk-entry-map($entry, $lemma-text-nodes)"/>
+        <xsl:sequence select="seed:mk-entry-map($entry, $number, $lemma-text-nodes)"/>
     </xsl:function>
 
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
+        <xsl:param name="number" as="xs:integer"/>
         <xsl:param name="lemma-text-nodes" as="text()*"/>
         <xsl:variable name="non-whitespace-text-nodes" as="text()*"
             select="$lemma-text-nodes[normalize-space(.) ne '']"/>
@@ -500,9 +557,44 @@ see xsl/projects/alea/preview.xsl
                     'lemma-text-nodes': $lemma-text-nodes,
                     'lemma-grouping-ids': $lemma-grouping-ids,
                     'lemma-replacement': $lemma-replacement,
-                    'line-number': $line-number
+                    'line-number': $line-number,
+                    'number': $number
                 }"/>
     </xsl:function>
+
+    <!-- make a map that can be used to add apparatus footnote signs into the main (edited) text -->
+    <xsl:function name="app:note-based-apparatus-nodes-map" as="map(xs:string, map(*))" visibilty="public">
+        <xsl:param name="entries" as="map(*)*"/>
+        <xsl:param name="after" as="xs:boolean"/>
+        <xsl:map>
+            <xsl:for-each-group select="$entries" group-by="map:get(., 'lemma-grouping-ids')">
+                <xsl:variable name="entry" select="current-group()[1]"/>
+                <xsl:variable name="text-node-id" as="xs:string">
+                    <xsl:choose>
+                        <xsl:when test="$after">
+                            <xsl:value-of
+                                select="(map:get($entry, 'lemma-grouping-ids') => tokenize('-'))[last()]"
+                            />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of
+                                select="(map:get($entry, 'lemma-grouping-ids') => tokenize('-'))[1]"
+                            />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="element-node-id" select="map:get($entry, 'entry-id')"/>
+                <xsl:map-entry key="$element-node-id">
+                    <xsl:map>
+                        <xsl:map-entry key="'entry-id'" select="map:get($entry, 'entry-id')"/>
+                        <xsl:map-entry key="'number'" select="map:get($entry, 'number')"/>
+                        <xsl:map-entry key="'after'" select="$after"/>
+                    </xsl:map>
+                </xsl:map-entry>
+            </xsl:for-each-group>
+        </xsl:map>
+    </xsl:function>
+
 
     <xsl:function name="app:lemma-text-nodes" as="text()*" visibility="public">
         <xsl:param name="element" as="element()"/>

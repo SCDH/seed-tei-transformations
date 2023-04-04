@@ -1,6 +1,8 @@
 # editor backup files
 *~
 
+/frameworks
+
 # build artifacts
 /target
 /public
@@ -8,6 +10,7 @@
 *.xsef
 /test.sh
 /xslt.sh
+/saxon.*.xml
 
 # xspec reports
 *-report.html

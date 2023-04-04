@@ -17,7 +17,7 @@ before_script:
   stage: test
   script:
     - 'mvn verify -s ci_settings.xml'
-    - './test.sh'
+    - 'target/bin/test.sh'
   except:
     - master
 
@@ -30,7 +30,7 @@ verify:jdk11:
 deploy:jdk11:
   script:
     - 'mvn verify -s ci_settings.xml'
-    - './test.sh'
+    - 'target/bin/test.sh'
   artifacts:
     paths:
       - target
@@ -45,6 +45,8 @@ pages:
     - ls -la
     - unzip target/*-package.zip -d public
     - cp -v target/*-package.zip public/
+    - cp -v target/descriptor.xml public/
+    - cp -v target/*-oxygen-distribution.jar public/
   artifacts:
     paths:
       - public
