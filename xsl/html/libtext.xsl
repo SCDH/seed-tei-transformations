@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- XSLT pacakge for couplets (verse, hemistichion) edited text (main text) -->
+<!-- XSLT package for edited text (main text)
+
+This package is not intended to be used directly. Use a derived package for the
+main text instead, e.g. libprose.xsl for prose or libcouplet.xsl for verses with
+caesura. Or derive your own.
+
+This package provides basic components for the main text (edited text), such as
+inserting footnote marks that link to the apparatus and comment sections.
+
+To get such footnote marks, you will have to override the variable
+$text:apparatus-entries, which is a map. The package for generating the apparatus
+should provide a function that provides the correct map. So does libapp2 by
+providing app:note-based-apparatus-nodes-map#2
+
+Note, that there is a default mode in this package.
+
+-->
 <xsl:package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -17,7 +33,7 @@
         <xsl:accept component="function" names="i18n:language#1" visibility="private"/>
     </xsl:use-package>
 
-    <!-- override this with a map when you need footnote signs to apparatus entries. See app:note-apparatus-nodes#2 -->
+    <!-- override this with a map when you need footnote signs to apparatus entries. See app:note-based-apparatus-nodes-map#2 -->
     <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
         visibility="public"/>
 
