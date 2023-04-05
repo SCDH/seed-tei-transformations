@@ -1,5 +1,17 @@
 # Changes
 
+## 0.0.6
+
+- libi18n
+  - fix link to `i18n.js`
+- libtext
+  - wrap front, body and back in their own divisions
+- libprose
+  - minimal support for verses
+  - wrap pagebreaks in span
+- alea-prose
+  - CSS improved
+
 ## 0.0.5
 
 - distribute as oXygen plugin:
