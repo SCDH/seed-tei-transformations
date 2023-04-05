@@ -49,10 +49,15 @@
 
             <!-- output pb/@n in square brackets -->
             <xsl:template match="pb">
-                <xsl:text>[</xsl:text>
-                <xsl:value-of select="@n"/>
-                <xsl:text>]</xsl:text>
+                <span class="pagebreak static-text">
+                    <xsl:text>[</xsl:text>
+                    <xsl:value-of select="@n"/>
+                    <xsl:text>]</xsl:text>
+                </span>
             </xsl:template>
+
+
+            <!-- minimal support for verses -->
 
             <xsl:template match="lg[l]">
                 <div class="stanza">
