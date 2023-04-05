@@ -21,6 +21,12 @@ through an XML catalog.
 
 #### Oxygen
 
+Distribution as plugin from URL
+
+```
+https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/descriptor.xml
+```
+
 ##### Per scenario configuration
 
 The Saxon config file can be declared on the basis of an XSLT
@@ -35,10 +41,19 @@ your transformations even when your offline, the former requires you
 to access the internet for each transformation based on the packages.
 
 
-```{txt}
-PAGES-CONFIG-URL: https://TODO/saxon.xml
-PLUGIN-CONFIG-URL: ${pluginDir(TODO)}/saxon.xml
+`PLUGIN-CONFIG-URL` is
+
 ```
+${pluginDirURL(de.wwu.scdh.tei.seed-transformations)}/saxon.xml
+```
+
+`PAGES-CONFIG-URL` is
+
+```
+https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/saxon.xml
+```
+
+
 
 ##### Project-wide configuration
 
