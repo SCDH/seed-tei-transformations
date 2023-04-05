@@ -108,7 +108,7 @@ See i18next documentation for more info: https://www.i18next.com
         <script>
             <xsl:call-template name="i18n:initialisation"/>
         </script>
-        <script src="{$i18n:js}">
+        <script src="{resolve-uri($i18n:js, static-base-uri())}">
             <!--xsl:value-of select="unparsed-text(resolve-uri($i18n, static-base-uri()))"/-->
         </script>
         <script type="module">
