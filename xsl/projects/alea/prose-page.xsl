@@ -319,6 +319,9 @@
                     sup {
                         font-size: 6pt
                     }
+                    sup + sup:before {
+                        content: " ";
+                    }
                     .static-text, .apparatus-sep, .siglum {
                         color: gray;
                     }
