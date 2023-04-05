@@ -28,7 +28,7 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                version="1.0.0" sourceLocation="xsl/html/libwit.xsl"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
-               version="1.0.0" sourceLocation="xsl/html/libapp2.xsl"/>
+               version="1.0.0" sourceLocation="xsl/html/libapp2c.xsl"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
                version="1.0.0" sourceLocation="xsl/html/librend.xsl"/>
