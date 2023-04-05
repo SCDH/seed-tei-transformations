@@ -328,6 +328,10 @@
                     .lemma-gap {
                         font-size:.8em;
                     }
+                    span.caesura {
+                        width: 4em;
+                        text-align: center;
+                    }
                     @font-face {
                         font-family:"Arabic Typesetting";
                         src:url("../../../arabt100.ttf");
