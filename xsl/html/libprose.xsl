@@ -54,6 +54,32 @@
                 <xsl:text>]</xsl:text>
             </xsl:template>
 
+            <xsl:template match="lg[l]">
+                <div class="stanza">
+                    <xsl:apply-templates select="node() | @met"/>
+                </div>
+            </xsl:template>
+
+            <xsl:template match="l">
+                <div class="verse">
+                    <xsl:apply-templates select="node() | @met"/>
+                </div>
+            </xsl:template>
+
+            <xsl:template match="caesura">
+                <span class="caesura static-text">
+                    <xsl:text> || </xsl:text>
+                </span>
+            </xsl:template>
+
+            <xsl:template match="@met">
+                <div class="verse-meter static-text">
+                    <xsl:text>[</xsl:text>
+                    <xsl:value-of select="."/>
+                    <xsl:text>]</xsl:text>
+                </div>
+            </xsl:template>
+
         </xsl:override>
 
 
