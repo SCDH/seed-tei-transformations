@@ -263,6 +263,7 @@
                     body {
                         direction: <xsl:value-of select="i18n:language-direction(/TEI/text)"/>;
                         font-family:"<xsl:value-of select="$font-name"/>";
+                        width: 40em;
                     }
                     .metadata {
                         direction: ltr;
@@ -294,7 +295,13 @@
                     div.apparatus-line,
                     div.editorial-note {
                         padding: 2px 0;
-                    }
+                        /* hanging indent for ltr */
+                        /*
+                        padding-right: 3em;
+                        text-indent: -3em;
+                        direction: rtl !important;
+                        */
+                        }
                     /*
                     section > p {
                         padding-right: 3em;
