@@ -39,6 +39,9 @@ Note, that there is a default mode in this package.
 
     <xsl:mode name="text:text" visibility="public"/>
 
+    <!-- parts that should not be generate output in mode text:text -->
+    <xsl:template match="teiHeader | back"/>
+
     <!-- inline markup that has to be invisible in the edited text -->
 
     <xsl:template match="note"/>
