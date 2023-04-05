@@ -3,6 +3,7 @@
      directory -->
 <!DOCTYPE plugin SYSTEM "../plugin.dtd">
 <plugin
+    id="${project.groupId}.${project.artifactId}"
     name="${project.name}"
     description="SEED XSLT and XQuery library for processing TEI"
     version="${project.version}"
