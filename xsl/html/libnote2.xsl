@@ -42,11 +42,10 @@
         package-version="0.1.0"/>
 
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libapp2.xsl"
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
         package-version="1.0.0">
-        <xsl:accept component="function" names="seed:mk-entry-map#3 seed:mk-entry-map#4"
-            visibility="private"/>
-        <xsl:accept component="mode" names="app:lemma-text-nodes" visibility="public"/>
+        <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="private"/>
+        <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
     </xsl:use-package>
 
     <xsl:expose component="function" names="note:*" visibility="public"/>
@@ -174,7 +173,7 @@
     <!-- if there is no @targetEnd, the referring passage is the whole parent element -->
     <xsl:template mode="note:text-nodes-dspt"
         match="note[not(@targetEnd)] | noteGrp[not(@targetEnd)]">
-        <xsl:apply-templates mode="app:lemma-text-nodes" select="parent::*"/>
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="parent::*"/>
     </xsl:template>
 
     <!-- note with @targetEnd -->
@@ -183,11 +182,11 @@
         <xsl:variable name="target-end-node" as="node()" select="//*[@xml:id eq $targetEnd]"/>
         <xsl:choose>
             <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
-                <xsl:apply-templates mode="app:lemma-text-nodes"
+                <xsl:apply-templates mode="seed:lemma-text-nodes"
                     select="seed:subtrees-between-anchors(., $target-end-node)"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:apply-templates mode="app:lemma-text-nodes"
+                <xsl:apply-templates mode="seed:lemma-text-nodes"
                     select="seed:subtrees-between-anchors($target-end-node, .)"/>
             </xsl:otherwise>
         </xsl:choose>
@@ -200,7 +199,7 @@
             <xsl:text>no matching rule in mode 'editorial-note-text-nodes-dspt' for </xsl:text>
             <xsl:value-of select="name(.)"/>
         </xsl:message>
-        <xsl:apply-templates mode="app:lemma-text-nodes"/>
+        <xsl:apply-templates mode="seed:lemma-text-nodes"/>
     </xsl:template>
 
 
