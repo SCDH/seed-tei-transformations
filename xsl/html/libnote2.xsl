@@ -178,9 +178,15 @@
 
     <!-- note with @targetEnd -->
     <xsl:template mode="note:text-nodes-dspt" match="note[@targetEnd] | noteGrp[@targetEnd]">
-        <xsl:variable name="targetEnd" as="xs:string" select="@targetEnd"/>
+        <xsl:variable name="targetEnd" as="xs:string" select="substring(@targetEnd, 2)"/>
         <xsl:variable name="target-end-node" as="node()" select="//*[@xml:id eq $targetEnd]"/>
         <xsl:choose>
+            <xsl:when test="empty($target-end-node)">
+                <xsl:message>
+                    <xsl:text>No anchor for message with @targetEnd: </xsl:text>
+                    <xsl:value-of select="$targetEnd"/>
+                </xsl:message>
+            </xsl:when>
             <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
                 <xsl:apply-templates mode="seed:lemma-text-nodes"
                     select="seed:subtrees-between-anchors(., $target-end-node)"/>
