@@ -231,6 +231,35 @@
         <xsl:accept component="function" names="note:editorial-notes#3" visibility="public"/>
         <xsl:accept component="template" names="note:note-based-editorial-notes" visibility="public"/>
         <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
+
+        <xsl:override>
+            <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
+            <xsl:template mode="note:text-nodes-dspt" match="note[@target] | noteGrp[@target]">
+                <xsl:variable name="targetEnd" as="xs:string" select="substring(@target, 2)"/>
+                <xsl:variable name="target-end-node" as="node()*"
+                    select="//*[@xml:id eq $targetEnd]"/>
+                <xsl:choose>
+                    <xsl:when test="empty($target-end-node)">
+                        <xsl:message>
+                            <xsl:text>No anchor for message with @target: </xsl:text>
+                            <xsl:value-of select="$targetEnd"/>
+                        </xsl:message>
+                    </xsl:when>
+                    <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
+                        <xsl:apply-templates mode="seed:lemma-text-nodes"
+                            select="seed:subtrees-between-anchors(., $target-end-node)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates mode="seed:lemma-text-nodes"
+                            select="seed:subtrees-between-anchors($target-end-node, .)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:template>
+
+            <!-- drop mentioned -->
+            <xsl:template mode="note:editorial-note" match="mentioned"/>
+        </xsl:override>
+
     </xsl:use-package>
 
 
