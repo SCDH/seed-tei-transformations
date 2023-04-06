@@ -66,7 +66,7 @@
     </xsl:function>
 
     <!-- template that generates the editorial notes -->
-    <xsl:template name="note:editorial-notes">
+    <xsl:template name="note:line-based-editorial-notes">
         <xsl:param name="notes" as="map(*)*"/>
         <div class="editorial-notes">
             <xsl:for-each-group select="$notes" group-by="map:get(., 'line-number')">
@@ -98,6 +98,44 @@
                     </div>
                 </xsl:for-each>
             </xsl:for-each-group>
+        </div>
+    </xsl:template>
+
+    <!-- template that generates the editorial notes -->
+    <xsl:template name="note:note-based-editorial-notes">
+        <xsl:param name="notes" as="map(*)*"/>
+        <div class="editorial-notes">
+            <xsl:for-each select="$notes">
+                <xsl:variable name="note" select="map:get(., 'entry')"/>
+                <xsl:variable name="number" select="map:get(., 'number')"/>
+                <xsl:variable name="entry-id" select="map:get(., 'entry-id')"/>
+                <div class="editorial-note">
+                    <span class="editorial-note-number note-number">
+                        <a name="{$entry-id}" href="#text-{$entry-id}">
+                            <xsl:value-of select="$number"/>
+                        </a>
+                    </span>
+                    <xsl:text>&sp;</xsl:text>
+                    <span class="editorial-note-lemma">
+                        <xsl:call-template name="note:editorial-note-lemma">
+                            <xsl:with-param name="entry" select="."/>
+                        </xsl:call-template>
+                    </span>
+                    <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
+                    <span class="note-text" lang="{i18n:language($note)}"
+                        style="direction:{i18n:language-direction($note)}; text-align:{i18n:language-align($note)};">
+                        <!-- This must be paired with pdf character entity,
+                                because directional embeddings are an embedded CFG! -->
+                        <xsl:value-of select="i18n:direction-embedding($note)"/>
+                        <xsl:apply-templates mode="note:editorial-note" select="$note"/>
+                        <xsl:text>&pdf;</xsl:text>
+                        <xsl:if
+                            test="i18n:language-direction($note) eq 'ltr' and i18n:language-direction($note/parent::*) ne 'ltr' and $i18n:ltr-to-rtl-extra-space">
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
+                    </span>
+                </div>
+            </xsl:for-each>
         </div>
     </xsl:template>
 
