@@ -35,6 +35,8 @@
         <xsl:accept component="template" names="app:*" visibility="public"/>
         <xsl:accept component="variable" names="app:*" visibility="public"/>
         <xsl:accept component="function" names="app:*" visibility="public"/>
+        <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
+        <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
 
         <xsl:override>
 
@@ -140,7 +142,7 @@
                 <xsl:param name="entry" as="map(*)"/>
                 <span class="apparatus-lemma">
                     <xsl:variable name="full-lemma" as="xs:string"
-                        select="map:get($entry, 'lemma-text-nodes') => app:shorten-lemma()"/>
+                        select="map:get($entry, 'lemma-text-nodes') => seed:shorten-lemma()"/>
                     <xsl:choose>
                         <xsl:when test="map:get($entry, 'entry')/self::gap">
                             <span class="lemma-gap" data-i18n-key="gap-rep">[…]</span>

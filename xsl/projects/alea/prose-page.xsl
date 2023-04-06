@@ -82,14 +82,17 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
         package-version="1.0.0"/>
 
-
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
+            visibility="public"/>
+        <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
-
-        <xsl:accept component="function" names="app:note-based-apparatus-nodes-map#2"
-            visibility="public"/>
 
         <xsl:override>
             <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
@@ -144,23 +147,6 @@
                 </xsl:value-of>
             </xsl:variable>
 
-            <!-- XPath how to get a pLike container given an app entry.
-                Note: this should not evaluate to an empty sequence. -->
-            <xsl:variable name="app:entry-container-xpath" as="xs:string">
-                <xsl:value-of>
-                    <xsl:text>ancestor::p</xsl:text>
-                    <xsl:text>| ancestor::l</xsl:text>
-                    <xsl:text>| ancestor::head</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
-
-            <xsl:variable name="app:text-nodes-mutet-ancestors" as="xs:string">
-                <xsl:value-of>
-                    <xsl:text>ancestor::rdg</xsl:text>
-                    <xsl:text>| ancestor::sic[parent::choice]</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
-
             <!-- use libwit in apparatus -->
             <xsl:template name="app:sigla">
                 <xsl:param name="wit" as="node()"/>
@@ -205,7 +191,7 @@
         <xsl:override>
             <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))">
                 <xsl:variable name="all-notes"
-                    select="app:note-based-apparatus-nodes-map(($apparatus-entries, $comment-notes), true())"/>
+                    select="seed:note-based-apparatus-nodes-map(($apparatus-entries, $comment-notes), true())"/>
                 <xsl:sequence select="$all-notes"/>
             </xsl:variable>
         </xsl:override>
@@ -231,6 +217,8 @@
         <xsl:accept component="function" names="note:editorial-notes#3" visibility="public"/>
         <xsl:accept component="template" names="note:note-based-editorial-notes" visibility="public"/>
         <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
+        <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+        <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="hidden"/>
 
         <xsl:override>
             <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
