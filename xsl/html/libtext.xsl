@@ -65,7 +65,9 @@ Note, that there is a default mode in this package.
 
     <!-- markup that has to be invisible in the edited text -->
 
-    <xsl:template match="note"/>
+    <xsl:template match="note">
+        <xsl:call-template name="text:apparatus-links"/>
+    </xsl:template>
 
     <!-- rdg: Do not output reading (variant) in all modes generating edited text. -->
     <xsl:template match="rdg"/>
