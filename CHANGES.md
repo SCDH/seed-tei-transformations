@@ -1,5 +1,12 @@
 # Changes
 
+## 0.1.0
+
+- introduced `libentry2` that provides common components for apparatus
+  entries and editorial notes
+- added `libnote2` package for editorial notes
+
+
 ## 0.0.6
 
 - libi18n
