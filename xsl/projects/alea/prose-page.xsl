@@ -10,7 +10,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
+    xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:obt="http://scdh.wwu.de/oxbytei" exclude-result-prefixes="#all"
@@ -193,16 +194,20 @@
 
     <xsl:variable name="apparatus-entries" as="map(*)*" select="app:apparatus-entries($current)"/>
 
+    <xsl:variable name="comment-notes" as="map(*)*"
+        select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2)"/>
+
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
         package-version="1.0.0">
 
         <xsl:override>
-
-            <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))"
-                select="app:note-based-apparatus-nodes-map($apparatus-entries, true())"/>
-
+            <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))">
+                <xsl:variable name="all-notes"
+                    select="app:note-based-apparatus-nodes-map(($apparatus-entries, $comment-notes), true())"/>
+                <xsl:sequence select="$all-notes"/>
+            </xsl:variable>
         </xsl:override>
 
     </xsl:use-package>
@@ -220,9 +225,45 @@
     </xsl:use-package>
 
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="function" names="note:editorial-notes#3" visibility="public"/>
+        <xsl:accept component="template" names="note:note-based-editorial-notes" visibility="public"/>
+        <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
+
+        <xsl:override>
+            <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
+            <xsl:template mode="note:text-nodes-dspt" match="note[@target] | noteGrp[@target]">
+                <xsl:variable name="targetEnd" as="xs:string" select="substring(@target, 2)"/>
+                <xsl:variable name="target-end-node" as="node()*"
+                    select="//*[@xml:id eq $targetEnd]"/>
+                <xsl:choose>
+                    <xsl:when test="empty($target-end-node)">
+                        <xsl:message>
+                            <xsl:text>No anchor for message with @target: </xsl:text>
+                            <xsl:value-of select="$targetEnd"/>
+                        </xsl:message>
+                    </xsl:when>
+                    <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
+                        <xsl:apply-templates mode="seed:lemma-text-nodes"
+                            select="seed:subtrees-between-anchors(., $target-end-node)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates mode="seed:lemma-text-nodes"
+                            select="seed:subtrees-between-anchors($target-end-node, .)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:template>
+
+            <!-- drop mentioned -->
+            <xsl:template mode="note:editorial-note" match="mentioned"/>
+        </xsl:override>
+
+    </xsl:use-package>
+
+
     <!-- 
-    <xsl:import href="libnote2.xsl"/>
-    <xsl:import href="libwit.xsl"/>
     <xsl:import href="libbiblio.xsl"/>
     <xsl:include href="libsurah.xsl"/>
     -->
@@ -287,7 +328,7 @@
                         vertical-align:top;
                         padding-left: 10px;
                         }
-                    .line-number, .apparatus-line-number, .apparatus-note-number, .editor-note-number {
+                    .line-number, .apparatus-line-number, .apparatus-note-number, .editorial-note-number {
                         text-align:right;
                         font-size: 0.7em;
                         padding-top: 0.3em;
@@ -367,14 +408,11 @@
                     </xsl:call-template>
                 </section>
                 <hr/>
-                <!--
                 <section class="comments">
-                    <xsl:call-template name="scdhx:editorial-notes">
-                        <xsl:with-param name="notes"
-                            select="scdhx:editorial-notes(//text/body, 'descendant::note')"/>
+                    <xsl:call-template name="note:note-based-editorial-notes">
+                        <xsl:with-param name="notes" select="$comment-notes"/>
                     </xsl:call-template>
                 </section>
-                -->
                 <hr/>
                 <xsl:call-template name="i18n:language-chooser"/>
                 <xsl:call-template name="i18n:load-javascript"/>

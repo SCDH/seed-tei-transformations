@@ -21,6 +21,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
                version="1.0.0" sourceLocation="xsl/common/libwit.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
+               version="1.0.0" sourceLocation="xsl/common/libentry2.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libapp2.xsl"
                version="1.0.0" sourceLocation="xsl/common/libapp2.xsl"/>
           <package
@@ -29,6 +32,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
                version="1.0.0" sourceLocation="xsl/html/libapp2c.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
+               version="1.0.0" sourceLocation="xsl/html/libnote2.xsl"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
                version="1.0.0" sourceLocation="xsl/html/librend.xsl"/>
