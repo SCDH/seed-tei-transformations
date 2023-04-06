@@ -195,7 +195,7 @@
     <xsl:variable name="apparatus-entries" as="map(*)*" select="app:apparatus-entries($current)"/>
 
     <xsl:variable name="comment-notes" as="map(*)*"
-        select="note:editorial-notes($current, 'descendant-or-self::note')"/>
+        select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2)"/>
 
 
     <xsl:use-package
@@ -228,7 +228,7 @@
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
         package-version="1.0.0">
-        <xsl:accept component="function" names="note:editorial-notes#2" visibility="public"/>
+        <xsl:accept component="function" names="note:editorial-notes#3" visibility="public"/>
         <xsl:accept component="template" names="note:note-based-editorial-notes" visibility="public"/>
         <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
     </xsl:use-package>
@@ -382,7 +382,7 @@
                 <section class="comments">
                     <xsl:call-template name="note:note-based-editorial-notes">
                         <xsl:with-param name="notes"
-                            select="note:editorial-notes(//text/body, 'descendant-or-self::note')"/>
+                            select="$comment-notes"/>
                     </xsl:call-template>
                 </section>
                 <hr/>

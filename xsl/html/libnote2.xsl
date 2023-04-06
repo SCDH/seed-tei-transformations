@@ -44,7 +44,7 @@
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libapp2.xsl"
         package-version="1.0.0">
-        <xsl:accept component="function" names="seed:mk-entry-map#2 seed:mk-entry-map#3"
+        <xsl:accept component="function" names="seed:mk-entry-map#3 seed:mk-entry-map#4"
             visibility="private"/>
         <xsl:accept component="mode" names="app:lemma-text-nodes" visibility="public"/>
     </xsl:use-package>
@@ -58,11 +58,12 @@
     <xsl:function name="note:editorial-notes" as="map(*)*">
         <xsl:param name="context" as="node()"/>
         <xsl:param name="editorial-nodes-xpath" as="xs:string"/>
+        <xsl:param name="type" as="xs:integer"/>
         <xsl:variable name="notes" as="node()*">
             <xsl:evaluate as="node()*" context-item="$context" expand-text="true"
                 xpath="$editorial-nodes-xpath"/>
         </xsl:variable>
-        <xsl:sequence select="$notes ! note:mk-note-map(., position())"/>
+        <xsl:sequence select="$notes ! note:mk-note-map(., position(), $type)"/>
     </xsl:function>
 
     <!-- template that generates the editorial notes -->
@@ -161,10 +162,11 @@
     <xsl:function name="note:mk-note-map" as="map(*)">
         <xsl:param name="note" as="node()"/>
         <xsl:param name="number" as="xs:integer"/>
+        <xsl:param name="type" as="xs:integer"/>
         <xsl:variable name="lemma-text-nodes" as="text()*">
             <xsl:apply-templates select="$note" mode="note:text-nodes-dspt"/>
         </xsl:variable>
-        <xsl:sequence select="seed:mk-entry-map($note, $number, $lemma-text-nodes)"/>
+        <xsl:sequence select="seed:mk-entry-map($note, $number, $type, $lemma-text-nodes)"/>
     </xsl:function>
 
     <xsl:mode name="note:text-nodes-dspt" on-no-match="shallow-skip" visiblity="public"/>

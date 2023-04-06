@@ -54,8 +54,7 @@ see xsl/projects/alea/preview.xsl
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
-    xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:seed="http://scdh.wwu.de/transform/seed#"
+    xmlns:app="http://scdh.wwu.de/transform/app#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
@@ -262,7 +261,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>Elements for apparatus: </xsl:text>
             <xsl:value-of select="$entry-elements ! name()"/>
         </xsl:message>
-        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position())"/>
+        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position(), 1)"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a sequence of prepared maps -->
@@ -295,20 +294,47 @@ see xsl/projects/alea/preview.xsl
             string-join($lemma-text, ' ')"/>
     </xsl:function>
 
-    <!-- this generates a map (object) for an apparatus entry
-        with all there is needed for grouping and creating the entry -->
+    <!--
+        This generates a map (object) for an apparatus entry
+        with all there is needed for grouping and creating the entry.
+
+        This funtion will call templates to get all non-whitespace
+        text nodes from the main (edited) text, on which the entry
+        is about. It than passes over to seed:mk-entry-map#4.
+
+        parameters:
+        @entry: the apparatus element
+        @number: the footnote number of the apparatus element
+        @type: the type of the apparatus, e.g. 1 for critical apparatus, 2 for editorial comments
+    -->
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
         <xsl:param name="number" as="xs:integer"/>
+        <xsl:param name="type" as="xs:integer"/>
         <xsl:variable name="lemma-text-nodes" as="text()*">
             <xsl:apply-templates select="$entry" mode="app:lemma-text-nodes-dspt"/>
         </xsl:variable>
-        <xsl:sequence select="seed:mk-entry-map($entry, $number, $lemma-text-nodes)"/>
+        <xsl:sequence select="seed:mk-entry-map($entry, $number, $type, $lemma-text-nodes)"/>
     </xsl:function>
 
+    <!--
+        This generates a map for an apparatus entry with all there is needed
+        for grouping and creating the entry.
+
+        We choose the type xs:integer for the type parameter because it
+        will be used for filtering and comparing integers is much faster
+        than comparing strings.
+
+        parameters:
+        @entry: the apparatus element
+        @number: the footnote number of the apparatus element
+        @type: the type of the apparatus, e.g. 1 for critical apparatus, 2 for editorial comments
+        @lemma-text-nodes: a sequence of text nodes from the edited (main) text, that the entry is about
+    -->
     <xsl:function name="seed:mk-entry-map" as="map(*)" visibility="public">
         <xsl:param name="entry" as="element()"/>
         <xsl:param name="number" as="xs:integer"/>
+        <xsl:param name="type" as="xs:integer"/>
         <xsl:param name="lemma-text-nodes" as="text()*"/>
         <xsl:variable name="non-whitespace-text-nodes" as="text()*"
             select="$lemma-text-nodes[normalize-space(.) ne '']"/>
@@ -432,6 +458,7 @@ see xsl/projects/alea/preview.xsl
                 map {
                     'entry': $entry,
                     'entry-id': generate-id($entry),
+                    'type': $type,
                     'lemma-text-nodes': $lemma-text-nodes,
                     'lemma-grouping-ids': $lemma-grouping-ids,
                     'lemma-replacement': $lemma-replacement,
@@ -441,7 +468,8 @@ see xsl/projects/alea/preview.xsl
     </xsl:function>
 
     <!-- make a map that can be used to add apparatus footnote signs into the main (edited) text -->
-    <xsl:function name="app:note-based-apparatus-nodes-map" as="map(xs:string, map(*))" visibilty="public">
+    <xsl:function name="app:note-based-apparatus-nodes-map" as="map(xs:string, map(*))"
+        visibilty="public">
         <xsl:param name="entries" as="map(*)*"/>
         <xsl:param name="after" as="xs:boolean"/>
         <xsl:map>
