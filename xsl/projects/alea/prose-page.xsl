@@ -217,6 +217,7 @@
         <xsl:accept component="function" names="note:editorial-notes#3" visibility="public"/>
         <xsl:accept component="template" names="note:note-based-editorial-notes" visibility="public"/>
         <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
+        <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
 
         <xsl:override>
             <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->

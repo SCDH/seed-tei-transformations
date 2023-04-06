@@ -36,6 +36,7 @@
         <xsl:accept component="variable" names="app:*" visibility="public"/>
         <xsl:accept component="function" names="app:*" visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
+        <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
 
         <xsl:override>
 

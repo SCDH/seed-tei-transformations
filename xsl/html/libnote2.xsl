@@ -45,6 +45,7 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
         package-version="1.0.0">
         <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="private"/>
+        <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
     </xsl:use-package>
 
