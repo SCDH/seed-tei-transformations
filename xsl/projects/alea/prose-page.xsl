@@ -328,7 +328,7 @@
                         vertical-align:top;
                         padding-left: 10px;
                         }
-                    .line-number, .apparatus-line-number, .apparatus-note-number, .editor-note-number {
+                    .line-number, .apparatus-line-number, .apparatus-note-number, .editorial-note-number {
                         text-align:right;
                         font-size: 0.7em;
                         padding-top: 0.3em;
@@ -410,8 +410,7 @@
                 <hr/>
                 <section class="comments">
                     <xsl:call-template name="note:note-based-editorial-notes">
-                        <xsl:with-param name="notes"
-                            select="$comment-notes"/>
+                        <xsl:with-param name="notes" select="$comment-notes"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
