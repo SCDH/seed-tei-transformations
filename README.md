@@ -61,19 +61,18 @@ A project-wide config is very helpful for developing XSL
 transformations based on the packages. But please note, that it is not
 needed for defining, distributing and using scenarios.
 
-- See [Oxygen docs]
-(https://www.oxygenxml.com/doc/versions/21.1/ug-editor/topics/preferences-xslt-saxon8.html)
-
-(**Use a configuration file ("-config")**) how to set this up. This
-option can be set on a *project-basis*. The options dialog is
-accessible from the **Options** menu, menu item **Preferences**; then
-descend into **XML**, **XSLT-Proc**, **XSLT**, **Saxon**,
-**Saxon-HE/PE/EE**.
+- See [Oxygen
+  docs](https://www.oxygenxml.com/doc/versions/21.1/ug-editor/topics/preferences-xslt-saxon8.html)
+  (**Use a configuration file ("-config")**) how to set this up. This
+  option can be set on a *project-basis*. The options dialog is
+  accessible from the **Options** menu, menu item **Preferences**;
+  then descend into **XML**, **XSLT-Proc**, **XSLT**, **Saxon**,
+  **Saxon-HE/PE/EE**.
 
 - See [tei-transform.xpr](tei-transform.xpr) for an example for a
-project-wide configuration: The options named
-`saxon.latest.config.file` and `saxon.latest.use.config.file` do the
-thing.
+  project-wide configuration: The options named
+  `saxon.latest.config.file` and `saxon.latest.use.config.file` do the
+  thing.
 
 #### Commandline
 
@@ -98,8 +97,8 @@ base URL
 `https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/`.
 
 For example the name of the package in
-[xsl/libi18n.xsl](xsl/libi18n.xsl) is
-`https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/libi18n.xsl`.
+[xsl/libi18n.xsl](xsl/html/libi18n.xsl) is
+`https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl`.
 
 
 ## Conventions
