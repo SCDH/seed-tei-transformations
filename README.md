@@ -1,5 +1,9 @@
 # XSL Transformations for TEI-XML documents
 
+This is a collection of XSL stylesheets and packages for TEI-XML
+documents. XSLT's package systems makes them highly reusable. The
+transformations were written for running in a web service and with the
+specific security requirements of such a runtime environment in mind.
 
 ## Packages
 
