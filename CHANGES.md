@@ -1,5 +1,11 @@
 # Changes
 
+## 0.1.1
+
+- ALEA's prose preview ro fit Andreas' needs
+  - line width to 30em
+  - font size to 1.2em
+
 ## 0.1.0
 
 - introduced `libentry2` that provides common components for apparatus
