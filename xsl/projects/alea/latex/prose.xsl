@@ -19,6 +19,92 @@
 
   <xsl:output method="text" encoding="UTF-8"/>
 
+  <xsl:param name="language" as="xs:string" select="/TEI/@xml:lang"/>
+
+  <xsl:variable name="current" as="node()*" select="root()"/>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libi18n.xsl"
+    package-version="1.0.0">
+    <xsl:override>
+      <xsl:variable name="i18n:default-language" as="xs:string" select="$language"/>
+    </xsl:override>
+  </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
+      visibility="public"/>
+    <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+  </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libapp2.xsl"
+    package-version="1.0.0">
+    <xsl:override>
+
+      <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))"
+        select="app:apparatus-entries($current) => seed:note-based-apparatus-nodes-map(true())"/>
+
+      <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
+        <xsl:value-of>
+          <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
+          <xsl:text>descendant-or-self::app[not(parent::sic[parent::choice])]</xsl:text>
+          <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+          <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+          <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[unclear]</xsl:text>
+          <xsl:text>| descendant::gap</xsl:text>
+        </xsl:value-of>
+      </xsl:variable>
+
+      <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string">
+        <xsl:value-of>
+          <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
+          <xsl:text>descendant-or-self::app[not(parent::sic[parent::choice])]</xsl:text>
+          <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+          <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+          <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[unclear]</xsl:text>
+          <xsl:text>| descendant::gap</xsl:text>
+        </xsl:value-of>
+      </xsl:variable>
+
+      <xsl:variable name="app:entries-xpath-external-double-end-point" as="xs:string">
+        <xsl:value-of>
+          <xsl:text>descendant-or-self::app</xsl:text>
+          <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+          <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+          <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[unclear]</xsl:text>
+          <xsl:text>| descendant::gap</xsl:text>
+        </xsl:value-of>
+      </xsl:variable>
+
+      <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string">
+        <xsl:value-of>
+          <xsl:text>descendant::corr[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+          <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
+          <xsl:text>| descendant::choice[unclear]</xsl:text>
+          <xsl:text>| descendant::gap</xsl:text>
+        </xsl:value-of>
+      </xsl:variable>
+
+
+    </xsl:override>
+  </xsl:use-package>
+
+
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
     package-version="1.0.0">
@@ -26,9 +112,17 @@
       <xsl:template name="text:par-start">
         <xsl:text>&lb;\setRTL{}</xsl:text>
       </xsl:template>
-    </xsl:override>
 
+      <!-- make apparatus footnotes -->
+      <xsl:template name="text:apparatus-footnote">
+        <xsl:message>apparatus footnote</xsl:message>
+        <xsl:call-template name="app:apparatus-footnote"/>
+      </xsl:template>
+
+    </xsl:override>
   </xsl:use-package>
+
+
 
   <xsl:mode on-no-match="shallow-skip"/>
 
@@ -63,6 +157,13 @@
     <!-- language and script -->
     <xsl:text>&lb;\ifluatex</xsl:text>
     <xsl:text>&lb;%% für luatex</xsl:text>
+    <xsl:text>&lb;\usepackage{luabidi}</xsl:text>
+    <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
+    <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
+    <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
+    <xsl:text>&lb;\babelfont{tt}{Amiri}</xsl:text>
+    <!--
     <xsl:text>&lb;\usepackage{fontspec}</xsl:text>
     <xsl:text>&lb;\defaultfontfeatures{Ligatures=TeX}</xsl:text>
     <xsl:text>&lb;\usepackage{polyglossia}</xsl:text>
@@ -71,16 +172,18 @@
     <xsl:text>&lb;\newfontfamily\arabicfont[Ligatures=TeX,Script=Arabic]{Amiri}</xsl:text>
     <xsl:text>&lb;\newfontfamily\arabicfontsf[Ligatures=TeX,Script=Arabic]{Amiri}</xsl:text>
     <xsl:text>&lb;\newfontfamily\arabicfonttt[Ligatures=TeX,Script=Arabic]{Amiri}</xsl:text>
+    -->
     <xsl:text>&lb;\setRTLmain</xsl:text>
     <xsl:text>&lb;\else</xsl:text>
     <xsl:text>&lb;%% für pdftex</xsl:text>
     <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:call-template name="text:latex-header"/>
+    <xsl:call-template name="i18n:latex-header"/>
+    <xsl:call-template name="app:latex-header"/>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
-    <!--xsl:text>&lb;\renewcommand*{\milestone}[2]{\LRE{[#1]}}</xsl:text-->
-    <xsl:text>&lb;\renewcommand*{\milestone}[2]{]&rle;#1&pdf;[}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\milestone}[2]{[#1]}</xsl:text>
 
     <xsl:text>&lb;\usepackage[switch,modulo,pagewise]{lineno}</xsl:text>
 
