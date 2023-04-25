@@ -133,9 +133,11 @@
                         <xsl:text>\appsep{rdgs-sep}</xsl:text>
                     </xsl:if>
                 </xsl:for-each>
+                <!--
                 <xsl:if test="position() ne last()">
                     <xsl:text>\appsep{app-entry-sep}</xsl:text>
                 </xsl:if>
+                -->
             </xsl:template>
 
             <!-- template for making the lemma text with some logic for handling empty lemmas -->
