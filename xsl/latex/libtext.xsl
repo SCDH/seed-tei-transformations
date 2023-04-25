@@ -29,8 +29,50 @@
     <xsl:text>&lb;&lb;%% end of text body&lb;&lb;</xsl:text>
   </xsl:template>
 
+
+  <!-- document structure -->
+
+  <xsl:template match="head">
+    <!-- TODO -->
+    <xsl:text>&lb;&lb;\noindent{}</xsl:text>
+    <xsl:text>&lb;\minisec{</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="p">
+    <xsl:call-template name="text:par-start"/>
+    <xsl:apply-templates/>
+    <xsl:text>&lb;&lb;&lb;</xsl:text>
+  </xsl:template>
+
+  <!-- a hook for macros at the beginning of a paragraph -->
+  <xsl:template name="text:par-start" visibility="public"/>
+
+  <xsl:template match="pb">
+    <xsl:text>\pb{</xsl:text>
+    <xsl:value-of select="@n"/>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="milestone">
+    <xsl:text>\milestone{</xsl:text>
+    <xsl:value-of select="@n"/>
+    <xsl:text>}{</xsl:text>
+    <xsl:value-of select="@unit"/>
+    <!--
+    <xsl:text>}{</xsl:text>
+    <xsl:value-of select="ancestor-or-self::*[@xml:lang]/@xml:lang"/>
+    -->
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+
+  <!-- related to critical apparatus and notes -->
+
   <xsl:template match="app">
     <xsl:apply-templates select="lem"/>
+    <xsl:call-template name="text:apparatus-footnote"/>
   </xsl:template>
 
   <xsl:template match="rdg"/>
@@ -63,39 +105,18 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="head">
-    <!-- TODO -->
-    <xsl:text>&lb;&lb;\noindent{}</xsl:text>
-    <xsl:text>&lb;\minisec{</xsl:text>
-    <xsl:apply-templates/>
-    <xsl:text>}</xsl:text>
-  </xsl:template>
+  <!-- make a footnote with an apparatus entry if there is one for the context element.
+    You probably want to override this, e.g., with app:apparatus-footnote. -->
+  <xsl:template name="text:apparatus-footnote" visibility="public"/>
 
 
-  <xsl:template match="p">
-    <xsl:call-template name="text:par-start"/>
-    <xsl:apply-templates/>
-    <xsl:text>&lb;&lb;&lb;</xsl:text>
-  </xsl:template>
-
-  <xsl:template match="milestone">
-    <xsl:text>\milestone{</xsl:text>
-    <xsl:value-of select="@n"/>
-    <xsl:text>}{</xsl:text>
-    <xsl:value-of select="@unit"/>
-    <!--
-    <xsl:text>}{</xsl:text>
-    <xsl:value-of select="ancestor-or-self::*[@xml:lang]/@xml:lang"/>
-    -->
-    <xsl:text>}</xsl:text>
-  </xsl:template>
 
 
+  <!-- contributions to the latex header -->
   <xsl:template name="text:latex-header" visibility="public">
     <xsl:text>&lb;&lb;%% macro definitions from .../xsl/latex/libtext.xsl</xsl:text>
+    <xsl:text>&lb;\newcommand*{\pb}[1]{[#1]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\milestone}[2]{[#1]}</xsl:text>
   </xsl:template>
-
-  <xsl:template name="text:par-start" visibility="public"/>
 
 </xsl:package>
