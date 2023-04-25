@@ -42,6 +42,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
                version="1.0.0" sourceLocation="xsl/html/libapp2c.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libapp2.xsl"
+               version="1.0.0" sourceLocation="xsl/latex/libapp2c.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
                version="1.0.0" sourceLocation="xsl/html/libnote2.xsl"/>
           <package
