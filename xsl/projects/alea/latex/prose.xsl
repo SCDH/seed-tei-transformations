@@ -109,8 +109,13 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
     package-version="1.0.0">
     <xsl:override>
+
       <xsl:template name="text:par-start">
-        <xsl:text>&lb;\setRTL{}</xsl:text>
+        <xsl:text>&lb;\setRTL\pstart </xsl:text>
+      </xsl:template>
+
+      <xsl:template name="text:par-end">
+        <xsl:text>&lb;\pend</xsl:text>
       </xsl:template>
 
       <!-- make apparatus footnotes -->
@@ -138,9 +143,7 @@
   </xsl:template>
 
   <xsl:template name="latex-header">
-    <xsl:text>\documentclass{scrbook}</xsl:text>
-
-    <xsl:text>&lb;\KOMAoption{fontsize}{16}</xsl:text>
+    <xsl:text>\documentclass{book}</xsl:text>
 
     <!-- input encoding -->
     <xsl.text>&lb;\usepackage{ifluatex}</xsl.text>
@@ -158,7 +161,7 @@
     <xsl:text>&lb;\ifluatex</xsl:text>
     <xsl:text>&lb;%% für luatex</xsl:text>
     <xsl:text>&lb;\usepackage{luabidi}</xsl:text>
-    <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
+    <xsl:text>&lb;\usepackage[english,bidi=basic]{babel}</xsl:text>
     <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
     <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
     <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
@@ -176,6 +179,13 @@
     <xsl:text>&lb;\setRTLmain</xsl:text>
     <xsl:text>&lb;\else</xsl:text>
     <xsl:text>&lb;%% für pdftex</xsl:text>
+    <xsl:text>&lb;\usepackage{bidi}</xsl:text>
+    <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
+    <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
+    <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
+    <xsl:text>&lb;\babelfont{tt}{Amiri}</xsl:text>
+    <xsl:text>&lb;\setRTLmain</xsl:text>
     <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:call-template name="text:latex-header"/>
@@ -186,20 +196,18 @@
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
     <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
     -->
-    <xsl:text>&lb;\usepackage[perpage,para]{footmisc}</xsl:text>
+    <xsl:text>&lb;\usepackage{reledmac}</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{[#1]}</xsl:text>
 
+    <!--
     <xsl:text>&lb;\usepackage[switch,modulo,pagewise]{lineno}</xsl:text>
-
-    <xsl:text>&lb;%\setkomafont{disposition}{\normalsize}</xsl:text>
-
+    -->
   </xsl:template>
 
   <xsl:template name="latex-front">
     <xsl:text>&lb;%%\maketitle</xsl:text>
-    <xsl:text>&lb;\linenumbers{}</xsl:text>
   </xsl:template>
 
   <xsl:template name="latex-back"/>

@@ -123,7 +123,7 @@
                 <xsl:call-template name="app:apparatus-lemma">
                     <xsl:with-param name="entry" select="$entries[1]"/>
                 </xsl:call-template>
-                <xsl:text>\appsep{lem-rdg-sep}</xsl:text>
+                <!--xsl:text>\appsep{lem-rdg-sep}</xsl:text-->
                 <xsl:for-each select="$entries">
                     <xsl:apply-templates mode="app:reading-dspt" select="map:get(., 'entry')">
                         <xsl:with-param name="apparatus-entry-map" as="map(*)" select="."
@@ -143,7 +143,7 @@
             <!-- template for making the lemma text with some logic for handling empty lemmas -->
             <xsl:template name="app:apparatus-lemma" visibility="private">
                 <xsl:param name="entry" as="map(*)"/>
-                <xsl:text>\lem{</xsl:text>
+                <xsl:text>\lemma{</xsl:text>
                 <xsl:variable name="full-lemma" as="xs:string"
                     select="map:get($entry, 'lemma-text-nodes') => seed:shorten-lemma()"/>
                 <xsl:choose>
@@ -168,7 +168,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) ne '']">
-                <xsl:text>\rdg{</xsl:text>
+                <xsl:text>\footnoteA{</xsl:text>
                 <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
                 <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
                     <xsl:with-param name="reading" select="node()"/>
@@ -188,7 +188,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) eq '']">
-                <xsl:text>\rdg{\apptranslate{omisit}</xsl:text>
+                <xsl:text>\footnoteA{\apptranslate{omisit}</xsl:text>
                 <xsl:if test="@wit">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
                     <xsl:call-template name="app:sigla">
@@ -241,7 +241,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="choice/sic">
-                <xsl:text>\rdg{</xsl:text>
+                <xsl:text>\footnoteA{</xsl:text>
                 <xsl:apply-templates mode="app:reading-text"/>
                 <xsl:if test="@source">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
@@ -257,7 +257,7 @@
             </xsl:template>
 
             <xsl:template mode="app:reading-dspt" match="choice[corr and sic]">
-                <xsl:text>\rdg{</xsl:text>
+                <xsl:text>\footnoteA{</xsl:text>
                 <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
                 <xsl:text>\appsep{rdgs-sep}</xsl:text>
                 <xsl:apply-templates select="sic" mode="app:reading-dspt"/>
@@ -269,7 +269,7 @@
 
             <!-- ALEA's old encoding of conjectures -->
             <xsl:template mode="app:reading-dspt" match="choice[corr and sic/app]" priority="2">
-                <xsl:text>\rdg{</xsl:text>
+                <xsl:text>\footnoteA{</xsl:text>
                 <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
                 <xsl:text>\appsep{rdgs-sep}</xsl:text>
                 <xsl:apply-templates select="sic/app" mode="app:reading-dspt"/>
@@ -281,7 +281,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="unclear[not(parent::choice)]">
-                <xsl:text>\rdg{</xsl:text>
+                <xsl:text>\footnoteA{</xsl:text>
                 <xsl:choose>
                     <xsl:when test="@reason">
                         <xsl:text>\IfTranslation{</xsl:text>
@@ -306,7 +306,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="gap">
-                <xsl:text>\rdg{</xsl:text>
+                <xsl:text>\footnoteA{</xsl:text>
                 <xsl:choose>
                     <xsl:when test="@reason">
                         <xsl:text>\IfTranslation{</xsl:text>
@@ -354,14 +354,76 @@
         <xsl:variable name="element-id" select="generate-id()"/>
         <xsl:if test="map:contains($app:apparatus-entries, $element-id)">
             <xsl:variable name="entry" select="map:get($app:apparatus-entries, $element-id)"/>
-            <xsl:text>%&lb;\footnote{%</xsl:text>
-            <xsl:value-of select="$element-id"/>
-            <xsl:text>%&lb;</xsl:text>
+            <xsl:variable name="app-entries" select="map:get($entry, 'entries')"/>
+            <xsl:text>%&lb;\edtext{\edlabel{</xsl:text>
+            <xsl:message use-when="system-property('debug') eq 'true'">
+                <xsl:text>Making end edlabel for </xsl:text>
+                <xsl:value-of select="map:get($app-entries[1], 'entry') => name()"/>
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="map:get($app-entries[1], 'entry')/@xml:id"/>
+            </xsl:message>
+            <xsl:variable name="edlabel-end">
+                <xsl:apply-templates mode="edlabel-end" select="map:get($app-entries[1], 'entry')"/>
+            </xsl:variable>
+            <xsl:value-of select="$edlabel-end"/>
+            <xsl:text>}}{%&lb;</xsl:text>
+            <!-- make the references by \xxref{startlabel}{endlabel} -->
+            <xsl:text>\xxref{</xsl:text>
+            <xsl:apply-templates mode="edlabel-start" select="map:get($app-entries[1], 'entry')"/>
+            <xsl:text>}{</xsl:text>
+            <xsl:value-of select="$edlabel-end"/>
+            <xsl:text>}</xsl:text>
+            <!-- make \lemma and \Afootnote -->
             <xsl:call-template name="app:apparatus-entry">
-                <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
+                <xsl:with-param name="entries" select="map:get($entry, 'entries')[1]"/>
             </xsl:call-template>
             <xsl:text>} %&lb;</xsl:text>
         </xsl:if>
+    </xsl:template>
+
+    <xsl:mode name="edlabel-start" on-no-match="shallow-skip"/>
+    <xsl:mode name="edlabel-end" on-no-match="shallow-skip"/>
+
+    <xsl:template mode="edlabel-start"
+        match="app[//variantEncoding/@method eq 'parallel-segmentation']">
+        <xsl:value-of select="concat(generate-id(), '-start')"/>
+    </xsl:template>
+
+    <xsl:template mode="edlabel-end"
+        match="app[//variantEncoding/@method eq 'parallel-segmentation']">
+        <xsl:value-of select="concat(generate-id(), '-end')"/>
+    </xsl:template>
+
+    <xsl:template mode="edlabel-start"
+        match="app[//variantEncoding/@method ne 'parallel-segmentation' and @from]">
+        <xsl:message>
+            <xsl:text>start edlabel </xsl:text>
+            <xsl:value-of select="@from"/>
+        </xsl:message>
+        <xsl:value-of select="substring(@from, 2)"/>
+    </xsl:template>
+
+    <xsl:template mode="edlabel-end"
+        match="app[//variantEncoding/@method ne 'parallel-segmentation']">
+        <xsl:value-of select="generate-id()"/>
+    </xsl:template>
+
+    <xsl:template mode="edlabel-start" match="*">
+        <xsl:message terminate="yes">
+            <xsl:text>ERROR: no rule for making start edlabel for </xsl:text>
+            <xsl:value-of select="name(.)"/>
+            <xsl:text> in </xsl:text>
+            <xsl:value-of select="//variantEncoding/@method"/>
+        </xsl:message>
+    </xsl:template>
+
+    <xsl:template mode="edlabel-end" match="*">
+        <xsl:message terminate="yes">
+            <xsl:text>ERROR: no rule for making end edlabel for </xsl:text>
+            <xsl:value-of select="name(.)"/>
+            <xsl:text> in </xsl:text>
+            <xsl:value-of select="//variantEncoding/@method"/>
+        </xsl:message>
     </xsl:template>
 
 

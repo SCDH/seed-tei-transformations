@@ -24,9 +24,9 @@
   <xsl:template match="front | back"/>
 
   <xsl:template match="body">
-    <xsl:text>&lb;&lb;%% begin of text body&lb;&lb;</xsl:text>
+    <xsl:text>&lb;&lb;%% begin of text body&lb;\beginnumbering&lb;&lb;</xsl:text>
     <xsl:apply-templates/>
-    <xsl:text>&lb;&lb;%% end of text body&lb;&lb;</xsl:text>
+    <xsl:text>&lb;&lb;%% end of text body&lb;\endnumbering&lb;&lb;</xsl:text>
   </xsl:template>
 
 
@@ -35,7 +35,7 @@
   <xsl:template match="head">
     <!-- TODO -->
     <xsl:text>&lb;&lb;\noindent{}</xsl:text>
-    <xsl:text>&lb;\minisec{</xsl:text>
+    <xsl:text>&lb;\section*{</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>}</xsl:text>
   </xsl:template>
@@ -43,11 +43,13 @@
   <xsl:template match="p">
     <xsl:call-template name="text:par-start"/>
     <xsl:apply-templates/>
+    <xsl:call-template name="text:par-end"/>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
-  <!-- a hook for macros at the beginning of a paragraph -->
+  <!-- hooks for macros at the beginning and end of a paragraph -->
   <xsl:template name="text:par-start" visibility="public"/>
+  <xsl:template name="text:par-end" visibility="public"/>
 
   <xsl:template match="pb">
     <xsl:text>\pb{</xsl:text>
@@ -75,7 +77,22 @@
     <xsl:call-template name="text:apparatus-footnote"/>
   </xsl:template>
 
+  <xsl:template match="anchor">
+    <xsl:call-template name="text:edlabel">
+      <xsl:with-param name="context" select="."/>
+      <xsl:with-param name="suffix" select="''"/>
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template match="rdg"/>
+
+  <xsl:template match="lem[//variantEncoding/@medthod eq 'parallel-segmentation']">
+    <xsl:call-template name="text:edlabel">
+      <xsl:with-param name="context" select="parent::app"/>
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
+    <xsl:apply-templates/>
+  </xsl:template>
 
   <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
 
@@ -103,6 +120,21 @@
 
   <xsl:template match="corr[not(parent::choice)]">
     <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template name="text:edlabel">
+    <xsl:param name="context" as="node()" select="." required="false"/>
+    <xsl:param name="suffix" as="xs:string" select="''" required="false"/>
+    <xsl:text>\edlabel{</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$context/@xml:id">
+        <xsl:value-of select="$context/@xml:id"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat(generate-id($context), $suffix)"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <!-- make a footnote with an apparatus entry if there is one for the context element.
