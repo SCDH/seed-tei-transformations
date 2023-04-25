@@ -182,6 +182,12 @@
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
 
+    <!-- does not give footnotes in para
+    <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
+    <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
+    -->
+    <xsl:text>&lb;\usepackage[perpage,para]{footmisc}</xsl:text>
+
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{[#1]}</xsl:text>
 
