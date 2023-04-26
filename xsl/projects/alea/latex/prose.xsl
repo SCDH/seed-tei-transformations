@@ -111,7 +111,7 @@
     <xsl:override>
 
       <xsl:template name="text:par-start">
-        <xsl:text>&lb;\setRTL\pstart </xsl:text>
+        <xsl:text>&lb;\pstart[\setRTL]</xsl:text>
       </xsl:template>
 
       <xsl:template name="text:par-end">
@@ -162,6 +162,7 @@
     <xsl:text>&lb;%% für luatex</xsl:text>
     <xsl:text>&lb;\usepackage{luabidi}</xsl:text>
     <xsl:text>&lb;\usepackage[english,bidi=basic]{babel}</xsl:text>
+    <xsl:text>&lb;\usepackage{arabluatex}</xsl:text>
     <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
     <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
     <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
