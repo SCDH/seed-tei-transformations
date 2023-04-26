@@ -70,19 +70,24 @@ This generic XSLT module provides babel translations for translation namespaces 
                     <xsl:text>}{</xsl:text>
                     <xsl:value-of select="."/>
                     <xsl:text>}{</xsl:text>
-                    <xsl:value-of select="map:get($translations, .)"/>
+                    <xsl:value-of select="map:get($translations, .) => i18n:escape()"/>
                     <xsl:text>}</xsl:text>
                     <xsl:if test="$language eq $i18n:default-language">
                         <xsl:text>&lb;\DeclareTranslationFallback{</xsl:text>
                         <xsl:value-of select="."/>
                         <xsl:text>}{</xsl:text>
-                        <xsl:value-of select="map:get($translations, .)"/>
+                        <xsl:value-of select="map:get($translations, .) => i18n:escape()"/>
                         <xsl:text>}</xsl:text>
                     </xsl:if>
                 </xsl:for-each>
             </xsl:if>
         </xsl:for-each>
     </xsl:template>
+
+    <xsl:function name="i18n:escape">
+        <xsl:param name="string" as="xs:string"/>
+        <xsl:value-of select="replace($string, '\[', '') => replace('\]', '')"/>
+    </xsl:function>
 
     <!-- contribution to the latex header -->
     <xsl:template name="i18n:latex-header" visibility="public">
