@@ -124,6 +124,7 @@
                     <xsl:with-param name="entry" select="$entries[1]"/>
                 </xsl:call-template>
                 <!--xsl:text>\appsep{lem-rdg-sep}</xsl:text-->
+                <xsl:text>\Afootnote{</xsl:text>
                 <xsl:for-each select="$entries">
                     <xsl:apply-templates mode="app:reading-dspt" select="map:get(., 'entry')">
                         <xsl:with-param name="apparatus-entry-map" as="map(*)" select="."
@@ -133,6 +134,7 @@
                         <xsl:text>\appsep{rdgs-sep}</xsl:text>
                     </xsl:if>
                 </xsl:for-each>
+                <xsl:text>}</xsl:text>
                 <!--
                 <xsl:if test="position() ne last()">
                     <xsl:text>\appsep{app-entry-sep}</xsl:text>
@@ -168,7 +170,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) ne '']">
-                <xsl:text>\footnoteA{</xsl:text>
+                <xsl:text>{</xsl:text>
                 <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
                 <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
                     <xsl:with-param name="reading" select="node()"/>
@@ -188,7 +190,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) eq '']">
-                <xsl:text>\footnoteA{\apptranslate{omisit}</xsl:text>
+                <xsl:text>{\apptranslate{omisit}</xsl:text>
                 <xsl:if test="@wit">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
                     <xsl:call-template name="app:sigla">
@@ -241,7 +243,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="choice/sic">
-                <xsl:text>\footnoteA{</xsl:text>
+                <xsl:text>{</xsl:text>
                 <xsl:apply-templates mode="app:reading-text"/>
                 <xsl:if test="@source">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
@@ -257,7 +259,7 @@
             </xsl:template>
 
             <xsl:template mode="app:reading-dspt" match="choice[corr and sic]">
-                <xsl:text>\footnoteA{</xsl:text>
+                <xsl:text>{</xsl:text>
                 <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
                 <xsl:text>\appsep{rdgs-sep}</xsl:text>
                 <xsl:apply-templates select="sic" mode="app:reading-dspt"/>
@@ -269,7 +271,7 @@
 
             <!-- ALEA's old encoding of conjectures -->
             <xsl:template mode="app:reading-dspt" match="choice[corr and sic/app]" priority="2">
-                <xsl:text>\footnoteA{</xsl:text>
+                <xsl:text>{</xsl:text>
                 <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
                 <xsl:text>\appsep{rdgs-sep}</xsl:text>
                 <xsl:apply-templates select="sic/app" mode="app:reading-dspt"/>
@@ -281,7 +283,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="unclear[not(parent::choice)]">
-                <xsl:text>\footnoteA{</xsl:text>
+                <xsl:text>{</xsl:text>
                 <xsl:choose>
                     <xsl:when test="@reason">
                         <xsl:text>\IfTranslation{</xsl:text>
@@ -306,7 +308,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="gap">
-                <xsl:text>\footnoteA{</xsl:text>
+                <xsl:text>{</xsl:text>
                 <xsl:choose>
                     <xsl:when test="@reason">
                         <xsl:text>\IfTranslation{</xsl:text>
