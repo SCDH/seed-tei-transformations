@@ -292,6 +292,7 @@ see xsl/projects/alea/preview.xsl
                     <xsl:map>
                         <xsl:map-entry key="'entry-id'" select="map:get($entry, 'entry-id')"/>
                         <xsl:map-entry key="'number'" select="map:get($entry, 'number')"/>
+                        <xsl:map-entry key="'entries'" select="current-group()"/>
                         <xsl:map-entry key="'after'" select="$after"/>
                     </xsl:map>
                 </xsl:map-entry>
