@@ -161,12 +161,7 @@
     <xsl:text>&lb;\ifluatex</xsl:text>
     <xsl:text>&lb;%% für luatex</xsl:text>
     <xsl:text>&lb;\usepackage{luabidi}</xsl:text>
-    <xsl:text>&lb;\usepackage[english,bidi=basic]{babel}</xsl:text>
-    <xsl:text>&lb;\usepackage{arabluatex}</xsl:text>
-    <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
-    <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
-    <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
-    <xsl:text>&lb;\babelfont{tt}{Amiri}</xsl:text>
+    <xsl:text>&lb;\usepackage{arabluatex}% necessary</xsl:text>
     <!--
     <xsl:text>&lb;\usepackage{fontspec}</xsl:text>
     <xsl:text>&lb;\defaultfontfeatures{Ligatures=TeX}</xsl:text>
@@ -177,17 +172,17 @@
     <xsl:text>&lb;\newfontfamily\arabicfontsf[Ligatures=TeX,Script=Arabic]{Amiri}</xsl:text>
     <xsl:text>&lb;\newfontfamily\arabicfonttt[Ligatures=TeX,Script=Arabic]{Amiri}</xsl:text>
     -->
-    <xsl:text>&lb;\setRTLmain</xsl:text>
     <xsl:text>&lb;\else</xsl:text>
     <xsl:text>&lb;%% für pdftex</xsl:text>
     <xsl:text>&lb;\usepackage{bidi}</xsl:text>
+    <xsl:text>&lb;\fi</xsl:text>
+
     <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
     <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
     <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
     <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
     <xsl:text>&lb;\babelfont{tt}{Amiri}</xsl:text>
     <xsl:text>&lb;\setRTLmain</xsl:text>
-    <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
