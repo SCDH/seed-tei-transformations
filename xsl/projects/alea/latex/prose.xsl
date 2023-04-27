@@ -111,7 +111,7 @@
     <xsl:override>
 
       <xsl:template name="text:par-start">
-        <xsl:text>&lb;\pstart[\setRTL]</xsl:text>
+        <xsl:text>&lb;\pstart[\setRL]</xsl:text>
       </xsl:template>
 
       <xsl:template name="text:par-end">
