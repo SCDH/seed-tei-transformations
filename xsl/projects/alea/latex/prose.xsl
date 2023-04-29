@@ -193,9 +193,13 @@
     <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
     -->
     <xsl:text>&lb;\usepackage{reledmac}</xsl:text>
+    <xsl:text>&lb;\Xarrangement{paragraph}</xsl:text>
+    <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
+    <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
+    <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\milestone}[2]{[#1]}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
 
     <!--
     <xsl:text>&lb;\usepackage[switch,modulo,pagewise]{lineno}</xsl:text>
