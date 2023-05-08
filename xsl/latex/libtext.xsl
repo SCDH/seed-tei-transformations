@@ -34,10 +34,12 @@
 
   <xsl:template match="head">
     <!-- TODO -->
-    <xsl:text>&lb;&lb;\noindent{}</xsl:text>
-    <xsl:text>&lb;\section*{</xsl:text>
+    <!--xsl:text>&lb;&lb;\noindent{}</xsl:text-->
+    <xsl:call-template name="text:par-start"/>
+    <xsl:text>&lb;&lb;\eledsection*{</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>}</xsl:text>
+    <xsl:call-template name="text:par-end"/>
   </xsl:template>
 
   <xsl:template match="p">
