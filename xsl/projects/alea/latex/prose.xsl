@@ -21,6 +21,10 @@
 
   <xsl:param name="language" as="xs:string" select="/TEI/@xml:lang"/>
 
+  <!-- optional: the URI of the projects central witness catalogue -->
+  <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
+
+
   <xsl:variable name="current" as="node()*" select="root()"/>
 
   <xsl:use-package
@@ -37,6 +41,28 @@
     <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
       visibility="public"/>
     <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+  </xsl:use-package>
+
+  <xsl:variable name="witnesses" as="element()*">
+    <xsl:choose>
+      <xsl:when test="$wit-catalog eq string()">
+        <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- a sequence from external and local witnesses -->
+        <xsl:sequence select="
+          (//sourceDesc//witness[@xml:id],
+          doc(resolve-uri($wit-catalog, base-uri()))/descendant::witness[@xml:id])"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libwit.xsl"
+    package-version="1.0.0">
+    <xsl:override>
+      <xsl:variable name="wit:witnesses" as="element()*" select="$witnesses"/>
+    </xsl:override>
   </xsl:use-package>
 
   <xsl:use-package
@@ -99,6 +125,13 @@
         </xsl:value-of>
       </xsl:variable>
 
+      <!-- use libwit in apparatus -->
+      <xsl:template name="app:sigla">
+        <xsl:param name="wit" as="node()"/>
+        <xsl:call-template name="wit:sigla">
+          <xsl:with-param name="wit" select="$wit"/>
+        </xsl:call-template>
+      </xsl:template>
 
     </xsl:override>
   </xsl:use-package>
@@ -197,6 +230,8 @@
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
+    <xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
+    <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
