@@ -51,6 +51,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
                version="1.0.0" sourceLocation="xsl/html/libnote2.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libnote2.xsl"
+               version="1.0.0" sourceLocation="xsl/latex/libnote2.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
                version="1.0.0" sourceLocation="xsl/html/librend.xsl"/>
           <package
