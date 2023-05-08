@@ -152,7 +152,7 @@
       </xsl:template>
 
       <!-- make apparatus footnotes -->
-      <xsl:template name="text:apparatus-footnote">
+      <xsl:template name="text:inline-footnotes">
         <xsl:message>apparatus footnote</xsl:message>
         <xsl:call-template name="app:apparatus-footnote"/>
       </xsl:template>

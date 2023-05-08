@@ -76,7 +76,7 @@
 
   <xsl:template match="app">
     <xsl:apply-templates select="lem"/>
-    <xsl:call-template name="text:apparatus-footnote"/>
+    <xsl:call-template name="text:inline-footnotes"/>
   </xsl:template>
 
   <xsl:template match="anchor">
@@ -140,8 +140,8 @@
   </xsl:template>
 
   <!-- make a footnote with an apparatus entry if there is one for the context element.
-    You probably want to override this, e.g., with app:apparatus-footnote. -->
-  <xsl:template name="text:apparatus-footnote" visibility="public"/>
+    You probably want to override this, e.g., with app:apparatus-footnote and note:editorial-note. -->
+  <xsl:template name="text:inline-footnotes" visibility="public"/>
 
 
 
