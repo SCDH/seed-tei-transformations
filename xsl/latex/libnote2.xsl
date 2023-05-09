@@ -78,9 +78,11 @@
 
     <xsl:template name="note:editorial-note">
         <xsl:param name="entries" as="map(*)" visibility="public"/>
+        <xsl:text>\lemma{</xsl:text>
         <xsl:call-template name="note:editorial-note-lemma">
             <xsl:with-param name="entry" select="$entries[1]"/>
         </xsl:call-template>
+        <xsl:text>}</xsl:text>
         <!--xsl:text>\appsep{lem-rdg-sep}</xsl:text-->
         <xsl:text>\footnoteA{</xsl:text>
         <xsl:apply-templates mode="note:editorial-note" select="map:get(., 'entry')">
