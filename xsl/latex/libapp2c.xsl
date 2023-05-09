@@ -129,7 +129,9 @@
                     <xsl:with-param name="entry" select="$entries[1]"/>
                 </xsl:call-template>
                 <!--xsl:text>\appsep{lem-rdg-sep}</xsl:text-->
-                <xsl:text>\Afootnote{</xsl:text>
+                <xsl:text>\</xsl:text>
+                <xsl:value-of select="edmac:footnote-macro($entries[1])"/>
+                <xsl:text>{</xsl:text>
                 <xsl:for-each select="$entries">
                     <xsl:apply-templates mode="app:reading-dspt" select="map:get(., 'entry')">
                         <xsl:with-param name="apparatus-entry-map" as="map(*)" select="."

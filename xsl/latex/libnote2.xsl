@@ -78,14 +78,16 @@
     </xsl:use-package>
 
     <xsl:template name="note:editorial-note">
-        <xsl:param name="entries" as="map(*)" visibility="public"/>
+        <xsl:param name="entry" as="map(xs:string, item())" visibility="public"/>
         <xsl:text>\lemma{</xsl:text>
         <xsl:call-template name="note:editorial-note-lemma">
-            <xsl:with-param name="entry" select="$entries[1]"/>
+            <xsl:with-param name="entry" select="$entry"/>
         </xsl:call-template>
         <xsl:text>}</xsl:text>
         <!--xsl:text>\appsep{lem-rdg-sep}</xsl:text-->
-        <xsl:text>\footnoteA{</xsl:text>
+        <xsl:text>\</xsl:text>
+        <xsl:value-of select="edmac:footnote-macro($entry)"/>
+        <xsl:text>{</xsl:text>
         <xsl:apply-templates mode="note:editorial-note" select="map:get(., 'entry')">
             <xsl:with-param name="apparatus-entry-map" as="map(*)" select="." tunnel="true"/>
         </xsl:apply-templates>
@@ -119,7 +121,7 @@
             <xsl:for-each select="$entries">
                 <!-- make \lemma and \Afootnote -->
                 <xsl:call-template name="note:editorial-note">
-                    <xsl:with-param name="entries" select="."/>
+                    <xsl:with-param name="entry" select="."/>
                 </xsl:call-template>
             </xsl:for-each>
             <xsl:text>} %&lb;</xsl:text>
