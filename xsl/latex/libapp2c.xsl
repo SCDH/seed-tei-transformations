@@ -16,6 +16,7 @@
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
 
@@ -369,13 +370,13 @@
                 <xsl:value-of select="map:get($app-entries[1], 'entry')/@xml:id"/>
             </xsl:message>
             <xsl:variable name="edlabel-end">
-                <xsl:apply-templates mode="edlabel-end" select="map:get($app-entries[1], 'entry')"/>
+                <xsl:apply-templates mode="edmac:edlabel-end" select="map:get($app-entries[1], 'entry')"/>
             </xsl:variable>
             <xsl:value-of select="$edlabel-end"/>
             <xsl:text>}}{%&lb;</xsl:text>
             <!-- make the references by \xxref{startlabel}{endlabel} -->
             <xsl:text>\xxref{</xsl:text>
-            <xsl:apply-templates mode="edlabel-start" select="map:get($app-entries[1], 'entry')"/>
+            <xsl:apply-templates mode="edmac:edlabel-start" select="map:get($app-entries[1], 'entry')"/>
             <xsl:text>}{</xsl:text>
             <xsl:value-of select="$edlabel-end"/>
             <xsl:text>}</xsl:text>
