@@ -192,7 +192,7 @@ see xsl/projects/alea/preview.xsl
             </xsl:choose>
         </xsl:variable>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
-        <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath)"/>
+        <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath, 1)"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a given context, e.g. / -->
@@ -221,10 +221,14 @@ see xsl/projects/alea/preview.xsl
 
     <!-- Generate apparatus elements for a given context, e.g. / and prepare mappings for them.
         The second argument is an XPath expression that tells what elements should go into the apparatus.
-        It is evaluated in the context given by the parameter 'context'. -->
+        It is evaluated in the context given by the parameter 'context'.
+        The third parameter is a grouping key for multiple apparatuses. Pass a constant of 1 if you want
+        yust one critical apparatus.
+    -->
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <xsl:param name="app-entries-xpath" as="xs:string"/>
+        <xsl:param name="type" as="xs:integer"/>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
         <xsl:variable name="entry-elements" as="element()*">
             <xsl:choose>
@@ -247,7 +251,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>Elements for apparatus: </xsl:text>
             <xsl:value-of select="$entry-elements ! name()"/>
         </xsl:message>
-        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position(), 1)"/>
+        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position(), $type)"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a sequence of prepared maps -->
