@@ -100,7 +100,9 @@
 
   <xsl:template match="witDetail"/>
 
-  <xsl:template match="note"/>
+  <xsl:template match="note">
+    <xsl:call-template name="text:inline-footnotes"/>
+  </xsl:template>
 
   <xsl:template match="gap">
     <xsl:text>[...]</xsl:text>
