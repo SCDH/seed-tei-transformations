@@ -49,6 +49,19 @@
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
+  <!-- simple support for verse -->
+  <xsl:template match="l">
+    <xsl:call-template name="text:par-start"/>
+    <xsl:apply-templates/>
+    <xsl:call-template name="text:par-end"/>
+    <xsl:text>&lb;&lb;&lb;</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="caesura">
+    <xsl:text>\hfill{}</xsl:text>
+  </xsl:template>
+
+
   <!-- hooks for macros at the beginning and end of a paragraph -->
   <xsl:template name="text:par-start" visibility="public"/>
   <xsl:template name="text:par-end" visibility="public"/>
