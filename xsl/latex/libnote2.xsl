@@ -78,7 +78,7 @@
     </xsl:use-package>
 
     <xsl:template name="note:editorial-note">
-        <xsl:param name="entry" as="map(xs:string, item())" visibility="public"/>
+        <xsl:param name="entry" as="map(xs:string, item()*)" visibility="public"/>
         <xsl:text>\lemma{</xsl:text>
         <xsl:call-template name="note:editorial-note-lemma">
             <xsl:with-param name="entry" select="$entry"/>
