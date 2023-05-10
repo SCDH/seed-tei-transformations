@@ -19,7 +19,15 @@
 
   <!-- you may want to override the rule content, e.g., by \txarb{.} -->
   <xsl:template match="text()">
+    <!-- some characters need to be escaped -->
+    <!--xsl:value-of select=". => replace('\[', '\\lbrack{}') => replace('\]', '\\rbrack{}')"/-->
+    <!--xsl:value-of select=". => replace('([\[])', '{$1}')"/-->
     <xsl:value-of select="."/>
+  </xsl:template>
+
+  <!-- shrink multiple whitespace space characters to a singel space  -->
+  <xsl:template match="text()[ancestor::p or ancestor::l or ancestor::head]">
+    <xsl:value-of select=". => replace('\s+', ' ')"/>
   </xsl:template>
 
   <xsl:template match="teiHeader"/>
