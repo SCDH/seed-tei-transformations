@@ -40,7 +40,9 @@
     <!-- TODO -->
     <!--xsl:text>&lb;&lb;\noindent{}</xsl:text-->
     <xsl:call-template name="edmac:par-start"/>
-    <xsl:text>&lb;&lb;\eledsection*{</xsl:text>
+    <xsl:text>&lb;&lb;\eledsection[</xsl:text>
+    <xsl:apply-templates mode="text:text-only"/>
+    <xsl:text>]{</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>}</xsl:text>
     <xsl:call-template name="edmac:par-end"/>
@@ -188,6 +190,36 @@
     </xsl:choose>
     <xsl:text>}</xsl:text>
   </xsl:template>
+
+
+  <!-- a mode if text text only (without macros that can cause run away arguments) is needed,
+    e.g. in the optional argument of \section -->
+  <xsl:mode name="text:text-only" on-no-match="shallow-skip" visibility="public"/>
+
+  <xsl:template mode="text:text-only" match="text()">
+    <!-- we have to drop square brackets for syntactical reasons! -->
+    <xsl:value-of select=". => replace('[\[\]]', '') => replace('\s+', ' ')"/>
+  </xsl:template>
+
+  <xsl:template mode="text:text-only" match="app">
+    <xsl:apply-templates mode="text:text-only" select="lem"/>
+  </xsl:template>
+
+  <xsl:template mode="text:text-only" match="choice[sic and corr]">
+    <xsl:apply-templates mode="text:text-only" select="corr"/>
+  </xsl:template>
+
+  <xsl:template mode="text:text-only" match="choice[abbr and expan]">
+    <xsl:apply-templates mode="text:text-only" select="expan"/>
+  </xsl:template>
+
+  <xsl:template mode="text:text-only" match="choice[seg]">
+    <xsl:apply-templates mode="text:text-only" select="seg[1]"/>
+  </xsl:template>
+
+  <xsl:template mode="text:text-only" match="note"/>
+
+
 
   <!-- make a footnote with an apparatus entry if there is one for the context element.
     You probably want to override this, e.g., with app:apparatus-footnote and note:editorial-note. -->
