@@ -25,7 +25,7 @@
         <xsl:if test="$predicate">
             <xsl:text>&lb;\pstart</xsl:text>
             <xsl:value-of select="$edmac:pstart-opt"/>
-            <xsl:text> </xsl:text>
+            <xsl:text>{} </xsl:text>
             <!-- to end macro, instead of {} -->
         </xsl:if>
     </xsl:template>
@@ -49,7 +49,7 @@
         <xsl:if test="$predicate">
             <xsl:text>&lb;\pstart</xsl:text>
             <xsl:value-of select="$edmac:pstart-opt"/>
-            <xsl:text> </xsl:text>
+            <xsl:text>{} </xsl:text>
             <!-- to end macro, instead of {} -->
         </xsl:if>
     </xsl:template>
