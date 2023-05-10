@@ -384,7 +384,7 @@
             <xsl:text>}</xsl:text>
             <!-- make \lemma and \Afootnote -->
             <xsl:call-template name="app:apparatus-entry">
-                <xsl:with-param name="entries" select="map:get($entry, 'entries')[1]"/>
+                <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
             </xsl:call-template>
             <xsl:text>} %&lb;</xsl:text>
         </xsl:if>
