@@ -178,6 +178,14 @@
         <xsl:value-of select="concat(generate-id(), '-end')"/>
     </xsl:template>
 
+    <xsl:template mode="edmac:edlabel-start" match="sic">
+        <xsl:value-of select="concat(generate-id(), '-start')"/>
+    </xsl:template>
+
+    <xsl:template mode="edmac:edlabel-end" match="sic">
+        <xsl:value-of select="concat(generate-id(), '-end')"/>
+    </xsl:template>
+
 
     <xsl:template mode="edmac:edlabel-start edmac:edlabel-end" match="note[not(@fromTarget)]">
         <xsl:value-of select="generate-id(parent::*)"/>
