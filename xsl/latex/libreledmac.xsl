@@ -57,7 +57,7 @@
     <!-- used to add \pend in case, where the apparatus entry ends outside of a block element like p or l -->
     <xsl:template name="edmac:app-end" visibility="public">
         <xsl:variable name="predicate" as="xs:boolean">
-            <xsl:apply-templates mode="edmac:app-pstart" select="."/>
+            <xsl:apply-templates mode="edmac:app-pend" select="."/>
         </xsl:variable>
         <xsl:if test="$predicate">
             <xsl:text>&lb;\pend</xsl:text>
