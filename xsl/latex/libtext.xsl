@@ -8,8 +8,12 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-  exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0"
-  default-mode="text:text">
+  xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
+  xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
+    package-version="1.0.0"/>
 
   <xsl:mode name="text:text" on-no-match="shallow-skip" visibility="public"/>
 
@@ -35,25 +39,25 @@
   <xsl:template match="head">
     <!-- TODO -->
     <!--xsl:text>&lb;&lb;\noindent{}</xsl:text-->
-    <xsl:call-template name="text:par-start"/>
+    <xsl:call-template name="edmac:par-start"/>
     <xsl:text>&lb;&lb;\eledsection*{</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>}</xsl:text>
-    <xsl:call-template name="text:par-end"/>
+    <xsl:call-template name="edmac:par-end"/>
   </xsl:template>
 
   <xsl:template match="p">
-    <xsl:call-template name="text:par-start"/>
+    <xsl:call-template name="edmac:par-start"/>
     <xsl:apply-templates/>
-    <xsl:call-template name="text:par-end"/>
+    <xsl:call-template name="edmac:par-end"/>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
   <!-- simple support for verse -->
   <xsl:template match="l">
-    <xsl:call-template name="text:par-start"/>
+    <xsl:call-template name="edmac:par-start"/>
     <xsl:apply-templates/>
-    <xsl:call-template name="text:par-end"/>
+    <xsl:call-template name="edmac:par-end"/>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
@@ -88,21 +92,25 @@
   <!-- related to critical apparatus and notes -->
 
   <xsl:template match="app">
+    <xsl:call-template name="edmac:app-start"/>
     <xsl:apply-templates select="lem"/>
     <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="anchor">
-    <xsl:call-template name="text:edlabel">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="context" select="."/>
       <xsl:with-param name="suffix" select="''"/>
     </xsl:call-template>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="rdg"/>
 
   <xsl:template match="lem[//variantEncoding/@medthod eq 'parallel-segmentation']">
-    <xsl:call-template name="text:edlabel">
+    <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="context" select="parent::app"/>
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
@@ -114,29 +122,61 @@
   <xsl:template match="witDetail"/>
 
   <xsl:template match="note">
+    <xsl:call-template name="edmac:app-start"/>
     <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="gap">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:text>[...]</xsl:text>
+    <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="unclear">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <!--xsl:text>[? </xsl:text-->
     <xsl:apply-templates/>
     <!--xsl:text> ?]</xsl:text-->
+    <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="choice[child::sic and child::corr]">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates select="corr"/>
+    <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="sic[not(parent::choice)]">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates/>
+    <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template match="corr[not(parent::choice)]">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates/>
+    <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
   <xsl:template name="text:edlabel">
