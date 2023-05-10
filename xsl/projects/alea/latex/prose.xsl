@@ -189,14 +189,6 @@
     package-version="1.0.0">
     <xsl:override>
 
-      <xsl:template name="text:par-start">
-        <xsl:text>&lb;\pstart[\setRL]</xsl:text>
-      </xsl:template>
-
-      <xsl:template name="text:par-end">
-        <xsl:text>&lb;\pend</xsl:text>
-      </xsl:template>
-
       <!-- make apparatus footnotes -->
       <xsl:template name="text:inline-footnotes">
         <xsl:message>apparatus footnote</xsl:message>

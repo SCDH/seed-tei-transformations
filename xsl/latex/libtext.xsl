@@ -65,11 +65,6 @@
     <xsl:text>\hfill{}</xsl:text>
   </xsl:template>
 
-
-  <!-- hooks for macros at the beginning and end of a paragraph -->
-  <xsl:template name="text:par-start" visibility="public"/>
-  <xsl:template name="text:par-end" visibility="public"/>
-
   <xsl:template match="pb">
     <xsl:text>\pb{</xsl:text>
     <xsl:value-of select="@n"/>
