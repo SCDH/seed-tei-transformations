@@ -92,22 +92,25 @@
     <xsl:mode name="edmac:app-pend" on-no-match="fail"/>
 
     <!-- app from double-end-point behind paragraph does not get a \pstart -->
-    <xsl:template mode="edmac:app-pstart" match="app[not(ancestor::p or ancestor::l)
-                   and //variantEncoding[@method eq 'double-end-point' and @location eq 'inline']
+    <xsl:template mode="edmac:app-pstart" priority="10"
+        match="app[not(ancestor::p or ancestor::head or ancestor::l)
+                   and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @from]">
         <xsl:sequence select="false()"/>
     </xsl:template>
 
     <!-- app from double-end-point before paragraph does not get a \pend -->
-    <xsl:template mode="edmac:app-pend" match="app[not(ancestor::p or ancestor::l)
-        and //variantEncoding[@method eq 'double-end-point' and @location eq 'inline']
-        and @to]">
+    <xsl:template mode="edmac:app-pend" priority="10"
+        match="app[not(ancestor::p or ancestor::head or ancestor::l)
+                   and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
+                   and @to]">
         <xsl:sequence select="false()"/>
     </xsl:template>
 
     <!-- apparatus elements outside a paragraph or other text block get a \pstart and \pend,
         if no other more special rule matches -->
-    <xsl:template mode="edmac:app-pstart edmac:app-pend" match="*[not(ancestor::p or ancestor::l)]">
+    <xsl:template mode="edmac:app-pstart edmac:app-pend" priority="2"
+        match="*[not(ancestor::p or ancestor::head or ancestor::l)]">
         <xsl:sequence select="true()"/>
     </xsl:template>
 
