@@ -212,7 +212,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   <xsl:mode on-no-match="shallow-skip"/>
 
-  <xsl:template match="/ | TEI">
+  <xsl:template match="/ | TEI" visibility="public">
     <xsl:call-template name="latex-header"/>
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
     <xsl:call-template name="latex-front"/>
@@ -223,7 +223,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
   </xsl:template>
 
-  <xsl:template name="latex-header">
+  <xsl:template name="latex-header" visibility="public">
     <!-- it does not work with koma-script classes
     <xsl:text>\documentclass{scrbook}</xsl:text>
     <xsl:text>&lb;\KOMAoption{fontsize}{14pt}</xsl:text>
@@ -306,10 +306,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     -->
   </xsl:template>
 
-  <xsl:template name="latex-front">
+  <xsl:template name="latex-front" visibility="public">
     <xsl:text>&lb;%%\maketitle</xsl:text>
   </xsl:template>
 
-  <xsl:template name="latex-back"/>
+  <xsl:template name="latex-back" visibility="public"/>
 
 </xsl:package>
