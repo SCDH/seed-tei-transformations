@@ -126,14 +126,7 @@
         <xsl:param name="context" as="node()" select="." required="false"/>
         <xsl:param name="suffix" as="xs:string" select="''" required="false"/>
         <xsl:text>\edlabel{</xsl:text>
-        <xsl:choose>
-            <xsl:when test="$context/@xml:id">
-                <xsl:value-of select="$context/@xml:id"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="concat(generate-id($context), $suffix)"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:value-of select="concat(if ($context/@xml:id) then $context/@xml:id else generate-id($context), $suffix)"/>
         <xsl:text>}</xsl:text>
     </xsl:template>
 
@@ -148,12 +141,12 @@
 
     <xsl:template mode="edmac:edlabel-start"
         match="app[//variantEncoding/@method eq 'parallel-segmentation']">
-        <xsl:value-of select="concat(generate-id(), '-start')"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end"
         match="app[//variantEncoding/@method eq 'parallel-segmentation']">
-        <xsl:value-of select="concat(generate-id(), '-end')"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start"
@@ -167,43 +160,40 @@
 
     <xsl:template mode="edmac:edlabel-end"
         match="app[//variantEncoding/@method ne 'parallel-segmentation']">
-        <xsl:value-of select="generate-id()"/>
+        <xsl:value-of select="if (@xml:id) then @xml:id else generate-id()"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="corr">
-        <xsl:value-of select="concat(generate-id(), '-start')"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="corr">
-        <xsl:value-of select="concat(generate-id(), '-end')"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="sic">
-        <xsl:value-of select="concat(generate-id(), '-start')"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="sic">
-        <xsl:value-of select="concat(generate-id(), '-end')"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
     </xsl:template>
 
 
-    <xsl:template mode="edmac:edlabel-start edmac:edlabel-end" match="note[not(@fromTarget)]">
-        <xsl:value-of select="generate-id(parent::*)"/>
+    <xsl:template mode="edmac:edlabel-start" match="note">
+        <xsl:value-of select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-start')"/>
+    </xsl:template>
+
+    <xsl:template mode="edmac:edlabel-end" match="note">
+        <xsl:value-of select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-end')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="note[@fromTarget]">
-        <xsl:choose>
-            <xsl:when test="@xml:id">
-                <xsl:value-of select="@xml:id"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="generate-id()"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:value-of select="substring(@fromTarget, 2)"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="note[@fromTarget]">
-        <xsl:value-of select="substring(@fromTarget, 2)"/>
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="*">
