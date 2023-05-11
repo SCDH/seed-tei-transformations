@@ -281,12 +281,22 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
     -->
     <xsl:text>&lb;\usepackage{reledmac}</xsl:text>
+    <xsl:text>&lb;\renewcommand{\footfudgefiddle}{100}</xsl:text>
+    <xsl:text>&lb;\lineation{page}</xsl:text>
+    <xsl:text>&lb;\linenummargin{outer}</xsl:text>
+    <xsl:text>&lb;\fnpos{critical-familiar}</xsl:text>
     <xsl:text>&lb;\Xarrangement{paragraph}</xsl:text>
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
     <xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
     <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text>
+    <xsl:text>&lb;\AtEveryPstart{\noindent\setRL}</xsl:text>
+    <xsl:text>&lb;\setlength{\parindent}{0pt}</xsl:text>
+
+    <xsl:text>&lb;\pagestyle{plain}</xsl:text>
+    <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{ |\ledinnernote{#1} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
