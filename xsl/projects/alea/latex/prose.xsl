@@ -19,7 +19,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
-  xmlns:text="http://scdh.wwu.de/transform/text#"
+  xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
@@ -184,6 +184,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
           </xsl:otherwise>
         </xsl:choose>
       </xsl:template>
+      <!-- dito -->
+      <xsl:template mode="edmac:edlabel-start" match="note[@target]">
+        <xsl:value-of select="substring(@target, 2)"/>
+      </xsl:template>
+      <xsl:template mode="edmac:edlabel-end" match="note[@target]">
+        <xsl:value-of select="concat(generate-id(), '-end')"/>
+      </xsl:template>
+
 
       <!-- drop mentioned -->
       <xsl:template mode="note:editorial-note" match="mentioned"/>
