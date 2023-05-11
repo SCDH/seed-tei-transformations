@@ -1,3 +1,10 @@
+<!-- XSLT transformation from TEI to LaTeX
+
+EXAMPLE USAGE:
+
+target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -s:test/alea/Prosa/Sag_al_mutawwaq/Sag_al_mutawwaq.tei.xml wit-catalog=../../WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt="[\noindent\setRL]"
+
+-->
 <!DOCTYPE package [
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
