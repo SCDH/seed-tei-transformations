@@ -224,7 +224,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   </xsl:template>
 
   <xsl:template name="latex-header">
+    <!-- it does not work with koma-script classes
+    <xsl:text>\documentclass{scrbook}</xsl:text>
+    <xsl:text>&lb;\KOMAoption{fontsize}{14pt}</xsl:text>
+    -->
     <xsl:text>\documentclass{book}</xsl:text>
+    <xsl:text>&lb;\usepackage[fontsize=15pt]{scrextend}</xsl:text>
+
+    <xsl:text>&lb;%\usepackage{showframe}</xsl:text>
 
     <!-- input encoding -->
     <xsl.text>&lb;\usepackage{ifluatex}</xsl.text>
