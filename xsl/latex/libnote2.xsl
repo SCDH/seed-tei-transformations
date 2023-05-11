@@ -29,7 +29,9 @@
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
-        package-version="1.0.0"/>
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="*" visibility="public"/>
+    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libnote2.xsl"
