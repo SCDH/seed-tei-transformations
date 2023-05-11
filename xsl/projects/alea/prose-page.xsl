@@ -59,7 +59,7 @@
             <xsl:otherwise>
                 <!-- a sequence from external and local witnesses -->
                 <xsl:sequence select="
-                        (doc($wit-catalog)/descendant::witness[@xml:id],
+                        (doc(resolve-uri($wit-catalog, base-uri()))/descendant::witness[@xml:id],
                         //sourceDesc//witness[@xml:id])"/>
             </xsl:otherwise>
         </xsl:choose>
