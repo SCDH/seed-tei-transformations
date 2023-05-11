@@ -53,10 +53,12 @@
         <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
       </xsl:when>
       <xsl:otherwise>
-        <!-- a sequence from external and local witnesses -->
+        <!-- a sequence from external and local witnesses.
+          We only use the ones with a siglum. -->
         <xsl:sequence select="
           (//sourceDesc//witness[@xml:id],
-          doc(resolve-uri($wit-catalog, base-uri()))/descendant::witness[@xml:id])"/>
+          doc(resolve-uri($wit-catalog, base-uri()))/descendant::witness[@xml:id])
+          [descendant::abbr[@type eq 'siglum']]"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
