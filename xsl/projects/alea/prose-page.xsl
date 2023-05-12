@@ -292,7 +292,8 @@
                     body {
                         direction: <xsl:value-of select="i18n:language-direction(/TEI/text)"/>;
                         font-family:"<xsl:value-of select="$font-name"/>";
-                        width: 40em;
+                        width: 30em;
+                        font-size: 1.2em;
                     }
                     .metadata {
                         direction: ltr;
