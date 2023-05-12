@@ -19,10 +19,9 @@
 
 
     <target name="test">
-        <!-- xsl/common/libwit.xsl has an abstract variable
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libwit.xspec"/>
-        </antcall> -->
+        </antcall>
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/json/witnesses.xspec"/>
         </antcall>
