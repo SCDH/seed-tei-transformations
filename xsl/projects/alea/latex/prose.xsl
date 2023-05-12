@@ -220,7 +220,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   <xsl:mode on-no-match="shallow-skip"/>
 
-  <xsl:template match="/ | TEI" visibility="public">
+  <xsl:template match="/ | TEI">
     <xsl:call-template name="latex-header"/>
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
     <xsl:call-template name="latex-front"/>
