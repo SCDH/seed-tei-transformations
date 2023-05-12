@@ -29,6 +29,9 @@
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libref.xspec"/>
         </antcall>
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libentry2.xspec"/>
+        </antcall>
     </target>
 
 </project>

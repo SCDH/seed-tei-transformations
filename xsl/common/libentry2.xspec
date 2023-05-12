@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map" xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="libentry2.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-with-app">
+        <t:TEI>
+            <t:teiHeader>
+                <t:encodingDesc>
+                    <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                </t:encodingDesc>
+            </t:teiHeader>
+            <t:text>
+                <t:body>
+                    <t:p>This <t:app><t:lem>is</t:lem><t:rdg wit="#future">will be</t:rdg></t:app>
+                        a</t:p>
+                    <t:p>This <t:app><t:lem/><t:rdg wit="#future">is</t:rdg></t:app> a
+                        sentence.</t:p>
+                    <t:p><t:app><t:lem/><t:rdg wit="#future">Will</t:rdg></t:app> there be a
+                        sentence?</t:p>
+                </t:body>
+            </t:text>
+        </t:TEI>
+    </x:variable>
+
+    <x:scenario label="mode seed:lemma-text-nodes">
+        <x:context select="($tei-with-app//t:p)[1]" mode="seed:lemma-text-nodes"/>
+        <x:expect label="text nodes" test="$x:result => string-join('') => normalize-space()"
+            select="'This is a'"/>
+        <x:expect label="count of text nodes" test="$x:result => count()" select="3"/>
+    </x:scenario>
+
+    <x:scenario label="seed:mk-entry-map() on app">
+        <x:context select="$tei-with-app"/>
+        <x:call function="seed:mk-entry-map">
+            <x:param name="context" select="($x:context//t:app)[1]"/>
+            <x:param name="number" select="1"/>
+            <x:param name="type" select="1"/>
+            <x:param name="lemma-text-nodes" select="($x:context//t:app)[1]/t:lem//text()"
+                as="text()*"/>
+        </x:call>
+        <!-- for whatever reason $x:result has the map twice -->
+        <x:variable name="rc" select="$x:result[1]"/>
+        <x:expect label="type" test="map:get($rc, 'type')" select="1"/>
+        <x:expect label="number" test="map:get($rc, 'number')" select="1"/>
+        <x:expect label="lemma-text-nodes" test="map:get($x:result[1], 'lemma-text-nodes')"
+            >is</x:expect>
+        <x:expect label="lemma-grouping-ids" test="map:get($x:result[1], 'lemma-grouping-ids')"
+            select="(($x:context//t:app)[1]/t:lem//text() ! generate-id()) => string-join('-')"/>
+        <x:expect label="entry" test="map:get($rc, 'entry')">
+            <t:app><t:lem>is</t:lem><t:rdg wit="#future">will be</t:rdg></t:app>
+        </x:expect>
+        <x:expect label="lemma-replacement" test="map:get($rc, 'lemma-replacement')" select="map{}"
+        />
+    </x:scenario>
+
+    <x:scenario label="seed:mk-entry-map() on app with empty lemma">
+        <x:context select="$tei-with-app"/>
+        <x:call function="seed:mk-entry-map">
+            <x:param name="context" select="($x:context//t:app)[2]"/>
+            <x:param name="number" select="1"/>
+            <x:param name="type" select="1"/>
+            <x:param name="lemma-text-nodes" select="($x:context//t:app)[2]/t:lem//text()"
+                as="text()*"/>
+        </x:call>
+        <!-- for whatever reason $x:result has the map twice -->
+        <x:variable name="rc" select="$x:result[1]"/>
+        <x:expect label="type" test="map:get($rc, 'type')" select="1"/>
+        <x:expect label="number" test="map:get($rc, 'number')" select="1"/>
+        <x:expect label="lemma-text-nodes" test="map:get($x:result[1], 'lemma-text-nodes')"
+            select="()"/>
+        <x:expect label="entry" test="map:get($rc, 'entry')">
+            <t:app><t:lem/><t:rdg wit="#future">is</t:rdg></t:app>
+        </x:expect>
+        <x:expect label="lemma-replacement/position"
+            test="map:get($rc, 'lemma-replacement') => map:get('position')" select="'preceding'"/>
+        <x:expect label="lemma-replacement/text"
+            test="map:get($rc, 'lemma-replacement') => map:get('text')" select="'This'"/>
+    </x:scenario>
+
+    <x:scenario label="seed:mk-entry-map() on app with empty lemma and no text before">
+        <x:context select="$tei-with-app"/>
+        <x:call function="seed:mk-entry-map">
+            <x:param name="context" select="($x:context//t:app)[3]"/>
+            <x:param name="number" select="1"/>
+            <x:param name="type" select="1"/>
+            <x:param name="lemma-text-nodes" select="($x:context//t:app)[3]/t:lem//text()"
+                as="text()*"/>
+        </x:call>
+        <!-- for whatever reason $x:result has the map twice -->
+        <x:variable name="rc" select="$x:result[1]"/>
+        <x:expect label="type" test="map:get($rc, 'type')" select="1"/>
+        <x:expect label="number" test="map:get($rc, 'number')" select="1"/>
+        <x:expect label="lemma-text-nodes" test="map:get($x:result[1], 'lemma-text-nodes')"
+            select="()"/>
+        <x:expect label="entry" test="map:get($rc, 'entry')">
+            <t:app><t:lem/><t:rdg wit="#future">Will</t:rdg></t:app>
+        </x:expect>
+        <x:expect label="lemma-replacement/position"
+            test="map:get($rc, 'lemma-replacement') => map:get('position')" select="'following'"/>
+        <x:expect label="lemma-replacement/text"
+            test="map:get($rc, 'lemma-replacement') => map:get('text')" select="'there'"/>
+    </x:scenario>
+
+    <x:scenario label="seed:text-node-in-text() lemma is in text">
+        <x:context select="$tei-with-app"/>
+        <x:call function="seed:text-node-in-text">
+            <x:param name="context" select="($x:context//t:app)[1]/t:lem/text()"/>
+        </x:call>
+        <x:expect select="true()"/>
+    </x:scenario>
+
+    <x:scenario label="seed:text-node-in-text() reading is not in text">
+        <x:context select="$tei-with-app"/>
+        <x:call function="seed:text-node-in-text">
+            <x:param name="context" select="($x:context//t:app)[1]/t:rdg/text()"/>
+        </x:call>
+        <x:expect select="false()"/>
+    </x:scenario>
+
+    <x:scenario label="seed:note-based-apparatus-nodes-map">
+        <x:call function="seed:note-based-apparatus-nodes-map">
+            <x:param name="entries"
+                select="map{'number': 1, 'entry-id': 'a1', 'lemma-grouping-ids': '1-2-3-4'},
+                map{'number': 2, 'entry-id': 'a2', 'lemma-grouping-ids': '3-4'},
+                map{'number': 3, 'entry-id': 'a3', 'lemma-grouping-ids': '1-2-3-4'},
+                map{'number': 4, 'entry-id': 'a4', 'lemma-grouping-ids': '3-4-5'}"/>
+            <x:param name="after" select="true()"/>
+        </x:call>
+        <x:expect label="number of map entries" test="map:size($x:result)" select="3"/>
+        <x:expect label="keys of map" test="map:keys($x:result)" select="('a1', 'a2', 'a4')"/>
+        <x:expect label="entry-id of first entry"
+            test="map:get($x:result, 'a1') => map:get('entry-id')" select="'a1'"/>
+        <x:expect label="number of first entry" test="map:get($x:result, 'a1') => map:get('number')"
+            select="1"/>
+        <x:expect label="count of entries of first entry" pending="entries on branch"
+            test="map:get($x:result, 'a1') => map:get('entries') => count()" select="2"/>
+        <x:expect label="'a1' is amoung th entries of first entry" pending="entries on branch"
+            test="(map:get($x:result, 'a1') => map:get('entries'))[1] => map:get('entry-id')"
+            select="'a1'"/>
+        <x:expect label="'a3' is amoung th entries of first entry" pending="entries on branch"
+            test="(map:get($x:result, 'a1') => map:get('entries'))[2] => map:get('entry-id')"
+            select="'a3'"/>
+    </x:scenario>
+
+</x:description>
