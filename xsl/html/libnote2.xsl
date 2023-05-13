@@ -38,6 +38,7 @@
         <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="final"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
+        <xsl:accept component="variable" names="note:editorial-notes" visibility="public"/>
 
         <xsl:override>
 
@@ -87,7 +88,7 @@
                         <xsl:variable name="entry-id" select="map:get(., 'entry-id')"/>
                         <div class="editorial-note">
                             <span class="editorial-note-number note-number">
-                                <a name="{$entry-id}" href="#text-{$entry-id}">
+                                <a name="app-{$entry-id}" href="#{$entry-id}">
                                     <xsl:value-of select="$number"/>
                                 </a>
                             </span>
@@ -114,6 +115,27 @@
                     </xsl:for-each>
                 </div>
             </xsl:template>
+
+            <!-- make a link to an editorial note if there is one for the context item.
+                The global variable note:editorial-notes must be set for this. -->
+            <xsl:template name="note:footnote-marks" visibility="public">
+                <xsl:variable name="element-id"
+                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:if test="map:contains($note:editorial-notes, $element-id)">
+                    <xsl:variable name="entry" select="map:get($note:editorial-notes, $element-id)"/>
+                    <sup class="apparatus-footnote-mark footnote-mark">
+                        <a name="{$element-id}" href="#app-{$element-id}">
+                            <xsl:value-of select="map:get($entry, 'number')"/>
+                        </a>
+                    </sup>
+                </xsl:if>
+            </xsl:template>
+
+            <xsl:template name="note:inline-alternatives" visibility="private">
+                <!-- TODO -->
+            </xsl:template>
+
+
 
             <!-- template for making the lemma text with some logic for handling empty lemmas -->
             <xsl:template name="note:editorial-note-lemma" visibility="public">

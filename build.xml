@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." name="test">
+<project basedir="." name="test" default="test">
 
     <property name="xspec.version" value="2.2.4"/>
 
@@ -17,20 +17,66 @@
     <echo>classpath: ${java.class.path}</echo>
     <echo>ext.dirs: ${java.ext.dirs}</echo>
 
-
+    <!-- default rule: run all tests -->
     <target name="test">
+        <antcall target="test-xsl-common-libwit.xsl"/>
+        <antcall target="test-xsl-common-libref.xsl"/>
+        <antcall target="test-xsl-common-libentry2.xsl"/>
+        <antcall target="test-xsl-json-witnesses.xsl"/>
+        <antcall target="test-xsl-html-text.xsl"/>
+        <antcall target="test-xsl-html-prose.xsl"/>
+        <antcall target="test-xsl-html-libapp2c.xsl"/>
+        <antcall target="test-xsl-projects-alea-prose-page.xsl"/>
+    </target>
+
+    <target name="test-xsl-common-libwit.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libwit.xspec"/>
         </antcall>
-        <antcall target="xspec.xspec" inheritall="false">
-            <param name="xspec.xml" location="${basedir}/xsl/json/witnesses.xspec"/>
-        </antcall>
+    </target>
+
+    <target name="test-xsl-common-libref.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libref.xspec"/>
         </antcall>
+    </target>
+
+    <target name="test-xsl-common-libentry2.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libentry2.xspec"/>
         </antcall>
     </target>
+
+    <target name="test-xsl-json-witnesses.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/json/witnesses.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-text.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/text.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-prose.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/prose.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-libapp2c.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/libapp2c.xspec"/>
+        </antcall>
+    </target>
+
+
+    <target name="test-xsl-projects-alea-prose-page.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/prose-page.xspec"/>
+        </antcall>
+    </target>
+
 
 </project>

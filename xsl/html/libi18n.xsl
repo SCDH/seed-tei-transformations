@@ -56,7 +56,8 @@ See i18next documentation for more info: https://www.i18next.com
     <!-- name of i18next JSON translations file in $locales-directory/LOCALE/ -->
     <xsl:param name="i18n:default-namespace" select="'translation'"/>
 
-
+    <!-- a sequence of language codes for which the direction is right to left -->
+    <xsl:param name="i18n:rtl-languages" as="xs:string*" select="('ar', 'he')"/>
 
     <!-- a sensible value is e.g. /TEI/@xml:lang -->
     <xsl:variable name="i18n:default-language" as="xs:string" visibility="abstract"/>
@@ -164,14 +165,16 @@ See i18next documentation for more info: https://www.i18next.com
         <xsl:param name="context" as="node()"/>
         <xsl:param name="default" as="xs:string"/>
         <xsl:variable name="lang" as="xs:string" select="i18n:language($context, $default)"/>
+        <xsl:value-of select="i18n:language-code-to-direction($lang)"/>
+    </xsl:function>
+
+    <!-- get the direction for a language code -->
+    <xsl:function name="i18n:language-code-to-direction" as="xs:string" visibility="public">
+        <xsl:param name="lang" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="$lang eq 'ar'">
+            <xsl:when test="some $l in $i18n:rtl-languages satisfies $l eq $lang">
                 <xsl:value-of select="'rtl'"/>
             </xsl:when>
-            <xsl:when test="$lang eq 'he'">
-                <xsl:value-of select="'rtl'"/>
-            </xsl:when>
-            <!-- TODO: add other languages as needed -->
             <xsl:otherwise>
                 <xsl:value-of select="'ltr'"/>
             </xsl:otherwise>
