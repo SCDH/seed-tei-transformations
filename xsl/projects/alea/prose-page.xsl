@@ -19,7 +19,7 @@
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
-    <!-- optional: the URI of the projects central witness catalogue -->
+    <!-- optional: the URI of the project's central witness catalogue -->
     <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
 
     <!-- A sequence of IDs of annotations to be transformed.
@@ -71,26 +71,12 @@
     </xsl:variable>
 
 
-    <xsl:variable name="witnesses" as="element()*">
-        <xsl:choose>
-            <xsl:when test="$wit-catalog eq string()">
-                <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <!-- a sequence from external and local witnesses -->
-                <xsl:sequence select="
-                        (doc($wit-catalog)/descendant::witness[@xml:id],
-                        //sourceDesc//witness[@xml:id])"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:variable>
-
-
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
         <xsl:override>
-            <xsl:variable name="i18n:default-language" as="xs:string" select="/*/@xml:lang"/>
+            <xsl:variable name="i18n:default-language" as="xs:string"
+                select="(/*/@xml:lang, 'ar')[1]"/>
         </xsl:override>
     </xsl:use-package>
 
@@ -109,6 +95,8 @@
             visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
     </xsl:use-package>
+
+    <xsl:variable name="apparatus-entries" select="app:apparatus-entries($current)"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
@@ -179,7 +167,7 @@
 
             <!-- set app:apparatus-entries for footnote marks in the main text -->
             <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))"
-                select="app:apparatus-entries($current) => seed:note-based-apparatus-nodes-map(true())"/>
+                select="seed:note-based-apparatus-nodes-map($apparatus-entries, true())"/>
 
         </xsl:override>
     </xsl:use-package>
@@ -189,10 +177,25 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/libmeta.xsl"
         package-version="1.0.0">
         <xsl:override>
-            <xsl:variable name="wit:witnesses" as="element()*" select="$witnesses"/>
+            <xsl:variable name="wit:witnesses" as="element()*">
+                <xsl:choose>
+                    <xsl:when test="$wit-catalog eq string()">
+                        <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <!-- a sequence from external and local witnesses -->
+                        <xsl:sequence select="
+                                (doc($wit-catalog)/descendant::witness[@xml:id],
+                                //sourceDesc//witness[@xml:id])"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
         </xsl:override>
     </xsl:use-package>
 
+
+    <xsl:variable name="editorial-notes" as="map(*)"
+        select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2)"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
@@ -234,7 +237,7 @@
 
             <!-- set note:editorial-notes for footnote marks in the text -->
             <xsl:variable name="note:editorial-notes" as="map(xs:string, map(*))"
-                select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
+                select="seed:note-based-apparatus-nodes-map($editorial-notes, true())"/>
 
         </xsl:override>
     </xsl:use-package>
@@ -261,10 +264,10 @@
         </xsl:override>
     </xsl:use-package>
 
-    <xsl:use-package
+    <!--    <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
         package-version="1.0.0"> </xsl:use-package>
-
+-->
 
 
     <!-- 
@@ -407,8 +410,7 @@
                     <xsl:apply-templates select="$current" mode="text:text"/>
                 </section>
                 <hr/>
-                <!--                
-                 <section class="variants">
+                <section class="variants">
                     <xsl:call-template name="app:note-based-apparatus-for-context">
                         <xsl:with-param name="app-context" select="$current"/>
                     </xsl:call-template>
@@ -416,13 +418,14 @@
                 <hr/>
                 <section class="comments">
                     <xsl:call-template name="note:note-based-editorial-notes">
-                        <xsl:with-param name="notes" select="$note:editorial-notes"/>
+                        <xsl:with-param name="notes" select="$editorial-notes"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
-                -->
+
                 <xsl:call-template name="i18n:language-chooser"/>
                 <xsl:call-template name="i18n:load-javascript"/>
+
                 <!--
                 <xsl:call-template name="surah-translations"/>
                 -->
