@@ -1,4 +1,9 @@
-<!-- a package just for the purpose of testing libtext.xsl -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- a transformation that just outputs the text using libtext.xsl
+
+This is mainly for testing libtext.xsl, but can be used to get a <div>
+containing the text.
+-->
 <xsl:package
   name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/test-libtext.xsl"
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

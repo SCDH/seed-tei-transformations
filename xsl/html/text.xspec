@@ -2,7 +2,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="test-libtext.xsl" run-as="external">
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="text.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -66,6 +66,17 @@
         </x:context>
         <x:expect label="result with language and direction information">
             <div class="text" xml:lang="ar" lang="ar" dir="rtl" id="tei-ar">...</div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on sample without language information">
+        <x:context mode="text:text">
+            <text xmlns="http://www.tei-c.org/ns/1.0" xml:id="unknown-lang">
+                <body/>
+            </text>
+        </x:context>
+        <x:expect label="result with language and direction information">
+            <div class="text" xml:lang="en" lang="en" dir="ltr" id="unknown-lang">...</div>
         </x:expect>
     </x:scenario>
 
