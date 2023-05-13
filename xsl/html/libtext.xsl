@@ -39,26 +39,20 @@ Note, that there is a default mode in this package.
 
     <xsl:mode name="text:text" visibility="public"/>
 
+    <!-- text:hook-before and text:hook-after are modes that offer hooks for
+        inserting project-specific things before and after an element -->
+    <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
+    <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
+
+
     <!-- parts of the document -->
 
     <!-- parts that should not be generate output in mode text:text -->
     <xsl:template match="teiHeader"/>
 
-    <xsl:template match="body">
-        <div class="body">
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="front">
-        <div class="front">
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="back">
-        <div class="back">
-            <xsl:apply-templates/>
+    <xsl:template match="body | front | back">
+        <div class="{name()}">
+            <xsl:apply-templates select="@* | node()"/>
         </div>
     </xsl:template>
 
@@ -66,7 +60,9 @@ Note, that there is a default mode in this package.
     <!-- markup that has to be invisible in the edited text -->
 
     <xsl:template match="note">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:call-template name="text:apparatus-links"/>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <!-- rdg: Do not output reading (variant) in all modes generating edited text. -->
@@ -80,8 +76,10 @@ Note, that there is a default mode in this package.
     <xsl:template match="witDetail"/>
 
     <xsl:template match="app">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:apply-templates select="lem"/>
         <xsl:call-template name="text:apparatus-links"/>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
@@ -93,39 +91,68 @@ Note, that there is a default mode in this package.
     </xsl:template>
 
     <xsl:template match="gap">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:text>[...]</xsl:text>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <xsl:template match="unclear">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <!--xsl:text>[? </xsl:text-->
         <xsl:apply-templates/>
         <!--xsl:text> ?]</xsl:text-->
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <xsl:template match="choice[child::sic and child::corr]">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:apply-templates select="corr"/>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <xsl:template match="sic[not(parent::choice)]">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:apply-templates/>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <xsl:template match="corr[not(parent::choice)]">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:apply-templates/>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
-    <!-- for segmentation, a prefix or suffix may be needed -->
-    <xsl:template match="seg">
-        <xsl:call-template name="text:tag-start"/>
-        <xsl:apply-templates/>
-        <xsl:call-template name="text:tag-end"/>
+    <!-- segmentation offers hooks for project-specific insertions -->
+    <xsl:template match="seg | s | w | c | pc">
+        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <span class="{name()}">
+            <xsl:apply-templates select="@* | node()"/>
+        </span>
+        <xsl:apply-templates mode="text:hook-after" select="."/>
+    </xsl:template>
+
+    <xsl:template match="@xml:id">
+        <xsl:attribute name="id" select="."/>
+    </xsl:template>
+
+    <xsl:template match="@xml:lang">
+        <xsl:attribute name="xml:lang" select="."/>
+        <xsl:attribute name="lang" select="."/>
+    </xsl:template>
+
+    <xsl:template match="@n">
+        <xsl:attribute name="data-tei-n" select="."/>
+    </xsl:template>
+
+    <xsl:template match="@type">
+        <xsl:attribute name="data-tei-type" select="."/>
     </xsl:template>
 
     <xsl:template name="text:tag-start" visibility="public"/>
 
     <xsl:template name="text:tag-end" visibility="public"/>
 
-    <xsl:template name="text:standard-attributes" visibility="public">
+    <xsl:template name="text:standard-attributes" visibility="private">
         <xsl:if test="@xml:id">
             <xsl:attribute name="id" select="@xml:id"/>
         </xsl:if>
@@ -137,7 +164,7 @@ Note, that there is a default mode in this package.
 
     <!-- make a link to an apparatus entry if there is one for the context element -->
     <xsl:template name="text:apparatus-links" visibility="public">
-        <xsl:variable name="element-id" select="generate-id()"/>
+        <xsl:variable name="element-id" select="if (@xml:id) then @xml:id else generate-id()"/>
         <xsl:if test="map:contains($text:apparatus-entries, $element-id)">
             <xsl:variable name="entry" select="map:get($text:apparatus-entries, $element-id)"/>
             <sup class="apparatus-footnote-mark footnote-mark">

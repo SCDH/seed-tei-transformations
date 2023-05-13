@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="test-libtext.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+            </teiHeader>
+            <text>
+                <front>
+                    <div>
+                        <head>Vorrede</head>
+                        <p>Der hochwohlgebohrenen Prinzessin Z.</p>
+                    </div>
+                </front>
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
+                                objektive Realität im Satz über die Summe der Innenwinkel des <app
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.</p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
+                                eine dritte Gerade geschnitten werden.</p>
+                        </div>
+                    </div>
+                    <div xml:id="d2" n="2">
+                        <lg>
+                            <l>
+                                <w n="1">Beim</w>
+                                <w n="2">Styx</w><pc>!</pc>
+                                <w n="3">Drüber</w>
+                            </l>
+                        </lg>
+                    </div>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="footnote to the apparatus entry">
+        <x:param name="apparatus-entries"
+            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 1, 'after': true()} }"/>
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
+        <x:expect label="result has a footnote">...<sup
+                class="apparatus-footnote-mark footnote-mark">
+                <a name="text-d1.1.a1" href="#d1.1.a1">1</a>
+            </sup>.</x:expect>
+    </x:scenario>
+
+    <x:scenario label="footnote to the apparatus entry (before)"
+        pending="logic for evaluating 'after' still missing">
+        <x:param name="apparatus-entries"
+            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 5, 'after': false()} }"/>
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
+        <x:expect label="result has a footnote">...<sup
+                class="apparatus-footnote-mark footnote-mark">
+                <a name="text-d1.1.a1" href="#d1.1.a1">5</a>
+            </sup>Dreiecks.</x:expect>
+    </x:scenario>
+
+    <x:scenario label="text:hook-after: [sic!] after sic element">
+        <x:param name="apparatus-entries"
+            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 5, 'after': false()} }"/>
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p2']" mode="text:text"/>
+        <x:expect label="result has a footnote" test="normalize-space()"
+            select="'Vorausgesetzt werden die Sätze über Wechselwinkel und Gegenwinkel an Paralellen [sic!], die durch eine dritte Gerade geschnitten werden.'"
+        />
+    </x:scenario>
+
+</x:description>
