@@ -24,7 +24,9 @@
         <antcall target="test-xsl-common-libentry2.xsl"/>
         <antcall target="test-xsl-json-witnesses.xsl"/>
         <antcall target="test-xsl-html-text.xsl"/>
+        <antcall target="test-xsl-html-prose.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
+        <antcall target="test-xsl-projects-alea-prose-page.xsl"/>
     </target>
 
     <target name="test-xsl-common-libwit.xsl">
@@ -66,6 +68,13 @@
     <target name="test-xsl-html-libapp2c.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/libapp2c.xspec"/>
+        </antcall>
+    </target>
+
+
+    <target name="test-xsl-projects-alea-prose-page.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/prose-page.xspec"/>
         </antcall>
     </target>
 
