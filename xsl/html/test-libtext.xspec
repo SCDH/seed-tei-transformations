@@ -15,7 +15,7 @@
                     </titleStmt>
                 </fileDesc>
             </teiHeader>
-            <text>
+            <text xml:id="the-text">
                 <front>
                     <div>
                         <head>Vorrede</head>
@@ -49,6 +49,61 @@
             </text>
         </TEI>
     </x:variable>
+
+
+    <x:scenario label="mode text:text on whole sample, testing language attributes">
+        <x:context select="$tei-text" mode="text:text"/>
+        <x:expect label="result with language and direction information">
+            <div class="text" xml:lang="de" lang="de" dir="ltr" id="the-text">...</div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on arabic sample">
+        <x:context mode="text:text">
+            <text xmlns="http://www.tei-c.org/ns/1.0" xml:id="tei-ar" xml:lang="ar">
+                <body/>
+            </text>
+        </x:context>
+        <x:expect label="result with language and direction information">
+            <div class="text" xml:lang="ar" lang="ar" dir="rtl" id="tei-ar">...</div>
+        </x:expect>
+    </x:scenario>
+
+
+    <x:scenario label="mode text:text on front">
+        <x:context select="$tei-text//t:front" mode="text:text"/>
+        <x:expect label="result">
+            <div class="front">VorredeDer hochwohlgebohrenen Prinzessin Z.</div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on d2">
+        <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
+        <x:expect label="result">
+            <span class="w" data-tei-n="1">Beim</span>
+            <span class="w" data-tei-n="2">Styx</span>
+            <span class="pc">!</span>
+            <span class="w" data-tei-n="3">Drüber</span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on apparatus">
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
+        <x:expect label="result" test="normalize-space()"
+            select="'Synthetische Urteile a priori beweisen objektive Realität im Satz über die Summe der Innenwinkel des Dreiecks.'"
+        />
+    </x:scenario>
+
+    <x:scenario
+        label="the text:apparatus-entries variable can't be set but by use-package overriding">
+        <x:variable name="apparatus-entries"
+            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 1, 'after': true()} }"/>
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
+        <x:expect label="result" test="normalize-space()"
+            select="'Synthetische Urteile a priori beweisen objektive Realität im Satz über die Summe der Innenwinkel des Dreiecks.'"
+        />
+    </x:scenario>
+
 
     <x:scenario label="footnote to the apparatus entry">
         <x:param name="apparatus-entries"

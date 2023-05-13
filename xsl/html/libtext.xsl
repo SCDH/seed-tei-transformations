@@ -30,7 +30,11 @@ Note, that there is a default mode in this package.
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
+        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
         <xsl:accept component="function" names="i18n:language#1" visibility="private"/>
+        <xsl:accept component="function" names="i18n:language-direction#1" visibility="private"/>
+        <xsl:accept component="function" names="i18n:language-code-to-direction#1"
+            visibility="private"/>
     </xsl:use-package>
 
     <!-- override this with a map when you need footnote signs to apparatus entries. See app:note-based-apparatus-nodes-map#2 -->
@@ -49,6 +53,19 @@ Note, that there is a default mode in this package.
 
     <!-- parts that should not be generate output in mode text:text -->
     <xsl:template match="teiHeader"/>
+
+    <xsl:template match="text">
+        <div class="text">
+            <xsl:if test="not(@xml:lang)">
+                <!-- assert that the language is set -->
+                <xsl:variable name="lang" select="i18n:language(.)"/>
+                <xsl:attribute name="xml:lang" select="$lang"/>
+                <xsl:attribute name="lang" select="$lang"/>
+                <xsl:attribute name="dir" select="i18n:language-code-to-direction($lang)"/>
+            </xsl:if>
+            <xsl:apply-templates select="@* | node()"/>
+        </div>
+    </xsl:template>
 
     <xsl:template match="body | front | back">
         <div class="{name()}">
@@ -150,6 +167,7 @@ Note, that there is a default mode in this package.
     <xsl:template match="@xml:lang">
         <xsl:attribute name="xml:lang" select="."/>
         <xsl:attribute name="lang" select="."/>
+        <xsl:attribute name="dir" select="i18n:language-direction(.)"/>
     </xsl:template>
 
     <xsl:template match="@n">
