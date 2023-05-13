@@ -218,6 +218,10 @@ see xsl/projects/alea/preview.xsl
         The XPath expressions from above are not hard-wired anywhere below.
     -->
 
+    <!-- override this with a map when you need footnote signs to apparatus entries. See seed:note-based-apparatus-nodes-map#2 -->
+    <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
+        visibility="public"/>
+
 
     <!-- Generate apparatus elements for a given context, e.g. / and prepare mappings for them.
         The second argument is an XPath expression that tells what elements should go into the apparatus.
@@ -259,6 +263,12 @@ see xsl/projects/alea/preview.xsl
     <xsl:template name="app:note-based-apparatus" visibility="abstract">
         <xsl:param name="entries" as="map(*)*"/>
     </xsl:template>
+
+    <!-- generate inline footnote marks. Hook this to text:inline-marks -->
+    <xsl:template name="app:footnote-marks" visibility="abstract"/>
+
+    <!-- generate inline alternatives. Hook this to text:inline-marks -->
+    <xsl:template name="app:inline-alternatives" visibility="abstract"/>
 
 
     <!-- the template for an entry -->

@@ -111,6 +111,28 @@
                 </div>
             </xsl:template>
 
+            <!-- make a link to an apparatus entry if there is one for the context item.
+                The global variable $app:apparatus-entries must be set for this. -->
+            <xsl:template name="app:footnote-marks" visibility="public">
+                <xsl:variable name="element-id"
+                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:if test="map:contains($app:apparatus-entries, $element-id)">
+                    <xsl:variable name="entry" select="map:get($app:apparatus-entries, $element-id)"/>
+                    <sup class="apparatus-footnote-mark footnote-mark">
+                        <a name="{$element-id}" href="#app-{$element-id}">
+                            <xsl:value-of select="map:get($entry, 'number')"/>
+                        </a>
+                    </sup>
+                </xsl:if>
+            </xsl:template>
+
+            <!-- make an inline alternative for an entry at the context it.
+                The global variable $app:apparatus-entries must be set for this. -->
+            <xsl:template name="app:inline-alternatives">
+                <!-- TODO -->
+            </xsl:template>
+
+
 
             <!-- the template for an entry -->
             <xsl:template name="app:apparatus-entry" visibility="public">
