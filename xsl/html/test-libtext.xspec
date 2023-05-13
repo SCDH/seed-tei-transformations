@@ -56,7 +56,7 @@
         <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
         <x:expect label="result has a footnote">...<sup
                 class="apparatus-footnote-mark footnote-mark">
-                <a name="text-d1.1.a1" href="#d1.1.a1">1</a>
+                <a name="d1.1.a1" href="#app-d1.1.a1">1</a>
             </sup>.</x:expect>
     </x:scenario>
 
@@ -67,7 +67,7 @@
         <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
         <x:expect label="result has a footnote">...<sup
                 class="apparatus-footnote-mark footnote-mark">
-                <a name="text-d1.1.a1" href="#d1.1.a1">5</a>
+                <a name="d1.1.a1" href="#app-d1.1.a1">5</a>
             </sup>Dreiecks.</x:expect>
     </x:scenario>
 

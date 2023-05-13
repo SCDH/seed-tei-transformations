@@ -92,34 +92,46 @@ Note, that there is a default mode in this package.
 
     <xsl:template match="gap">
         <xsl:apply-templates mode="text:hook-before" select="."/>
+        <!-- use hook instead? -->
         <xsl:text>[...]</xsl:text>
+        <xsl:call-template name="text:apparatus-links"/>
         <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
     <xsl:template match="unclear">
         <xsl:apply-templates mode="text:hook-before" select="."/>
-        <!--xsl:text>[? </xsl:text-->
-        <xsl:apply-templates/>
-        <!--xsl:text> ?]</xsl:text-->
+        <span class="unclear">
+            <xsl:apply-templates select="@* | node()"/>
+        </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:call-template name="text:apparatus-links"/>
     </xsl:template>
 
     <xsl:template match="choice[child::sic and child::corr]">
         <xsl:apply-templates mode="text:hook-before" select="."/>
-        <xsl:apply-templates select="corr"/>
+        <span class="choice-with-sic-and-corr">
+            <xsl:apply-templates select="@* | corr"/>
+        </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:call-template name="text:apparatus-links"/>
     </xsl:template>
 
     <xsl:template match="sic[not(parent::choice)]">
         <xsl:apply-templates mode="text:hook-before" select="."/>
-        <xsl:apply-templates/>
+        <span class="sic">
+            <xsl:apply-templates select="@* | node()"/>
+        </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:call-template name="text:apparatus-links"/>
     </xsl:template>
 
     <xsl:template match="corr[not(parent::choice)]">
         <xsl:apply-templates mode="text:hook-before" select="."/>
-        <xsl:apply-templates/>
+        <span class="corr">
+            <xsl:apply-templates select="@* | node()"/>
+        </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:call-template name="text:apparatus-links"/>
     </xsl:template>
 
     <!-- segmentation offers hooks for project-specific insertions -->
@@ -163,12 +175,14 @@ Note, that there is a default mode in this package.
     </xsl:template>
 
     <!-- make a link to an apparatus entry if there is one for the context element -->
+    <!-- Note: we keep the ID for the text part and prefix IDs for the apparatus
+        and notes parts with 'app-'! -->
     <xsl:template name="text:apparatus-links" visibility="public">
         <xsl:variable name="element-id" select="if (@xml:id) then @xml:id else generate-id()"/>
         <xsl:if test="map:contains($text:apparatus-entries, $element-id)">
             <xsl:variable name="entry" select="map:get($text:apparatus-entries, $element-id)"/>
             <sup class="apparatus-footnote-mark footnote-mark">
-                <a name="text-{$element-id}" href="#{$element-id}">
+                <a name="{$element-id}" href="#app-{$element-id}">
                     <xsl:value-of select="map:get($entry, 'number')"/>
                 </a>
             </sup>
