@@ -96,7 +96,7 @@
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
     </xsl:use-package>
 
-    <xsl:variable name="apparatus-entries" select="app:apparatus-entries($current)"/>
+    <xsl:variable name="apparatus-entries" as="map(*)*" select="app:apparatus-entries($current)"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
@@ -194,7 +194,7 @@
     </xsl:use-package>
 
 
-    <xsl:variable name="editorial-notes" as="map(*)"
+    <xsl:variable name="editorial-notes" as="map(*)*"
         select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2)"/>
 
     <xsl:use-package
