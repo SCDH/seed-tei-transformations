@@ -8,10 +8,8 @@ caesura. Or derive your own.
 This package provides basic components for the main text (edited text), such as
 inserting footnote marks that link to the apparatus and comment sections.
 
-To get such footnote marks, you will have to override the variable
-$text:apparatus-entries, which is a map. The package for generating the apparatus
-should provide a function that provides the correct map. So does libapp2 by
-providing app:note-based-apparatus-nodes-map#2
+To get such footnote marks, you will have to override the variable the template
+text:inline-marks.
 
 Note, that there is a default mode in this package.
 
@@ -36,10 +34,6 @@ Note, that there is a default mode in this package.
         <xsl:accept component="function" names="i18n:language-code-to-direction#1"
             visibility="private"/>
     </xsl:use-package>
-
-    <!-- override this with a map when you need footnote signs to apparatus entries. See app:note-based-apparatus-nodes-map#2 -->
-    <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
-        visibility="public"/>
 
     <xsl:mode name="text:text" visibility="public"/>
 
@@ -78,7 +72,7 @@ Note, that there is a default mode in this package.
 
     <xsl:template match="note">
         <xsl:apply-templates mode="text:hook-before" select="."/>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
         <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
@@ -95,7 +89,7 @@ Note, that there is a default mode in this package.
     <xsl:template match="app">
         <xsl:apply-templates mode="text:hook-before" select="."/>
         <xsl:apply-templates select="lem"/>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
         <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
@@ -111,7 +105,7 @@ Note, that there is a default mode in this package.
         <xsl:apply-templates mode="text:hook-before" select="."/>
         <!-- use hook instead? -->
         <xsl:text>[...]</xsl:text>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
         <xsl:apply-templates mode="text:hook-after" select="."/>
     </xsl:template>
 
@@ -121,7 +115,7 @@ Note, that there is a default mode in this package.
             <xsl:apply-templates select="@* | node()"/>
         </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
     </xsl:template>
 
     <xsl:template match="choice[child::sic and child::corr]">
@@ -130,7 +124,7 @@ Note, that there is a default mode in this package.
             <xsl:apply-templates select="@* | corr"/>
         </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
     </xsl:template>
 
     <xsl:template match="sic[not(parent::choice)]">
@@ -139,7 +133,7 @@ Note, that there is a default mode in this package.
             <xsl:apply-templates select="@* | node()"/>
         </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
     </xsl:template>
 
     <xsl:template match="corr[not(parent::choice)]">
@@ -148,7 +142,7 @@ Note, that there is a default mode in this package.
             <xsl:apply-templates select="@* | node()"/>
         </span>
         <xsl:apply-templates mode="text:hook-after" select="."/>
-        <xsl:call-template name="text:apparatus-links"/>
+        <xsl:call-template name="text:inline-marks"/>
     </xsl:template>
 
     <!-- segmentation offers hooks for project-specific insertions -->
@@ -192,19 +186,9 @@ Note, that there is a default mode in this package.
         </xsl:if>
     </xsl:template>
 
-    <!-- make a link to an apparatus entry if there is one for the context element -->
-    <!-- Note: we keep the ID for the text part and prefix IDs for the apparatus
-        and notes parts with 'app-'! -->
-    <xsl:template name="text:apparatus-links" visibility="public">
-        <xsl:variable name="element-id" select="if (@xml:id) then @xml:id else generate-id()"/>
-        <xsl:if test="map:contains($text:apparatus-entries, $element-id)">
-            <xsl:variable name="entry" select="map:get($text:apparatus-entries, $element-id)"/>
-            <sup class="apparatus-footnote-mark footnote-mark">
-                <a name="{$element-id}" href="#app-{$element-id}">
-                    <xsl:value-of select="map:get($entry, 'number')"/>
-                </a>
-            </sup>
-        </xsl:if>
-    </xsl:template>
+
+    <!-- you probably want to override this for adding footnote marks etc. to the text -->
+    <xsl:template name="text:inline-marks" visibility="public"/>
+
 
 </xsl:package>

@@ -105,37 +105,6 @@
         />
     </x:scenario>
 
-    <x:scenario
-        label="the text:apparatus-entries variable can't be set but by use-package overriding">
-        <x:variable name="apparatus-entries"
-            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 1, 'after': true()} }"/>
-        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
-        <x:expect label="result" test="normalize-space()"
-            select="'Synthetische Urteile a priori beweisen objektive Realität im Satz über die Summe der Innenwinkel des Dreiecks.'"
-        />
-    </x:scenario>
-
-
-    <x:scenario label="footnote to the apparatus entry">
-        <x:param name="apparatus-entries"
-            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 1, 'after': true()} }"/>
-        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
-        <x:expect label="result has a footnote">...<sup
-                class="apparatus-footnote-mark footnote-mark">
-                <a name="d1.1.a1" href="#app-d1.1.a1">1</a>
-            </sup>.</x:expect>
-    </x:scenario>
-
-    <x:scenario label="footnote to the apparatus entry (before)"
-        pending="logic for evaluating 'after' still missing">
-        <x:param name="apparatus-entries"
-            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 5, 'after': false()} }"/>
-        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
-        <x:expect label="result has a footnote">...<sup
-                class="apparatus-footnote-mark footnote-mark">
-                <a name="d1.1.a1" href="#app-d1.1.a1">5</a>
-            </sup>Dreiecks.</x:expect>
-    </x:scenario>
 
     <x:scenario label="text:hook-after: [sic!] after sic element">
         <x:param name="apparatus-entries"
