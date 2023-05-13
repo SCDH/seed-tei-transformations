@@ -97,8 +97,8 @@
                             <span class="apparatus-note-number note-number">
 
                                 <xsl:variable name="entry" select="current-group()[1]"/>
-                                <a name="{map:get($entry, 'entry-id')}"
-                                    href="#text-{map:get($entry, 'entry-id')}">
+                                <a name="app-{map:get($entry, 'entry-id')}"
+                                    href="#{map:get($entry, 'entry-id')}">
                                     <xsl:value-of select="map:get($entry, 'number')"/>
                                 </a>
                             </span>

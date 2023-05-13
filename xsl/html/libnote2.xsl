@@ -87,7 +87,7 @@
                         <xsl:variable name="entry-id" select="map:get(., 'entry-id')"/>
                         <div class="editorial-note">
                             <span class="editorial-note-number note-number">
-                                <a name="{$entry-id}" href="#text-{$entry-id}">
+                                <a name="app-{$entry-id}" href="#{$entry-id}">
                                     <xsl:value-of select="$number"/>
                                 </a>
                             </span>
