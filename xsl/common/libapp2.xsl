@@ -36,7 +36,7 @@ which encoding cristalls go into the apparatus.
 Usage:
 
 Most generic usage needs 2 components
-- the function app:apparatus-entries#2 to generate a map of apparatus entries and pass this map to
+- the function app:apparatus-entries#3 to generate a map of apparatus entries and pass this map to
 - the template app:apparatus
 The funtion takes a context to determine the extension of the apparatus (doc or part) and an XPath
 expression to determine its features.
@@ -192,7 +192,7 @@ see xsl/projects/alea/preview.xsl
             </xsl:choose>
         </xsl:variable>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
-        <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath)"/>
+        <xsl:sequence as="map(*)*" select="app:apparatus-entries($context, $app-entries-xpath, 1)"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a given context, e.g. / -->
@@ -218,10 +218,6 @@ see xsl/projects/alea/preview.xsl
         The XPath expressions from above are not hard-wired anywhere below.
     -->
 
-    <!-- override this with a map when you need footnote signs to apparatus entries. See seed:note-based-apparatus-nodes-map#2 -->
-    <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
-        visibility="public"/>
-
 
     <!-- Generate apparatus elements for a given context, e.g. / and prepare mappings for them.
         The second argument is an XPath expression that tells what elements should go into the apparatus.
@@ -229,6 +225,7 @@ see xsl/projects/alea/preview.xsl
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <xsl:param name="app-entries-xpath" as="xs:string"/>
+        <xsl:param name="type" as="xs:integer"/>
         <!-- we first generate a sequence of all elements that should show up in the apparatus -->
         <xsl:variable name="entry-elements" as="element()*">
             <xsl:choose>
@@ -251,7 +248,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>Elements for apparatus: </xsl:text>
             <xsl:value-of select="$entry-elements ! name()"/>
         </xsl:message>
-        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position(), 1)"/>
+        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position(), $type)"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a sequence of prepared maps -->
@@ -261,14 +258,18 @@ see xsl/projects/alea/preview.xsl
 
     <!-- generate a note-based apparatus for a sequence of prepared maps -->
     <xsl:template name="app:note-based-apparatus" visibility="abstract">
-        <xsl:param name="entries" as="map(*)*"/>
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
     </xsl:template>
 
     <!-- generate inline footnote marks. Hook this to text:inline-marks -->
-    <xsl:template name="app:footnote-marks" visibility="abstract"/>
+    <xsl:template name="app:footnote-marks" visibility="abstract">
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
+    </xsl:template>
 
     <!-- generate inline alternatives. Hook this to text:inline-marks -->
-    <xsl:template name="app:inline-alternatives" visibility="abstract"/>
+    <xsl:template name="app:inline-alternatives" visibility="abstract">
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
+    </xsl:template>
 
 
     <!-- the template for an entry -->
@@ -384,6 +385,35 @@ see xsl/projects/alea/preview.xsl
         match="app[app:variant-encoding(.) eq 'internal-location-referenced']">
         <xsl:apply-templates mode="seed:lemma-text-nodes" select="lem"/>
     </xsl:template>
+
+    <!-- for <note>: if there is no @targetEnd, the referring passage is the whole parent element -->
+    <xsl:template mode="app:lemma-text-nodes-dspt"
+        match="note[not(@targetEnd)] | noteGrp[not(@targetEnd)]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="parent::*"/>
+    </xsl:template>
+
+    <!-- note with @targetEnd -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@targetEnd] | noteGrp[@targetEnd]">
+        <xsl:variable name="targetEnd" as="xs:string" select="substring(@targetEnd, 2)"/>
+        <xsl:variable name="target-end-node" as="node()" select="//*[@xml:id eq $targetEnd]"/>
+        <xsl:choose>
+            <xsl:when test="empty($target-end-node)">
+                <xsl:message>
+                    <xsl:text>No anchor for message with @targetEnd: </xsl:text>
+                    <xsl:value-of select="$targetEnd"/>
+                </xsl:message>
+            </xsl:when>
+            <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
+                <xsl:apply-templates mode="seed:lemma-text-nodes"
+                    select="seed:subtrees-between-anchors(., $target-end-node)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="seed:lemma-text-nodes"
+                    select="seed:subtrees-between-anchors($target-end-node, .)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
 
     <xsl:mode name="app:reading-dspt" on-no-match="shallow-skip" visibility="public"/>
 

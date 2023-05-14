@@ -83,41 +83,43 @@
 
             <!-- generate a note-based apparatus for a sequence of prepared maps -->
             <xsl:template name="app:note-based-apparatus" visibility="public">
-                <xsl:param name="entries" as="map(*)*"/>
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:variable name="merged-entries" select="map:merge($entries)"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>printing note based apparatus for </xsl:text>
+                    <xsl:value-of select="map:size($entries)"/>
+                    <xsl:text> entries</xsl:text>
+                </xsl:message>
                 <div>
-                    <xsl:for-each-group select="$entries"
-                        group-by="map:get(., 'lemma-grouping-ids')">
-                        <xsl:message use-when="system-property('debug') eq 'true'">
-                            <xsl:text>Joining </xsl:text>
-                            <xsl:value-of select="count(current-group())"/>
-                            <xsl:text> apparatus entries referencing text nodes </xsl:text>
-                            <xsl:value-of select="current-grouping-key()"/>
-                        </xsl:message>
+                    <xsl:for-each select="map:keys($entries)">
+                        <xsl:sort select="map:get($entries, .) => map:get('number')"/>
+                        <xsl:variable name="entry-id" select="."/>
+                        <xsl:variable name="entry" select="map:get($entries, $entry-id)"/>
+                        <xsl:variable name="number" select="map:get($entry, 'number')"/>
                         <div class="apparatus-line">
                             <span class="apparatus-note-number note-number">
-
-                                <xsl:variable name="entry" select="current-group()[1]"/>
-                                <a name="app-{map:get($entry, 'entry-id')}"
-                                    href="#{map:get($entry, 'entry-id')}">
+                                <a name="app-{$entry-id}"
+                                    href="#{$entry-id}">
                                     <xsl:value-of select="map:get($entry, 'number')"/>
                                 </a>
                             </span>
                             <!-- call the template that outputs an apparatus entries -->
                             <xsl:call-template name="app:apparatus-entry">
-                                <xsl:with-param name="entries" select="current-group()"/>
+                                <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
                             </xsl:call-template>
                         </div>
-                    </xsl:for-each-group>
+                    </xsl:for-each>
                 </div>
             </xsl:template>
 
             <!-- make a link to an apparatus entry if there is one for the context item.
-                The global variable $app:apparatus-entries must be set for this. -->
+                See seed:note-based-apparatus-nodes-map#2 for making a required map. -->
             <xsl:template name="app:footnote-marks" visibility="public">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
                 <xsl:variable name="element-id"
                     select="if (@xml:id) then @xml:id else generate-id()"/>
-                <xsl:if test="map:contains($app:apparatus-entries, $element-id)">
-                    <xsl:variable name="entry" select="map:get($app:apparatus-entries, $element-id)"/>
+                <xsl:if test="map:contains($entries, $element-id)">
+                    <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
                     <sup class="apparatus-footnote-mark footnote-mark">
                         <a name="{$element-id}" href="#app-{$element-id}">
                             <xsl:value-of select="map:get($entry, 'number')"/>
@@ -127,8 +129,9 @@
             </xsl:template>
 
             <!-- make an inline alternative for an entry at the context it.
-                The global variable $app:apparatus-entries must be set for this. -->
+                See seed:note-based-apparatus-nodes-map#2 for making a required map.-->
             <xsl:template name="app:inline-alternatives">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
                 <!-- TODO -->
             </xsl:template>
 
@@ -359,6 +362,21 @@
                     <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
                         >;</span>
                 </xsl:if>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-dspt" match="note[not(parent::app)]">
+                <span class="note-text" lang="{i18n:language(.)}"
+                    style="direction:{i18n:language-direction(.)}; text-align:{i18n:language-align(.)};">
+                    <!-- This must be paired with pdf character entity,
+                                because directional embeddings are an embedded CFG! -->
+                    <xsl:value-of select="i18n:direction-embedding(.)"/>
+                    <xsl:apply-templates mode="app:reading-text" select="node()"/>
+                    <xsl:text>&pdf;</xsl:text>
+                    <xsl:if
+                        test="i18n:language-direction(.) eq 'ltr' and i18n:language-direction(parent::*) ne 'ltr' and $i18n:ltr-to-rtl-extra-space">
+                        <xsl:text> </xsl:text>
+                    </xsl:if>
+                </span>
             </xsl:template>
 
         </xsl:override>
