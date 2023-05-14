@@ -9,6 +9,7 @@
 ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:text="http://scdh.wwu.de/transform/text#"
@@ -96,13 +97,17 @@
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
     </xsl:use-package>
 
-    <xsl:variable name="apparatus-entries" as="map(*)*" select="app:apparatus-entries($current)"/>
+    <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))"
+        select="app:apparatus-entries($current) => seed:note-based-apparatus-nodes-map(true())"/>
+    <xsl:variable name="editorial-notes" as="map(xs:string, map(*))"
+        select="app:apparatus-entries($current, 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
 
         <xsl:accept component="template" names="app:footnote-marks" visibility="public"/>
+        <xsl:accept component="template" names="app:note-based-apparatus" visibility="public"/>
 
         <xsl:override>
             <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
@@ -157,6 +162,34 @@
                 </xsl:value-of>
             </xsl:variable>
 
+            <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
+            <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@target] | noteGrp[@target]">
+                <xsl:variable name="targetEnd" as="xs:string" select="substring(@target, 2)"/>
+                <xsl:variable name="target-end-node" as="node()*"
+                    select="//*[@xml:id eq $targetEnd]"/>
+                <xsl:choose>
+                    <xsl:when test="empty($target-end-node)">
+                        <xsl:message>
+                            <xsl:text>No anchor for message with @target: </xsl:text>
+                            <xsl:value-of select="$targetEnd"/>
+                        </xsl:message>
+                    </xsl:when>
+                    <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
+                        <xsl:apply-templates mode="seed:lemma-text-nodes"
+                            select="seed:subtrees-between-anchors(., $target-end-node)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates mode="seed:lemma-text-nodes"
+                            select="seed:subtrees-between-anchors($target-end-node, .)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:template>
+
+            <!-- drop mentioned -->
+            <xsl:template mode="app:reading-text" match="mentioned"/>
+
+
+
             <!-- use libwit in apparatus -->
             <xsl:template name="app:sigla">
                 <xsl:param name="wit" as="node()"/>
@@ -164,10 +197,6 @@
                     <xsl:with-param name="wit" select="$wit"/>
                 </xsl:call-template>
             </xsl:template>
-
-            <!-- set app:apparatus-entries for footnote marks in the main text -->
-            <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))"
-                select="seed:note-based-apparatus-nodes-map($apparatus-entries, true())"/>
 
         </xsl:override>
     </xsl:use-package>
@@ -194,9 +223,7 @@
     </xsl:use-package>
 
 
-    <xsl:variable name="editorial-notes" as="map(*)*"
-        select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2)"/>
-
+    <!--
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libnote2.xsl"
         package-version="1.0.0">
@@ -206,10 +233,10 @@
         <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
         <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="hidden"/>
-        <!--xsl:accept component="variable" names="note:editorial-notes" visibility="public"/-->
+        <!-\-xsl:accept component="variable" names="note:editorial-notes" visibility="public"/-\->
 
         <xsl:override>
-            <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
+            <!-\- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -\->
             <xsl:template mode="note:text-nodes-dspt" match="note[@target] | noteGrp[@target]">
                 <xsl:variable name="targetEnd" as="xs:string" select="substring(@target, 2)"/>
                 <xsl:variable name="target-end-node" as="node()*"
@@ -232,24 +259,29 @@
                 </xsl:choose>
             </xsl:template>
 
-            <!-- drop mentioned -->
+            <!-\- drop mentioned -\->
             <xsl:template mode="note:editorial-note" match="mentioned"/>
 
-            <!-- set note:editorial-notes for footnote marks in the text -->
+            <!-\- set note:editorial-notes for footnote marks in the text -\->
             <xsl:variable name="note:editorial-notes" as="map(xs:string, map(*))"
                 select="seed:note-based-apparatus-nodes-map($editorial-notes, true())"/>
 
         </xsl:override>
     </xsl:use-package>
-
+-->
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
         package-version="1.0.0">
         <xsl:override>
 
             <xsl:template name="text:inline-marks">
-                <xsl:call-template name="app:footnote-marks"/>
-                <xsl:call-template name="note:footnote-marks"/>
+                <xsl:call-template name="app:footnote-marks">
+                    <xsl:with-param name="entries"
+                        select="map:merge($apparatus-entries, $editorial-notes)"/>
+                </xsl:call-template>
+                <xsl:call-template name="app:footnote-marks">
+                    <xsl:with-param name="entries" select="map:merge($editorial-notes)"/>
+                </xsl:call-template>
             </xsl:template>
 
             <!-- print metrum -->
@@ -411,14 +443,14 @@
                 </section>
                 <hr/>
                 <section class="variants">
-                    <xsl:call-template name="app:note-based-apparatus-for-context">
-                        <xsl:with-param name="app-context" select="$current"/>
+                    <xsl:call-template name="app:note-based-apparatus">
+                        <xsl:with-param name="entries" select="$apparatus-entries"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
                 <section class="comments">
-                    <xsl:call-template name="note:note-based-editorial-notes">
-                        <xsl:with-param name="notes" select="$editorial-notes"/>
+                    <xsl:call-template name="app:note-based-apparatus">
+                        <xsl:with-param name="entries" select="$editorial-notes"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
