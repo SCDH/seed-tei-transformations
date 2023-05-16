@@ -58,20 +58,24 @@
         'entry': $tei-text//t:app[1],
         'type': 1, 
         'number': 1, 
+        'line-number': 5,
         'lemma-text-nodes': $tei-text//t:app[1]/t:lem/text(),
         'lemma-grouping-ids': '$tei-text//t:app[1]/t:lem/text() ! generate-id(.)' }"/>
 
     <x:variable name="sic1" select="map {'entry-id': generate-id($tei-text//t:sic[1]),
                      'entry': $tei-text//t:sic[1],
-                     'type': 1, 
-                     'number': 2, 
+                     'type': 1,
+                     'number': 2,
+                     'line-number': 7,
                      'lemma-text-nodes': $tei-text//t:sic[1]/text(),
                      'lemma-grouping-ids': $tei-text//t:sic[1]/text() ! generate-id(.) }"/>
 
     <x:variable name="apparatus-entries" select="$sic1, $app1"/>
 
-    <x:variable name="apparatus-entry-map"
-        select="map{map:get($sic1, 'entry-id'): map {'entry': $sic1, 'number': 2, 'after': true()}}"/>
+    <x:variable name="apparatus-entry-map" select="map{
+        map:get($sic1, 'entry-id'): map {'entry': map:get($sic1, 'entry-id'), 'entries': $sic1, 'number': 2, 'after': true()},
+        map:get($app1, 'entry-id'): map {'entry': map:get($app1, 'entry-id'), 'entries': $app1, 'number': 1, 'after': true()}
+        }"/>
 
     <x:scenario label="apparatus entries">
         <x:context select="$tei-text"/>
@@ -90,21 +94,10 @@
     <x:scenario label="apparatus footnotes">
         <x:context select="$tei-text"/>
         <x:call template="app:note-based-apparatus">
-            <x:param name="entries" select="$apparatus-entries"/>
+            <x:param name="entries" select="$apparatus-entry-map"/>
         </x:call>
         <x:expect label="result">
             <div>
-                <div class="apparatus-line">
-                    <span class="apparatus-note-number note-number">
-                        <a name="..." href="...">2</a>
-                    </span>
-                    <span class="apparatus-entry">
-                        <span class="apparatus-lemma">Paralellen</span>
-                        <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
-                        <span class="static-text" data-i18n-key="sic">‪sic!‬</span>
-                        <span class="apparatus-sep" data-i18n-key="app-entry-sep">...</span>
-                    </span>
-                </div>
                 <div class="apparatus-line">
                     <span class="apparatus-note-number note-number">
                         <a name="app-d1.1.a1" href="#d1.1.a1">1</a>
@@ -115,61 +108,17 @@
                         <span class="reading">n-Ecks<span class="apparatus-sep"
                                 style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
                             >:</span>N</span>
-                    </span>
-                </div>
-            </div>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="apparatus footnotes (part)">
-        <x:context select="$tei-text"/>
-        <x:call template="app:note-based-apparatus">
-            <x:param name="entries" select="$apparatus-entries[1]"/>
-        </x:call>
-        <x:expect label="result">
-            <div>
-                <div class="apparatus-line">
-                    <span class="apparatus-note-number note-number">
-                        <a name="..." href="...">2</a>
-                    </span>
-                    <span class="apparatus-entry">
-                        <span class="apparatus-lemma">Paralellen</span>
-                        <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
-                        <span class="static-text" data-i18n-key="sic">‪sic!‬</span>
-                    </span>
-                </div>
-            </div>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="apparatus footnotes">
-        <x:context select="$tei-text"/>
-        <x:call template="app:note-based-apparatus">
-            <x:param name="entries" select="$apparatus-entries"/>
-        </x:call>
-        <x:expect label="result">
-            <div>
-                <div class="apparatus-line">
-                    <span class="apparatus-note-number note-number">
-                        <a name="..." href="...">2</a>
-                    </span>
-                    <span class="apparatus-entry">
-                        <span class="apparatus-lemma">Paralellen</span>
-                        <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
-                        <span class="static-text" data-i18n-key="sic">‪sic!‬</span>
                         <span class="apparatus-sep" data-i18n-key="app-entry-sep">...</span>
                     </span>
                 </div>
                 <div class="apparatus-line">
                     <span class="apparatus-note-number note-number">
-                        <a name="app-d1.1.a1" href="#d1.1.a1">1</a>
+                        <a name="app-d13e33" href="#d13e33">2</a>
                     </span>
                     <span class="apparatus-entry">
-                        <span class="apparatus-lemma">Dreiecks</span>
+                        <span class="apparatus-lemma">Paralellen</span>
                         <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
-                        <span class="reading">n-Ecks<span class="apparatus-sep"
-                                style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
-                            >:</span>N</span>
+                        <span class="static-text" data-i18n-key="sic">‪sic!‬</span>
                     </span>
                 </div>
             </div>
@@ -184,5 +133,37 @@
         <x:expect label="result"/>
     </x:scenario>
 
+    <x:scenario label="line-based apparatus">
+        <x:context select="$tei-text"/>
+        <x:call template="app:line-based-apparatus">
+            <x:param name="entries" select="$apparatus-entries"/>
+        </x:call>
+        <x:expect label="order as in passed sequence">
+            <div>
+                <div class="apparatus-line">
+                    <span class="apparatus-line-number line-number">7 </span>
+                    <span class="apparatus-line-entries">
+                        <span class="apparatus-entry">
+                            <span class="apparatus-lemma">Paralellen</span>
+                            <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
+                            <span class="static-text" data-i18n-key="sic">‪sic!‬</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="apparatus-line">
+                    <span class="apparatus-line-number line-number">5 </span>
+                    <span class="apparatus-line-entries">
+                        <span class="apparatus-entry">
+                            <span class="apparatus-lemma">Dreiecks</span>
+                            <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
+                            <span class="reading">n-Ecks<span class="apparatus-sep"
+                                    style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
+                                    >:</span>N</span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </x:expect>
+    </x:scenario>
 
 </x:description>
