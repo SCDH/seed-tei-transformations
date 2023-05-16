@@ -4,6 +4,9 @@
 This package base package provides modes for all text reproductive modes.
 These modes are empty. Replace this package with one with your project-specific and output-specific
 rules for formatting the text.
+
+TODO: Consider and decide! Should we declare only one mode, instead of multiple modes. The XSLT
+package system would allow this and even its adaption in a branch of the package hierarchy.
 -->
 <xsl:package
   name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
