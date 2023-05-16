@@ -304,33 +304,39 @@ see xsl/projects/alea/preview.xsl
 
     <!-- The mode apparatus-reading-text is for printing the text of a reading etc.
         Typically it is entred from a template in the mode apparatus-reading -->
-    <xsl:mode name="app:reading-text" on-no-match="shallow-skip" visibility="public"/>
+    <!--xsl:mode name="app:reading-text" on-no-match="shallow-skip" visibility="public"/-->
 
-    <xsl:template mode="app:reading-text"
-        match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
-        <xsl:apply-templates mode="app:reading-text" select="lem"/>
-    </xsl:template>
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="app:reading-text" visibility="public"/>
+        <xsl:override>
+            <xsl:template mode="app:reading-text"
+                match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
+                <xsl:apply-templates mode="app:reading-text" select="lem"/>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text"
-        match="app[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
+            <xsl:template mode="app:reading-text"
+                match="app[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
-    <xsl:template mode="app:reading-text" match="choice[sic and corr]">
-        <xsl:apply-templates mode="app:reading-text" select="corr"/>
-    </xsl:template>
+            <xsl:template mode="app:reading-text" match="choice[sic and corr]">
+                <xsl:apply-templates mode="app:reading-text" select="corr"/>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text" match="caesura">
-        <xsl:text> || </xsl:text>
-    </xsl:template>
+            <xsl:template mode="app:reading-text" match="caesura">
+                <xsl:text> || </xsl:text>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text" match="l[preceding-sibling::l]">
-        <xsl:text> / </xsl:text>
-        <xsl:apply-templates mode="app:reading-text"/>
-    </xsl:template>
+            <xsl:template mode="app:reading-text" match="l[preceding-sibling::l]">
+                <xsl:text> / </xsl:text>
+                <xsl:apply-templates mode="app:reading-text"/>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text" match="text()">
-        <xsl:value-of select="."/>
-    </xsl:template>
-
+            <xsl:template mode="app:reading-text" match="text()">
+                <xsl:value-of select="."/>
+            </xsl:template>
+        </xsl:override>
+    </xsl:use-package>
 
 
     <!-- Both of the two dispatcher modes should define transformation rules
