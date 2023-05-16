@@ -48,4 +48,7 @@ in the base text, the apparatus and in the editorial notes. -->
         </span>
     </xsl:template>
 
+    <!-- drop attributes for which there is not special rule -->
+    <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
+
 </xsl:package>
