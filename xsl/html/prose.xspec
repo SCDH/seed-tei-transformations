@@ -68,12 +68,7 @@
         <x:expect label="result">
             <section id="d2" data-tei-n="2">
                 <div class="lg stanza">
-                    <div class="l verse">
-                        <span class="w" data-tei-n="1">Beim</span>
-                        <span class="w" data-tei-n="2">Styx</span>
-                        <span class="pc">!</span>
-                        <span class="w" data-tei-n="3">Drüber</span>
-                    </div>
+                    <div class="l verse">BeimStyx!Drüber</div>
                 </div>
             </section>
         </x:expect>
