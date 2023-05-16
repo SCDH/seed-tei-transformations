@@ -78,5 +78,10 @@
         </antcall>
     </target>
 
+    <target name="test-xsl-projects-alea-preview.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/preview.xspec"/>
+        </antcall>
+    </target>
 
 </project>
