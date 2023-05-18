@@ -51,4 +51,19 @@ in the base text, the apparatus and in the editorial notes. -->
     <!-- drop attributes for which there is not special rule -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
 
+    <xsl:template name="text:class-attribute" visibility="public">
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+        <xsl:attribute name="class"
+            select="(name(), $additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"/>
+    </xsl:template>
+
+    <xsl:template name="text:class-attribute-opt" visibility="public">
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+        <xsl:if test="@type or @rendition or $additional">
+            <xsl:attribute name="class"
+                select="($additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"
+            />
+        </xsl:if>
+    </xsl:template>
+
 </xsl:package>
