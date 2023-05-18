@@ -84,7 +84,7 @@
     <x:scenario label="mode text:text on front">
         <x:context select="$tei-text//t:front" mode="text:text"/>
         <x:expect label="result">
-            <div class="front">VorredeDer hochwohlgebohrenen Prinzessin Z.</div>
+            <div>VorredeDer hochwohlgebohrenen Prinzessin Z.</div>
         </x:expect>
     </x:scenario>
 

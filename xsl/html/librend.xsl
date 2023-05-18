@@ -18,18 +18,21 @@ in the base text, the apparatus and in the editorial notes. -->
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'bold']">
         <b>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </b>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'italic']">
         <i>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </i>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'underline']">
         <u>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </u>
     </xsl:template>
@@ -37,13 +40,15 @@ in the base text, the apparatus and in the editorial notes. -->
     <xsl:template mode="text:text app:reading-text note:editorial"
         match="hi[@rend eq 'superscript']">
         <sup>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </sup>
     </xsl:template>
 
     <!-- segmentation offers hooks for project-specific insertions -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="seg | s | w | c | pc">
-        <span class="{name()}">
+        <span>
+            <xsl:call-template name="text:class-attribute"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </span>
     </xsl:template>

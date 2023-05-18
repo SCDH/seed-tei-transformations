@@ -16,6 +16,7 @@
         package-version="1.0.0">
 
         <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
+        <xsl:accept component="template" names="text:*" visibility="public"/>
         <xsl:accept component="mode" names="*" visibility="public"/>
         <xsl:accept component="template" names="text:inline-marks" visibility="public"/>
 
@@ -28,6 +29,7 @@
             <xsl:template match="div">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <section>
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </section>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -36,6 +38,7 @@
             <xsl:template match="p">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <p>
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </p>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -47,6 +50,7 @@
                 <xsl:variable name="heading"
                     select="concat('h', if ($level eq 0) then 1 else $level)"/>
                 <xsl:element name="{$heading}">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </xsl:element>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -56,6 +60,7 @@
             <xsl:template match="pb">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="pb static-text">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@*"/>
                     <xsl:text>[</xsl:text>
                     <xsl:value-of select="@n"/>
@@ -69,7 +74,10 @@
 
             <xsl:template match="lg[l]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
-                <div class="lg stanza">
+                <div>
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="additional" select="'stanza'"/>
+                    </xsl:call-template>
                     <xsl:apply-templates select="@* | node()"/>
                 </div>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -77,7 +85,10 @@
 
             <xsl:template match="l">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
-                <div class="l verse">
+                <div>
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="additional" select="'verse'"/>
+                    </xsl:call-template>
                     <xsl:apply-templates select="@* | node()"/>
                 </div>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -85,7 +96,10 @@
 
             <xsl:template match="caesura">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="caesura static-text">
+                <span>
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="additional" select="'static-text'"/>
+                    </xsl:call-template>
                     <xsl:apply-templates select="@*"/>
                     <!-- leave to hooks or css? -->
                     <xsl:text> || </xsl:text>
