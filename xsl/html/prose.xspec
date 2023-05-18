@@ -118,8 +118,8 @@
                     <meta charset="utf-8"/>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
                     <title>Test :: SEED transformations</title>
-                    <!--CSS not available file:/home/clueck/src/scdh/tei-processing/transform/xsl/html/xspec/this.css-->
-                    <!--CSS from file:/home/clueck/src/scdh/tei-processing/transform/test/samples/sample.css-->
+                    <!--...-->
+                    <!--...-->
                     <style>/* hello tester */&#xa;</style>
                 </head>
                 <body>...</body>
