@@ -20,4 +20,12 @@ package system would allow this and even its adaption in a branch of the package
   <xsl:mode name="app:reading-text" on-no-match="text-only-copy" visibility="public"/>
   <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
 
+  <xsl:template name="text:class-attribute" visibility="public">
+    <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+  </xsl:template>
+
+  <xsl:template name="text:class-attribute-opt" visibility="public">
+    <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+  </xsl:template>
+
 </xsl:package>

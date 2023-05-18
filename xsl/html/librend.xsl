@@ -18,18 +18,21 @@ in the base text, the apparatus and in the editorial notes. -->
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'bold']">
         <b>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </b>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'italic']">
         <i>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </i>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'underline']">
         <u>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </u>
     </xsl:template>
@@ -37,18 +40,35 @@ in the base text, the apparatus and in the editorial notes. -->
     <xsl:template mode="text:text app:reading-text note:editorial"
         match="hi[@rend eq 'superscript']">
         <sup>
+            <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </sup>
     </xsl:template>
 
     <!-- segmentation offers hooks for project-specific insertions -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="seg | s | w | c | pc">
-        <span class="{name()}">
+        <span>
+            <xsl:call-template name="text:class-attribute"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </span>
     </xsl:template>
 
     <!-- drop attributes for which there is not special rule -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
+
+    <xsl:template name="text:class-attribute" visibility="public">
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+        <xsl:attribute name="class"
+            select="(name(), $additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"/>
+    </xsl:template>
+
+    <xsl:template name="text:class-attribute-opt" visibility="public">
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+        <xsl:if test="@type or @rendition or $additional">
+            <xsl:attribute name="class"
+                select="($additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"
+            />
+        </xsl:if>
+    </xsl:template>
 
 </xsl:package>

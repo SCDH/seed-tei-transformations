@@ -42,6 +42,7 @@ Note, that there is a default mode in this package.
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
         package-version="1.0.0">
         <xsl:accept component="mode" names="text:text" visibility="public"/>
+        <xsl:accept component="template" names="text:*" visibility="public"/>
         <xsl:override default-mode="text:text">
             <!-- text:hook-before and text:hook-after are modes that offer hooks for
                 inserting project-specific things before and after an element -->
@@ -65,7 +66,8 @@ Note, that there is a default mode in this package.
             </xsl:template>
 
             <xsl:template match="body | front | back">
-                <div class="{name()}">
+                <div>
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </div>
             </xsl:template>
@@ -182,7 +184,6 @@ Note, that there is a default mode in this package.
             <xsl:attribute name="xml:lang" select="@xml:lang"/>
         </xsl:if>
     </xsl:template>
-
 
     <!-- you probably want to override this for adding footnote marks etc. to the text -->
     <xsl:template name="text:inline-marks" visibility="public"/>
