@@ -25,9 +25,11 @@ Note, that the default mode is html:html!
 
   <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
+  <!-- a sequence of CSS files -->
   <xsl:param name="html:css" as="xs:string*" select="()"/>
 
-  <xsl:param name="html:css-internal" as="xs:boolean" select="true()"/>
+  <!-- should be one of 'internal', 'absolute', 'relative' -->
+  <xsl:param name="html:css-method" as="xs:string" select="'internal'"/>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -89,18 +91,13 @@ Note, that the default mode is html:html!
   </xsl:template>
 
   <xsl:template name="html:css" visibility="public">
+    <xsl:variable name="base-uri" select="base-uri()"/>
     <xsl:choose>
-      <xsl:when test="$html:css-internal">
+      <xsl:when test="$html:css-method eq 'internal'">
         <xsl:for-each select="$html:css">
-          <link rel="stylesheet" type="text/css" href="resolve-uri(., base-uri())"/>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="root" select="root()"/>
-        <xsl:for-each select="$html:css">
-          <xsl:variable name="href" select="resolve-uri(., base-uri($root))"/>
+          <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
           <xsl:choose>
-            <xsl:when test="doc-available($href)">
+            <xsl:when test="unparsed-text-available($href)">
               <xsl:comment>
                 <xsl:text>CSS from </xsl:text>
                 <xsl:value-of select="$href"/>
@@ -117,6 +114,22 @@ Note, that the default mode is html:html!
             </xsl:otherwise>
           </xsl:choose>
         </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$html:css-method eq 'absolute'">
+        <xsl:for-each select="$html:css">
+          <link rel="stylesheet" type="text/css" href="{resolve-uri(., $base-uri)}"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$html:css-method eq 'relative'">
+        <xsl:for-each select="$html:css">
+          <link rel="stylesheet" type="text/css" href="{.}"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message terminate="yes">
+          <xsl:text>ERROR: invalid value for parameter html:css-method: </xsl:text>
+          <xsl:value-of select="$html:css-method"/>
+        </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:call-template name="html:additional-css"/>
