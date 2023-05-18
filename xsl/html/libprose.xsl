@@ -43,8 +43,9 @@
 
             <xsl:template match="head">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
+                <xsl:variable name="level" as="xs:integer" select="count(ancestor::*[matches(local-name(), 'div')])"/>
                 <xsl:variable name="heading"
-                    select="concat('h', count(ancestor::*[matches(local-name(), 'div')]))"/>
+                    select="concat('h', if ($level eq 0) then 1 else $level)"/>
                 <xsl:element name="{$heading}">
                     <xsl:apply-templates select="@* | node()"/>
                 </xsl:element>
