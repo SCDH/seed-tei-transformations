@@ -2,7 +2,8 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="prose.xsl" run-as="external">
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="prose.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -78,6 +79,87 @@
         <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
         <x:expect label="result">
             <p data-tei-n="1" id="d1.1.p1">...</p>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode prose on apparatus" pending="test not working">
+        <x:context select="$tei-text//t:front" mode="prose"/>
+        <x:expect label="result">
+            <div>
+                <section>
+                    <h1>Vorrede</h1>
+                    <p>Der hochwohlgebohrenen Prinzessin Z.</p>
+                </section>
+            </div>
+        </x:expect>
+    </x:scenario>
+
+
+    <x:scenario label="full html">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="result">
+            <html lang="de">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                    <title>Test :: SEED transformations</title>
+                </head>
+                <body>...</body>
+            </html>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="full html with internal CSS">
+        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="result">
+            <html lang="de">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                    <title>Test :: SEED transformations</title>
+                    <!--CSS not available file:/home/clueck/src/scdh/tei-processing/transform/xsl/html/xspec/this.css-->
+                    <!--CSS from file:/home/clueck/src/scdh/tei-processing/transform/test/samples/sample.css-->
+                    <style>/* hello tester */&#xa;</style>
+                </head>
+                <body>...</body>
+            </html>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="full html with absolute links to CSS">
+        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
+        <x:param name="html:css-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="result">
+            <html lang="de">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                    <title>Test :: SEED transformations</title>
+                    <link rel="stylesheet" type="text/css" href="..."/>
+                    <link rel="stylesheet" type="text/css" href="..."/>
+                </head>
+                <body>...</body>
+            </html>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="full html with relative links to CSS">
+        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
+        <x:param name="html:css-method" select="'relative'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="result">
+            <html lang="de">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                    <title>Test :: SEED transformations</title>
+                    <link rel="stylesheet" type="text/css" href="this.css"/>
+                    <link rel="stylesheet" type="text/css" href="../../../test/samples/sample.css"/>
+                </head>
+                <body>...</body>
+            </html>
         </x:expect>
     </x:scenario>
 
