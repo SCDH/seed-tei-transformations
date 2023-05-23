@@ -98,8 +98,7 @@
                         <xsl:variable name="number" select="map:get($entry, 'number')"/>
                         <div class="apparatus-line">
                             <span class="apparatus-note-number note-number">
-                                <a name="app-{$entry-id}"
-                                    href="#{$entry-id}">
+                                <a name="app-{$entry-id}" href="#{$entry-id}">
                                     <xsl:value-of select="map:get($entry, 'number')"/>
                                 </a>
                             </span>
@@ -357,6 +356,16 @@
                         <span class="static-text" data-i18n-key="{@unit}">&lre;<xsl:value-of
                                 select="@unit"/>&pdf;</span>
                     </xsl:if>
+                </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-dspt" match="supplied">
+                <span class="reading supplied">
+                    <span class="static-text" data-i18n-key="supplied">&lre;supplied&pdf;</span>
                 </span>
                 <xsl:if test="position() ne last()">
                     <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"

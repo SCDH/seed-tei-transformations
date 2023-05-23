@@ -121,6 +121,7 @@
                     <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::choice[unclear]</xsl:text>
                     <xsl:text>| descendant::gap</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
                 </xsl:value-of>
             </xsl:variable>
 
@@ -135,6 +136,7 @@
                     <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::choice[unclear]</xsl:text>
                     <xsl:text>| descendant::gap</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
                 </xsl:value-of>
             </xsl:variable>
 
@@ -148,6 +150,7 @@
                     <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::choice[unclear]</xsl:text>
                     <xsl:text>| descendant::gap</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
                 </xsl:value-of>
             </xsl:variable>
 
@@ -159,6 +162,7 @@
                     <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
                     <xsl:text>| descendant::choice[unclear]</xsl:text>
                     <xsl:text>| descendant::gap</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
                 </xsl:value-of>
             </xsl:variable>
 
@@ -415,6 +419,12 @@
                     span.caesura {
                         width: 4em;
                         text-align: center;
+                    }
+                    .supplied:not(.reading):before {
+                        content: "[";
+                    }
+                    .supplied:not(.reading):after {
+                    content: "]";
                     }
                     @font-face {
                         font-family:"Arabic Typesetting";
