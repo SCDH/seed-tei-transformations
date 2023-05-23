@@ -114,7 +114,7 @@
 
   <xsl:template match="rdg"/>
 
-  <xsl:template match="lem[//variantEncoding/@medthod eq 'parallel-segmentation']">
+  <xsl:template match="lem[//variantEncoding/@method eq 'parallel-segmentation']">
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="context" select="parent::app"/>
       <xsl:with-param name="suffix" select="'-start'"/>
@@ -122,7 +122,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
+  <xsl:template match="lem[//variantEncoding/@method ne 'parallel-segmentation']"/>
 
   <xsl:template match="witDetail"/>
 
