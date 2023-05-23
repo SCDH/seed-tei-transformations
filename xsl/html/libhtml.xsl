@@ -173,7 +173,7 @@ Note, that the default mode is html:html!
             </xsl:when>
             <xsl:otherwise>
               <xsl:comment>
-              <xsl:text>CSS not available </xsl:text>
+              <xsl:text>JS not available </xsl:text>
               <xsl:value-of select="$href"/>
             </xsl:comment>
             </xsl:otherwise>
@@ -210,7 +210,7 @@ Note, that the default mode is html:html!
       <xsl:choose>
         <xsl:when test="unparsed-text-available($href)">
           <xsl:comment>
-                <xsl:text>CSS from </xsl:text>
+                <xsl:text>JS from </xsl:text>
                 <xsl:value-of select="$href"/>
               </xsl:comment>
           <script>
@@ -219,7 +219,7 @@ Note, that the default mode is html:html!
         </xsl:when>
         <xsl:otherwise>
           <xsl:comment>
-              <xsl:text>CSS not available </xsl:text>
+              <xsl:text>JS not available </xsl:text>
               <xsl:value-of select="$href"/>
             </xsl:comment>
         </xsl:otherwise>
@@ -296,7 +296,7 @@ Note, that the default mode is html:html!
           <xsl:choose>
             <xsl:when test="unparsed-text-available($href)">
               <xsl:comment>
-                <xsl:text>CSS from </xsl:text>
+                <xsl:text>JS from </xsl:text>
                 <xsl:value-of select="$href"/>
               </xsl:comment>
               <script>
@@ -305,7 +305,7 @@ Note, that the default mode is html:html!
             </xsl:when>
             <xsl:otherwise>
               <xsl:comment>
-              <xsl:text>CSS not available </xsl:text>
+              <xsl:text>JS not available </xsl:text>
               <xsl:value-of select="$href"/>
             </xsl:comment>
             </xsl:otherwise>
