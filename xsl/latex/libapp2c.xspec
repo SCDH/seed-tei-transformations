@@ -92,14 +92,6 @@
             >Paralellen</x:expect>
     </x:scenario>
 
-    <x:scenario label="apparatus footnotes">
-        <x:context select="$tei-text"/>
-        <x:call template="app:note-based-apparatus">
-            <x:param name="entries" select="$apparatus-entry-map"/>
-        </x:call>
-        <x:expect label="not used in latex"/>
-    </x:scenario>
-
     <x:scenario label="apparatus footnote marks on sic">
         <x:context select="$tei-text//t:sic[1]"/>
         <x:variable name="app:apparatus-entries" select="$apparatus-entry-map"/>
@@ -121,15 +113,6 @@
             >%&#xa;\edtext{\edlabel{d1.1.a1-end}}{%&#xa;\xxref{d1.1.a1-start}{d1.1.a1-end}\lemma{Dreiecks}\Afootnote{{n-Ecks\appsep{rdg-siglum-sep}\wit{N}}}}&#x20;%&#xa;</x:expect>
     </x:scenario>
 
-    <x:scenario label="line-based apparatus">
-        <x:context select="$tei-text"/>
-        <x:call template="app:line-based-apparatus">
-            <x:param name="entries" select="$apparatus-entries"/>
-        </x:call>
-        <x:expect label="not used in latex"/>
-    </x:scenario>
-
-
     <x:scenario label="apparatus entries with custom xpath">
         <x:context select="$tei-text"/>
         <x:call function="app:apparatus-entries">
@@ -145,6 +128,24 @@
         <x:expect label="entry 1: lemma-text-nodes" test="(.)[1] => map:get('lemma-text-nodes')"
             select="$tei-text//t:p[@xml:id eq 'd1.1.p2']/text()|$tei-text//t:p[@xml:id eq 'd1.1.p2']/t:sic/text()"
         />
+    </x:scenario>
+
+
+
+    <x:scenario label="apparatus footnotes">
+        <x:context select="$tei-text"/>
+        <x:call template="app:note-based-apparatus">
+            <x:param name="entries" select="$apparatus-entry-map"/>
+        </x:call>
+        <x:expect label="not used in latex"/>
+    </x:scenario>
+
+    <x:scenario label="line-based apparatus">
+        <x:context select="$tei-text"/>
+        <x:call template="app:line-based-apparatus">
+            <x:param name="entries" select="$apparatus-entries"/>
+        </x:call>
+        <x:expect label="not used in latex"/>
     </x:scenario>
 
 </x:description>
