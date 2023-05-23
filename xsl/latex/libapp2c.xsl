@@ -221,6 +221,15 @@
                 </xsl:if>
             </xsl:template>
 
+            <xsl:template mode="app:reading-dspt" match="note[not(parent::app)]">
+                <xsl:text>\appnote{</xsl:text>
+                <xsl:apply-templates mode="app:reading-text"/>
+                <xsl:text>}</xsl:text>
+                <xsl:if test="position() ne last()">
+                    <xsl:text>\appsep{rdgs-sep}</xsl:text>
+                </xsl:if>
+            </xsl:template>
+
 
             <xsl:template mode="app:reading-dspt" match="corr">
                 <xsl:text>\apptranslate{conieci}</xsl:text>
