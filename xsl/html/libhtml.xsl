@@ -41,7 +41,7 @@ Note, that the default mode is html:html!
   <xsl:param name="html:after-body-js" as="xs:string*" select="()"/>
 
   <!-- javascript file defining the makeScrollTarget function -->
-  <xsl:param name="html:scroll-target" as="xs:string*" select="'scroll-target-replace-prefix.js'"/>
+  <xsl:param name="html:scroll-target" as="xs:string*" select="()"/>
 
   <!-- should be one of 'internal', 'absolute', 'relative' -->
   <xsl:param name="html:scroll-target-method" as="xs:string" select="'internal'"/>
