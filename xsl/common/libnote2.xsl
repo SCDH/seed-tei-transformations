@@ -47,6 +47,9 @@
     <xsl:expose component="mode" names="note:*" visibility="public"/>
     <xsl:expose component="template" names="note:*" visibility="public"/>
 
+    <!-- override this with a map when you need footnote signs to editorial notes. See seed:note-based-apparatus-nodes-map#2 -->
+    <xsl:variable name="note:editorial-notes" as="map(xs:string, map(*))" select="map {}" visibility="public"/>
+
     <!-- function for making a sequence of mappings from editorial notes -->
     <xsl:function name="note:editorial-notes" as="map(*)*">
         <xsl:param name="context" as="node()"/>
@@ -68,6 +71,12 @@
     <xsl:template name="note:note-based-editorial-notes" visibility="abstract">
         <xsl:param name="notes" as="map(*)*"/>
     </xsl:template>
+
+    <!-- generate a footnote mark for the context item in the main text -->
+    <xsl:template name="note:footnote-marks" visibility="abstract"/>
+
+    <!-- generate a footnote mark for the context item in the main text -->
+    <xsl:template name="note:inline-alternatives" visibility="abstract"/>
 
     <!-- template for making the lemma text with some logic for handling empty lemmas -->
     <xsl:template name="note:editorial-note-lemma" visibility="abstract">

@@ -8,10 +8,8 @@ caesura. Or derive your own.
 This package provides basic components for the main text (edited text), such as
 inserting footnote marks that link to the apparatus and comment sections.
 
-To get such footnote marks, you will have to override the variable
-$text:apparatus-entries, which is a map. The package for generating the apparatus
-should provide a function that provides the correct map. So does libapp2 by
-providing app:note-based-apparatus-nodes-map#2
+To get such footnote marks, you will have to override the variable the template
+text:inline-marks.
 
 Note, that there is a default mode in this package.
 
@@ -30,102 +28,154 @@ Note, that there is a default mode in this package.
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
+        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
         <xsl:accept component="function" names="i18n:language#1" visibility="private"/>
+        <xsl:accept component="function" names="i18n:language-direction#1" visibility="private"/>
+        <xsl:accept component="function" names="i18n:language-code-to-direction#1"
+            visibility="private"/>
     </xsl:use-package>
 
-    <!-- override this with a map when you need footnote signs to apparatus entries. See app:note-based-apparatus-nodes-map#2 -->
-    <xsl:variable name="text:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
-        visibility="public"/>
+    <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
+    <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
 
-    <xsl:mode name="text:text" visibility="public"/>
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="text:text" visibility="public"/>
+        <xsl:accept component="template" names="text:*" visibility="public"/>
+        <xsl:override default-mode="text:text">
+            <!-- text:hook-before and text:hook-after are modes that offer hooks for
+                inserting project-specific things before and after an element -->
 
-    <!-- parts of the document -->
+            <!-- parts of the document -->
 
-    <!-- parts that should not be generate output in mode text:text -->
-    <xsl:template match="teiHeader"/>
+            <!-- parts that should not be generate output in mode text:text -->
+            <xsl:template match="teiHeader"/>
 
-    <xsl:template match="body">
-        <div class="body">
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
+            <xsl:template match="text">
+                <div class="text">
+                    <xsl:if test="not(@xml:lang)">
+                        <!-- assert that the language is set -->
+                        <xsl:variable name="lang" select="i18n:language(.)"/>
+                        <xsl:attribute name="xml:lang" select="$lang"/>
+                        <xsl:attribute name="lang" select="$lang"/>
+                        <xsl:attribute name="dir" select="i18n:language-code-to-direction($lang)"/>
+                    </xsl:if>
+                    <xsl:apply-templates select="@* | node()"/>
+                </div>
+            </xsl:template>
 
-    <xsl:template match="front">
-        <div class="front">
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="back">
-        <div class="back">
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
+            <xsl:template match="body | front | back">
+                <div>
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | node()"/>
+                </div>
+            </xsl:template>
 
 
-    <!-- markup that has to be invisible in the edited text -->
+            <!-- markup that has to be invisible in the edited text -->
 
-    <xsl:template match="note">
-        <xsl:call-template name="text:apparatus-links"/>
-    </xsl:template>
+            <xsl:template match="note">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+            </xsl:template>
 
-    <!-- rdg: Do not output reading (variant) in all modes generating edited text. -->
-    <xsl:template match="rdg"/>
+            <!-- rdg: Do not output reading (variant) in all modes generating edited text. -->
+            <xsl:template match="rdg"/>
+
+            <xsl:template match="witDetail"/>
+
+            <xsl:template match="app">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <xsl:apply-templates select="lem"/>
+                <xsl:call-template name="text:inline-marks"/>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+            </xsl:template>
+
+            <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
+
+            <xsl:template
+                match="lem[//variantEncoding/@method eq 'parallel-segmentation' and empty(node())]">
+                <!-- FIXME: some error here eg. on BBgim8.tei -->
+                <!--xsl:text>[!!!]</xsl:text-->
+            </xsl:template>
+
+            <xsl:template match="gap">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <!-- use hook instead? -->
+                <xsl:text>[...]</xsl:text>
+                <xsl:call-template name="text:inline-marks"/>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+            </xsl:template>
+
+            <xsl:template match="unclear">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="unclear">
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="choice[child::sic and child::corr]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="choice-with-sic-and-corr">
+                    <xsl:apply-templates select="@* | corr"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="sic[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="sic">
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="corr[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="corr">
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="@xml:id">
+                <xsl:attribute name="id" select="."/>
+            </xsl:template>
+
+            <xsl:template match="@xml:lang">
+                <xsl:attribute name="xml:lang" select="."/>
+                <xsl:attribute name="lang" select="."/>
+                <xsl:attribute name="dir" select="i18n:language-direction(.)"/>
+            </xsl:template>
+
+            <xsl:template match="@n">
+                <xsl:attribute name="data-tei-n" select="."/>
+            </xsl:template>
+
+            <xsl:template match="@type">
+                <xsl:attribute name="data-tei-type" select="."/>
+            </xsl:template>
+        </xsl:override>
+    </xsl:use-package>
+
 
     <xsl:function name="text:non-lemma-nodes" as="node()*">
         <xsl:param name="element" as="node()"/>
         <xsl:sequence select="$element/descendant-or-self::rdg/descendant-or-self::node()"/>
     </xsl:function>
 
-    <xsl:template match="witDetail"/>
-
-    <xsl:template match="app">
-        <xsl:apply-templates select="lem"/>
-        <xsl:call-template name="text:apparatus-links"/>
-    </xsl:template>
-
-    <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
-
-    <xsl:template
-        match="lem[//variantEncoding/@method eq 'parallel-segmentation' and empty(node())]">
-        <!-- FIXME: some error here eg. on BBgim8.tei -->
-        <!--xsl:text>[!!!]</xsl:text-->
-    </xsl:template>
-
-    <xsl:template match="gap">
-        <xsl:text>[...]</xsl:text>
-    </xsl:template>
-
-    <xsl:template match="unclear">
-        <!--xsl:text>[? </xsl:text-->
-        <xsl:apply-templates/>
-        <!--xsl:text> ?]</xsl:text-->
-    </xsl:template>
-
-    <xsl:template match="choice[child::sic and child::corr]">
-        <xsl:apply-templates select="corr"/>
-    </xsl:template>
-
-    <xsl:template match="sic[not(parent::choice)]">
-        <xsl:apply-templates/>
-    </xsl:template>
-
-    <xsl:template match="corr[not(parent::choice)]">
-        <xsl:apply-templates/>
-    </xsl:template>
-
-    <!-- for segmentation, a prefix or suffix may be needed -->
-    <xsl:template match="seg">
-        <xsl:call-template name="text:tag-start"/>
-        <xsl:apply-templates/>
-        <xsl:call-template name="text:tag-end"/>
-    </xsl:template>
-
     <xsl:template name="text:tag-start" visibility="public"/>
 
     <xsl:template name="text:tag-end" visibility="public"/>
 
-    <xsl:template name="text:standard-attributes" visibility="public">
+    <xsl:template name="text:standard-attributes" visibility="private">
         <xsl:if test="@xml:id">
             <xsl:attribute name="id" select="@xml:id"/>
         </xsl:if>
@@ -135,17 +185,8 @@ Note, that there is a default mode in this package.
         </xsl:if>
     </xsl:template>
 
-    <!-- make a link to an apparatus entry if there is one for the context element -->
-    <xsl:template name="text:apparatus-links" visibility="public">
-        <xsl:variable name="element-id" select="generate-id()"/>
-        <xsl:if test="map:contains($text:apparatus-entries, $element-id)">
-            <xsl:variable name="entry" select="map:get($text:apparatus-entries, $element-id)"/>
-            <sup class="apparatus-footnote-mark footnote-mark">
-                <a name="text-{$element-id}" href="#{$element-id}">
-                    <xsl:value-of select="map:get($entry, 'number')"/>
-                </a>
-            </sup>
-        </xsl:if>
-    </xsl:template>
+    <!-- you probably want to override this for adding footnote marks etc. to the text -->
+    <xsl:template name="text:inline-marks" visibility="public"/>
+
 
 </xsl:package>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generic XSLT package for basic text formatting
+<!-- replacement of common/librend.xsl for basic text formatting in HTML output
 
 This is to be imported once into your main stylesheet if you want basic formatting
 in the base text, the apparatus and in the editorial notes. -->
@@ -11,77 +11,64 @@ in the base text, the apparatus and in the editorial notes. -->
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
 
-    <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
-        package-version="0.1.0">
-        <xsl:accept component="template" names="i18n:lang-attributes" visibility="private"/>
-    </xsl:use-package>
+    <xsl:mode name="text:text" on-no-match="text-only-copy" visibility="public"/>
+    <xsl:mode name="app:reading-text" on-no-match="text-only-copy" visibility="public"/>
+    <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
 
-
-    <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
-
-    <xsl:mode name="text:text" visibility="public"/>
-    <xsl:mode name="app:reading-text" visibility="public"/>
-    <xsl:mode name="note:editorial" visibility="public"/>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'bold']">
         <b>
-            <xsl:call-template name="i18n:lang-attributes">
-                <xsl:with-param name="context" select="."/>
-            </xsl:call-template>
-            <xsl:apply-templates mode="#current"/>
+            <xsl:call-template name="text:class-attribute-opt"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
         </b>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'italic']">
         <i>
-            <xsl:call-template name="i18n:lang-attributes">
-                <xsl:with-param name="context" select="."/>
-            </xsl:call-template>
-            <xsl:apply-templates mode="#current"/>
+            <xsl:call-template name="text:class-attribute-opt"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
         </i>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'underline']">
         <u>
-            <xsl:call-template name="i18n:lang-attributes">
-                <xsl:with-param name="context" select="."/>
-            </xsl:call-template>
-            <xsl:apply-templates mode="#current"/>
+            <xsl:call-template name="text:class-attribute-opt"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
         </u>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial"
         match="hi[@rend eq 'superscript']">
         <sup>
-            <xsl:call-template name="i18n:lang-attributes">
-                <xsl:with-param name="context" select="."/>
-            </xsl:call-template>
-            <xsl:apply-templates mode="#current"/>
+            <xsl:call-template name="text:class-attribute-opt"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
         </sup>
     </xsl:template>
 
-    <xsl:template mode="text:text app:reading-text note:editorial"
-        match="title[@type eq 'lemma'] | q | quote">
-        <xsl:variable name="content">
-            <xsl:apply-templates mode="#current"/>
-        </xsl:variable>
+    <!-- segmentation offers hooks for project-specific insertions -->
+    <xsl:template mode="text:text app:reading-text note:editorial" match="seg | s | w | c | pc">
         <span>
-            <xsl:call-template name="i18n:lang-attributes">
-                <xsl:with-param name="context" select="."/>
-            </xsl:call-template>
-            <xsl:value-of select="concat('“', normalize-space($content), '”')"/>
+            <xsl:call-template name="text:class-attribute"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
         </span>
     </xsl:template>
 
-    <xsl:template mode="text:text app:reading-text note:editorial"
-        match="seg[matches(@type, 'booktitle')] | title">
-        <i>
-            <xsl:call-template name="i18n:lang-attributes">
-                <xsl:with-param name="context" select="."/>
-            </xsl:call-template>
-            <xsl:apply-templates mode="#current"/>
-        </i>
+    <!-- drop attributes for which there is not special rule -->
+    <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
+
+    <xsl:template name="text:class-attribute" visibility="public">
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+        <xsl:attribute name="class"
+            select="(name(), $additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"/>
+    </xsl:template>
+
+    <xsl:template name="text:class-attribute-opt" visibility="public">
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+        <xsl:if test="@type or @rendition or $additional">
+            <xsl:attribute name="class"
+                select="($additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"
+            />
+        </xsl:if>
     </xsl:template>
 
 </xsl:package>

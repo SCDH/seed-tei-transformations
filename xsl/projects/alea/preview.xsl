@@ -49,6 +49,19 @@
         package-version="1.0.0"/>
 
     <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
+            visibility="public"/>
+        <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+    </xsl:use-package>
+
+    <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))"
+        select="app:apparatus-entries(root()) => seed:note-based-apparatus-nodes-map(true())"/>
+    <xsl:variable name="editorial-notes" as="map(xs:string, map(*))"
+        select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
+
+    <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
         <xsl:override>
@@ -104,22 +117,9 @@
                 </xsl:value-of>
             </xsl:variable>
 
-            <!-- XPath how to get a pLike container given an app entry.
-                Note: this should not evaluate to an empty sequence. -->
-            <xsl:variable name="app:entry-container-xpath" as="xs:string">
-                <xsl:value-of>
-                    <xsl:text>ancestor::p</xsl:text>
-                    <xsl:text>| ancestor::l</xsl:text>
-                    <xsl:text>| ancestor::head</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
+            <!-- drop mentioned -->
+            <xsl:template mode="app:reading-text" match="mentioned"/>
 
-            <xsl:variable name="app:text-nodes-mutet-ancestors" as="xs:string">
-                <xsl:value-of>
-                    <xsl:text>ancestor::rdg</xsl:text>
-                    <xsl:text>| ancestor::sic[parent::choice]</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
 
             <!-- use libwit in apparatus -->
             <xsl:template name="app:sigla">
@@ -134,10 +134,6 @@
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libcouplet.xsl"
-        package-version="1.0.0"> </xsl:use-package>
-
-    <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
         package-version="1.0.0"> </xsl:use-package>
 
     <xsl:use-package
@@ -270,8 +266,14 @@
                 </section>
                 <hr/>
                 <section class="variants">
-                    <xsl:call-template name="app:apparatus-for-context">
-                        <xsl:with-param name="app-context" select="/"/>
+                    <xsl:call-template name="app:note-based-apparatus">
+                        <xsl:with-param name="entries" select="$apparatus-entries"/>
+                    </xsl:call-template>
+                </section>
+                <hr/>
+                <section class="comments">
+                    <xsl:call-template name="app:note-based-apparatus">
+                        <xsl:with-param name="entries" select="$editorial-notes"/>
                     </xsl:call-template>
                 </section>
                 <hr/>

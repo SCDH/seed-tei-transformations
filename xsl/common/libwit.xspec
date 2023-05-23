@@ -4,74 +4,200 @@
 <!-- Unit tests (regression tests) for libwit.xsl -->
 
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
-  xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
-  xmlns:wit="http://scdh.wwu.de/transform/wit#"  xmlns:t="http://www.tei-c.org/ns/1.0"
-  stylesheet="libwit.xsl" run-as="external">
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+  xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+  xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="test-libwit.xsl" run-as="external">
 
-  <x:variable name="x:saxon-config">
-    <configuration xmlns="http://saxon.sf.net/ns/configuration">
-      <xsltPackages>
-        <package
-          name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
-          package-version="1.0.0" sourceLocation="libwit.xsl"/>
-      </xsltPackages>
-    </configuration>
+  <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+  <x:variable name="tei-witnesses">
+    <TEI xmlns="http://www.tei-c.org/ns/1.0">
+      <teiHeader>
+        <fileDesc>
+          <titleStmt>
+            <title>Handschriftenverzeichnis</title>
+          </titleStmt>
+          <publicationStmt>
+            <publisher>-</publisher>
+          </publicationStmt>
+          <sourceDesc>
+            <listWit>
+              <witness xml:id="W"/>
+              <witness xml:id="L">
+                <choice>
+                  <abbr type="siglum" xml:lang="de">l</abbr>
+                  <am>=</am>
+                  <expand>the local guy</expand>
+                </choice>
+              </witness>
+            </listWit>
+          </sourceDesc>
+        </fileDesc>
+      </teiHeader>
+      <text>
+        <body>
+          <p>Hello <app>
+              <lem/>
+              <rdg wit="#W">Wien</rdg>
+              <rdg wit="#GH">Gotha</rdg>
+              <rdg wit="#W #GH">Wien and Gotha</rdg>
+              <rdg wit="#L">local guy</rdg>
+              <rdg wit="#U" type="U">Utopia</rdg>
+            </app>!</p>
+        </body>
+      </text>
+    </TEI>
   </x:variable>
-  
 
-  <x:scenario label="getting siglum from witness catalogue">
-    <x:context href="../../test/samples/witnesses.xml"/>
+  <x:param name="wit-catalog" select="'../../test/samples/witnesses.xml'"/>
+
+  <x:scenario label="getting siglum for @wit='#W'">
+    <x:context select="$tei-witnesses"/>
     <x:call function="wit:sigla-for-idrefs">
-      <x:param select="'#W'"/>
+      <x:param select="($x:context//t:app)[1]/t:rdg[1]/@wit"/>
     </x:call>
-    <x:expect label="arabic VEH" test="normalize-space(.) = 'ڤ'"/>
+    <x:expect label="arabic VEH" select="('ڤ')"/>
   </x:scenario>
 
-
-  <x:scenario label="getting siglum for empty string ID from witness catalogue">
-    <x:context href="../../test/samples/witnesses.xml"/>
+  <x:scenario label="getting siglum for @wit='#W #GH'">
+    <x:context select="$tei-witnesses"/>
     <x:call function="wit:sigla-for-idrefs">
-      <x:param select="''"/>
+      <x:param select="($x:context//t:app)[1]/t:rdg[3]/@wit"/>
     </x:call>
-    <x:expect label="corner case" test="normalize-space(.) = ''"/>
+    <x:expect label="sigla" select="('ڤ','غ')"/>
   </x:scenario>
 
-  <x:scenario label="no separator for single siglum">
-    <x:context href="../../test/samples/witnesses.xml"/>
+  <x:scenario label="getting siglum for @wit='#L'">
+    <x:context select="$tei-witnesses"/>
     <x:call function="wit:sigla-for-idrefs">
-      <x:param select="'#W'"/>
-      <x:param select="'HAL'"/>
+      <x:param select="($x:context//t:app)[1]/t:rdg[4]/@wit"/>
     </x:call>
-    <x:expect label="arabic VEH, nothing else" test="normalize-space(.) = 'ڤ'"/>
+    <x:expect label="siglum" select="('l')"/>
   </x:scenario>
 
-  <x:scenario label="getting multiple sigla with separator">
-    <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:get-witness-siglum">
-      <x:param select="'#W #S'"/>
-      <x:param select="'HAL'"/>
+  <x:scenario label="getting siglum for @wit='#U' (unknown)">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:sigla-for-idrefs">
+      <x:param select="($x:context//t:app)[1]/t:rdg[5]/@wit"/>
     </x:call>
-    <x:expect label="arabic VEH and SEEN separated by 'HAL'" test="normalize-space(.) = 'ڤHALس'"/>
+    <x:expect label="siglum" select="()"/>
   </x:scenario>
 
-  <x:scenario label="getting multiple sigla without separator">
-    <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:get-witness-siglum">
-      <x:param select="'#W #S'"/>
+
+  <x:scenario label="get siglum for an @xml:id">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:sigla-for-ids">
+      <x:param select="$x:context//*[@xml:id eq 'W']/@xml:id"/>
     </x:call>
-    <x:expect label="arabic VEH and SEEN separated by space" test="normalize-space(.) = 'ڤ س'"/>
+    <x:expect label="siglum" select="'ڤ'"/>
   </x:scenario>
 
-  <x:scenario label="getting siglum sequence from witness catalogue">
-    <x:context href="../../test/samples/witnesses.xml"/>
-    <x:call function="wit:get-witness-siglum-seq">
-      <x:param select="'#W  #S    HAL'"/>
+  <x:scenario label="get siglum for an @xml:id (local)">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:sigla-for-ids">
+      <x:param select="$x:context//*[@xml:id eq 'L']/@xml:id"/>
     </x:call>
-    <!-- TODO: make this test work! -->
-    <!--x:expect
-	label="sequence of 3 strings"
-	test="count(.) = 3"/-->
-    <x:expect label="equals to sequence" select="'ڤ', 'س', 'HAL'"/>
+    <x:expect label="siglum" select="'l'"/>
+  </x:scenario>
+
+  <x:scenario label="getting siglum for ID 'U' (unknown)">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:sigla-for-ids">
+      <x:param select="($x:context//t:app)[1]/t:rdg[5]/@type"/>
+    </x:call>
+    <x:expect label="siglum" select="()"/>
+  </x:scenario>
+
+
+  <x:scenario label="getting description for @wit='#W #GH'">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:descriptions-for-idrefs">
+      <x:param select="($x:context//t:app)[1]/t:rdg[3]/@wit"/>
+    </x:call>
+    <x:expect label="description" select="('ڤ=W= Wien', 'غ=GH= Gotha')"/>
+  </x:scenario>
+
+  <x:scenario label="getting description for @wit='#L'">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:descriptions-for-idrefs">
+      <x:param select="($x:context//t:app)[1]/t:rdg[4]/@wit"/>
+    </x:call>
+    <x:expect label="description" select="'l=the local guy'"/>
+  </x:scenario>
+
+  <x:scenario label="getting description for @wit='#U' (unknown)">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:descriptions-for-idrefs">
+      <x:param select="($x:context//t:app)[1]/t:rdg[5]/@wit"/>
+    </x:call>
+    <x:expect label="description" select="()"/>
+  </x:scenario>
+
+
+
+  <x:scenario label="getting description for 'W'">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:descriptions-for-ids">
+      <x:param select="$x:context//*[@xml:id eq 'W']/@xml:id"/>
+    </x:call>
+    <x:expect label="description" select="'ڤ=W= Wien'"/>
+  </x:scenario>
+
+  <x:scenario label="getting description for 'L'">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:descriptions-for-ids">
+      <x:param select="$x:context//*[@xml:id eq 'L']/@xml:id"/>
+    </x:call>
+    <x:expect label="description" select="'l=the local guy'"/>
+  </x:scenario>
+
+
+  <x:scenario label="getting witness for 'W'">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:get-witness">
+      <x:param select="xs:ID('W')"/>
+      <x:param select="$x:context"/>
+    </x:call>
+    <x:expect label="witness" href="../../test/samples/witnesses.xml" select="//*[@xml:id eq 'W']"/>
+  </x:scenario>
+
+  <x:scenario label="getting witness for 'L'">
+    <x:context select="$tei-witnesses"/>
+    <x:call function="wit:get-witness">
+      <x:param select="xs:ID('L')"/>
+      <x:param select="$x:context"/>
+    </x:call>
+    <x:expect label="witness" select="$x:context//*[@xml:id eq 'L']"/>
+  </x:scenario>
+
+
+  <x:scenario label="sigulum for witness 'L'">
+    <x:call function="wit:siglum">
+      <x:param select="$tei-witnesses//t:witness[@xml:id eq 'L']"/>
+    </x:call>
+    <x:expect label="siglum" select="'l'"/>
+  </x:scenario>
+
+  <x:scenario label="sigulum for witness 'W'">
+    <x:call function="wit:siglum">
+      <x:param select="$tei-witnesses//t:witness[@xml:id eq 'W']"/>
+    </x:call>
+    <x:expect label="ID as siglum since no siglum found" select="'W'"/>
+  </x:scenario>
+
+
+  <x:scenario label="description for witness 'L'">
+    <x:call function="wit:description">
+      <x:param select="$tei-witnesses//t:witness[@xml:id eq 'L']"/>
+    </x:call>
+    <x:expect label="description" select="'l=the local guy'"/>
+  </x:scenario>
+
+  <x:scenario label="description for witness 'W'">
+    <x:call function="wit:description">
+      <x:param select="$tei-witnesses//t:witness[@xml:id eq 'W']"/>
+    </x:call>
+    <x:expect label="no description available" select="''"/>
   </x:scenario>
 
 </x:description>

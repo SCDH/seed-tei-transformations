@@ -36,7 +36,7 @@ which encoding cristalls go into the apparatus.
 Usage:
 
 Most generic usage needs 2 components
-- the function app:apparatus-entries#2 to generate a map of apparatus entries and pass this map to
+- the function app:apparatus-entries#3 to generate a map of apparatus entries and pass this map to
 - the template app:apparatus
 The funtion takes a context to determine the extension of the apparatus (doc or part) and an XPath
 expression to determine its features.
@@ -261,7 +261,17 @@ see xsl/projects/alea/preview.xsl
 
     <!-- generate a note-based apparatus for a sequence of prepared maps -->
     <xsl:template name="app:note-based-apparatus" visibility="abstract">
-        <xsl:param name="entries" as="map(*)*"/>
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
+    </xsl:template>
+
+    <!-- generate inline footnote marks. Hook this to text:inline-marks -->
+    <xsl:template name="app:footnote-marks" visibility="abstract">
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
+    </xsl:template>
+
+    <!-- generate inline alternatives. Hook this to text:inline-marks -->
+    <xsl:template name="app:inline-alternatives" visibility="abstract">
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
     </xsl:template>
 
 
@@ -297,33 +307,39 @@ see xsl/projects/alea/preview.xsl
 
     <!-- The mode apparatus-reading-text is for printing the text of a reading etc.
         Typically it is entred from a template in the mode apparatus-reading -->
-    <xsl:mode name="app:reading-text" on-no-match="shallow-skip" visibility="public"/>
+    <!--xsl:mode name="app:reading-text" on-no-match="shallow-skip" visibility="public"/-->
 
-    <xsl:template mode="app:reading-text"
-        match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
-        <xsl:apply-templates mode="app:reading-text" select="lem"/>
-    </xsl:template>
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="app:reading-text" visibility="public"/>
+        <xsl:override>
+            <xsl:template mode="app:reading-text"
+                match="app[app:variant-encoding(.) eq 'internal-parallel-segmentation']">
+                <xsl:apply-templates mode="app:reading-text" select="lem"/>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text"
-        match="app[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
+            <xsl:template mode="app:reading-text"
+                match="app[matches(app:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
-    <xsl:template mode="app:reading-text" match="choice[sic and corr]">
-        <xsl:apply-templates mode="app:reading-text" select="corr"/>
-    </xsl:template>
+            <xsl:template mode="app:reading-text" match="choice[sic and corr]">
+                <xsl:apply-templates mode="app:reading-text" select="corr"/>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text" match="caesura">
-        <xsl:text> || </xsl:text>
-    </xsl:template>
+            <xsl:template mode="app:reading-text" match="caesura">
+                <xsl:text> || </xsl:text>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text" match="l[preceding-sibling::l]">
-        <xsl:text> / </xsl:text>
-        <xsl:apply-templates mode="app:reading-text"/>
-    </xsl:template>
+            <xsl:template mode="app:reading-text" match="l[preceding-sibling::l]">
+                <xsl:text> / </xsl:text>
+                <xsl:apply-templates mode="app:reading-text"/>
+            </xsl:template>
 
-    <xsl:template mode="app:reading-text" match="text()">
-        <xsl:value-of select="."/>
-    </xsl:template>
-
+            <xsl:template mode="app:reading-text" match="text()">
+                <xsl:value-of select="."/>
+            </xsl:template>
+        </xsl:override>
+    </xsl:use-package>
 
 
     <!-- Both of the two dispatcher modes should define transformation rules
@@ -378,6 +394,35 @@ see xsl/projects/alea/preview.xsl
         match="app[app:variant-encoding(.) eq 'internal-location-referenced']">
         <xsl:apply-templates mode="seed:lemma-text-nodes" select="lem"/>
     </xsl:template>
+
+    <!-- for <note>: if there is no @targetEnd, the referring passage is the whole parent element -->
+    <xsl:template mode="app:lemma-text-nodes-dspt"
+        match="note[not(@targetEnd)] | noteGrp[not(@targetEnd)]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="parent::*"/>
+    </xsl:template>
+
+    <!-- note with @targetEnd -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@targetEnd] | noteGrp[@targetEnd]">
+        <xsl:variable name="targetEnd" as="xs:string" select="substring(@targetEnd, 2)"/>
+        <xsl:variable name="target-end-node" as="node()" select="//*[@xml:id eq $targetEnd]"/>
+        <xsl:choose>
+            <xsl:when test="empty($target-end-node)">
+                <xsl:message>
+                    <xsl:text>No anchor for message with @targetEnd: </xsl:text>
+                    <xsl:value-of select="$targetEnd"/>
+                </xsl:message>
+            </xsl:when>
+            <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
+                <xsl:apply-templates mode="seed:lemma-text-nodes"
+                    select="seed:subtrees-between-anchors(., $target-end-node)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="seed:lemma-text-nodes"
+                    select="seed:subtrees-between-anchors($target-end-node, .)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
 
     <xsl:mode name="app:reading-dspt" on-no-match="shallow-skip" visibility="public"/>
 

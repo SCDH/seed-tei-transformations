@@ -144,7 +144,8 @@ see xsl/projects/alea/preview.xsl
                 -->
             <xsl:choose>
                 <xsl:when test="empty($lemma-text-node-ids)">
-                    <xsl:value-of select="generate-id($entry)"/>
+                    <xsl:value-of
+                        select="if ($entry/@xml:id) then $entry/@xml:id else generate-id($entry)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:sequence select="$lemma-text-node-ids => string-join('-')"/>
@@ -255,7 +256,7 @@ see xsl/projects/alea/preview.xsl
         <xsl:sequence select="
                 map {
                     'entry': $entry,
-                    'entry-id': generate-id($entry),
+                    'entry-id': seed:get-id($entry),
                     'type': $type,
                     'lemma-text-nodes': $lemma-text-nodes,
                     'lemma-grouping-ids': $lemma-grouping-ids,
@@ -263,6 +264,18 @@ see xsl/projects/alea/preview.xsl
                     'line-number': $line-number,
                     'number': $number
                 }"/>
+    </xsl:function>
+
+    <xsl:function name="seed:get-id" as="xs:string">
+        <xsl:param name="context" as="node()"/>
+        <xsl:choose>
+            <xsl:when test="$context/@xml:id">
+                <xsl:value-of select="$context/@xml:id"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="generate-id($context)"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
 
     <!-- make a map that can be used to add apparatus footnote signs into the main (edited) text -->
