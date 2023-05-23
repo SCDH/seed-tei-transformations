@@ -37,7 +37,7 @@
                                     >n-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
-                                eine dritte Gerade geschnitten werden.</p>
+                                eine dritte Gerade geschnitten werden.<note>Genaus.</note></p>
                         </div>
                     </div>
                     <div xml:id="d2" n="2">
@@ -127,6 +127,24 @@
             <x:param name="entries" select="$apparatus-entries"/>
         </x:call>
         <x:expect label="not used in latex"/>
+    </x:scenario>
+
+
+    <x:scenario label="apparatus entries with custom xpath">
+        <x:context select="$tei-text"/>
+        <x:call function="app:apparatus-entries">
+            <x:param name="app-context" select="$x:context"/>
+            <x:param name="app-entries-xpath" select="'descendant-or-self::note[ancestor::text]'"/>
+            <x:param name="type" select="2"/>
+        </x:call>
+        <x:expect label="count of entries" test="count(.)" select="1"/>
+        <x:expect label="entry 1: element name" test="(.)[1] => map:get('entry') => name()"
+            select="'note'"/>
+        <x:expect label="entry 1: entry" test="(.)[1] => map:get('entry')"
+            select="$x:context//t:note[1]"/>
+        <x:expect label="entry 1: lemma-text-nodes" test="(.)[1] => map:get('lemma-text-nodes')"
+            select="$tei-text//t:p[@xml:id eq 'd1.1.p2']/text()|$tei-text//t:p[@xml:id eq 'd1.1.p2']/t:sic/text()"
+        />
     </x:scenario>
 
 </x:description>
