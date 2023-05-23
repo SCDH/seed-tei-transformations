@@ -29,10 +29,6 @@
         <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
     </xsl:use-package>
 
-    <!-- override this with a map when you need footnote signs to apparatus entries. See seed:note-based-apparatus-nodes-map#2 -->
-    <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))" select="map {}"
-        visibility="public"/>
-
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
         package-version="1.0.0"/>
@@ -53,72 +49,56 @@
             <!-- generate a line-based apparatus for a sequence of prepared maps -->
             <xsl:template name="app:line-based-apparatus" visibility="public">
                 <xsl:param name="entries" as="map(*)*"/>
-                <div>
-                    <!-- we first group the entries by line number -->
-                    <xsl:for-each-group select="$entries" group-by="map:get(., 'line-number')">
-                        <xsl:message use-when="system-property('debug') eq 'true'">
-                            <xsl:text>Apparatus entries for line </xsl:text>
-                            <xsl:value-of select="current-grouping-key()"/>
-                            <xsl:text> : </xsl:text>
-                            <xsl:value-of select="count(current-group())"/>
-                        </xsl:message>
-
-                        <div class="apparatus-line">
-                            <span class="apparatus-line-number line-number">
-                                <xsl:value-of select="current-grouping-key()"/>
-                                <xsl:text>&sp;</xsl:text>
-                            </span>
-                            <span class="apparatus-line-entries">
-                                <!-- we then group by such entries, that get their lemma (repetition of the base text)
-                            from the same set of text nodes, because we want to join them into one entry -->
-                                <xsl:for-each-group select="current-group()"
-                                    group-by="map:get(., 'lemma-grouping-ids')">
-                                    <xsl:message use-when="system-property('debug') eq 'true'">
-                                        <xsl:text>Joining </xsl:text>
-                                        <xsl:value-of select="count(current-group())"/>
-                                        <xsl:text> apparatus entries referencing text nodes </xsl:text>
-                                        <xsl:value-of select="current-grouping-key()"/>
-                                    </xsl:message>
-                                    <!-- call the template that outputs an apparatus entries -->
-                                    <xsl:call-template name="app:apparatus-entry">
-                                        <xsl:with-param name="entries" select="current-group()"/>
-                                    </xsl:call-template>
-                                </xsl:for-each-group>
-                            </span>
-                        </div>
-
-                    </xsl:for-each-group>
-                </div>
+                <!-- not doing anything here -->
             </xsl:template>
 
             <!-- generate a note-based apparatus for a sequence of prepared maps -->
             <xsl:template name="app:note-based-apparatus" visibility="public">
-                <xsl:param name="entries" as="map(*)*"/>
-                <div>
-                    <xsl:for-each-group select="$entries"
-                        group-by="map:get(., 'lemma-grouping-ids')">
-                        <xsl:message use-when="system-property('debug') eq 'true'">
-                            <xsl:text>Joining </xsl:text>
-                            <xsl:value-of select="count(current-group())"/>
-                            <xsl:text> apparatus entries referencing text nodes </xsl:text>
-                            <xsl:value-of select="current-grouping-key()"/>
-                        </xsl:message>
-                        <div class="apparatus-line">
-                            <span class="apparatus-note-number note-number">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <!-- not doing anything here -->
+            </xsl:template>
 
-                                <xsl:variable name="entry" select="current-group()[1]"/>
-                                <a name="{map:get($entry, 'entry-id')}"
-                                    href="#text-{map:get($entry, 'entry-id')}">
-                                    <xsl:value-of select="map:get($entry, 'number')"/>
-                                </a>
-                            </span>
-                            <!-- call the template that outputs an apparatus entries -->
-                            <xsl:call-template name="app:apparatus-entry">
-                                <xsl:with-param name="entries" select="current-group()"/>
-                            </xsl:call-template>
-                        </div>
-                    </xsl:for-each-group>
-                </div>
+            <!-- generate inline alternatives. Hook this to text:inline-marks -->
+            <xsl:template name="app:inline-alternatives" visibility="public">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <!-- not doing anything here -->
+            </xsl:template>
+
+            <!-- generate footnotes for the context element. Hook this to text:inline-marks -->
+            <xsl:template name="app:footnote-marks" visibility="public">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:variable name="element-id"
+                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:if test="map:contains($entries, $element-id)">
+                    <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
+                    <!-- get the apparatus entries for this context -->
+                    <xsl:variable name="app-entries" select="map:get($entry, 'entries')"/>
+                    <xsl:text>%&lb;\edtext{\edlabel{</xsl:text>
+                    <xsl:message use-when="system-property('debug') eq 'true'">
+                        <xsl:text>Making end edlabel for </xsl:text>
+                        <xsl:value-of select="map:get($app-entries[1], 'entry') => name()"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="map:get($app-entries[1], 'entry')/@xml:id"/>
+                    </xsl:message>
+                    <xsl:variable name="edlabel-end">
+                        <xsl:apply-templates mode="edmac:edlabel-end"
+                            select="map:get($app-entries[1], 'entry')"/>
+                    </xsl:variable>
+                    <xsl:value-of select="$edlabel-end"/>
+                    <xsl:text>}}{%&lb;</xsl:text>
+                    <!-- make the references by \xxref{startlabel}{endlabel} -->
+                    <xsl:text>\xxref{</xsl:text>
+                    <xsl:apply-templates mode="edmac:edlabel-start"
+                        select="map:get($app-entries[1], 'entry')"/>
+                    <xsl:text>}{</xsl:text>
+                    <xsl:value-of select="$edlabel-end"/>
+                    <xsl:text>}</xsl:text>
+                    <!-- make \lemma and \Afootnote -->
+                    <xsl:call-template name="app:apparatus-entry">
+                        <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
+                    </xsl:call-template>
+                    <xsl:text>} %&lb;</xsl:text>
+                </xsl:if>
             </xsl:template>
 
 
@@ -356,39 +336,6 @@
 
         </xsl:override>
     </xsl:use-package>
-
-
-    <!-- make a footnote with an apparatus entry if there is one for the context element -->
-    <xsl:template name="app:apparatus-footnote" visibility="public">
-        <xsl:variable name="element-id" select="generate-id()"/>
-        <xsl:if test="map:contains($app:apparatus-entries, $element-id)">
-            <xsl:variable name="entry" select="map:get($app:apparatus-entries, $element-id)"/>
-            <xsl:variable name="app-entries" select="map:get($entry, 'entries')"/>
-            <xsl:text>%&lb;\edtext{\edlabel{</xsl:text>
-            <xsl:message use-when="system-property('debug') eq 'true'">
-                <xsl:text>Making end edlabel for </xsl:text>
-                <xsl:value-of select="map:get($app-entries[1], 'entry') => name()"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="map:get($app-entries[1], 'entry')/@xml:id"/>
-            </xsl:message>
-            <xsl:variable name="edlabel-end">
-                <xsl:apply-templates mode="edmac:edlabel-end" select="map:get($app-entries[1], 'entry')"/>
-            </xsl:variable>
-            <xsl:value-of select="$edlabel-end"/>
-            <xsl:text>}}{%&lb;</xsl:text>
-            <!-- make the references by \xxref{startlabel}{endlabel} -->
-            <xsl:text>\xxref{</xsl:text>
-            <xsl:apply-templates mode="edmac:edlabel-start" select="map:get($app-entries[1], 'entry')"/>
-            <xsl:text>}{</xsl:text>
-            <xsl:value-of select="$edlabel-end"/>
-            <xsl:text>}</xsl:text>
-            <!-- make \lemma and \Afootnote -->
-            <xsl:call-template name="app:apparatus-entry">
-                <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
-            </xsl:call-template>
-            <xsl:text>} %&lb;</xsl:text>
-        </xsl:if>
-    </xsl:template>
 
 
     <!-- contributions to the latex header -->
