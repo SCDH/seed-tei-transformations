@@ -78,7 +78,7 @@
         }"/>
 
     <x:scenario label="apparatus entries"
-        pending="this is tested somewhere else. Test does not compile because of XSpec's handling of the context item. Fails due to encodingDesc/variantEncoding! But this is needed for other tests.">
+        pending="this is tested somewhere else. Test does not compile because of XSpec's handling of the context item and xsl:evaluate. Fails due to encodingDesc/variantEncoding! But this is needed for other tests.">
         <x:context select="$tei-text"/>
         <x:call function="app:apparatus-entries">
             <x:param name="app-context" select="$x:context"/>
