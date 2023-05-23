@@ -83,9 +83,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     package-version="1.0.0">
     <xsl:override>
 
-      <xsl:variable name="app:apparatus-entries" as="map(xs:string, map(*))"
-        select="app:apparatus-entries($current) => seed:note-based-apparatus-nodes-map(true())"/>
-
       <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
         <xsl:value-of>
           <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
@@ -146,25 +143,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         </xsl:call-template>
       </xsl:template>
 
-    </xsl:override>
-  </xsl:use-package>
-
-  <xsl:use-package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libnote2.xsl"
-    package-version="1.0.0">
-    <xsl:accept component="function" names="note:editorial-notes#3" visibility="public"/>
-    <xsl:accept component="template" names="note:inline-editorial-notes" visibility="public"/>
-    <xsl:accept component="mode" names="note:editorial-note" visibility="public"/>
-    <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
-    <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="hidden"/>
-
-    <xsl:override>
-
-      <xsl:variable name="note:editorial-notes" as="map(xs:string, map(*))"
-        select="note:editorial-notes($current, 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
-
       <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
-      <xsl:template mode="note:text-nodes-dspt" match="note[@target] | noteGrp[@target]">
+      <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@target] | noteGrp[@target]">
         <xsl:variable name="targetEnd" as="xs:string" select="substring(@target, 2)"/>
         <xsl:variable name="target-end-node" as="node()*" select="//*[@xml:id eq $targetEnd]"/>
         <xsl:choose>
@@ -192,13 +172,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:value-of select="concat(generate-id(), '-end')"/>
       </xsl:template>
 
-
-      <!-- drop mentioned -->
-      <xsl:template mode="note:editorial-note" match="mentioned"/>
     </xsl:override>
-
   </xsl:use-package>
 
+  <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))"
+    select="app:apparatus-entries($current) => seed:note-based-apparatus-nodes-map(true())"/>
+  <xsl:variable name="editorial-notes" as="map(xs:string, map(*))"
+    select="app:apparatus-entries($current, 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
 
 
   <xsl:use-package
@@ -209,8 +189,12 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <!-- make apparatus footnotes -->
       <xsl:template name="text:inline-footnotes">
         <xsl:message>apparatus footnote</xsl:message>
-        <xsl:call-template name="app:apparatus-footnote"/>
-        <xsl:call-template name="note:inline-editorial-notes"/>
+        <xsl:call-template name="app:footnote-marks">
+          <xsl:with-param name="entries" select="$apparatus-entries"/>
+        </xsl:call-template>
+        <xsl:call-template name="app:footnote-marks">
+          <xsl:with-param name="entries" select="$editorial-notes"/>
+        </xsl:call-template>
       </xsl:template>
 
     </xsl:override>
