@@ -145,6 +145,16 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
+            <xsl:template match="supplied[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="supplied">
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+
             <xsl:template match="@xml:id">
                 <xsl:attribute name="id" select="."/>
             </xsl:template>

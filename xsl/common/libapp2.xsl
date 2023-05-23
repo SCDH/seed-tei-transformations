@@ -103,6 +103,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -118,6 +119,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -133,6 +135,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -145,6 +148,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -251,7 +255,8 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>Elements for apparatus: </xsl:text>
             <xsl:value-of select="$entry-elements ! name()"/>
         </xsl:message>
-        <xsl:sequence as="map(*)*" select="$entry-elements ! seed:mk-entry-map(., position(), $type)"/>
+        <xsl:sequence as="map(*)*"
+            select="$entry-elements ! seed:mk-entry-map(., position(), $type)"/>
     </xsl:function>
 
     <!-- generate a line-based apparatus for a sequence of prepared maps -->
@@ -525,6 +530,11 @@ see xsl/projects/alea/preview.xsl
     <xsl:template mode="app:lemma-text-nodes-dspt" match="gap"/>
 
 
+    <!-- supplied -->
+
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="supplied[not(parent::choice)]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes"/>
+    </xsl:template>
 
 
     <!-- default rules -->
