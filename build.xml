@@ -90,4 +90,11 @@
         </antcall>
     </target>
 
+    <target name="test-xsl-projects-alea-latex-prose.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/latex/prose.xspec"/>
+        </antcall>
+    </target>
+
+
 </project>
