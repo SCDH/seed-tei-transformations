@@ -226,7 +226,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;%\usepackage{showframe}</xsl:text>
 
     <!-- input encoding -->
-    <xsl.text>&lb;\usepackage{ifluatex}</xsl.text>
+    <xsl:text>&lb;\usepackage{ifluatex}</xsl:text>
     <xsl:text>&lb;\ifluatex</xsl:text>
     <xsl:text>&lb;%% für luatex</xsl:text>
     <xsl:text>&lb;\usepackage[utf8]{luainputenc}</xsl:text>
