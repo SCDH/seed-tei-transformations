@@ -37,7 +37,7 @@
                                     >n-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
-                                eine dritte Gerade geschnitten werden.</p>
+                                eine dritte Gerade geschnitten werden.<note>Genaus!</note></p>
                         </div>
                     </div>
                     <div xml:id="d2" n="2">
@@ -80,6 +80,15 @@
     <x:scenario label="assert compilation">
         <x:context select="$tei-text"/>
         <x:expect label="compiles without error">...</x:expect>
+    </x:scenario>
+
+    <x:scenario label="assert components">
+        <x:context select="$tei-text"/>
+        <x:expect label="critical apparatus on app"
+            test="matches(., 'des\s+\\edlabel\{d1.1.a1-start\}Dreiecks%\s+\\edtext\{\\edlabel\{d1.1.a1-end\}\}\{%\s+\\xxref\{d1.1.a1-start\}\{d1.1.a1-end\}\\lemma\{Dreiecks\}\\Afootnote\{\{n-Ecks\\appsep\{rdg-siglum-sep\}\\wit\{\\sigla\{\}\}\}\}\}\s+%')"/>
+        <x:expect label="critical apparatus on sic"
+            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}Paralellen%\s+\\edtext\{\\edlabel\{[a-zA-Z0-9]+-end\}\}\{%\s+\\xxref\{[a-zA-Z0-9]+-start\}\{[a-zA-Z0-9]+-end\}\\lemma\{Paralellen\}\\Afootnote\{\\apptranslate\{sic\}\}\}\s+%\s+,')"
+        />
     </x:scenario>
 
 </x:description>
