@@ -426,6 +426,18 @@
                     .supplied:not(.reading):after {
                     content: "]";
                     }
+                    .verbatim-holy:before {
+                        content: "﴿";
+                    }
+                    .verbatim-holy:after {
+                        content: "﴾";
+                    }
+                    .verbatim:before {
+                    content: "(";
+                    }
+                    .verbatim:after {
+                    content: ")";
+                    }
                     @font-face {
                         font-family:"Arabic Typesetting";
                         src:url("../../../arabt100.ttf");

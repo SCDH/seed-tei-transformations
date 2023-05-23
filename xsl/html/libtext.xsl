@@ -154,6 +154,18 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
+            <!-- support for quotes, which may need a footnote about the source -->
+            <xsl:template match="quote | q">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span>
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+
 
             <xsl:template match="@xml:id">
                 <xsl:attribute name="id" select="."/>
