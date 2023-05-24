@@ -28,4 +28,7 @@ package system would allow this and even its adaption in a branch of the package
     <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
   </xsl:template>
 
+  <!-- drop attributes for which there is not special rule -->
+  <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
+
 </xsl:package>
