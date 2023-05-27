@@ -221,84 +221,47 @@ Note, that the default mode is html:html!
   <xsl:template name="html:after-body-js" visibility="public">
     <!-- javascript after the body is always internalized -->
     <xsl:variable name="base-uri" select="base-uri()"/>
-    <xsl:for-each select="$html:after-body-js">
-      <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
-      <xsl:choose>
-        <xsl:when test="unparsed-text-available($href)">
-          <xsl:comment>
-                <xsl:text>JS from </xsl:text>
+    <xsl:variable name="base-uri" select="base-uri()"/>
+    <xsl:choose>
+      <xsl:when test="$html:js-method eq 'internal'">
+        <xsl:for-each select="$html:after-body-js">
+          <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
+          <xsl:choose>
+            <xsl:when test="unparsed-text-available($href)">
+              <xsl:comment>
+                <xsl:text>CSS from </xsl:text>
                 <xsl:value-of select="$href"/>
               </xsl:comment>
-          <script>
-            <xsl:value-of select="unparsed-text($href)"/>
-          </script>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:comment>
+              <script type="text/javascript">
+                <xsl:value-of select="unparsed-text($href)"/>
+              </script>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:comment>
               <xsl:text>JS not available </xsl:text>
               <xsl:value-of select="$href"/>
             </xsl:comment>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-    <!-- let's set this up for cosumation in an iframe -->
-    <xsl:variable name="message-body" as="map(xs:string, item()*)">
-      <xsl:map>
-        <xsl:map-entry key="'doc-origin'" select="base-uri()"/>
-        <xsl:map-entry key="'filename'" select="(base-uri() => tokenize('/'))[last()]"/>
-      </xsl:map>
-    </xsl:variable>
-    <script>
-      <!-- We set up notification of the scroll position in an iframe using the postMessage channel.
-        Cf. https://davidwalsh.name/window-iframe -->
-      <xsl:text>// a map for identifying the document&lb;var msg = </xsl:text>
-      <xsl:value-of
-        select="$message-body => serialize(map {'method': 'json', 'use-character-maps' : map { '/' : '/' }})"/>
-      <xsl:text>;&lb;</xsl:text>
-      <xsl:text>
-  // set up an event handler for scroll events, it simply calls notifyScrolled()
-  var scrollTimeout = null;
-  window.onscroll = function(){
-    if (scrollTimeout) clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(notifyScrolled,250);
-  };
-
-  // get all divs and their Y positions
-  var divs;
-  var divsY;
-  window.onload = function() {
-    divs = Array.from(document.querySelectorAll('div'));
-    divsY = divs.map(d => d.offsetTop);
-    notifyScrolled();
-  }
-  
-  function notifyScrolled() {
-    console.log("scrolled");
-    var y = window.scrollY;
-    // get the first div that is visible
-    for (i=0; i &lt; divs.length; i++) {
-      if (divsY[i] &gt;= y &amp;&amp; divs[i].id != "") {
-        console.log("scrolled to " + i + "th div: " + divs[i].id);
-        // pass a message using the postMessage channel, cf. https://davidwalsh.name/window-iframe
-        parent.postMessage({ ...msg, 'event': 'scrolled', 'top': divs[i].id }, window.location.protocol + window.location.host);
-        break;
-      }
-    }
-  }
-  
-  window.onmessage = notifySyncScroll;
-
-  function notifySyncScroll(e) {
-    console.log("filtering event from notifySync");
-    if (e.data?.event == "sync" &amp;&amp; e.data?.source != msg.filename) {
-      var newPos =  makeScrollTarget(e.data?.position);
-      console.log("performing a sync for " + msg.filename + " aka " + e.data?.source + ", scrolling to: " + newPos);
-      location.href = "#"; // bug fix for webkit
-      location.href = "#" + newPos;
-    }
-  }
-      </xsl:text>
-    </script>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$html:js-method eq 'absolute'">
+        <xsl:for-each select="$html:after-body-js">
+          <script type="text/javascript" src="{resolve-uri(., $base-uri)}"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$html:js-method eq 'relative'">
+        <xsl:for-each select="$html:after-body-js">
+          <script type="text/javascript" src="{.}"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message terminate="yes">
+          <xsl:text>ERROR: invalid value for parameter html:css-method: </xsl:text>
+          <xsl:value-of select="$html:js-method"/>
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:call-template name="html:scroll-target"/>
     <xsl:call-template name="html:after-body-additional-js"/>
   </xsl:template>
