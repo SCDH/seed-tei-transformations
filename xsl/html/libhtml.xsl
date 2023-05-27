@@ -183,7 +183,7 @@ Note, that the default mode is html:html!
                 <xsl:text>CSS from </xsl:text>
                 <xsl:value-of select="$href"/>
               </xsl:comment>
-              <script>
+              <script type="text/javascript">
                 <xsl:value-of select="unparsed-text($href)"/>
               </script>
             </xsl:when>
@@ -198,12 +198,12 @@ Note, that the default mode is html:html!
       </xsl:when>
       <xsl:when test="$html:js-method eq 'absolute'">
         <xsl:for-each select="$html:js">
-          <link rel="stylesheet" type="text/css" href="{resolve-uri(., $base-uri)}"/>
+          <script type="text/javascript" src="{resolve-uri(., $base-uri)}"/>
         </xsl:for-each>
       </xsl:when>
       <xsl:when test="$html:js-method eq 'relative'">
         <xsl:for-each select="$html:js">
-          <link rel="stylesheet" type="text/css" href="{.}"/>
+          <script type="text/javascript" src="{.}"/>
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
