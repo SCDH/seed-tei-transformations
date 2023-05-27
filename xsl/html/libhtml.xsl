@@ -46,6 +46,11 @@ Note, that the default mode is html:html!
   <!-- should be one of 'internal', 'absolute', 'relative' -->
   <xsl:param name="html:scroll-target-method" as="xs:string" select="'internal'"/>
 
+  <!-- the canonical URL, if not set, a default value will be used -->
+  <xsl:param name="html:canonical" as="xs:string" select="''"/>
+
+  <xsl:variable name="html:canonical-uri" as="xs:string" select="''" visibility="public"/>
+
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -83,6 +88,17 @@ Note, that the default mode is html:html!
         <title>
           <xsl:call-template name="html:title"/>
         </title>
+        <xsl:variable name="canonical" as="xs:string">
+          <xsl:choose>
+            <xsl:when test="$html:canonical ne ''">
+              <xsl:value-of select="$html:canonical"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="base-uri()"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <link rel="canonical" href="{$canonical}"/>
         <xsl:call-template name="html:css"/>
         <xsl:call-template name="html:js"/>
         <xsl:call-template name="html:last-in-head-hook"/>
