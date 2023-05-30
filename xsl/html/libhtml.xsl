@@ -31,6 +31,9 @@ Note, that the default mode is html:html!
   <!-- should be one of 'internal', 'absolute', 'relative' -->
   <xsl:param name="html:css-method" as="xs:string" select="'internal'"/>
 
+  <!-- a sequence of Javascript modules to be linked -->
+  <xsl:param name="html:js-modules" as="xs:string*" select="()"/>
+
   <!-- a sequence of Javascript files to be included on the header -->
   <xsl:param name="html:js" as="xs:string*" select="()"/>
 
@@ -100,6 +103,7 @@ Note, that the default mode is html:html!
         </xsl:variable>
         <link rel="canonical" href="{$canonical}"/>
         <xsl:call-template name="html:css"/>
+        <xsl:call-template name="html:js-modules"/>
         <xsl:call-template name="html:js"/>
         <xsl:call-template name="html:last-in-head-hook"/>
       </head>
@@ -170,6 +174,13 @@ Note, that the default mode is html:html!
   </xsl:template>
 
   <xsl:template name="html:additional-css" visibility="public"/>
+
+  <xsl:template name="html:js-modules">
+    <xsl:variable name="base-uri" select="base-uri()"/>
+    <xsl:for-each select="$html:js-modules">
+      <script type="module" src="{resolve-uri(., $base-uri)}"/>
+    </xsl:for-each>
+  </xsl:template>
 
   <xsl:template name="html:js">
     <xsl:variable name="base-uri" select="base-uri()"/>
