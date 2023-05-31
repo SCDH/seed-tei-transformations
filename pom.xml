@@ -44,6 +44,7 @@
         <xspec.version>2.2.4</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
+	<seed-config-xsl.url>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-xml-transformer/seed-config.xsl</seed-config-xsl.url>
         <release.url/>
     </properties>
 
