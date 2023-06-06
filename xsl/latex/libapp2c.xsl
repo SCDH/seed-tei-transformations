@@ -360,6 +360,7 @@
         <xsl:text>&lb;\newcommand*{\wit}[1]{#1}</xsl:text>
         <xsl:text>&lb;\newcommand*{\appsep}[1]{\GetTranslation{#1}}</xsl:text>
         <xsl:text>&lb;\newcommand*{\apptranslate}[1]{\GetTranslation{#1}}</xsl:text>
+        <xsl:text>&lb;\newcommand*{\appnote}[1]{#1}</xsl:text>
         <xsl:text>&lb;\newcommand*{\sigla}[1]{#1}</xsl:text>
         <xsl:text>&lb;\newcommand*{\siglum}[1]{#1}</xsl:text>
     </xsl:template>
