@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="libcouplet.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+                <encodingDesc>
+                    <variantEncoding method="parallel-segmentation" location="internal"/>
+                </encodingDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <front>
+                    <div>
+                        <head>Vorrede</head>
+                        <p>Der hochwohlgebohrenen Prinzessin Z.</p>
+                    </div>
+                </front>
+                <body>
+                    <lg>
+                        <l>Du siehst, wohin du siehst, <caesura/> nur eitelkeit auf erden.</l>
+                        <l>Was dieser heute baut, <caesura/> reißt jener morgen ein,</l>
+                        <l>Wo jetz und städte stehn, <caesura/> wird eine wiese sein,</l>
+                        <l>Auf der ein schäfers kind <caesura/> wird spielen mit den herden.</l>
+                    </lg>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="hemistiches in test document" pending="not yet stable">
+        <x:context select="$tei-text" mode="text:text"/>
+        <x:expect label="result"/>
+    </x:scenario>
+
+    <x:scenario label="nested caesura">
+        <x:context mode="text:text">
+            <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                erden.</tei:l>
+        </x:context>
+        <x:expect label="result has edlabels"
+            test="matches(., '\\couplet\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+        />
+    </x:scenario>
+
+
+</x:description>

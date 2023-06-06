@@ -72,9 +72,16 @@
         </antcall>
     </target>
 
+
     <target name="test-xsl-latex-libapp2c.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/latex/libapp2c.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-latex-libcouplet.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/latex/libcouplet.xspec"/>
         </antcall>
     </target>
 
