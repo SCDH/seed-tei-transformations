@@ -63,12 +63,26 @@
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
-  <!-- simple support for verse -->
-  <xsl:template match="l">
+  <xsl:template match="lg[not(lg)]">
     <xsl:call-template name="edmac:par-start"/>
     <xsl:apply-templates/>
     <xsl:call-template name="edmac:par-end"/>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
+  </xsl:template>
+
+  <!-- simple support for verse -->
+  <xsl:template match="l[not(ancestor::lg)]">
+    <xsl:call-template name="edmac:par-start"/>
+    <xsl:apply-templates/>
+    <xsl:call-template name="edmac:par-end"/>
+    <xsl:text>&lb;&lb;&lb;</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="l[ancestor::lg]">
+    <xsl:apply-templates/>
+    <xsl:if test="following-sibling::l">
+      <xsl:text>\newline%&lb;</xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="caesura">
@@ -198,6 +212,8 @@
     </xsl:choose>
     <xsl:text>}</xsl:text>
   </xsl:template>
+
+
 
 
   <!-- a mode if text text only (without macros that can cause run away arguments) is needed,
