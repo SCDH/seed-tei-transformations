@@ -1,5 +1,15 @@
 # Changes
 
+## 0.2.0
+
+- various hooks
+- supply output-specific librend.xsl
+- use libapp2.xsl for all kinds of notes, that repeat the lemma, be it
+  apparatus entries or editorial notes
+- support `<supplied>`
+- support `<quote>` and `<q>`
+- unit tests
+
 ## 0.1.1
 
 - ALEA's prose preview ro fit Andreas' needs
