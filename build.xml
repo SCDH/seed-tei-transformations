@@ -27,6 +27,7 @@
         <antcall target="test-xsl-html-prose.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
         <antcall target="test-xsl-projects-alea-prose-page.xsl"/>
+        <antcall target="test-xsl-projects-alea-preview.xsl"/>
     </target>
 
     <target name="test-xsl-common-libwit.xsl">
