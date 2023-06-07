@@ -64,29 +64,34 @@
   </xsl:template>
 
   <xsl:template match="lg[not(lg)]">
-    <xsl:call-template name="edmac:par-start"/>
+    <xsl:text>&lb;&lb;\stanza\relax %&lb;</xsl:text>
     <xsl:apply-templates/>
-    <xsl:call-template name="edmac:par-end"/>
+    <!-- in reledmac, a stanza is ended by \& -->
+    <xsl:text>\&amp;%&lb;</xsl:text>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
-  <!-- simple support for verse -->
+  <!-- a single verse not in lg is output as a stanza -->
   <xsl:template match="l[not(ancestor::lg)]">
-    <xsl:call-template name="edmac:par-start"/>
+    <xsl:text>&lb;&lb;\stanza\relax %&lb;</xsl:text>
     <xsl:apply-templates/>
-    <xsl:call-template name="edmac:par-end"/>
+    <xsl:text>\&amp;</xsl:text>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
   <xsl:template match="l[ancestor::lg]">
     <xsl:apply-templates/>
+    <!-- in reledmac, each verse but the last is ended by an ampersand -->
     <xsl:if test="following-sibling::l">
-      <xsl:text>\newline%&lb;</xsl:text>
+      <xsl:text>&amp;%&lb;</xsl:text>
     </xsl:if>
   </xsl:template>
 
+  <!-- delete whitespace nodes between verses -->
+  <xsl:template match="text()[normalize-space(.) eq '' and ancestor::lg and not(ancestor::l)]"/>
+
   <xsl:template match="caesura">
-    <xsl:text>\hfill{}</xsl:text>
+    <xsl:text>\caesura{}</xsl:text>
   </xsl:template>
 
   <xsl:template match="pb">
@@ -257,6 +262,7 @@
     <xsl:text>&lb;&lb;%% macro definitions from .../xsl/latex/libtext.xsl</xsl:text>
     <xsl:text>&lb;\newcommand*{\pb}[1]{[#1]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\milestone}[2]{[#1]}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\caesura}{||}</xsl:text>
   </xsl:template>
 
 </xsl:package>
