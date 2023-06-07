@@ -126,7 +126,8 @@
         <xsl:param name="context" as="node()" select="." required="false"/>
         <xsl:param name="suffix" as="xs:string" select="''" required="false"/>
         <xsl:text>\edlabel{</xsl:text>
-        <xsl:value-of select="concat(if ($context/@xml:id) then $context/@xml:id else generate-id($context), $suffix)"/>
+        <xsl:value-of
+            select="concat(if ($context/@xml:id) then $context/@xml:id else generate-id($context), $suffix)"/>
         <xsl:text>}</xsl:text>
     </xsl:template>
 
@@ -179,13 +180,25 @@
         <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
     </xsl:template>
 
+    <xsl:template mode="edmac:edlabel-start" match="choice">
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
+    </xsl:template>
+
+    <xsl:template mode="edmac:edlabel-end" match="choice">
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+    </xsl:template>
+
 
     <xsl:template mode="edmac:edlabel-start" match="note">
-        <xsl:value-of select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-start')"/>
+        <xsl:value-of
+            select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-start')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="note">
-        <xsl:value-of select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-end')"/>
+        <xsl:value-of
+            select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-end')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="note[@fromTarget]">
