@@ -81,6 +81,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libcouplet.xsl"
                version="1.0.0" sourceLocation="xsl/html/libcouplet.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libcouplet.xsl"
+               version="1.0.0" sourceLocation="xsl/latex/libcouplet.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
                version="1.0.0" sourceLocation="xsl/html/libprose.xsl"/>
           <package
