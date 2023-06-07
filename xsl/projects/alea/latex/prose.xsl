@@ -293,6 +293,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
 
+    <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
+    <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
+    <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\couplet}[2]{#1\hfill #2}</xsl:text>
+
+    <!--
+    <xsl:text>&lb;\newcommand*{\couplet}[2]{\bayt{#1}{#2}}</xsl:text>
+    -->
     <!--
     <xsl:text>&lb;\usepackage[switch,modulo,pagewise]{lineno}</xsl:text>
     -->
