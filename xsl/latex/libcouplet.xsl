@@ -8,8 +8,12 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
+  xmlns:verse="http://scdh.wwu.de/transform/verse#"
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
-  xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
+  xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
+
+  <xsl:expose component="template" names="verse:*" visibility="public"/>
+  <xsl:expose component="function" names="verse:*" visibility="public"/>
 
   <xsl:mode name="after-caesura" visibility="private"/>
   <xsl:mode name="before-caesura" visibility="private"/>
@@ -20,42 +24,35 @@
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
-    package-version="1.0.0">
-    <xsl:accept component="mode" names="text:*" visibility="public"/>
-    <xsl:accept component="template" names="text:*" visibility="public"/>
-    <xsl:accept component="template" names="edmac:*" visibility="public"/>
+    package-version="1.0.0"> </xsl:use-package>
 
-    <xsl:override>
+  <!-- a replacement for text:verse -->
+  <xsl:template name="verse:verse">
+    <xsl:text>\hemistich{</xsl:text>
+    <!-- start label and hook on l -->
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
+    <!-- text of first hemistiche -->
+    <!-- output of nodes that preceed caesura -->
+    <xsl:apply-templates mode="text:text"
+      select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
+    <!-- recursively handle nodes, that contain caesura -->
+    <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+    <xsl:text>}{</xsl:text>
+    <!-- second hemistiche -->
+    <!-- recursively handle nodes, that contain caesura -->
+    <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
+    <!-- output nodes that follow caesura -->
+    <xsl:apply-templates mode="text:text"
+      select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"/>
+    <!-- end label and hook on l -->
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
 
-      <xsl:template name="text:verse">
-        <xsl:text>\couplet{</xsl:text>
-        <!-- start label and hook on l -->
-        <xsl:call-template name="edmac:edlabel">
-          <xsl:with-param name="suffix" select="'-start'"/>
-        </xsl:call-template>
-        <!-- text of first hemistiche -->
-        <!-- output of nodes that preceed caesura -->
-        <xsl:apply-templates
-          select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except text:non-lemma-nodes(.)"/>
-        <!-- recursively handle nodes, that contain caesura -->
-        <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
-        <xsl:text>}{</xsl:text>
-        <!-- second hemistiche -->
-        <!-- recursively handle nodes, that contain caesura -->
-        <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
-        <!-- output nodes that follow caesura -->
-        <xsl:apply-templates
-          select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except text:non-lemma-nodes(.)"/>
-        <!-- end label and hook on l -->
-        <xsl:call-template name="edmac:edlabel">
-          <xsl:with-param name="suffix" select="'-end'"/>
-        </xsl:call-template>
-        <xsl:text>}</xsl:text>
-      </xsl:template>
-
-    </xsl:override>
-
-  </xsl:use-package>
 
   <!-- nodes that contain caesura: recursively output everything preceding caesura -->
   <xsl:template match="*[descendant::caesura]" mode="before-caesura">
@@ -69,8 +66,8 @@
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
     <!-- output of nodes that preced caesura -->
-    <xsl:apply-templates
-      select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except text:non-lemma-nodes(.)"/>
+    <xsl:apply-templates mode="text:text"
+      select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
     <!-- recursively handle nodes, that contain caesura -->
     <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
   </xsl:template>
@@ -84,8 +81,8 @@
     <!-- recursively handle nodes, that contain caesura -->
     <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
     <!-- output nodes that follow caesura -->
-    <xsl:apply-templates
-      select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except text:non-lemma-nodes(.)"/>
+    <xsl:apply-templates mode="text:text"
+      select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"/>
     <!-- after element hooks -->
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-end'"/>
@@ -97,26 +94,27 @@
   <!-- When the caesura is not present in the nested node, then output the node only once and warn the user.  -->
   <xsl:template match="*" mode="before-caesura">
     <xsl:message>WARNING: broken document? caesura missing</xsl:message>
-    <xsl:apply-templates/>
+    <xsl:apply-templates mode="text:text"/>
   </xsl:template>
   <xsl:template match="*" mode="after-caesura"/>
 
 
   <!-- TODO: this needs a better implementation -->
-  <xsl:function name="text:non-lemma-nodes" as="node()*">
+  <xsl:function name="verse:non-lemma-nodes" as="node()*">
     <xsl:param name="element" as="node()"/>
     <xsl:sequence select="$element/descendant-or-self::rdg/descendant-or-self::node()"/>
   </xsl:function>
 
 
   <!-- contributions to the latex header -->
-  <xsl:template name="text:latex-header-caesura" visibility="public">
+  <xsl:template name="verse:latex-header">
     <xsl:text>&lb;&lb;%% macro definitions from .../xsl/latex/libverse.xsl</xsl:text>
-    <xsl:text>&lb;\newcommand*{\couplet}[2]{#1#2}</xsl:text>
     <xsl:text>&lb;\usepackage{filecontents}</xsl:text>
     <xsl:text>&lb;\begin{filecontents}{hemistich.sty}</xsl:text>
+    <xsl:text>&lb;</xsl:text>
     <xsl:value-of select="unparsed-text('hemistich.sty')"/>
     <xsl:text>&lb;\end{filecontents}</xsl:text>
+    <xsl:text>&lb;\usepackage{hemistich}</xsl:text>
   </xsl:template>
 
 </xsl:package>
