@@ -19,7 +19,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
-  xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
+  xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
+  xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
@@ -182,6 +183,11 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
 
   <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libcouplet.xsl"
+    package-version="1.0.0"/>
+
+
+  <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
     package-version="1.0.0">
     <xsl:override>
@@ -195,6 +201,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="app:footnote-marks">
           <xsl:with-param name="entries" select="$editorial-notes"/>
         </xsl:call-template>
+      </xsl:template>
+
+      <xsl:template name="text:verse">
+        <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
     </xsl:override>
@@ -294,9 +304,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
+    <xsl:text>&lb;\setlength{\stanzaindentbase}{10pt}</xsl:text>
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
     <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\couplet}[2]{#1\hfill #2}</xsl:text>
+    <xsl:call-template name="verse:latex-header"/>
 
     <!--
     <xsl:text>&lb;\newcommand*{\couplet}[2]{\bayt{#1}{#2}}</xsl:text>
