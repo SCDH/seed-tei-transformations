@@ -27,7 +27,7 @@
 
     <xsl:override>
 
-      <xsl:template match="l[descendant::caesura]">
+      <xsl:template name="text:verse">
         <xsl:text>\couplet{</xsl:text>
         <!-- start label and hook on l -->
         <xsl:call-template name="edmac:edlabel">
@@ -51,9 +51,6 @@
           <xsl:with-param name="suffix" select="'-end'"/>
         </xsl:call-template>
         <xsl:text>}</xsl:text>
-        <xsl:if test="following-sibling::l">
-          <xsl:text>&lb;</xsl:text>
-        </xsl:if>
       </xsl:template>
 
     </xsl:override>
@@ -114,8 +111,12 @@
 
   <!-- contributions to the latex header -->
   <xsl:template name="text:latex-header-caesura" visibility="public">
-    <xsl:text>&lb;&lb;%% macro definitions from .../xsl/latex/libtext.xsl</xsl:text>
+    <xsl:text>&lb;&lb;%% macro definitions from .../xsl/latex/libverse.xsl</xsl:text>
     <xsl:text>&lb;\newcommand*{\couplet}[2]{#1#2}</xsl:text>
+    <xsl:text>&lb;\usepackage{filecontents}</xsl:text>
+    <xsl:text>&lb;\begin{filecontents}{hemistich.sty}</xsl:text>
+    <xsl:value-of select="unparsed-text('hemistich.sty')"/>
+    <xsl:text>&lb;\end{filecontents}</xsl:text>
   </xsl:template>
 
 </xsl:package>

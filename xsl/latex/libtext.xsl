@@ -74,17 +74,22 @@
   <!-- a single verse not in lg is output as a stanza -->
   <xsl:template match="l[not(ancestor::lg)]">
     <xsl:text>&lb;&lb;\stanza\relax %&lb;</xsl:text>
-    <xsl:apply-templates/>
+    <xsl:call-template name="text:verse"/>
     <xsl:text>\&amp;</xsl:text>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
 
   <xsl:template match="l[ancestor::lg]">
-    <xsl:apply-templates/>
+    <xsl:call-template name="text:verse"/>
     <!-- in reledmac, each verse but the last is ended by an ampersand -->
     <xsl:if test="following-sibling::l">
       <xsl:text>&amp;%&lb;</xsl:text>
     </xsl:if>
+  </xsl:template>
+
+  <!-- a hook for handling verse. The default just applies the templates in mode text:text -->
+  <xsl:template name="text:verse" visibility="public">
+    <xsl:apply-templates/>
   </xsl:template>
 
   <!-- delete whitespace nodes between verses -->
