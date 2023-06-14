@@ -100,7 +100,7 @@
                     <xsl:call-template name="app:apparatus-entry">
                         <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
                     </xsl:call-template>
-                    <xsl:text>} %&lb;</xsl:text>
+                    <xsl:text>}%&lb;</xsl:text>
                 </xsl:if>
             </xsl:template>
 
