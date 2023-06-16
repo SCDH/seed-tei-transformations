@@ -39,9 +39,20 @@
         </TEI>
     </x:variable>
 
-    <x:scenario label="hemistiches in test document" pending="not yet stable">
+    <x:scenario label="hemistiches in test document">
         <x:context select="$tei-text" mode="text:text"/>
-        <x:expect label="result"/>
+        <x:expect label="starts numbering"
+            test="matches(., '^\s*%% begin of text body&#xa;\\beginnumbering')"/>
+        <x:expect label="has verse 1"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.&amp;%&#xa;')"/>
+        <x:expect label="has verse 2"
+            test="matches(., 'Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,&amp;%&#xa;')"/>
+        <x:expect label="has verse 3"
+            test="matches(., 'Wo jetz und städte stehn, \\caesura\{\} wird eine wiese sein,&amp;%&#xa;')"/>
+        <x:expect label="has verse 4"
+            test="matches(., 'Auf der ein schäfers kind \\caesura\{\} wird spielen mit den herden.\\&amp;%&#xa;')"/>
+        <x:expect label="ends numbering"
+            test="matches(., '%% end of text body&#xa;\\endnumbering\s+$')"/>
     </x:scenario>
 
     <x:scenario label="single verse">
@@ -125,6 +136,53 @@
         <x:expect label="has verse ending and stanza ending and label from anchor"
             test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+\\edlabel\{a3-start\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
         <x:expect label="no delayed end macro from app" test="matches(., 'ein,\\&amp;%\s+$')"/>
+    </x:scenario>
+
+    <x:scenario label="sic">
+        <x:context mode="text:text">
+            <tei:p>The quick <tei:sic>braun</tei:sic> fox</tei:p>
+        </x:context>
+        <x:expect label="has start label"
+            test="matches(., '\\pstart\{\}%&#xa;The quick \\edlabel\{[a-zA-Z0-9]+-start\}braun fox\s+\\pend\s*%&#xa;\s*$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="corr">
+        <x:context mode="text:text">
+            <tei:p>The quick <tei:corr>brown</tei:corr> fox</tei:p>
+        </x:context>
+        <x:expect label="has start label"
+            test="matches(., '\\pstart\{\}%&#xa;The quick \\edlabel\{[a-zA-Z0-9]+-start\}brown fox\s+\\pend\s*%&#xa;\s*$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="choice with corr and sic">
+        <x:context mode="text:text">
+            <tei:p>The quick
+                    <tei:choice><tei:sic>braun</tei:sic><tei:corr>brown</tei:corr></tei:choice>
+                fox</tei:p>
+        </x:context>
+        <x:expect label="has start label and text from corr"
+            test="matches(., '\\pstart\{\}%&#xa;The\s+quick\s+\\edlabel\{[a-zA-Z0-9]+-start\}brown\s+fox\s+\\pend\s*%&#xa;\s*$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="gap">
+        <x:context mode="text:text">
+            <tei:p>The quick brown <tei:gap unit="characters" quatity="2"/>x jumps</tei:p>
+        </x:context>
+        <x:expect label="has start label and dots"
+            test="matches(., '\\pstart\{\}%&#xa;The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}\[\.\.\.\]x\s+jumps\s*\\pend\s*%&#xa;\s*$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="supplied">
+        <x:context mode="text:text">
+            <tei:p>The quick brown <tei:supplied>fo</tei:supplied>x jumps</tei:p>
+        </x:context>
+        <x:expect label="has start label"
+            test="matches(., '\\pstart\{\}%&#xa;The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}fox\s+jumps\s*\\pend\s*%&#xa;\s*$')"
+        />
     </x:scenario>
 
 
