@@ -64,19 +64,16 @@
   </xsl:template>
 
   <xsl:template match="lg[not(lg)]">
-    <xsl:text>&lb;&lb;\stanza\relax %&lb;</xsl:text>
+    <xsl:call-template name="edmac:stanza-start"/>
     <xsl:apply-templates/>
-    <!-- in reledmac, a stanza is ended by \& -->
-    <xsl:text>\&amp;%&lb;</xsl:text>
-    <xsl:text>&lb;&lb;&lb;</xsl:text>
+    <xsl:call-template name="edmac:stanza-end"/>
   </xsl:template>
 
   <!-- a single verse not in lg is output as a stanza -->
   <xsl:template match="l[not(ancestor::lg)]">
-    <xsl:text>&lb;&lb;\stanza\relax %&lb;</xsl:text>
+    <xsl:call-template name="edmac:stanza-start"/>
     <xsl:call-template name="text:verse"/>
-    <xsl:text>\&amp;</xsl:text>
-    <xsl:text>&lb;&lb;&lb;</xsl:text>
+    <xsl:call-template name="edmac:stanza-end"/>
   </xsl:template>
 
   <xsl:template match="l[ancestor::lg]">

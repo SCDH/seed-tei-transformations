@@ -50,7 +50,7 @@
                 erden.</tei:l>
         </x:context>
         <x:expect label="is treated as a stanza"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.\\&amp;&#xa;&#xa;&#xa;')"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.\\&amp;%\s+')"
         />
     </x:scenario>
 
@@ -66,6 +66,29 @@
             test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;%\s+')"
         />
     </x:scenario>
+
+    <x:scenario label="multiple verses in internal double end point app">
+        <x:context mode="text:text">
+            <tei:variantEncoding method="double-end-point" location="internal"/>
+            <tei:anchor xml:id="a1"/>
+            <tei:lg>
+                <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                    erden.</tei:l>
+                <tei:l>Was dieser heute baut, <tei:caesura/> reißt jener morgen ein,</tei:l>
+            </tei:lg>
+            <tei:app from="#a1">
+                <tei:rdg wit="B">Und nun?</tei:rdg>
+            </tei:app>
+        </x:context>
+        <x:expect label="has verse ending and 'delayed' stanza ending"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;%\sdelayed\s+$')"/>
+        <x:expect label="has edlabel from anchor" test="matches(., '\\edlabel\{a1\}')"/>
+        <x:expect label="preferred label from anchor is inside stanza"
+            test="matches(., '^\s*\\stanza')"
+            pending="anchor still goes into its on paragraph, TODO: handling of anchors outside block"
+        />
+    </x:scenario>
+
 
 
 </x:description>

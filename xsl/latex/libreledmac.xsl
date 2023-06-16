@@ -14,8 +14,61 @@
 
     <!-- reledmac for line numbering -->
 
+    <xsl:expose component="mode" names="edmac:*" visibility="public"/>
+    <xsl:expose component="template" names="edmac:*" visibility="public"/>
+
+
     <!-- optional parameter passed to every \pstart. E.g. '[\setRL]' -->
     <xsl:param name="edmac:pstart-opt" as="xs:string" select="''"/>
+
+    <!-- The templates named edmac:*-(start|end)-macro are used to make \pstart
+        and \pend etc. homogenously in various places.
+        Do not use them directly, but use edmac:(par|stanza)-(start|end) which
+        add some evaluation of the context.
+        But, OVERRIDE these macros to adapt how \pstart etc. is done in your
+        project.
+        A comment can be passed in as argument which will be inserted after %,
+        which may be instructive for debugging.
+    -->
+
+    <xsl:template name="edmac:par-start-macro" visibility="public">
+        <xsl:param name="comment" as="xs:string" select="''" required="false"/>
+        <xsl:text>&lb;\pstart</xsl:text>
+        <xsl:value-of select="$edmac:pstart-opt"/>
+        <!-- to end macro, instead of {} -->
+        <xsl:text>{}%</xsl:text>
+        <xsl:value-of select="$comment"/>
+        <xsl:text>&lb;</xsl:text>
+    </xsl:template>
+
+    <xsl:template name="edmac:par-end-macro">
+        <xsl:param name="comment" as="xs:string" select="''" required="false"/>
+        <xsl:text>&lb;\pend %</xsl:text>
+        <xsl:value-of select="$comment"/>
+        <xsl:text>&lb;&lb;&lb;</xsl:text>
+    </xsl:template>
+
+    <xsl:template name="edmac:stanza-start-macro">
+        <xsl:param name="comment" as="xs:string" select="''" required="false"/>
+        <xsl:text>&lb;\stanza\relax %</xsl:text>
+        <xsl:value-of select="$comment"/>
+        <xsl:text>&lb;</xsl:text>
+    </xsl:template>
+
+    <xsl:template name="edmac:stanza-end-macro">
+        <xsl:param name="comment" as="xs:string" select="''" required="false"/>
+        <!-- in reledmac, a stanza is ended by \& -->
+        <xsl:text>\&amp;%&lb;</xsl:text>
+        <xsl:text>&lb;&lb;&lb;</xsl:text>
+    </xsl:template>
+
+
+
+    <!-- The templates named edmac:par-(start|end) evaluate the context and make
+        \pstart and \pend if they are not to be suppressed because of
+        wrapping apparatus elements or the like. These templates are used a lot in
+        libtext.xsl.
+    -->
 
     <!-- used to add \pstart in context of a block element like p or l -->
     <xsl:template name="edmac:par-start" visibility="public">
@@ -47,10 +100,8 @@
             <xsl:apply-templates mode="edmac:app-pstart" select="."/>
         </xsl:variable>
         <xsl:if test="$predicate">
-            <xsl:text>&lb;\pstart</xsl:text>
-            <xsl:value-of select="$edmac:pstart-opt"/>
-            <xsl:text>{} </xsl:text>
-            <!-- to end macro, instead of {} -->
+            <!-- we have to treat prose different that lyrics, so we use a mode -->
+            <xsl:apply-templates mode="edmac:app-pstart-macro" select="."/>
         </xsl:if>
     </xsl:template>
 
@@ -60,9 +111,11 @@
             <xsl:apply-templates mode="edmac:app-pend" select="."/>
         </xsl:variable>
         <xsl:if test="$predicate">
-            <xsl:text>&lb;\pend</xsl:text>
+            <!-- we have to treat prose and lyrics differently, so we use a mode -->
+            <xsl:apply-templates mode="edmac:app-pend-macro" select="."/>
         </xsl:if>
     </xsl:template>
+
 
     <!-- Rules for deciding if text blocks like p and l get a \pstart and \pend.
         Elements outside text blocks may need these macros.
@@ -91,9 +144,9 @@
     <xsl:mode name="edmac:app-pstart" on-no-match="fail"/>
     <xsl:mode name="edmac:app-pend" on-no-match="fail"/>
 
-    <!-- app from double-end-point behind paragraph does not get a \pstart -->
+    <!-- app from double-end-point before paragraph does not get a \pstart -->
     <xsl:template mode="edmac:app-pstart" priority="10"
-        match="app[not(ancestor::p or ancestor::head or ancestor::l)
+        match="app[not(ancestor::p or ancestor::head or ancestor::l or ancestor::lg)
                    and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @from]">
         <xsl:sequence select="false()"/>
@@ -101,7 +154,7 @@
 
     <!-- app from double-end-point before paragraph does not get a \pend -->
     <xsl:template mode="edmac:app-pend" priority="10"
-        match="app[not(ancestor::p or ancestor::head or ancestor::l)
+        match="app[not(ancestor::p or ancestor::head or ancestor::l or ancestor::lg)
                    and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @to]">
         <xsl:sequence select="false()"/>
@@ -110,13 +163,56 @@
     <!-- apparatus elements outside a paragraph or other text block get a \pstart and \pend,
         if no other more special rule matches -->
     <xsl:template mode="edmac:app-pstart edmac:app-pend" priority="2"
-        match="*[not(ancestor::p or ancestor::head or ancestor::l)]">
+        match="*[not(ancestor::p or ancestor::head or ancestor::l or ancestor::lg)]">
         <xsl:sequence select="true()"/>
     </xsl:template>
 
     <!-- default rule: no \pstart and \pend -->
     <xsl:template mode="edmac:app-pstart edmac:app-pend" match="*">
         <xsl:sequence select="false()"/>
+    </xsl:template>
+
+
+    <!-- modes for choosing the right macro for pstart and pend
+        when wrapping apparatus elements. Per default, it is
+        \pstart and \pend, but for verse we need \stanza and \&.
+    -->
+    <xsl:mode name="edmac:app-pstart-macro" on-no-match="fail"/>
+    <xsl:mode name="edmac:app-pend-macro" on-no-match="fail"/>
+
+    <!-- defaults to \pstart -->
+    <xsl:template mode="edmac:app-pstart-macro" match="*">
+        <xsl:text>&lb;\pstart</xsl:text>
+        <xsl:value-of select="$edmac:pstart-opt"/>
+        <xsl:text>{}% preferred&lb;</xsl:text>
+        <!-- to end macro, instead of {} -->
+    </xsl:template>
+
+    <!-- defaults to \pend -->
+    <xsl:template mode="edmac:app-pend-macro" match="*">
+        <xsl:text>&lb;\pend% delayed &lb;</xsl:text>
+    </xsl:template>
+
+    <!-- verse or stanza, start of stanza,
+        for internal double end-point, apparatus element before lemma -->
+    <xsl:template mode="edmac:app-pstart-macro"
+        match="app[(following-sibling::l|following-sibling::lg)
+                   and not(ancestor::lg)
+                   and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
+                   and @to]">
+        <xsl:text>&lb;\stanza\relax %&lb;</xsl:text>
+    </xsl:template>
+
+    <!-- verse or stanza, end of stanza,
+        for internal double end-point, apparatus element after lemma -->
+    <xsl:template mode="edmac:app-pend-macro"
+        match="app[(preceding-sibling::l|preceding-sibling::lg)
+                   and not(ancestor::lg)
+                   and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
+                   and @from]">
+        <!-- in reledmac, a stanza is ended by \& -->
+        <xsl:text>\&amp;% delayed&lb;</xsl:text>
+        <xsl:text>&lb;&lb;&lb;</xsl:text>
     </xsl:template>
 
 
