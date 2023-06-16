@@ -153,6 +153,12 @@
         <xsl:sequence select="false()"/>
     </xsl:template>
 
+    <!-- no \pstart if an anchor preceeds immediately that is referenced by a later app -->
+    <xsl:template mode="edmac:par-pstart" priority="5"
+        match="*[preceding-sibling::*[1][self::anchor and (let $idref:=concat('#', @xml:id) return following::app[@from eq $idref])]]">
+        <xsl:sequence select="false()"/>
+    </xsl:template>
+
     <!-- default rule: output \pstart or \pend -->
     <xsl:template mode="edmac:par-pstart edmac:par-pend" match="*">
         <xsl:sequence select="true()"/>
@@ -204,14 +210,14 @@
     <!-- defaults to \pstart -->
     <xsl:template mode="edmac:app-pstart-macro" match="*">
         <xsl:call-template name="edmac:par-start-macro">
-            <xsl:with-param name="comment" select="'preferred'"/>
+            <xsl:with-param name="comment" select="concat('preferred from ', name())"/>
         </xsl:call-template>
     </xsl:template>
 
     <!-- defaults to \pend -->
     <xsl:template mode="edmac:app-pend-macro" match="*">
         <xsl:call-template name="edmac:par-end-macro">
-            <xsl:with-param name="comment" select="'delayed'"/>
+            <xsl:with-param name="comment" select="concat('delayed from ', name())"/>
         </xsl:call-template>
     </xsl:template>
 
@@ -223,21 +229,39 @@
                    and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @to]">
         <xsl:call-template name="edmac:stanza-start-macro">
-            <xsl:with-param name="comment" select="'preferred'"/>
+            <xsl:with-param name="comment" select="concat('preferred from ', name())"/>
         </xsl:call-template>
     </xsl:template>
 
     <!-- verse or stanza, end of stanza,
         for internal double end-point, apparatus element after lemma -->
     <xsl:template mode="edmac:app-pend-macro"
-        match="app[(preceding-sibling::l|preceding-sibling::lg)
+        match="app[(preceding-sibling::*[1][self::l]|preceding-sibling::*[1][self::lg])
                    and not(ancestor::lg)
                    and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @from]">
         <xsl:call-template name="edmac:stanza-end-macro">
-            <xsl:with-param name="comment" select="'delayed'"/>
+            <xsl:with-param name="comment" select="concat('delayed from ', name())"/>
         </xsl:call-template>
     </xsl:template>
+
+    <!-- anchor and app around l or lg: \stanza as opening for anchor-->
+    <xsl:template mode="edmac:app-pstart-macro"
+        match="anchor[(following-sibling::*[1][self::l]|following-sibling::*[1][self::lg])
+                      and not(ancestor::lg)
+                      and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
+                      and (let $idref:=concat('#', @xml:id) return following::app[@from eq $idref])]">
+        <xsl:call-template name="edmac:stanza-start-macro">
+            <xsl:with-param name="comment" select="concat('preferred from ', name())"/>
+        </xsl:call-template>
+    </xsl:template>
+
+    <!-- no \pend output for anchor that preceedes block elements and belongs to a following app -->
+    <xsl:template mode="edmac:app-pend-macro"
+        match="anchor[(following-sibling::*[1][self::l] | following-sibling::*[1][self::lg] | following-sibling::*[1][self::p] | following-sibling::*[1][self::head])
+                      and not(ancestor::lg)
+                      and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
+                      and (let $idref:=concat('#', @xml:id) return following::app[@from eq $idref])]"/>
 
 
 

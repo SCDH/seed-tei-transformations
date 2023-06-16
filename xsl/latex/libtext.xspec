@@ -92,13 +92,14 @@
             </tei:app>
         </x:context>
         <x:expect label="has verse ending and stanza ending"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
-        <x:expect label="has edlabel from anchor" test="matches(., '\\edlabel\{a1\}')"/>
-        <x:expect label="delayed end macro from app" test="matches(., 'ein,\\&amp;%\s?delayed\s+$')"/>
+            test="matches(., 'Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
+        <x:expect label="has preferred start macro from anchor"
+            test="matches(., '^\s*\\stanza\\relax %preferred from tei:anchor&#xa;')"/>
+        <x:expect label="has edlabel from anchor" test="matches(., '\\edlabel\{a1\}Du')"/>
+        <x:expect label="delayed end macro from app"
+            test="matches(., 'ein,\\&amp;%\s?delayed from tei:app\s+$')"/>
         <x:expect label="preferred start macro from anchor is inside stanza"
-            test="matches(., '^\s*\\stanza')"
-            pending="anchor still goes into its on paragraph, TODO: handling of anchors outside block"
-        />
+            test="matches(., '^\s*\\stanza')"/>
     </x:scenario>
 
     <x:scenario label="douple end point apparatus, single missing verse in stanza">
@@ -137,6 +138,47 @@
             test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+\\edlabel\{a3-start\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
         <x:expect label="no delayed end macro from app" test="matches(., 'ein,\\&amp;%\s+$')"/>
     </x:scenario>
+
+    <x:scenario label="double end-point apparatus around several block elements">
+        <x:context mode="text:text">
+            <tei:variantEncoding method="double-end-point" location="internal"/>
+            <tei:anchor xml:id="a3"/>
+            <tei:p>Ein Barock-Gedicht weiß:</tei:p>
+            <tei:lg>
+                <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                    erden.</tei:l>
+            </tei:lg>
+            <tei:app from="#a3">
+                <tei:rdg wit="B"/>
+            </tei:app>
+        </x:context>
+        <x:expect label="paragraph with preferred \pstart and regular \pend"
+            test="matches(., '^\s*\\pstart\{\}%preferred from tei:anchor&#xa;\\edlabel\{a3\}Ein\s+Barock-Gedicht\s+weiß:&#xa;\\pend %&#xa;')"/>
+        <x:expect label="verse with regular \stanza and delayed \&amp;"
+            test="matches(., '\\stanza\\relax %&#xa;Du\s+siehst,\s+wohin\s+du\s+siehst,\s+\\caesura\{\}\s+nur\s+eitelkeit\s+auf\s+erden.\\&amp;%delayed from tei:app&#xa;\s*$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="double end-point apparatus around several block elements in other order">
+        <x:context mode="text:text">
+            <tei:variantEncoding method="double-end-point" location="internal"/>
+            <tei:anchor xml:id="a3"/>
+            <tei:lg>
+                <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                    erden,</tei:l>
+            </tei:lg>
+            <tei:p>weiß ein Barock-Gedicht.</tei:p>
+            <tei:app from="#a3">
+                <tei:rdg wit="B"/>
+            </tei:app>
+        </x:context>
+        <x:expect label="verse with preferred \stanza and regular \&amp;"
+            test="matches(., '^\s*\\stanza\\relax %preferred from tei:anchor&#xa;\\edlabel\{a3\}Du\s+siehst,\s+wohin\s+du\s+siehst,\s+\\caesura\{\}\s+nur\s+eitelkeit\s+auf\s+erden,\\&amp;%&#xa;')"/>
+        <x:expect label="paragraph with regular \pstart and delayed \pend"
+            test="matches(., '\\pstart\{\}%&#xa;weiß\s+ein\s+Barock-Gedicht.&#xa;\s*\\pend %delayed from tei:app&#xa;\s*$')"
+        />
+    </x:scenario>
+
 
     <x:scenario label="sic">
         <x:context mode="text:text">
