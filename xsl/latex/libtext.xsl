@@ -168,6 +168,20 @@
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
+  <xsl:template match="supplied">
+    <xsl:call-template name="edmac:app-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
+    <!--xsl:text>[</xsl:text-->
+    <xsl:apply-templates/>
+    <!--xsl:text>]</xsl:text-->
+    <xsl:apply-templates mode="text:hook-after" select="."/>
+    <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:call-template name="edmac:app-end"/>
+  </xsl:template>
+
   <xsl:template match="unclear">
     <xsl:call-template name="edmac:app-start"/>
     <xsl:call-template name="edmac:edlabel">
