@@ -28,29 +28,37 @@
 
   <!-- a replacement for text:verse -->
   <xsl:template name="verse:verse">
-    <xsl:text>\hemistich{</xsl:text>
-    <!-- start label and hook on l -->
-    <xsl:call-template name="edmac:edlabel">
-      <xsl:with-param name="suffix" select="'-start'"/>
-    </xsl:call-template>
-    <!-- text of first hemistiche -->
-    <!-- output of nodes that preceed caesura -->
-    <xsl:apply-templates mode="text:text"
-      select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
-    <!-- recursively handle nodes, that contain caesura -->
-    <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
-    <xsl:text>}{</xsl:text>
-    <!-- second hemistiche -->
-    <!-- recursively handle nodes, that contain caesura -->
-    <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
-    <!-- output nodes that follow caesura -->
-    <xsl:apply-templates mode="text:text"
-      select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"/>
-    <!-- end label and hook on l -->
-    <xsl:call-template name="edmac:edlabel">
-      <xsl:with-param name="suffix" select="'-end'"/>
-    </xsl:call-template>
-    <xsl:text>}</xsl:text>
+    <xsl:context-item as="element(l)" use="required"/>
+    <xsl:choose>
+      <xsl:when test="descendant::caesura">
+        <xsl:text>\hemistich{</xsl:text>
+        <!-- start label and hook on l -->
+        <xsl:call-template name="edmac:edlabel">
+          <xsl:with-param name="suffix" select="'-start'"/>
+        </xsl:call-template>
+        <!-- text of first hemistiche -->
+        <!-- output of nodes that preceed caesura -->
+        <xsl:apply-templates mode="text:text"
+          select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
+        <!-- recursively handle nodes, that contain caesura -->
+        <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+        <xsl:text>}{</xsl:text>
+        <!-- second hemistiche -->
+        <!-- recursively handle nodes, that contain caesura -->
+        <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
+        <!-- output nodes that follow caesura -->
+        <xsl:apply-templates mode="text:text"
+          select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"/>
+        <!-- end label and hook on l -->
+        <xsl:call-template name="edmac:edlabel">
+          <xsl:with-param name="suffix" select="'-end'"/>
+        </xsl:call-template>
+        <xsl:text>}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates mode="text:text"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 

@@ -31,5 +31,14 @@
         />
     </x:scenario>
 
+    <x:scenario label="verse without caesura">
+        <x:context>
+            <tei:l>Du siehst, wohin du siehst, nur eitelkeit auf erden.</tei:l>
+        </x:context>
+        <x:call template="verse:verse"/>
+        <x:expect label="text only"
+            test="matches(., 'Du siehst, wohin du siehst, nur eitelkeit auf erden.')"/>
+    </x:scenario>
+
 
 </x:description>

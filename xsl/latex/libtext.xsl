@@ -34,6 +34,9 @@
     <xsl:value-of select=". => replace('\s+', ' ')"/>
   </xsl:template>
 
+  <!-- drop whitespace nodes that from outside pLike -->
+  <!--xsl:template match="text()[normalize-space() eq '' and not(ancestor::p | ancestor::l | ancestor::head)]"/-->
+
   <xsl:template match="teiHeader"/>
 
   <!-- TODO -->
