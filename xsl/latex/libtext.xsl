@@ -17,6 +17,10 @@
 
   <xsl:mode name="text:text" on-no-match="shallow-skip" visibility="public"/>
 
+  <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
+  <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
+
+
   <!-- you may want to override the rule content, e.g., by \txarb{.} -->
   <xsl:template match="text()">
     <!-- some characters need to be escaped -->
@@ -94,12 +98,14 @@
   </xsl:template>
 
   <xsl:template match="pb">
+    <xsl:call-template name="edmac:edlabel"/>
     <xsl:text>\pb{</xsl:text>
     <xsl:value-of select="@n"/>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="milestone">
+    <xsl:call-template name="edmac:edlabel"/>
     <xsl:text>\milestone{</xsl:text>
     <xsl:value-of select="@n"/>
     <xsl:text>}{</xsl:text>
@@ -155,7 +161,9 @@
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:text>[...]</xsl:text>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="text:inline-footnotes"/>
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
@@ -165,9 +173,11 @@
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <!--xsl:text>[? </xsl:text-->
     <xsl:apply-templates/>
     <!--xsl:text> ?]</xsl:text-->
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="text:inline-footnotes"/>
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
@@ -177,7 +187,9 @@
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:apply-templates select="corr"/>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="text:inline-footnotes"/>
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
@@ -187,7 +199,9 @@
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:apply-templates/>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="text:inline-footnotes"/>
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
@@ -197,7 +211,9 @@
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:apply-templates/>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="text:inline-footnotes"/>
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
