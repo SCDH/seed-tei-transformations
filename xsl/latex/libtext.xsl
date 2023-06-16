@@ -284,7 +284,9 @@
 
   <!-- make a footnote with an apparatus entry if there is one for the context element.
     You probably want to override this, e.g., with app:apparatus-footnote and note:editorial-note. -->
-  <xsl:template name="text:inline-footnotes" visibility="public"/>
+  <xsl:template name="text:inline-footnotes" visibility="public">
+    <xsl:context-item as="element()" use="required"/>
+  </xsl:template>
 
 
 

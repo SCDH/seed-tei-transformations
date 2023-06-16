@@ -73,6 +73,7 @@
 
     <!-- used to add \pstart in context of a block element like p or l -->
     <xsl:template name="edmac:par-start" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:par-pstart" select="."/>
         </xsl:variable>
@@ -83,6 +84,7 @@
 
     <!-- used to add \pend in context of a block element like p or l -->
     <xsl:template name="edmac:par-end" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:par-pend" select="."/>
         </xsl:variable>
@@ -96,6 +98,7 @@
 
     <!-- used to add \pstart in context of a block element like p or l -->
     <xsl:template name="edmac:stanza-start" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:par-pstart" select="."/>
         </xsl:variable>
@@ -106,6 +109,7 @@
 
     <!-- used to add \pend in context of a block element like p or l -->
     <xsl:template name="edmac:stanza-end" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:par-pend" select="."/>
         </xsl:variable>
@@ -117,6 +121,7 @@
 
     <!-- used to add \pstart in case, where the apparatus entry begins outside of a block element like p or l -->
     <xsl:template name="edmac:app-start" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:app-pstart" select="."/>
         </xsl:variable>
@@ -128,6 +133,7 @@
 
     <!-- used to add \pend in case, where the apparatus entry ends outside of a block element like p or l -->
     <xsl:template name="edmac:app-end" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:app-pend" select="."/>
         </xsl:variable>

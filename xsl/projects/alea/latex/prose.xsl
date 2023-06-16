@@ -194,6 +194,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <!-- make apparatus footnotes -->
       <xsl:template name="text:inline-footnotes">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:message>apparatus footnote</xsl:message>
         <xsl:call-template name="app:footnote-marks">
           <xsl:with-param name="entries" select="$apparatus-entries"/>
