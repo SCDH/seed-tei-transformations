@@ -58,7 +58,8 @@
     <xsl:template name="edmac:stanza-end-macro">
         <xsl:param name="comment" as="xs:string" select="''" required="false"/>
         <!-- in reledmac, a stanza is ended by \& -->
-        <xsl:text>\&amp;%&lb;</xsl:text>
+        <xsl:text>\&amp;%</xsl:text>
+        <xsl:value-of select="$comment"/>
         <xsl:text>&lb;&lb;&lb;</xsl:text>
     </xsl:template>
 
@@ -76,10 +77,7 @@
             <xsl:apply-templates mode="edmac:par-pstart" select="."/>
         </xsl:variable>
         <xsl:if test="$predicate">
-            <xsl:text>&lb;\pstart</xsl:text>
-            <xsl:value-of select="$edmac:pstart-opt"/>
-            <xsl:text>{} </xsl:text>
-            <!-- to end macro, instead of {} -->
+            <xsl:call-template name="edmac:par-start-macro"/>
         </xsl:if>
     </xsl:template>
 
@@ -88,8 +86,31 @@
         <xsl:variable name="predicate" as="xs:boolean">
             <xsl:apply-templates mode="edmac:par-pend" select="."/>
         </xsl:variable>
-        <xsl:if test="not(following-sibling::*[1][self::app[@from]])">
-            <xsl:text>&lb;\pend</xsl:text>
+        <xsl:if test="$predicate">
+            <xsl:call-template name="edmac:par-end-macro"/>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- The templates named edmac:stanza-(start|end) are as edmac:par-(start|end),
+        but for verse. -->
+
+    <!-- used to add \pstart in context of a block element like p or l -->
+    <xsl:template name="edmac:stanza-start" visibility="public">
+        <xsl:variable name="predicate" as="xs:boolean">
+            <xsl:apply-templates mode="edmac:par-pstart" select="."/>
+        </xsl:variable>
+        <xsl:if test="$predicate">
+            <xsl:call-template name="edmac:stanza-start-macro"/>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- used to add \pend in context of a block element like p or l -->
+    <xsl:template name="edmac:stanza-end" visibility="public">
+        <xsl:variable name="predicate" as="xs:boolean">
+            <xsl:apply-templates mode="edmac:par-pend" select="."/>
+        </xsl:variable>
+        <xsl:if test="$predicate">
+            <xsl:call-template name="edmac:stanza-end-macro"/>
         </xsl:if>
     </xsl:template>
 
@@ -182,15 +203,16 @@
 
     <!-- defaults to \pstart -->
     <xsl:template mode="edmac:app-pstart-macro" match="*">
-        <xsl:text>&lb;\pstart</xsl:text>
-        <xsl:value-of select="$edmac:pstart-opt"/>
-        <xsl:text>{}% preferred&lb;</xsl:text>
-        <!-- to end macro, instead of {} -->
+        <xsl:call-template name="edmac:par-start-macro">
+            <xsl:with-param name="comment" select="'preferred'"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- defaults to \pend -->
     <xsl:template mode="edmac:app-pend-macro" match="*">
-        <xsl:text>&lb;\pend% delayed &lb;</xsl:text>
+        <xsl:call-template name="edmac:par-end-macro">
+            <xsl:with-param name="comment" select="'delayed'"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- verse or stanza, start of stanza,
@@ -200,7 +222,9 @@
                    and not(ancestor::lg)
                    and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @to]">
-        <xsl:text>&lb;\stanza\relax %&lb;</xsl:text>
+        <xsl:call-template name="edmac:stanza-start-macro">
+            <xsl:with-param name="comment" select="'preferred'"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- verse or stanza, end of stanza,
@@ -210,9 +234,9 @@
                    and not(ancestor::lg)
                    and //variantEncoding[@method eq 'double-end-point' and @location eq 'internal']
                    and @from]">
-        <!-- in reledmac, a stanza is ended by \& -->
-        <xsl:text>\&amp;% delayed&lb;</xsl:text>
-        <xsl:text>&lb;&lb;&lb;</xsl:text>
+        <xsl:call-template name="edmac:stanza-end-macro">
+            <xsl:with-param name="comment" select="'delayed'"/>
+        </xsl:call-template>
     </xsl:template>
 
 
@@ -352,5 +376,14 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
+
+
+    <!-- override this in order to make other verse endings -->
+    <xsl:template name="edmac:verse-end">
+        <!-- in reledmac, each verse but the last is ended by an ampersand -->
+        <xsl:if test="following-sibling::l">
+            <xsl:text>&amp;%&lb;</xsl:text>
+        </xsl:if>
+    </xsl:template>
 
 </xsl:package>

@@ -81,9 +81,10 @@
             </tei:app>
         </x:context>
         <x:expect label="has verse ending and 'delayed' stanza ending"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;%\sdelayed\s+$')"/>
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
         <x:expect label="has edlabel from anchor" test="matches(., '\\edlabel\{a1\}')"/>
-        <x:expect label="preferred label from anchor is inside stanza"
+        <x:expect label="delayed end macro from app" test="matches(., '\\&amp;%\s?delayed\s+$')"/>
+        <x:expect label="preferred start macro from anchor is inside stanza"
             test="matches(., '^\s*\\stanza')"
             pending="anchor still goes into its on paragraph, TODO: handling of anchors outside block"
         />

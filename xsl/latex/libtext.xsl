@@ -78,10 +78,7 @@
 
   <xsl:template match="l[ancestor::lg]">
     <xsl:call-template name="text:verse"/>
-    <!-- in reledmac, each verse but the last is ended by an ampersand -->
-    <xsl:if test="following-sibling::l">
-      <xsl:text>&amp;%&lb;</xsl:text>
-    </xsl:if>
+    <xsl:call-template name="edmac:verse-end"/>
   </xsl:template>
 
   <!-- a hook for handling verse. The default just applies the templates in mode text:text -->
