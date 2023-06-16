@@ -380,8 +380,9 @@
 
     <!-- override this in order to make other verse endings -->
     <xsl:template name="edmac:verse-end">
-        <!-- in reledmac, each verse but the last is ended by an ampersand -->
-        <xsl:if test="following-sibling::l">
+        <!-- TODO: Are there more possibilities for nested following verses? -->
+        <xsl:if test="following-sibling::l | following-sibling::app/lem//l">
+            <!-- in reledmac, each verse but the last is ended by an ampersand -->
             <xsl:text>&amp;%&lb;</xsl:text>
         </xsl:if>
     </xsl:template>

@@ -80,14 +80,51 @@
                 <tei:rdg wit="B">Und nun?</tei:rdg>
             </tei:app>
         </x:context>
-        <x:expect label="has verse ending and 'delayed' stanza ending"
+        <x:expect label="has verse ending and stanza ending"
             test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
         <x:expect label="has edlabel from anchor" test="matches(., '\\edlabel\{a1\}')"/>
-        <x:expect label="delayed end macro from app" test="matches(., '\\&amp;%\s?delayed\s+$')"/>
+        <x:expect label="delayed end macro from app" test="matches(., 'ein,\\&amp;%\s?delayed\s+$')"/>
         <x:expect label="preferred start macro from anchor is inside stanza"
             test="matches(., '^\s*\\stanza')"
             pending="anchor still goes into its on paragraph, TODO: handling of anchors outside block"
         />
+    </x:scenario>
+
+    <x:scenario label="douple end point apparatus, single missing verse in stanza">
+        <x:context mode="text:text">
+            <tei:variantEncoding method="double-end-point" location="internal"/>
+            <tei:lg>
+                <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                    erden.</tei:l>
+                <tei:anchor xml:id="a2"/>
+                <tei:l>Was dieser heute baut, <tei:caesura/> reißt jener morgen ein,</tei:l>
+                <tei:app from="#a2">
+                    <tei:rdg wit="B"/>
+                </tei:app>
+            </tei:lg>
+        </x:context>
+        <x:expect label="has verse ending and stanza ending and label from anchor"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+\\edlabel\{a2\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
+        <x:expect label="no delayed end macro from app" test="matches(., 'ein,\\&amp;%\s+$')"/>
+    </x:scenario>
+
+    <x:scenario label="parallel segmentation apparatus, single missing verse in stanza">
+        <x:context mode="text:text">
+            <tei:variantEncoding method="parallel-segmentation" location="internal"/>
+            <tei:lg>
+                <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                    erden.</tei:l>
+                <tei:app xml:id="a3">
+                    <tei:lem>
+                        <tei:l>Was dieser heute baut, <tei:caesura/> reißt jener morgen ein,</tei:l>
+                    </tei:lem>
+                    <tei:rdg wit="B"/>
+                </tei:app>
+            </tei:lg>
+        </x:context>
+        <x:expect label="has verse ending and stanza ending and label from anchor"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+\\edlabel\{a3-start\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
+        <x:expect label="no delayed end macro from app" test="matches(., 'ein,\\&amp;%\s+$')"/>
     </x:scenario>
 
 
