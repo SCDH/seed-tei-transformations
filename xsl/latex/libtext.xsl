@@ -235,21 +235,6 @@
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
-  <xsl:template name="text:edlabel">
-    <xsl:param name="context" as="node()" select="." required="false"/>
-    <xsl:param name="suffix" as="xs:string" select="''" required="false"/>
-    <xsl:text>\edlabel{</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$context/@xml:id">
-        <xsl:value-of select="$context/@xml:id"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="concat(generate-id($context), $suffix)"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>}</xsl:text>
-  </xsl:template>
-
 
 
 
