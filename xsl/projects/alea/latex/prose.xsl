@@ -184,7 +184,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libcouplet.xsl"
-    package-version="1.0.0"/>
+    package-version="1.0.0">
+    <xsl:override>
+      <xsl:template name="verse:fill-caesura">
+        <xsl:context-item as="element(l)" use="required"/>
+        <xsl:call-template name="verse:fill-tatweel"/>
+      </xsl:template>
+    </xsl:override>
+
+  </xsl:use-package>
 
 
   <xsl:use-package
