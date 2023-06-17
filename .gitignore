@@ -1,7 +1,12 @@
 # editor backup files
 *~
+auto
 
 /frameworks
+/test/alea
+/test/edition-ibu-nubatah
+
+*.zip
 
 # build artifacts
 /target
