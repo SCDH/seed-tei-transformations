@@ -12,7 +12,8 @@
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
 
-  <xsl:expose component="template" names="verse:*" visibility="public"/>
+  <xsl:expose component="template" names="verse:fill-caesura" visibility="public"/>
+  <xsl:expose component="template" names="verse:*" visibility="final"/>
   <xsl:expose component="function" names="verse:*" visibility="public"/>
 
   <xsl:mode name="after-caesura" visibility="private"/>
@@ -24,14 +25,16 @@
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
-    package-version="1.0.0"> </xsl:use-package>
+    package-version="1.0.0"/>
 
   <!-- a replacement for text:verse -->
   <xsl:template name="verse:verse">
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:choose>
       <xsl:when test="descendant::caesura">
-        <xsl:text>\hemistich{</xsl:text>
+        <xsl:text>\hemistich[</xsl:text>
+        <xsl:call-template name="verse:fill-caesura"/>
+        <xsl:text>]{</xsl:text>
         <!-- start label and hook on l -->
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
@@ -57,6 +60,40 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates mode="text:text"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- a hook to be replaced with your implementation if you need to fill the space
+    of caesura with something else than \hfill -->
+  <xsl:template name="verse:fill-caesura">
+    <xsl:context-item as="element(l)" use="required"/>
+    <xsl:text>\hfill</xsl:text>
+  </xsl:template>
+
+
+  <!-- This is a replacement for verse:fill-caesura for arabic poetry.
+    If the characters around the caesura element are tatweel (elongation),
+    then the caesura is filled with tatweel, resulting in in-word caesura.
+  -->
+  <xsl:template name="verse:fill-tatweel" as="text()">
+    <xsl:context-item as="element(l)" use="required"/>
+    <xsl:variable name="caesura" as="element(caesura)"
+      select="descendant::caesura[not(ancestor::rdg)]"/>
+    <xsl:variable name="before-text">
+      <xsl:apply-templates mode="text:text" select="$caesura/preceding-sibling::node()"/>
+    </xsl:variable>
+    <xsl:variable name="before" select="normalize-space($before-text)"/>
+    <xsl:variable name="after-text">
+      <xsl:apply-templates mode="text:text" select="$caesura/following-sibling::node()"/>
+    </xsl:variable>
+    <xsl:variable name="after" select="normalize-space($after-text)"/>
+    <xsl:choose>
+      <xsl:when test="matches($before, '&#x0640;$') and matches($after, '^&#x0640;')">
+        <xsl:text>\leaders\hbox{&#x0640;}\hfill</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>\hfill</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

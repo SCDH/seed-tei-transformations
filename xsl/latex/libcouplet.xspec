@@ -16,7 +16,7 @@
         </x:context>
         <x:call template="verse:verse"/>
         <x:expect label="result"
-            test="matches(., '\\hemistich\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du siehst, \}\{ nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+            test="matches(., '\\hemistich\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du siehst, \}\{ nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
         />
     </x:scenario>
 
@@ -27,7 +27,7 @@
         </x:context>
         <x:call template="verse:verse"/>
         <x:expect label="result has edlabels"
-            test="matches(., '\\hemistich\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+            test="matches(., '\\hemistich\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
         />
     </x:scenario>
 
@@ -40,5 +40,38 @@
             test="matches(., 'Du siehst, wohin du siehst, nur eitelkeit auf erden.')"/>
     </x:scenario>
 
+    <x:variable name="tatweel-from-sag">
+        <tei:lg>
+            <tei:l>والمُلك منتظمٌ بما نثرَتْه مِن <tei:caesura/> هام الأعادي مُرهفاتُ نِصاله</tei:l>
+            <tei:l>والعِلم مشتهر بما يأوي مِنَ الــ <tei:caesura/> ــعُلماء والفُضَلاء تحت
+                ظلالِه</tei:l>
+            <tei:l>والعِلم مشتهر بما يأوي مِنَ ال <tei:caesura/> ــعُلماء والفُضَلاء تحت
+                ظلالِه</tei:l>
+        </tei:lg>
+    </x:variable>
+
+    <x:scenario label="tatweel-enclosed verse 1?">
+        <x:context select="($tatweel-from-sag//tei:l)[1]"/>
+        <x:call template="verse:fill-tatweel"/>
+        <x:expect label="not enclosed">
+            <x:text>\hfill</x:text>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="tatweel-enclosed verse 2?">
+        <x:context select="($tatweel-from-sag//tei:l)[2]"/>
+        <x:call template="verse:fill-tatweel"/>
+        <x:expect label="not enclosed">
+            <x:text>\leaders\hbox{&#x640;}\hfill</x:text>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="tatweel-enclosed verse 3?">
+        <x:context select="($tatweel-from-sag//tei:l)[3]"/>
+        <x:call template="verse:fill-tatweel"/>
+        <x:expect label="not enclosed">
+            <x:text>\hfill</x:text>
+        </x:expect>
+    </x:scenario>
 
 </x:description>
