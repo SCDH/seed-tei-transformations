@@ -32,6 +32,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- optional: the URI of the projects central witness catalogue -->
   <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
 
+  <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
+  <xsl:param name="tatweel-times" as="xs:integer" select="10" required="false"/>
+
 
   <xsl:variable name="current" as="node()*" select="root()"/>
 
@@ -186,7 +189,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libcouplet.xsl"
     package-version="1.0.0">
     <xsl:override>
-      <xsl:template name="verse:fill-caesura">
+      <xsl:template name="verse:fill-caesura" as="text()*">
         <xsl:context-item as="element(l)" use="required"/>
         <xsl:call-template name="verse:fill-tatweel"/>
       </xsl:template>
@@ -317,6 +320,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
     <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
     <xsl:call-template name="verse:latex-header"/>
+    <xsl:text>&lb;\usepackage{calc}</xsl:text>
+    <xsl:text>&lb;\makeatletter</xsl:text>
+    <xsl:text>&lb;\settowidth{\hst@gutter@width}{</xsl:text>
+    <xsl:for-each select="1 to $tatweel-times">
+      <xsl:text>&#x640;</xsl:text>
+    </xsl:for-each>
+    <xsl:text>}</xsl:text>
+    <xsl:text>&lb;\setlength{\hst@hemistich@width}{.5\linewidth-.5\hst@gutter@width-.5\stanzaindentbase-1pt}</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
 
     <!--
     <xsl:text>&lb;\newcommand*{\couplet}[2]{\bayt{#1}{#2}}</xsl:text>
