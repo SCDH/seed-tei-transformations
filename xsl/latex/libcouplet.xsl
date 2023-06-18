@@ -32,9 +32,9 @@
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:choose>
       <xsl:when test="descendant::caesura">
-        <xsl:text>\hemistich[</xsl:text>
+        <xsl:text>\hemistich</xsl:text>
         <xsl:call-template name="verse:fill-caesura"/>
-        <xsl:text>]{</xsl:text>
+        <xsl:text>{</xsl:text>
         <!-- start label and hook on l -->
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
@@ -66,7 +66,7 @@
 
   <!-- a hook to be replaced with your implementation if you need to fill the space
     of caesura with something else than \hfill -->
-  <xsl:template name="verse:fill-caesura">
+  <xsl:template name="verse:fill-caesura" as="text()*">
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:text>\hfill</xsl:text>
   </xsl:template>
@@ -76,7 +76,7 @@
     If the characters around the caesura element are tatweel (elongation),
     then the caesura is filled with tatweel, resulting in in-word caesura.
   -->
-  <xsl:template name="verse:fill-tatweel" as="text()">
+  <xsl:template name="verse:fill-tatweel" as="text()*">
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:variable name="caesura" as="element(caesura)"
       select="descendant::caesura[not(ancestor::rdg)]"/>
@@ -90,10 +90,10 @@
     <xsl:variable name="after" select="normalize-space($after-text)"/>
     <xsl:choose>
       <xsl:when test="matches($before, '&#x0640;$') and matches($after, '^&#x0640;')">
-        <xsl:text>\leaders\hbox{&#x0640;}\hfill</xsl:text>
+        <xsl:text>[\filltatweel]</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>\hfill</xsl:text>
+        <!-- empty -->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

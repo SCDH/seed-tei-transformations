@@ -6,14 +6,34 @@
 \ProvidesPackage{hemistich}[2019/06/02 lyrics edition macros for reledmac]
 
 \RequirePackage{adjustbox}
+\RequirePackage{xparse}
 
 \newlength{\hst@hemistich@width}
 \setlength{\hst@hemistich@width}{.45\linewidth}
 
-\newcommand*{\hemistich}[3][\hfill]{%
+%% the gutter width
+\newlength{\hst@gutter@width}
+\setlength{\hst@gutter@width}{.15\hst@hemistich@width}
+
+%% the macro \hemistich[between]{first half}{second half}
+\NewDocumentCommand{\hemistich}{o m m}{%
   \adjustbox{height=\Height, width=\hst@hemistich@width}{#2}%
-  #1%
+  \IfNoValueTF{#1}{%
+    \hspace{\hst@gutter@width}}{%
+    #1}% \if #1\empty \hspace{\hst@gutter@width}\else #1\fi}%
   \adjustbox{height=\Height, width=\hst@hemistich@width}{#3}%
-  }
+}
+
+
+%% make an arabic tatwir (tatweel) of a given length
+%% this can be used to fill the gutter with arabic tatweel
+\newcommand*{\filltatweel}[1][\hst@gutter@width]{%
+  \makebox[{\hst@gutter@width}]{\leaders\hbox{ـ}\hfill}%
+  % %% https://tex.stackexchange.com/questions/202379/filling-gaps-by-repeating-a-character
+  % \leavevmode%
+  % \llap{\clipbox{-1ex 0pt {\width} 0pt}{ـ}}%
+  % \resizebox{#1}{\height}{\clipbox{0pt}{ـ}}%
+  % \rlap{\clipbox{{\width} 0pt -1ex 0pt}{ـ}}%
+}
 
 \endinput
