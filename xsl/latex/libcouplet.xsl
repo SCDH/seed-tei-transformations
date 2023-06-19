@@ -68,7 +68,7 @@
     of caesura with something else than \hfill -->
   <xsl:template name="verse:fill-caesura" as="text()*">
     <xsl:context-item as="element(l)" use="required"/>
-    <xsl:text>\hfill</xsl:text>
+    <xsl:text>[\hfill]</xsl:text>
   </xsl:template>
 
 
