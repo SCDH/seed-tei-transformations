@@ -32,8 +32,11 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- optional: the URI of the projects central witness catalogue -->
   <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
 
+  <!-- the font to use with TeX -->
+  <xsl:param name="font" as="xs:string" select="'FreeSerif'" required="false"/>
+
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
-  <xsl:param name="tatweel-times" as="xs:integer" select="10" required="false"/>
+  <xsl:param name="tatweel-times" as="xs:integer" select="8" required="false"/>
 
 
   <xsl:variable name="current" as="node()*" select="root()"/>
@@ -280,10 +283,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
-    <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
-    <xsl:text>&lb;\babelfont{rm}{Amiri}</xsl:text>
-    <xsl:text>&lb;\babelfont{sf}{Amiri}</xsl:text>
-    <xsl:text>&lb;\babelfont{tt}{Amiri}</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main,justification=elongated,transforms=kashida.plain]{arabic}</xsl:text>
+    <xsl:for-each select="('rm', 'sf', 'tt')">
+      <xsl:text>&lb;\babelfont{</xsl:text>
+      <xsl:value-of select="."/>
+      <xsl:text>}{</xsl:text>
+      <xsl:value-of select="$font"/>
+      <xsl:text>}</xsl:text>
+    </xsl:for-each>
     <xsl:text>&lb;\setRTLmain</xsl:text>
 
     <xsl:call-template name="text:latex-header"/>
