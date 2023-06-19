@@ -14,7 +14,9 @@
                <persName/>
             </respStmt>
          </titleStmt>
-         <include xmlns="http://www.w3.org/2001/XInclude" xpointer="publicationStmt" href="../../common.xml"/>
+         <publicationStmt>
+            <publisher>WWU Münster</publisher>
+         </publicationStmt>
          <sourceDesc>
             <listWit>
                <witness xml:id="TT">
@@ -29,8 +31,6 @@
             </listWit>
          </sourceDesc>
       </fileDesc>
-      <include xmlns="http://www.w3.org/2001/XInclude" xpointer="profileDesc" href="../../common.xml"/>
-      <include xmlns="http://www.w3.org/2001/XInclude" xpointer="encodingDesc" href="../../common.xml"/>
       <encodingDesc>
          <variantEncoding method="double-end-point" location="internal"/>
          <tagsDecl>
