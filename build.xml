@@ -26,8 +26,12 @@
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
+        <antcall target="test-xsl-latex-libapp2c.xsl"/>
+        <antcall target="test-xsl-latex-libtext.xsl"/>
+        <antcall target="test-xsl-latex-libcouplet.xsl"/>
         <antcall target="test-xsl-projects-alea-prose-page.xsl"/>
         <antcall target="test-xsl-projects-alea-preview.xsl"/>
+        <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
     </target>
 
     <target name="test-xsl-common-libwit.xsl">
@@ -73,6 +77,25 @@
     </target>
 
 
+    <target name="test-xsl-latex-libapp2c.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/latex/libapp2c.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-latex-libcouplet.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/latex/libcouplet.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-latex-libtext.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/latex/libtext.xspec"/>
+        </antcall>
+    </target>
+
+
     <target name="test-xsl-projects-alea-prose-page.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/projects/alea/prose-page.xspec"/>
@@ -84,5 +107,12 @@
             <param name="xspec.xml" location="${basedir}/xsl/projects/alea/preview.xspec"/>
         </antcall>
     </target>
+
+    <target name="test-xsl-projects-alea-latex-prose.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/latex/prose.xspec"/>
+        </antcall>
+    </target>
+
 
 </project>

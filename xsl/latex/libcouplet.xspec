@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:verse="http://scdh.wwu.de/transform/verse#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="libcouplet.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+
+    <x:scenario label="verse with caesura">
+        <x:context>
+            <tei:l>Du siehst, wohin du siehst, <tei:caesura/> nur eitelkeit auf erden.</tei:l>
+        </x:context>
+        <x:call template="verse:verse"/>
+        <x:expect label="result"
+            test="matches(., '\\hemistich\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du siehst, \}\{ nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+        />
+    </x:scenario>
+
+    <x:scenario label="nested caesura">
+        <x:context>
+            <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                erden.</tei:l>
+        </x:context>
+        <x:call template="verse:verse"/>
+        <x:expect label="result has edlabels"
+            test="matches(., '\\hemistich\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+        />
+    </x:scenario>
+
+    <x:scenario label="verse without caesura">
+        <x:context>
+            <tei:l>Du siehst, wohin du siehst, nur eitelkeit auf erden.</tei:l>
+        </x:context>
+        <x:call template="verse:verse"/>
+        <x:expect label="text only"
+            test="matches(., 'Du siehst, wohin du siehst, nur eitelkeit auf erden.')"/>
+    </x:scenario>
+
+    <x:variable name="tatweel-from-sag">
+        <tei:lg>
+            <tei:l>والمُلك منتظمٌ بما نثرَتْه مِن <tei:caesura/> هام الأعادي مُرهفاتُ نِصاله</tei:l>
+            <tei:l>والعِلم مشتهر بما يأوي مِنَ الــ <tei:caesura/> ــعُلماء والفُضَلاء تحت
+                ظلالِه</tei:l>
+            <tei:l>والعِلم مشتهر بما يأوي مِنَ ال <tei:caesura/> ــعُلماء والفُضَلاء تحت
+                ظلالِه</tei:l>
+        </tei:lg>
+    </x:variable>
+
+    <x:scenario label="tatweel-enclosed verse 1?">
+        <x:context select="($tatweel-from-sag//tei:l)[1]"/>
+        <x:call template="verse:fill-tatweel"/>
+        <x:expect label="not enclosed" select="()"/>
+    </x:scenario>
+
+    <x:scenario label="tatweel-enclosed verse 2?">
+        <x:context select="($tatweel-from-sag//tei:l)[2]"/>
+        <x:call template="verse:fill-tatweel"/>
+        <x:expect label="not enclosed">
+            <x:text>[\filltatweel]</x:text>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="tatweel-enclosed verse 3?">
+        <x:context select="($tatweel-from-sag//tei:l)[3]"/>
+        <x:call template="verse:fill-tatweel"/>
+        <x:expect label="not enclosed" select="()"/>
+    </x:scenario>
+
+</x:description>

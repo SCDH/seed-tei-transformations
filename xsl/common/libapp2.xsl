@@ -225,7 +225,10 @@ see xsl/projects/alea/preview.xsl
 
     <!-- Generate apparatus elements for a given context, e.g. / and prepare mappings for them.
         The second argument is an XPath expression that tells what elements should go into the apparatus.
-        It is evaluated in the context given by the parameter 'context'. -->
+        It is evaluated in the context given by the parameter 'context'.
+        The third parameter is a grouping key for multiple apparatuses. Pass a constant of 1 if you want
+        yust one critical apparatus.
+    -->
     <xsl:function name="app:apparatus-entries" as="map(*)*" visibility="public">
         <xsl:param name="context" as="node()*"/>
         <xsl:param name="app-entries-xpath" as="xs:string"/>

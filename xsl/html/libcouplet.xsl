@@ -143,7 +143,7 @@
                 <xsl:value-of select="common:line-number(.)"/>
             </td>
             <td class="text-col1">
-                <!-- output of nodes that preced caesura -->
+                <!-- output of nodes that preceed caesura -->
                 <xsl:apply-templates
                     select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except text:non-lemma-nodes(.)"/>
                 <!-- recursively handle nodes, that contain caesura -->

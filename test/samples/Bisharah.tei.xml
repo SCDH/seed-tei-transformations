@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xml:id="Bisharah" xml:lang="ar">
+    <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>
+               <idno type="work-id">Bisharah</idno>
+            </title>
+            <respStmt n="transcribed">
+               <resp>edited and commented by</resp>
+               <persName/>
+            </respStmt>
+            <respStmt n="checked">
+               <resp>double-checked by</resp>
+               <persName/>
+            </respStmt>
+         </titleStmt>
+         <publicationStmt>
+            <publisher>WWU Münster</publisher>
+         </publicationStmt>
+         <sourceDesc>
+            <listWit>
+               <witness xml:id="TT">
+                  <abbr type="siglum" xml:lang="ar">تو</abbr>
+               </witness>
+               <witness xml:id="TB">
+                  <abbr type="siglum" xml:lang="ar">بر</abbr>
+               </witness>
+               <witness xml:id="Subh">
+                  <abbr type="siglum" xml:lang="ar">صبح</abbr>
+               </witness>
+            </listWit>
+         </sourceDesc>
+      </fileDesc>
+      <encodingDesc>
+         <variantEncoding method="double-end-point" location="internal"/>
+         <tagsDecl>
+            <rendition xml:id="r-rtl" scheme="css">direction: rtl;</rendition>
+            <rendition xml:id="r-ltr" scheme="css">direction: ltr;</rendition>
+         </tagsDecl>
+      </encodingDesc>
+   </teiHeader>        
+    <text>
+<body>
+<head>كتاب <sic>البشارة</sic> بالعافية الشريفة السلطانية</head>
+<p><milestone unit="section" n="1"/> أورد اللّهُ عليه من الهناء كلّ سريّ يسرّه ، وكلّ سَنيّ <anchor xml:id="bd3e79"
+               />يقرّ<app xml:id="d3e1382" from="#bd3e79">
+               <rdg wit="#TB">يقرا</rdg>
+            </app> أمام ناظره الكريم ويُقرّه ، وكلّ وفيّ إذا طلع على آفاق حلب قيل (للّه دَرّه) ، ولا
+            زالت البشائرُ تلقاه بكلّ وجه جميل ، <anchor xml:id="bd3e158"/>وكلّ جليّ جليل<app
+               xml:id="d3e1387" from="#bd3e158">
+               <rdg wit="#TB">هذه السجعة لم ترد في</rdg>
+            </app> ، وكلّ <anchor xml:id="bd3e174"/>خبرٍ<app xml:id="d3e1396" from="#bd3e174">
+               <rdg wit="#TB">خير</rdg>
+            </app> تصحّ الدنيا <anchor xml:id="bd3e183"/>بصحّة مقتضيه<app xml:id="d3e1401"
+               from="#bd3e183">
+               <rdg wit="#Subh">بصِحَّتِهِ</rdg>
+            </app> فليس بها غير النسيم عليل ، تقبيلًا يُـزاحم به عقود الثغور ، <anchor
+               xml:id="bd3e228"/>ويلائم بمبسمه <anchor xml:id="bd3e234"/><corr>سينات</corr><app
+               xml:id="d3e1411" from="#bd3e234">
+               <rdg wit="#TT">سنيّات</rdg>
+               <rdg wit="#TB">سنيات</rdg>
+            </app> هذه السطور<app xml:id="d3e1406" from="#bd3e228">
+               <rdg wit="#Subh">هذه السجعة لم ترد في</rdg>
+            </app> ، ويكاد يمنع من ضمّ الشفتَيْن للثم طول الابتسام للسرور ،<milestone unit="section" n="2"/> ويُنهي بعد رفْع اليد بدُعائه ، وضمّ الجوانح على ولائه ، وجزْم الهناء
+            المشترك <anchor xml:id="bd3e329"/>بنصيب مسرّته لمسرّة<app xml:id="d3e1417"
+               from="#bd3e329">
+               <rdg wit="#Subh">بمسرّة</rdg>
+            </app> مولانا وهنائه ، أنّ المثال الشريف زاده اللّه شَرَفا ، <anchor xml:id="bd3e370"
+               />وزاد<app xml:id="d3e1422" from="#bd3e370">
+               <rdg wit="#TB">وازاد</rdg>
+            </app> فضل سلطانه على العباد سَرَفا ، <anchor xml:id="bd3e392"/>ورد<app xml:id="d3e1427"
+               from="#bd3e392">
+               <rdg wit="#TT">وزاد</rdg>
+               <rdg wit="#TB">ورد</rdg>
+            </app> بالبشارة العُظمى ، والنعمى التي ما ضاهتْها الأيّامُ قبْلُ بنُعمى ، والمسرّة التي
+            يأكل حديثُها أحاديث المسرّات ﴿أكلًا لـمّا﴾ ، <anchor xml:id="bd3e459"/>ويُحِبّه<app
+               xml:id="d3e1432" from="#bd3e459">
+               <rdg wit="#Subh">ويُحِبُّها</rdg>
+            </app> الإسلامُ والمسلمون ﴿حبًّا جمّا﴾ ، <anchor xml:id="bd3e478"/>وسلامةِ<app
+               xml:id="d3e1437" from="#bd3e478">
+               <rdg wit="#Subh">بسلامة</rdg>
+            </app> جوهر الجسد الشريف من ذلك <anchor xml:id="bd3e497"/>العَرَض<app xml:id="d3e1442"
+               from="#bd3e497">
+               <rdg wit="#TB">العوض</rdg>
+            </app> ، وشفائه الذي في عيون الأعداء منه <anchor xml:id="bd3e522"/>شفًا<app
+               xml:id="d3e1448" from="#bd3e522">
+               <rdg wit="#Subh">شِفَارٌ</rdg>
+            </app> يطعن و﴿في قلوبهم مرض﴾ ، وأنّ مادّة الأدواء بحمد اللّه قد <anchor xml:id="bd3e560"
+               />انحسمَتْ<app xml:id="d3e1453" from="#bd3e560">
+               <rdg wit="#TB">انجسمت</rdg>
+            </app> ، والواردة من <anchor xml:id="bd3e573"/>الافتقاد<app xml:id="d3e1458"
+               from="#bd3e573">
+               <rdg wit="#TB">الانقياد</rdg>
+            </app> بالأجر والعافية قد <anchor xml:id="bd3e586"/>اتّسمت<app xml:id="d3e1463"
+               from="#bd3e586">
+               <rdg wit="#TB">انسمت</rdg>
+               <rdg wit="#Subh">ابتسمت</rdg>
+            </app> ، <anchor xml:id="bd3e592"/>وثغور المماليك التي تصبح <anchor xml:id="bd3e605"
+               />ثغورُ<app xml:id="d3e1476" from="#bd3e605">
+               <rdg wit="#TT #TB">ثغور</rdg>
+            </app> الممالك مِثلَها قد ابتسمت<app xml:id="d3e1468" from="#bd3e592">
+               <rdg wit="#Subh">هذه السجعة لم ترد في</rdg>
+            </app> ، وأنّ ظنون الإشفاق قد اضمحلّت ، ونسمات الروض قد <anchor xml:id="bd3e652"
+               />فدت<app xml:id="d3e1482" from="#bd3e652">
+               <rdg wit="#TT">ڡدّت</rdg>
+               <rdg wit="#TB">فدت</rdg>
+            </app> الجسد الشريف فاعتلّت ، وأخبار الهناء <anchor xml:id="bd3e674"/>يُغنّيها<app
+               xml:id="d3e1487" from="#bd3e674">
+               <rdg wit="#TT">ٮعٮـٮـها</rdg>
+               <rdg wit="#TB">بعينها</rdg>
+               <rdg wit="#Subh">يُعَيِّنها</rdg>
+            </app> كلُّ <anchor xml:id="bd3e681"/>بريد<app xml:id="d3e1492" from="#bd3e681">
+               <rdg wit="#TB">يريد</rdg>
+            </app> نشوان من الفرح <anchor xml:id="bd3e693"/>أُسائلها<app xml:id="d3e1497"
+               from="#bd3e693">
+               <rdg wit="#TB">ٮسايلها</rdg>
+            </app> (أيّ المواطن حلّت) ،<milestone unit="section" n="2b"/> فيا لها بشارةً خصّت الإسلام وعمّت بنيه ، وسارت
+            فوق الأرض وسرّت تحتها أسلاف الملك ومُبتنيه ، وشملت البلاد وعبادها ، والسلطنةَ وقد حجب
+            الله عمادها عمّا دهى ، والملك السليماني وقد ثبّت اللّه به على الدنيا من السماء خيمتها
+            ومن الجبال أوتادها ، والطير وقد حملت وُرقه أوراق <anchor xml:id="bd3e871"/>بطائق<app
+               xml:id="d3e1502" from="#bd3e871">
+               <rdg wit="#Subh">هذه الكلمة لم ترد في</rdg>
+            </app> السرور ، والوحش وقد قالت مهاه على عيني أتحمّل ذلك السقام أو ذلك الفتور ، ﴿ذلك
+            الفضلُ من اللّه وكفى باللّه عليما﴾ ، والألطاف الراحم بها المؤمنين من خلقه ﴿وكان
+            بالمؤمنين رحيما﴾ ،<milestone unit="section" n="2c"/> وكان ورود هذا
+            المثال الشريف على يد فلان فيا له مِن واردٍ لمَشارع الأمن أوْرَد ، ولروائع <anchor
+               xml:id="bd3e1038"/>البأس<app xml:id="d3e1507" from="#bd3e1038">
+               <rdg wit="#Subh">الناس</rdg>
+            </app> عن القلوب حجب أو ردّ ، وقد جهّزه المملوك بالمثال الشريف المختصّ بمولانا وبهذه
+            الخدمة بعد أنْ ضُربت البشائر <anchor xml:id="bd3e1102"/>متنوّعة<app xml:id="d3e1513"
+               from="#bd3e1102">
+               <rdg wit="#Subh">مُسَوّغَةً</rdg>
+            </app> في كلّ ضربٍ من التهاني ، وزيّنت البلد زينةً ما <anchor xml:id="bd3e1137"
+               />نظمت<app xml:id="d3e1518" from="#bd3e1137">
+               <rdg wit="#TT">ىطمت</rdg>
+               <rdg wit="#TB">لطمت</rdg>
+            </app> فيها غير العقود أيدي الغواني ،<milestone unit="section" n="3"/> فيأخذ <anchor xml:id="bd3e1168"
+               />مولانا<app xml:id="d3e1523" from="#bd3e1168">
+               <rdg wit="#Subh">هذه الكلمة لم ترد في</rdg>
+            </app> حظّه من هذه البشرى ، ونصيبه من هذا الوجه الذي ملأ الوجوه بشْرا ، <anchor
+               xml:id="bd3e1216"/>وشطره<app xml:id="d3e1528" from="#bd3e1216">
+               <rdg wit="#TT">وسطره</rdg>
+               <rdg wit="#TB">وشطره</rdg>
+            </app> من الهناء المخصوص الذي تعجّل منه المملوك شطرا ، <anchor xml:id="bd3e1247"/>والذي
+               <anchor xml:id="bd3e1251"/>ألزمهما<app xml:id="d3e1541" from="#bd3e1251">
+               <rdg wit="#TB">الزمها</rdg>
+            </app> وألزم الخلق شكران الفرح فاجتمعوا عليه والحمد للّه شكرا<app xml:id="d3e1533"
+               from="#bd3e1247">
+               <rdg wit="#Subh">هذه السجعة لم ترد في</rdg>
+            </app> ، واللّه تعالى يسرّه بكلّ <anchor xml:id="bd3e1298"/>خيرٍ<app xml:id="d3e1547"
+               from="#bd3e1298">
+               <rdg wit="#TT #TB">كذا في</rdg>
+            </app> تُشرق زواهِرُه ، وتعبق في كمائم الدروج أزاهِرُه ، ويتألّق على يد بريده من <anchor
+               xml:id="bd3e1346"/>المخلّقات<app xml:id="d3e1552" from="#bd3e1346">
+               <rdg wit="#TT">المحلقات</rdg>
+               <rdg wit="#TB #Subh">المخلقات</rdg>
+            </app> كلّ كوكب صبح تملأ الدنيا بشائرُه</p>
+</body>
+
+</text>
+</TEI>
