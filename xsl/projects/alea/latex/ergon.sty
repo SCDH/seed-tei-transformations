@@ -1,0 +1,51 @@
+%% Stylesheet for ALEA volumes published by Ergon Verlag
+%% Christian Lück <christian.lueck@uni-muenster.de>, 2023
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{ergon}[2019/06/02 Ergon Verlag]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% package options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DefineFamily{ergon}
+\DefineFamilyMember{ergon}
+
+%% font package option
+\newcommand*{\ergon@font}{Amiri}
+\DefineFamilyKey{ergon}{font}[Amiri]{%
+  \renewcommand*\ergon@font{#1}%
+  \FamilyKeyStateProcessed}
+
+
+%% font package option
+\newcommand*{\ergon@fontsize}{16pt}
+\DefineFamilyKey{ergon}{fontsize}[16pt]{%
+  \renewcommand*\ergon@fontsize{#1}%
+  \FamilyKeyStateProcessed}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% font
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\babelfont{rm}{\ergon@font}
+\babelfont{sf}{\ergon@font}
+\babelfont{tt}{\ergon@font}
+
+\RequirePackage[fontsize=\ergon@fontsize]{fontsize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% typearea
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[%
+verbose,%
+textwidth=113mm,%
+textheight=185mm%
+]{geometry}
+
+
+
+
+\endinput
