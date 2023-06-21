@@ -248,6 +248,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>\documentclass{book}</xsl:text>
     <xsl:text>&lb;\usepackage[fontsize=15pt]{scrextend}</xsl:text>
 
+    <xsl:text>&lb;%\usepackage[text={113mm,185mm}]{geometry}</xsl:text>
+
     <xsl:text>&lb;%\usepackage{showframe}</xsl:text>
 
     <!-- input encoding -->
