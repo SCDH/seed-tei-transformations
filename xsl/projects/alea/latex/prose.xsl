@@ -345,6 +345,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <!--
     <xsl:text>&lb;\usepackage[switch,modulo,pagewise]{lineno}</xsl:text>
     -->
+
+    <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
 
   <xsl:template name="latex-front" visibility="public">
