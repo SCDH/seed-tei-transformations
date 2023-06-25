@@ -15,14 +15,24 @@
 \newlength{\hst@gutter@width}
 \setlength{\hst@gutter@width}{.15\hst@hemistich@width}
 
+
 %% the macro \hemistich[between]{first half}{second half}
 \NewDocumentCommand{\hemistich}{o m m}{%
-  \adjustbox{height=\Height, width=\hst@hemistich@width}{#2}%
-  \IfNoValueTF{#1}{%
-    \hspace{\hst@gutter@width}}{%
-    #1}% \if #1\empty \hspace{\hst@gutter@width}\else #1\fi}%
-  \adjustbox{height=\Height, width=\hst@hemistich@width}{#3}%
-}
+  #2\hfill #3}
+
+
+% %% the macro \hemistich[between]{first half}{second half}
+% \NewDocumentCommand{\hemistich}{o m m}{%
+%   \begin{minipage}[t]{\hst@hemistich@width}%
+%     #2\parfillskip=0pt%
+%   \end{minipage}%
+%   \IfNoValueTF{#1}{%
+%     \hspace{\hst@gutter@width}}{%
+%     #1}% \if #1\empty \hspace{\hst@gutter@width}\else #1\fi}%
+%   \begin{minipage}[t]{\hst@hemistich@width}%
+%     #3\parfillskip=0pt%
+%   \end{minipage}%
+% }
 
 
 %% make an arabic tatwir (tatweel) of a given length
