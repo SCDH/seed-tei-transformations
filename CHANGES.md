@@ -1,5 +1,11 @@
 # Changes
 
+## 0.3.0
+
+- support for LaTeX using reledmac
+- some improvements to HTML output
+
+
 ## 0.2.0
 
 - various hooks

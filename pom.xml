@@ -6,7 +6,7 @@
 
     <groupId>de.wwu.scdh.tei</groupId>
     <artifactId>seed-transformations</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <name>SEED TEI Transformations</name>
     <url>https://github.com/scdh/tei-transformations</url>
