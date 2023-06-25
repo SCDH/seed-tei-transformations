@@ -285,7 +285,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
-    <xsl:text>&lb;\babelprovide[import,main,justification=elongated,transforms=kashida.plain]{arabic}</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
     <xsl:for-each select="('rm', 'sf', 'tt')">
       <xsl:text>&lb;\babelfont{</xsl:text>
       <xsl:value-of select="."/>
