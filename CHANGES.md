@@ -1,5 +1,9 @@
 # Changes
 
+## 0.3.1
+
+- generate configuration for the SEED XML Transformer
+
 ## 0.3.0
 
 - support for LaTeX using reledmac
