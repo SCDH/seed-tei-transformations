@@ -16,7 +16,7 @@
         </x:context>
         <x:call template="verse:verse"/>
         <x:expect label="result"
-            test="matches(., '\\hemistich\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du siehst, \}\{ nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+            test="matches(., '\\hemistichs\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du siehst, \}\{ nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
         />
     </x:scenario>
 
@@ -27,7 +27,7 @@
         </x:context>
         <x:call template="verse:verse"/>
         <x:expect label="result has edlabels"
-            test="matches(., '\\hemistich\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+            test="matches(., '\\hemistichs\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
         />
     </x:scenario>
 
