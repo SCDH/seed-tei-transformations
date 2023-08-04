@@ -35,8 +35,20 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- the font to use with TeX -->
   <xsl:param name="font" as="xs:string" select="'FreeSerif'" required="false"/>
 
+  <!-- base font size -->
+  <xsl:param name="fontsize" as="xs:string" select="'12pt'" required="false"/>
+
+  <!-- scaling factor of the main font -->
+  <xsl:param name="fontscale" as="xs:string" select="'1'" required="false"/>
+
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
   <xsl:param name="tatweel-times" as="xs:integer" select="8" required="false"/>
+
+  <!-- whether to show LaTeX debugging features like frames etc. -->
+  <xsl:param name="debug-latex" as="xs:boolean" select="false()" required="false"/>
+
+  <!-- where kashida elongation is to be applied -->
+  <xsl:param name="kashida" as="xs:string" select="'verse'" required="false"/>
 
 
   <xsl:variable name="current" as="node()*" select="root()"/>
@@ -238,6 +250,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="latex-back"/>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
+    <xsl:call-template name="latex-footer"/>
   </xsl:template>
 
   <xsl:template name="latex-header" visibility="public">
@@ -246,11 +259,17 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\KOMAoption{fontsize}{14pt}</xsl:text>
     -->
     <xsl:text>\documentclass{book}</xsl:text>
-    <xsl:text>&lb;\usepackage[fontsize=15pt]{scrextend}</xsl:text>
+    <xsl:text>&lb;%\usepackage[fontsize=</xsl:text>
+    <xsl:value-of select="$fontsize"/>
+    <xsl:text>]{scrextend}</xsl:text>
 
-    <xsl:text>&lb;%\usepackage[text={113mm,185mm}]{geometry}</xsl:text>
+    <!-- typearea of the books in the ALEA series -->
+    <xsl:text>&lb;\usepackage[text={113mm,185mm}]{geometry}</xsl:text>
 
-    <xsl:text>&lb;%\usepackage{showframe}</xsl:text>
+
+    <xsl:if test="$debug-latex">
+      <xsl:text>&lb;\usepackage{showframe}</xsl:text>
+    </xsl:if>
 
     <!-- input encoding -->
     <xsl:text>&lb;\usepackage{ifluatex}</xsl:text>
@@ -285,11 +304,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
-    <xsl:text>&lb;\babelprovide[import,main]{arabic}</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main,justification=kashida,transforms=kashida.plain]{arabic}</xsl:text>
     <xsl:for-each select="('rm', 'sf', 'tt')">
       <xsl:text>&lb;\babelfont{</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}{</xsl:text>
+      <xsl:text>}[Scale=</xsl:text>
+      <xsl:value-of select="$fontscale"/>
+      <xsl:text>]{</xsl:text>
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
     </xsl:for-each>
@@ -336,15 +357,23 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:text>&#x640;</xsl:text>
     </xsl:for-each>
     <xsl:text>}</xsl:text>
-    <xsl:text>&lb;\setlength{\hst@hemistich@width}{.5\linewidth-.5\hst@gutter@width-.5\stanzaindentbase-1pt}</xsl:text>
+    <xsl:text>&lb;\setlength{\hst@hemistich@width}{.5\textwidth-.5\hst@gutter@width-.5\stanzaindentbase}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
 
-    <!--
-    <xsl:text>&lb;\newcommand*{\couplet}[2]{\bayt{#1}{#2}}</xsl:text>
-    -->
-    <!--
-    <xsl:text>&lb;\usepackage[switch,modulo,pagewise]{lineno}</xsl:text>
-    -->
+    <!-- set kashida elongation rule -->
+    <xsl:choose>
+      <xsl:when test="$kashida eq 'global'">
+        <xsl:text>&lb;\directlua{Babel.arabic.justify_enabled=true}</xsl:text>
+      </xsl:when>
+      <xsl:when test="$kashida eq 'verse'">
+        <xsl:text>&lb;\directlua{Babel.arabic.justify_enabled=false}</xsl:text>
+        <xsl:text>&lb;\renewcommand*{\hemistichEnd}{\directlua{Babel.arabic.justify_enabled=true}}</xsl:text>
+        <xsl:text>&lb;\renewcommand*{\afterHemistich}{\directlua{Babel.arabic.justify_enabled=false}}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>&lb;\directlua{Babel.arabic.justify_enabled=false}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
@@ -354,5 +383,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   </xsl:template>
 
   <xsl:template name="latex-back" visibility="public"/>
+
+  <xsl:template name="latex-footer">
+    <!-- local variables for AUCTeX -->
+    <xsl:text>&lb;&lb;%%% Local Variables:</xsl:text>
+    <xsl:text>&lb;%%% mode: latex</xsl:text>
+    <xsl:text>&lb;%%% TeX-master: t</xsl:text>
+    <xsl:text>&lb;%%% TeX-engine: luatex</xsl:text>
+    <xsl:text>&lb;%%% TeX-PDF-mode: t</xsl:text>
+    <xsl:text>&lb;%%% End:</xsl:text>
+  </xsl:template>
 
 </xsl:package>
