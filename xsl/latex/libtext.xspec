@@ -228,5 +228,82 @@
     </x:scenario>
 
 
+    <!-- tests for stripping whitespace -->
+
+    <x:scenario label="stripping: spaces around caesura">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l>Du siehst, wohin du siehst, <tei:caesura/> nur eitelkeit auf erden.</tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
+
+    <x:scenario label="stripping: spaces around caesura and at start/end of verse">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l>&#xa; Du siehst, wohin du siehst, <tei:caesura/> nur eitelkeit auf erden.
+            </tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
+
+    <x:scenario label="stripping: space in element at start of verse">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l><tei:hi>&#xa; Du</tei:hi> siehst, wohin du siehst,<tei:caesura/>nur eitelkeit auf
+                erden. </tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
+
+    <x:scenario label="stripping: whitespace text nodes around caesura">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l>Du siehst, wohin du <tei:hi>siehst, &#xa;</tei:hi>&#xa;<tei:caesura/>&#xa;
+                    <tei:hi>&#xa;nur </tei:hi>eitelkeit auf erden. </tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
+
+    <x:scenario label="stripping: space in elements around caesura">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l>Du siehst, wohin du <tei:hi>siehst, &#xa;</tei:hi><tei:caesura/><tei:hi>&#xa;nur
+                </tei:hi>eitelkeit auf erden. </tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
+
+    <x:scenario label="stripping: nested caesura">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                erden.</tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
+
+    <x:scenario label="stripping: nested caesura and whitespace at start/end of verse">
+        <x:param name="text:strip" as="xs:boolean" select="true()"/>
+        <x:context mode="text:text">
+            <tei:l> Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                erden. </tei:l>
+        </x:context>
+        <x:expect label="is stripped"
+            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst,\\caesura\{\}nur eitelkeit auf erden.\\&amp;%\s+')"
+        />
+    </x:scenario>
 
 </x:description>
