@@ -32,21 +32,21 @@
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:choose>
       <xsl:when test="descendant::caesura">
-        <xsl:text>\hemistich</xsl:text>
+        <xsl:text>\hemistichs</xsl:text>
         <xsl:call-template name="verse:fill-caesura"/>
         <xsl:text>{</xsl:text>
         <!-- start label and hook on l -->
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <!-- text of first hemistiche -->
+        <!-- text of first hemistich -->
         <!-- output of nodes that preceed caesura -->
         <xsl:apply-templates mode="text:text"
           select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
         <!-- recursively handle nodes, that contain caesura -->
         <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
         <xsl:text>}{</xsl:text>
-        <!-- second hemistiche -->
+        <!-- second hemistich -->
         <!-- recursively handle nodes, that contain caesura -->
         <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
         <!-- output nodes that follow caesura -->
