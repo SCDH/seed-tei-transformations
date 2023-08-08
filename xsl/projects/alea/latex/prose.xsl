@@ -259,7 +259,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\KOMAoption{fontsize}{14pt}</xsl:text>
     -->
     <xsl:text>\documentclass{book}</xsl:text>
-    <xsl:text>&lb;%\usepackage[fontsize=</xsl:text>
+    <xsl:text>&lb;\usepackage[fontsize=</xsl:text>
     <xsl:value-of select="$fontsize"/>
     <xsl:text>]{scrextend}</xsl:text>
 
