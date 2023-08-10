@@ -36,7 +36,7 @@
         <x:expect label="result" select="'A B C'"/>
     </x:scenario>
 
-    <x:scenario label="normalize space: strip ending newline" pending="todo">
+    <x:scenario label="normalize space: strip ending newline">
         <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
         <x:call function="edmac:normalize">
             <x:param>

@@ -433,13 +433,29 @@
                     Multiple spaces are shrinked to a single space, but linebreaks ending a comment are kept.
                 -->
                 <!-- note: using named entities in regex does not work -->
-                <xsl:sequence
-                    select="string-join($latex) =>
+                <xsl:variable name="pass1" select="string-join($latex) =>
                         replace('(%[^&#xa;]*&#xa;&#xd;?)\s+', '$1 ', 'm') =>
                         replace('[ ]+', ' ') =>
                         replace('^\s+', '') =>
-                        replace('[ ]+$', '')"
-                />
+                        replace('[ ]+$', '')
+                        "/>
+                <!-- Since do not have (negative) lookahead,
+                    we cannot use replace() to remove trailing newlines but them in case of keep comments.
+                -->
+                <xsl:choose>
+                    <xsl:when
+                        test="matches($pass1, '\s+$') and not(replace($pass1, '\s+$', '') => matches('%[^&#xa;]*$'))">
+                        <xsl:message use-when="system-property('debug') eq 'true'">
+                            <xsl:text>deleting left over trailing space: '</xsl:text>
+                            <xsl:value-of select="$pass1"/>
+                            <xsl:text>'</xsl:text>
+                        </xsl:message>
+                        <xsl:value-of select="replace($pass1, '\s+$', '')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$pass1"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:sequence select="string-join($latex)"/>
