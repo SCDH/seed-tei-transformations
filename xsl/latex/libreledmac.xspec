@@ -48,6 +48,19 @@
         <x:expect label="result" select="'A B C'"/>
     </x:scenario>
 
+    <x:scenario label="normalize space: replace newlines with single space">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text>A&lb;</x:text>
+                <x:text>B&lb;&lb;</x:text>
+                <x:text>C</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" select="'A B C'"/>
+        <x:expect label="length" test="string-length(.)" select="5"/>
+    </x:scenario>
+
     <x:scenario label="normalize space: keep comment">
         <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
         <x:call function="edmac:normalize">
