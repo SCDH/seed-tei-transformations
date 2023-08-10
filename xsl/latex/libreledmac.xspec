@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE description [
+    <!ENTITY lb "&#xa;" >
+    <!ENTITY s "&#x20;" >
+]>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:edmac="http://scdh.wwu.de/transform/edmac#" stylesheet="libreledmac.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:scenario label="normalize: concatenate">
+        <x:param name="edmac:normalization" as="xs:string" select="''"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text> C </x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" select="' A  B  C '"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: strip and shrink">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text> C </x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" select="'A B C'"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: strip ending newline" pending="todo">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text> C&lb;</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" select="'A B C'"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: keep comment">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text>% C&lb;</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" test="normalize-space(.)" select="'A B % C'"/>
+        <x:expect label="length" test="string-length(.)" select="8"/>
+        <x:expect label="start" test="string-to-codepoints(.)[1]" select="65"/>
+        <x:expect label="comment ended" test="string-to-codepoints(.)[last()]" select="10"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: keep comment, strip spaces behind">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text>% C&lb;</x:text>
+                <x:text>&s;&s;</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" test="normalize-space(.)" select="'A B % C'"/>
+        <x:expect label="length" test="string-length(.)" select="8"/>
+        <x:expect label="start" test="string-to-codepoints(.)[1]" select="65"/>
+        <x:expect label="comment ended" test="string-to-codepoints(.)[last()]" select="10"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: keep comment, strip newlines behind">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text>% C&lb;</x:text>
+                <x:text>&lb;&lb;&s;&s;&lb;&s;&s;</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" test="normalize-space(.)" select="'A B % C'"/>
+        <x:expect label="length" test="string-length(.)" select="8"/>
+        <x:expect label="start" test="string-to-codepoints(.)[1]" select="65"/>
+        <x:expect label="comment ended" test="string-to-codepoints(.)[last()]" select="10"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: keep comment, keep space delimited text behind">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text>% C&lb;</x:text>
+                <x:text> D</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" test="normalize-space(.)" select="'A B % C D'"/>
+        <x:expect label="length" test="string-length(.)" select="10"/>
+        <x:expect label="start" test="string-to-codepoints(.)[1]" select="65"/>
+        <x:expect label="comment ended" test="string-to-codepoints(.)[last() - 2]" select="10"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: keep comment, keep newline delimited text behind">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text>% C&lb;</x:text>
+                <x:text>&lb;&s;&lb;&s;D</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" test="normalize-space(.)" select="'A B % C D'"/>
+        <x:expect label="length" test="string-length(.)" select="10"/>
+        <x:expect label="start" test="string-to-codepoints(.)[1]" select="65"/>
+        <x:expect label="comment ended" test="string-to-codepoints(.)[last() - 2]" select="10"/>
+    </x:scenario>
+
+    <x:scenario label="normalize space: keep multiple comments, keep newline delimited text behind">
+        <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
+        <x:call function="edmac:normalize">
+            <x:param>
+                <x:text> A </x:text>
+                <x:text> B </x:text>
+                <x:text>% C&lb;</x:text>
+                <x:text>&lb;&s;&lb;&s;D </x:text>
+                <x:text>% E&lb;</x:text>
+                <x:text>&lb;&s;&lb;&s;F&s;</x:text>
+            </x:param>
+        </x:call>
+        <x:expect label="result" test="normalize-space(.)" select="'A B % C D % E F'"/>
+        <x:expect label="length" test="string-length(.)" select="17"/>
+        <x:expect label="start" test="string-to-codepoints(.)[1]" select="65"/>
+        <x:expect label="comment ended" test="string-to-codepoints(.)[last() - 2]" select="10"/>
+    </x:scenario>
+
+
+</x:description>

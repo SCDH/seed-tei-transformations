@@ -2,6 +2,7 @@
 <!-- XSLT package with components for using reledmac for critical editions -->
 <!DOCTYPE package [
     <!ENTITY lb "&#xa;" >
+    <!ENTITY cr "&#xd;" >
 ]>
 <xsl:package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
@@ -17,6 +18,8 @@
     <xsl:expose component="mode" names="edmac:*" visibility="public"/>
     <xsl:expose component="template" names="edmac:*" visibility="public"/>
 
+    <!-- how to normalize generated latex of block elements like verses and paragraphs. VALUES: empty string, 'space' -->
+    <xsl:param name="edmac:normalization" as="xs:string" select="''" required="false"/>
 
     <!-- optional parameter passed to every \pstart. E.g. '[\setRL]' -->
     <xsl:param name="edmac:pstart-opt" as="xs:string" select="''"/>
@@ -416,5 +419,32 @@
             <xsl:text>&amp;%&lb;</xsl:text>
         </xsl:if>
     </xsl:template>
+
+
+    <!-- general tools -->
+
+    <xsl:function name="edmac:normalize" as="xs:string" visibility="public">
+        <xsl:param name="latex" as="xs:string*"/>
+        <xsl:choose>
+            <xsl:when test="$edmac:normalization eq 'space'">
+                <!--
+                    Leading space is stripped.
+                    Trailing ASCII SP is stripped but trailing linebreaks are kept because they may end a comment.
+                    Multiple spaces are shrinked to a single space, but linebreaks ending a comment are kept.
+                -->
+                <!-- note: using named entities in regex does not work -->
+                <xsl:sequence
+                    select="string-join($latex) =>
+                        replace('(%[^&#xa;]*&#xa;&#xd;?)\s+', '$1 ', 'm') =>
+                        replace('[ ]+', ' ') =>
+                        replace('^\s+', '') =>
+                        replace('[ ]+$', '')"
+                />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="string-join($latex)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
 
 </xsl:package>
