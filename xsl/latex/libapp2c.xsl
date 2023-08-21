@@ -101,6 +101,9 @@
                         <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
                     </xsl:call-template>
                     <xsl:text>}%&lb;</xsl:text>
+                    <!-- We add {} to the output because TeX ignores leading blanks in a line.
+                        Spaces would get lost otherwise. -->
+                    <xsl:text>{}</xsl:text>
                 </xsl:if>
             </xsl:template>
 

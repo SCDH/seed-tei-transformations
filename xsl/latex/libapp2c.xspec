@@ -110,7 +110,7 @@
             <x:param name="entries" select="$apparatus-entry-map"/>
         </x:call>
         <x:expect label="result"
-            >%&#xa;\edtext{\edlabel{d1.1.a1-end}}{%&#xa;\xxref{d1.1.a1-start}{d1.1.a1-end}\lemma{Dreiecks}\Afootnote{{n-Ecks\appsep{rdg-siglum-sep}\wit{N}}}}%&#xa;</x:expect>
+            >%&#xa;\edtext{\edlabel{d1.1.a1-end}}{%&#xa;\xxref{d1.1.a1-start}{d1.1.a1-end}\lemma{Dreiecks}\Afootnote{{n-Ecks\appsep{rdg-siglum-sep}\wit{N}}}}%&#xa;{}</x:expect>
     </x:scenario>
 
     <x:scenario label="apparatus entries with custom xpath">
