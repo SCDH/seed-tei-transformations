@@ -17,8 +17,10 @@
 
   <xsl:mode name="text:text" on-no-match="shallow-skip" visibility="public"/>
 
+  <xsl:mode name="text:hook-ahead" on-no-match="deep-skip" visibility="public"/>
   <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
   <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
+  <xsl:mode name="text:hook-behind" on-no-match="deep-skip" visibility="public"/>
 
 
   <!-- you may want to override the rule content, e.g., by \txarb{.} -->
@@ -71,19 +73,27 @@
   </xsl:template>
 
   <xsl:template match="lg[not(lg)]">
+    <xsl:apply-templates mode="text:hook-ahead" select="."/>
     <xsl:call-template name="edmac:stanza-start"/>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:apply-templates/>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="edmac:stanza-end"/>
+    <xsl:apply-templates mode="text:hook-behind" select="."/>
   </xsl:template>
 
   <!-- a single verse not in lg is output as a stanza -->
   <xsl:template match="l[not(ancestor::lg)]">
+    <xsl:apply-templates mode="text:hook-ahead" select="."/>
     <xsl:call-template name="edmac:stanza-start"/>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:variable name="latex" as="text()*">
       <xsl:call-template name="text:verse"/>
     </xsl:variable>
     <xsl:value-of select="edmac:normalize($latex)"/>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
     <xsl:call-template name="edmac:stanza-end"/>
+    <xsl:apply-templates mode="text:hook-behind" select="."/>
   </xsl:template>
 
   <xsl:template match="l[ancestor::lg]">
