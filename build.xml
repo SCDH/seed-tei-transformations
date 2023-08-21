@@ -26,6 +26,7 @@
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
+        <antcall target="test-xsl-latex-libreledmac.xsl"/>
         <antcall target="test-xsl-latex-libapp2c.xsl"/>
         <antcall target="test-xsl-latex-libtext.xsl"/>
         <antcall target="test-xsl-latex-libcouplet.xsl"/>
@@ -76,6 +77,12 @@
         </antcall>
     </target>
 
+
+    <target name="test-xsl-latex-libreledmac.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/latex/libreledmac.xspec"/>
+        </antcall>
+    </target>
 
     <target name="test-xsl-latex-libapp2c.xsl">
         <antcall target="xspec.xspec" inheritall="false">

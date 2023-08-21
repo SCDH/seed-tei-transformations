@@ -39,19 +39,26 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <!-- text of first hemistich -->
-        <!-- output of nodes that preceed caesura -->
-        <xsl:apply-templates mode="text:text"
-          select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
-        <!-- recursively handle nodes, that contain caesura -->
-        <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+        <xsl:variable name="first" as="xs:string*">
+          <!-- text of first hemistich -->
+          <!-- output of nodes that preceed caesura -->
+          <xsl:apply-templates mode="text:text"
+            select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
+          <!-- recursively handle nodes, that contain caesura -->
+          <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+        </xsl:variable>
+        <xsl:value-of select="edmac:normalize($first)"/>
         <xsl:text>}{</xsl:text>
-        <!-- second hemistich -->
-        <!-- recursively handle nodes, that contain caesura -->
-        <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
-        <!-- output nodes that follow caesura -->
-        <xsl:apply-templates mode="text:text"
-          select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"/>
+        <xsl:variable name="second" as="xs:string*">
+          <!-- second hemistich -->
+          <!-- recursively handle nodes, that contain caesura -->
+          <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
+          <!-- output nodes that follow caesura -->
+          <xsl:apply-templates mode="text:text"
+            select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"
+          />
+        </xsl:variable>
+        <xsl:value-of select="edmac:normalize($second)"/>
         <!-- end label and hook on l -->
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-end'"/>

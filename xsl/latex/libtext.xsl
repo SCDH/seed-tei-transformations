@@ -15,9 +15,6 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
     package-version="1.0.0"/>
 
-  <!-- strip whitespace at the start or end of verses and around the caesura -->
-  <xsl:param name="text:strip" as="xs:boolean" select="false()" required="false"/>
-
   <xsl:mode name="text:text" on-no-match="shallow-skip" visibility="public"/>
 
   <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
@@ -35,46 +32,6 @@
   <!-- shrink multiple whitespace space characters to a singel space  -->
   <xsl:template match="text()[ancestor::p or ancestor::l or ancestor::head]">
     <xsl:value-of select=". => replace('\s+', ' ')"/>
-  </xsl:template>
-
-  <!-- remove white space around caesura -->
-  <xsl:template match="text()[$text:strip
-    and ancestor::l and following::node()[1][self::caesura]]" priority="2">
-    <xsl:value-of select="replace(., '\s+$', '') => replace('\s+', ' ')"/>
-  </xsl:template>
-  <xsl:template match="text()[$text:strip
-    and ancestor::l and preceding::node()[1][self::caesura]]" priority="2">
-    <xsl:value-of select="replace(., '^\s+', '') => replace('\s+', ' ')"/>
-  </xsl:template>
-  <!-- remove white space at start or end of verse -->
-  <xsl:template match="text()[$text:strip
-    and ancestor::l
-    and generate-id(.) eq generate-id((ancestor::l//text())[1])]" priority="2">
-    <xsl:value-of select="replace(., '^\s+', '') => replace('\s+', ' ')"/>
-  </xsl:template>
-  <xsl:template match="text()[$text:strip
-    and ancestor::l
-    and generate-id(.) eq generate-id((ancestor::l//text())[last()])]" priority="2">
-    <xsl:value-of select="replace(., '\s+$', '') => replace('\s+', ' ')"/>
-  </xsl:template>
-  <xsl:template match="text()[$text:strip
-    and ancestor::l
-    and generate-id(.) eq generate-id((ancestor::l//text())[1])
-    and generate-id(.) eq generate-id((ancestor::l//text())[last()])]" priority="2.1">
-    <xsl:value-of select="replace(., '^\s+', '') => replace('\s+$', '') => replace('\s+', ' ')"/>
-  </xsl:template>
-  <!-- remove white space from text node that fills up the first/second hemistich -->
-  <xsl:template match="text()[$text:strip
-    and ancestor::l
-    and following::node()[1][self::caesura]
-    and generate-id(.) eq generate-id((ancestor::l//text())[1])]" priority="3">
-    <xsl:value-of select="replace(., '^\s+', '') => replace('\s+$', '') => replace('\s+', ' ')"/>
-  </xsl:template>
-  <xsl:template match="text()[$text:strip
-    and ancestor::l
-    and preceding::node()[1][self::caesura]
-    and generate-id(.) eq generate-id((ancestor::l//text())[last()])]" priority="3">
-    <xsl:value-of select="replace(., '^\s+', '') => replace('\s+$', '') => replace('\s+', ' ')"/>
   </xsl:template>
 
   <!-- drop whitespace nodes that from outside pLike -->
@@ -122,7 +79,10 @@
   <!-- a single verse not in lg is output as a stanza -->
   <xsl:template match="l[not(ancestor::lg)]">
     <xsl:call-template name="edmac:stanza-start"/>
-    <xsl:call-template name="text:verse"/>
+    <xsl:variable name="latex" as="text()*">
+      <xsl:call-template name="text:verse"/>
+    </xsl:variable>
+    <xsl:value-of select="edmac:normalize($latex)"/>
     <xsl:call-template name="edmac:stanza-end"/>
   </xsl:template>
 

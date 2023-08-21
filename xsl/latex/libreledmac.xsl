@@ -2,6 +2,7 @@
 <!-- XSLT package with components for using reledmac for critical editions -->
 <!DOCTYPE package [
     <!ENTITY lb "&#xa;" >
+    <!ENTITY cr "&#xd;" >
 ]>
 <xsl:package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
@@ -17,6 +18,8 @@
     <xsl:expose component="mode" names="edmac:*" visibility="public"/>
     <xsl:expose component="template" names="edmac:*" visibility="public"/>
 
+    <!-- how to normalize generated latex of block elements like verses and paragraphs. VALUES: empty string, 'space' -->
+    <xsl:param name="edmac:normalization" as="xs:string" select="''" required="false"/>
 
     <!-- optional parameter passed to every \pstart. E.g. '[\setRL]' -->
     <xsl:param name="edmac:pstart-opt" as="xs:string" select="''"/>
@@ -416,5 +419,79 @@
             <xsl:text>&amp;%&lb;</xsl:text>
         </xsl:if>
     </xsl:template>
+
+
+    <!-- general tools -->
+
+    <!--
+        A function for normalizing latex output from a block element.
+
+        If stylesheet parameter edmac:normalization is set to 'space' then:
+
+        Leading space is stripped.
+        Trailing space is stripped.
+        Trailing linebreaks are kept if they end a comment.
+        Multiple spaces are shrinked to a single space.
+        Linebreaks are replaced by ASCII SP, unless ending a comment.
+    -->
+    <xsl:function name="edmac:normalize" as="xs:string" visibility="public">
+        <xsl:param name="latex" as="xs:string*"/>
+        <xsl:choose>
+            <xsl:when test="$edmac:normalization eq 'space'">
+                <!--
+                    Since we do not have (negative) lookahead,
+                    we cannot use replace() to remove trailing newlines but them in case of keep comments.
+
+                    But we can first replace all newlines with spaces unless are not ending a comment.
+                    And then shrink spaces.
+                -->
+                <xsl:variable name="pass1"
+                    select="((string-join($latex) => tokenize('&#xa;&#xd;?')) ! edmac:keep-comment-end(.)) => string-join()"/>
+                <xsl:variable name="pass2" select="$pass1 =>
+                    replace('[ ]+', ' ') =>
+                    replace('^\s+', '') =>
+                    replace('[ ]+$', '')
+                    "/>
+                <xsl:value-of select="$pass2"/>
+                <!-- older implementation -->
+                <!-- note: using named entities in regex does not work -->
+                <!--xsl:variable name="pass1" select="string-join($latex) =>
+                    replace('(%[^&#xa;]*&#xa;&#xd;?)\s+', '$1 ', 'm') =>
+                    replace('[ ]+', ' ') =>
+                    replace('^\s+', '') =>
+                    replace('[ ]+$', '')
+                    "/>
+                <xsl:choose>
+                    <xsl:when
+                        test="matches($pass1, '\s+$') and not(replace($pass1, '\s+$', '') => matches('%[^&#xa;]*$'))">
+                        <xsl:message use-when="system-property('debug') eq 'true'">
+                            <xsl:text>deleting left over trailing space: '</xsl:text>
+                            <xsl:value-of select="$pass1"/>
+                            <xsl:text>'</xsl:text>
+                        </xsl:message>
+                        <xsl:value-of select="replace($pass1, '\s+$', '')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$pass1"/>
+                    </xsl:otherwise>
+                </xsl:choose-->
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="string-join($latex)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <xsl:function name="edmac:keep-comment-end" as="xs:string" visibility="private">
+        <xsl:param name="line" as="xs:string"/>
+        <xsl:choose>
+            <xsl:when test="matches($line, '%')">
+                <xsl:value-of select="concat($line, '&#xa;')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="concat($line, ' ')"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
 
 </xsl:package>
