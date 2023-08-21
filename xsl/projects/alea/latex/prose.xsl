@@ -234,6 +234,24 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
+      <xsl:template mode="text:hook-ahead" match="*[@met]">
+        <xsl:text>&lb;&lb;\pstart</xsl:text>
+        <xsl:variable name="met" select="@met"/>
+        <xsl:text>{}[</xsl:text>
+        <xsl:choose>
+          <xsl:when test="root(.)//teiHeader//metSym[@value eq $met]">
+            <!-- The meters name is pulled from the metDecl
+               in the encodingDesc in the document header -->
+            <xsl:value-of select="root(.)//teiHeader//metSym[@value eq $met]//term[1]"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@met"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>]</xsl:text>
+        <xsl:text>&lb;\pend&lb;</xsl:text>
+      </xsl:template>
+
     </xsl:override>
   </xsl:use-package>
 
@@ -350,6 +368,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
     <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
     <xsl:call-template name="verse:latex-header"/>
+    <xsl:text>&lb;\AtEveryStopStanza{\smallskip}</xsl:text>
     <xsl:text>&lb;\usepackage{calc}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\settowidth{\hst@gutter@width}{</xsl:text>
