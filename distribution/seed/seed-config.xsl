@@ -11,11 +11,11 @@ relevant locations.
 
 USAGE EXAMPLES:
 
-target/bin/xslt.sh -xsl:utils/seed-config.xsl -s:xsl/projects/alea/prose-page saxon-config-uri=../saxon.xml
+target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl -s:xsl/projects/alea/prose-page saxon-config-uri=../../saxon.xml
 
-target/bin/xslt.sh -xsl:utils/seed-config.xsl -it saxon-config-uri=../saxon.xml transformations=xsl/projects/alea/prose-page.xsl
+target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl -it saxon-config-uri=../../saxon.xml transformations=xsl/projects/alea/prose-page.xsl
 
-target/bin/xslt.sh -xsl:utils/seed-config.xsl saxon-config-uri=https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/saxon.xml transformations=xsl/projects/alea/prose-page.xsl -it
+target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/saxon.xml transformations=xsl/projects/alea/prose-page.xsl -it
 
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
