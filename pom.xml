@@ -468,7 +468,6 @@
                 </dependencies>
             </plugin>
 
-            <!-- make framework package -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4</version>
@@ -488,6 +487,7 @@
                         </configuration>
                     </execution>
                     <execution>
+		       <!-- make oxygen distribution -->
                         <id>oxygen-distribution</id>
                         <phase>package</phase>
                         <goals>
@@ -502,6 +502,7 @@
                         </configuration>
                     </execution>
                     <execution>
+		        <!-- paketize resources for the SEED XML transformer -->
                         <id>seed-distribution</id>
                         <phase>package</phase>
                         <goals>
