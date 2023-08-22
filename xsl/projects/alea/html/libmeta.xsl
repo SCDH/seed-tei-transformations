@@ -6,7 +6,7 @@
     <!ENTITY pdf "&#x202c;" >
 ]>
 <xsl:package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/libmeta.xsl"
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/libmeta.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:meta="http://scdh.wwu.de/transform/meta#" exclude-result-prefixes="#all"

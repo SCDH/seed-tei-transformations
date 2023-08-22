@@ -30,8 +30,8 @@
         <antcall target="test-xsl-latex-libapp2c.xsl"/>
         <antcall target="test-xsl-latex-libtext.xsl"/>
         <antcall target="test-xsl-latex-libcouplet.xsl"/>
-        <antcall target="test-xsl-projects-alea-prose-page.xsl"/>
-        <antcall target="test-xsl-projects-alea-preview.xsl"/>
+        <antcall target="test-xsl-projects-alea-html-prose-page.xsl"/>
+        <antcall target="test-xsl-projects-alea-html-diwan.xsl"/>
         <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
     </target>
 
@@ -103,15 +103,15 @@
     </target>
 
 
-    <target name="test-xsl-projects-alea-prose-page.xsl">
+    <target name="test-xsl-projects-alea-html-prose-page.xsl">
         <antcall target="xspec.xspec" inheritall="false">
-            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/prose-page.xspec"/>
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/html/prose-page.xspec"/>
         </antcall>
     </target>
 
-    <target name="test-xsl-projects-alea-preview.xsl">
+    <target name="test-xsl-projects-alea-html-diwan.xsl">
         <antcall target="xspec.xspec" inheritall="false">
-            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/preview.xspec"/>
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/html/diwan.xspec"/>
         </antcall>
     </target>
 

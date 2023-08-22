@@ -137,7 +137,7 @@
         package-version="1.0.0"> </xsl:use-package>
 
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/libmeta.xsl"
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/libmeta.xsl"
         package-version="1.0.0">
         <xsl:override>
             <xsl:variable name="wit:witnesses" as="element()*" select="$witnesses"/>
