@@ -23,6 +23,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+  xmlns:alea="http://scdh.wwu.de/transform/alea#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
@@ -234,27 +235,33 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
+      <!-- set the verse meter (metrum) before the verse environment starts -->
       <xsl:template mode="text:hook-ahead" match="*[@met]">
-        <xsl:text>&lb;&lb;\pstart</xsl:text>
-        <xsl:variable name="met" select="@met"/>
-        <xsl:text>{}[</xsl:text>
-        <xsl:choose>
-          <xsl:when test="root(.)//teiHeader//metSym[@value eq $met]">
-            <!-- The meters name is pulled from the metDecl
-               in the encodingDesc in the document header -->
-            <xsl:value-of select="root(.)//teiHeader//metSym[@value eq $met]//term[1]"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="@met"/>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:text>]</xsl:text>
-        <xsl:text>&lb;\pend&lb;</xsl:text>
+        <xsl:text>&lb;\versemeter</xsl:text>
+        <xsl:text>{</xsl:text>
+        <xsl:value-of select="alea:meter(@met)"/>
+        <xsl:text>}%&lb;</xsl:text>
       </xsl:template>
 
     </xsl:override>
   </xsl:use-package>
 
+
+  <!-- todo: move to reasonable place -->
+  <!-- a template for displaying the meter (metrum) of verse -->
+  <xsl:function name="alea:meter" as="xs:string">
+    <xsl:param name="met" as="attribute(met)"/>
+    <xsl:choose>
+      <xsl:when test="root($met)//teiHeader//metSym[@value eq $met]">
+        <!-- The meters name is pulled from the metDecl
+            in the encodingDesc in the document header -->
+        <xsl:value-of select="root($met)//teiHeader//metSym[@value eq $met][1]//term[1]"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$met"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
 
 
   <xsl:mode on-no-match="shallow-skip"/>
@@ -336,6 +343,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     </xsl:for-each>
     <xsl:text>&lb;\setRTLmain</xsl:text>
 
+    <xsl:text>&lb;\newcommand*{\arabicobracket}{]}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabiccbracket}{[}</xsl:text>
+
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
@@ -366,11 +376,24 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
+    <xsl:text>&lb;\makeatletter</xsl:text>
+    <xsl:text>&lb;\newcommand*{\versemeter}[1]{\def\@verse@meter{#1}}</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;\setlength{\stanzaindentbase}{10pt}</xsl:text>
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
     <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
     <xsl:call-template name="verse:latex-header"/>
-    <xsl:text>&lb;\AtEveryStopStanza{\smallskip}</xsl:text>
+    <xsl:text>&lb;\AtEveryStanza{%</xsl:text>
+    <xsl:text>&lb;  \let\oldpb\pb%</xsl:text>
+    <xsl:text>&lb;  \let\pb\ledinnernote%</xsl:text>
+    <xsl:text>&lb;  }</xsl:text>
+    <xsl:text>&lb;\makeatletter</xsl:text>
+    <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax}</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
+    <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
+    <xsl:text>&lb;  \smallskip%</xsl:text>
+    <xsl:text>&lb;  \let\pb\oldpb%</xsl:text>
+    <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\usepackage{calc}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\settowidth{\hst@gutter@width}{</xsl:text>
