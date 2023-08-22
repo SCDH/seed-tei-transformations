@@ -19,6 +19,8 @@
             <include>**/*.xsl</include>
             <include>**/*.js</include>
             <include>**/*.json</include>
+	    <include>**/*.css</include>
+	    <include>**/*.sty</include>
 	 </includes>
       </fileSet>
       <fileSet>
