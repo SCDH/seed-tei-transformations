@@ -505,6 +505,20 @@
                             </descriptors>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>seed-distribution</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                            <archiveBaseDirectory>${project.basedir}</archiveBaseDirectory>
+                            <descriptors>
+                                <descriptor>distribution/seed/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
