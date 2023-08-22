@@ -4,7 +4,7 @@
 The transformations given as the "transformations" parameter are
 resolved relative to the URI given in the saxon-config-uri. The
 saxon-config-uri is resolved relative to the stylesheet URI, aka
-as static-base-uir().
+as static-base-uri().
 
 The parameter upload-uri can be used to set a base URL for all
 relevant locations.
@@ -27,13 +27,23 @@ target/bin/xslt.sh -xsl:utils/seed-config.xsl saxon-config-uri=https://scdh.zivg
 
     <xsl:output method="json" encoding="UTF-8" indent="true"/>
 
+    <!-- URI of the saxon configuration file. -->
     <xsl:param name="saxon-config-uri" as="xs:string" required="true"/>
 
-    <xsl:param name="transformations" as="xs:string*" required="false"/>
+    <!-- sequence of XSL transformations (stylesheets). Only used when the initial template is called. -->
+    <xsl:param name="transformations" as="xs:string*" select="()" required="false"/>
 
+    <!-- Relative links to packages in the saxon config are based on this.
+        Defaults to the base URI of the Saxon configuration's document node. -->
     <xsl:param name="base-uri" as="xs:string" select="base-uri($saxon-config)"/>
 
+    <!-- Where the SEED XML Transformer will get the packages. Only used if $relative-uris
+        is false(). -->
     <xsl:param name="upload-uri" as="xs:string" select="$base-uri"/>
+
+    <!-- If true, then relative URIs from the saxon configuration file are preserved,
+        otherwise they are prefixed with $upload-uri. -->
+    <xsl:param name="relative-uris" as="xs:boolean" select="true()"/>
 
     <xsl:param name="class" as="xs:string"
         select="'de.wwu.scdh.seed.xml.transform.saxon.SaxonXslTransformation'"/>
@@ -88,7 +98,15 @@ target/bin/xslt.sh -xsl:utils/seed-config.xsl saxon-config-uri=https://scdh.zivg
                 <xsl:map-entry key="'description'"
                     select="($stylesheet//comment() => string-join('&#xa;') => tokenize('&#xa;'))[normalize-space() ne ''][1] => normalize-space()"/>
                 <xsl:map-entry key="'class'" select="$class"/>
-                <xsl:map-entry key="'location'" select="resolve-uri($location, $upload-uri)"/>
+                <xsl:choose>
+                    <xsl:when test="$relative-uris">
+                        <xsl:map-entry key="'location'" select="$location"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:map-entry key="'location'" select="resolve-uri($location, $upload-uri)"
+                        />
+                    </xsl:otherwise>
+                </xsl:choose>
                 <xsl:map-entry key="'mediaType'" select="seed:media-type($stylesheet)"/>
                 <xsl:map-entry key="'requiresSource'"
                     select="exists($stylesheet/global-context-item)"/>
@@ -175,7 +193,15 @@ target/bin/xslt.sh -xsl:utils/seed-config.xsl saxon-config-uri=https://scdh.zivg
             <xsl:value-of select="@name"/>
         </xsl:message>
         <xsl:map>
-            <xsl:map-entry key="'location'" select="resolve-uri(@sourceLocation, $upload-uri)"/>
+            <xsl:choose>
+                <xsl:when test="$relative-uris">
+                    <xsl:map-entry key="'location'" select="string(@sourceLocation)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:map-entry key="'location'"
+                        select="resolve-uri(@sourceLocation, $upload-uri)"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:map>
         <!-- the package may be registered with another name or version -->
         <xsl:if
