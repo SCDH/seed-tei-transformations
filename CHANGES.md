@@ -1,5 +1,16 @@
 # Changes
 
+## dev
+
+- distribution for the SEED XML Transformer
+- LaTeX
+  - introduced functions for normalizing space in LaTeX output
+  - fixed spacing problem after comments
+- projects:
+  - ALEA
+	- improved LaTeX output for prose
+    - enforced directory layout (common, html, latex)
+
 ## 0.3.1
 
 - generate configuration for the SEED XML Transformer
