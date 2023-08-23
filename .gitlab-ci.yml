@@ -54,7 +54,7 @@ pages:
     - cp -v target/*-package.zip public/
     - cp -v target/descriptor.xml public/
     - cp -v target/*-oxygen-distribution.jar public/
-    - cp -v target/seed-config.yaml public/
+    - cp -v target/*-seed-resources.tar.gz public/
   artifacts:
     paths:
       - public
