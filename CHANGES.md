@@ -1,6 +1,6 @@
 # Changes
 
-## dev
+## 0.4.0
 
 - distribution for the SEED XML Transformer
 - LaTeX
