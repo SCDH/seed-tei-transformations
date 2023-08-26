@@ -22,6 +22,7 @@
         <antcall target="test-xsl-common-libwit.xsl"/>
         <antcall target="test-xsl-common-libref.xsl"/>
         <antcall target="test-xsl-common-libentry2.xsl"/>
+        <antcall target="test-xsl-common-libsource.xsl"/>
         <antcall target="test-xsl-json-witnesses.xsl"/>
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
@@ -50,6 +51,12 @@
     <target name="test-xsl-common-libentry2.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libentry2.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-common-libsource.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libsource.xspec"/>
         </antcall>
     </target>
 
