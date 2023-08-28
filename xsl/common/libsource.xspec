@@ -128,6 +128,80 @@
         <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="3"/>
     </x:scenario>
 
+
+
+    <x:scenario label="xpath source info to text node, 'Bey stiller nacht '">
+        <x:param name="source:mode" select="7"/>
+        <x:context select="$tei-text//text()[. eq ('Bey stiller nacht ')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="'/TEI[1]/text[1]/body[1]/lg[1]/lg[1]/l[1]/text()[1]'"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+        <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="18"/>
+    </x:scenario>
+
+    <x:scenario label="xpath from id source info to text node, 'Bey stiller nacht '">
+        <x:param name="source:mode" select="8"/>
+        <x:context select="$tei-text//text()[. eq ('Bey stiller nacht ')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="concat('id(', codepoints-to-string(39), 'v1', codepoints-to-string(39), ')/text()[1]')"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+        <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="18"/>
+    </x:scenario>
+
+    <x:scenario
+        label="namespace-aware xpath source info to text node, Clark notation, 'Bey stiller nacht '">
+        <x:param name="source:mode" select="9"/>
+        <x:context select="$tei-text//text()[. eq ('Bey stiller nacht ')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="'/Q{http://www.tei-c.org/ns/1.0}TEI[1]/Q{http://www.tei-c.org/ns/1.0}text[1]/Q{http://www.tei-c.org/ns/1.0}body[1]/Q{http://www.tei-c.org/ns/1.0}lg[1]/Q{http://www.tei-c.org/ns/1.0}lg[1]/Q{http://www.tei-c.org/ns/1.0}l[1]/text()[1]'"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+        <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="18"/>
+    </x:scenario>
+
+    <x:scenario
+        label="namespace-aware xpath from id to text node source info, Clark notation, 'Bey stiller nacht '">
+        <x:param name="source:mode" select="10"/>
+        <x:context select="$tei-text//text()[. eq ('Jch')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="concat('id(', codepoints-to-string(39), 'v3', codepoints-to-string(39) ,')/Q{http://www.tei-c.org/ns/1.0}unclear[1]/text()[1]')"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+        <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="3"/>
+    </x:scenario>
+
+    <x:scenario
+        label="namespace-aware xpath to text node source info, {uri}local, 'Bey stiller nacht '">
+        <x:param name="source:mode" select="11"/>
+        <x:context select="$tei-text//text()[. eq ('Bey stiller nacht ')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="'/{http://www.tei-c.org/ns/1.0}TEI[1]/{http://www.tei-c.org/ns/1.0}text[1]/{http://www.tei-c.org/ns/1.0}body[1]/{http://www.tei-c.org/ns/1.0}lg[1]/{http://www.tei-c.org/ns/1.0}lg[1]/{http://www.tei-c.org/ns/1.0}l[1]/text()[1]'"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+        <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="18"/>
+    </x:scenario>
+
+    <x:scenario
+        label="namespace-aware xpath from id to text node source info, {uri}local, 'Bey stiller nacht '">
+        <x:param name="source:mode" select="12"/>
+        <x:context select="$tei-text//text()[. eq ('Jch')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="concat('id(', codepoints-to-string(39), 'v3', codepoints-to-string(39) ,')/{http://www.tei-c.org/ns/1.0}unclear[1]/text()[1]')"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+        <x:expect label="length" test="/*/@data-source-length => xs:integer()" select="3"/>
+    </x:scenario>
+
+
+
     <x:scenario label="xpath source info, 'augen'">
         <x:param name="source:mode" select="1"/>
         <x:context select="$tei-text//text()[. eq ('augen')]"/>
@@ -158,5 +232,14 @@
         <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="59"/>
     </x:scenario>
 
+    <x:scenario label="xpath to text node source info, 'schlagen.'">
+        <x:param name="source:mode" select="7"/>
+        <x:context select="$tei-text//text()[normalize-space(.) eq ('schlagen.')]"/>
+        <x:call template="source:text-node"/>
+        <x:expect label="wrapped in &lt;span&gt;" test="local-name(/element())" select="'span'"/>
+        <x:expect label="xpath" test="/*/@data-source-xpath => string()"
+            select="'/TEI[1]/text[1]/body[1]/lg[1]/lg[2]/l[2]/text()[2]'"/>
+        <x:expect label="offset" test="/*/@data-source-offset => xs:integer()" select="0"/>
+    </x:scenario>
 
 </x:description>
