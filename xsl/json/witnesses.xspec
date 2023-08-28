@@ -17,7 +17,7 @@
     <x:scenario label="Witnesses from crit.xml, flattened (default)">
         <x:context href="../../test/samples/crit.xml"/>
         <x:expect href="../../test/samples/expected-json.xml"
-            select="id('xsl_json_witnesses_xsl_flattened')/text()"
+            select="id('xsl_json_witnesses_xsl_flattened') => parse-json()"
             label="The result should be equal to something laid down in test/samples/expected-json.xml"
         />
     </x:scenario>
@@ -26,7 +26,7 @@
         <x:param name="wit:flatten" select="true()"/>
         <x:context href="../../test/samples/crit.xml"/>
         <x:expect href="../../test/samples/expected-json.xml"
-            select="id('xsl_json_witnesses_xsl_flattened')/text()"
+            select="id('xsl_json_witnesses_xsl_flattened') => parse-json()"
             label="The result should be equal to ..."/>
     </x:scenario>
 
@@ -34,7 +34,7 @@
         <x:param name="wit:flatten" select="false()"/>
         <x:context href="../../test/samples/crit.xml"/>
         <x:expect href="../../test/samples/expected-json.xml"
-            select="id('xsl_json_witnesses_xsl_not_flattened')/text()"
+            select="id('xsl_json_witnesses_xsl_not_flattened') => parse-json()"
             label="The result should be equal to ..."/>
     </x:scenario>
 
@@ -43,7 +43,7 @@
         <x:param name="wit:catalog" select="'../../test/samples/witnesses.xml'"/>
         <x:context href="../../test/samples/crit.xml"/>
         <x:expect href="../../test/samples/expected-json.xml"
-            select="id('xsl_json_witnesses_xsl_flattened_catalog')/text()"
+            select="id('xsl_json_witnesses_xsl_flattened_catalog') => parse-json()"
             label="The result should be equal to ... "/>
     </x:scenario>
 
