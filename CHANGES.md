@@ -1,5 +1,10 @@
 # Changes
 
+## 0.5.0
+
+- added `libsource.xsl` for including information, that makes an
+  (HTML) projection transparent on the XML source.
+
 ## 0.4.0
 
 - distribution for the SEED XML Transformer

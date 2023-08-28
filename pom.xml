@@ -255,6 +255,7 @@
 			   <dir>${project.basedir}</dir>
 			   <includes>
 			      <!-- include every transformation resource for the SEED XML Transformer -->
+			      <include>xsl/common/libsource.xsl</include>
 			      <include>xsl/html/prose.xsl</include>
 			      <include>xsl/projects/alea/html/diwan.xsl</include>
 			      <include>xsl/projects/alea/html/prose-page.xsl</include>

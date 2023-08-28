@@ -312,16 +312,16 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
     <xsl:function name="seed:media-type" as="xs:string">
         <xsl:param name="stylesheet" as="document-node()"/>
         <xsl:choose>
-            <xsl:when test="$stylesheet/output/@method eq 'text'">
+            <xsl:when test="$stylesheet/*/output/@method eq 'text'">
                 <xsl:text>text/plain</xsl:text>
             </xsl:when>
-            <xsl:when test="$stylesheet/output/@method eq 'html'">
+            <xsl:when test="$stylesheet/*/output/@method eq 'html'">
                 <xsl:text>text/html</xsl:text>
             </xsl:when>
-            <xsl:when test="$stylesheet/output/@method eq 'json'">
+            <xsl:when test="$stylesheet/*/output/@method eq 'json'">
                 <xsl:text>application/json</xsl:text>
             </xsl:when>
-            <xsl:when test="$stylesheet/output/@method eq 'xml'">
+            <xsl:when test="$stylesheet/*/output/@method eq 'xml'">
                 <xsl:text>text/xml</xsl:text>
             </xsl:when>
             <xsl:otherwise>

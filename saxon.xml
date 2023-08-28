@@ -36,6 +36,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
                version="1.0.0" sourceLocation="xsl/common/libwit.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libsource.xsl"
+               version="1.0.0" sourceLocation="xsl/common/libsource.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libwit.xsl"
                version="1.0.0" sourceLocation="xsl/latex/libwit.xsl"/>
           <package

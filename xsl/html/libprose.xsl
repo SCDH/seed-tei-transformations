@@ -22,10 +22,6 @@
 
         <xsl:override>
 
-            <xsl:template match="text()">
-                <xsl:value-of select="."/>
-            </xsl:template>
-
             <xsl:template match="div">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <section>
