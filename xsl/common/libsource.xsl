@@ -73,19 +73,19 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
 
 
   <xsl:variable name="source:name-mode" as="xs:integer"
-    select="($source:mode mod 6 + $source:mode mod 2) mod 3" visibility="final"/>
+    select="(($source:mode - 1) mod 6 - ($source:mode - 1) mod 2) idiv 2" visibility="final"/>
 
-  <xsl:variable name="source:is-mode-to-text-node" as="xs:boolean" select="$source:mode lt 7"
-    visibility="final"/>
+  <xsl:variable name="source:is-mode-to-text-node" as="xs:boolean"
+    select="($source:mode - 1) idiv 6 eq 0" visibility="final"/>
 
-  <xsl:variable name="source:is-mode-from-id" as="xs:boolean" select="$source:mode mod 2 eq 0"
+  <xsl:variable name="source:is-mode-from-id" as="xs:boolean" select="($source:mode - 1) mod 2 eq 1"
     visibility="final"/>
 
   <xsl:variable name="source:is-mode-from-root-qname" as="xs:boolean"
-    select="$source:mode mod 6 eq 5" visibility="final"/>
+    select="($source:mode - 1) mod 6 eq 4" visibility="final"/>
 
   <xsl:variable name="source:is-mode-from-root-lname" as="xs:boolean"
-    select="$source:mode mod 6 eq 1" visibility="final"/>
+    select="($source:mode - 1) mod 6 eq 0" visibility="final"/>
 
   <xsl:variable name="source:is-mode-from-root-clarkname" as="xs:boolean" select="$source:mode eq 9"
     visibility="final"/>
@@ -269,13 +269,13 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
       </xsl:when>
       <!-- the further order should be determined by probable values of $source:mode -->
       <!-- the mapping of integers may depend on the calculation of $source:name-mode -->
-      <xsl:when test="$name-mode eq 0">
+      <xsl:when test="$name-mode eq 2">
         <xsl:sequence select="concat('{', namespace-uri($node), '}', local-name($node))"/>
       </xsl:when>
       <xsl:when test="$name-mode eq 1">
         <xsl:sequence select="concat('Q{', namespace-uri($node), '}', local-name($node))"/>
       </xsl:when>
-      <xsl:when test="$name-mode eq 2">
+      <xsl:when test="$name-mode eq 0">
         <xsl:sequence select="local-name($node)"/>
       </xsl:when>
       <xsl:otherwise>
