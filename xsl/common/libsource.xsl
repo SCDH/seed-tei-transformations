@@ -13,7 +13,7 @@ USAGE:
   ...
 
   <xsl:template match="text()" mode="your-mode">
-    <xsl:call-templage name="source:text-node"/>
+    <xsl:call-template name="source:text-node"/>
   </xsl:template>
 
   ...
