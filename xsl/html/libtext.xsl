@@ -20,8 +20,8 @@ Note, that there is a default mode in this package.
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-    version="3.0" default-mode="text:text">
+    xmlns:source="http://scdh.wwu.de/transform/source#" exclude-result-prefixes="#all"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -35,6 +35,10 @@ Note, that there is a default mode in this package.
             visibility="private"/>
     </xsl:use-package>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libsource.xsl"
+        package-version="1.0.0"/>
+
     <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
     <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
 
@@ -46,6 +50,10 @@ Note, that there is a default mode in this package.
         <xsl:override default-mode="text:text">
             <!-- text:hook-before and text:hook-after are modes that offer hooks for
                 inserting project-specific things before and after an element -->
+
+            <xsl:template mode="text:text" match="text()">
+                <xsl:call-template name="source:text-node"/>
+            </xsl:template>
 
             <!-- parts of the document -->
 
