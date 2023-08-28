@@ -22,7 +22,7 @@ USAGE:
 
 Run XSLT with source mode:
 
-target/bin/xslt.sh -config:saxon.he.xml -xsl:your.xsl -s:your.xml {http://scdh.wwu.de/transform/source#}mode=12
+target/bin/xslt.sh -config:saxon.he.xml -xsl:your.xsl -s:your.xml {http://scdh.wwu.de/transform/source#}mode=6
 
 to get something like
 
@@ -35,35 +35,35 @@ The mode is integer-encoded because it's much faster to compare two integers tha
 0: no source information
 
 
-1: xpath and offset, not namespace-aware
+1: xpath to text node, not namespace-aware
 
-2: xpath from xml:id and offset, not namespace-aware
+2: xpath from xml:id to text node, not namespace-aware
 
-3: namespace-aware xpath and offset, Clark notation of QNames, i.e. Q{uri}local
+3: namespace-aware xpath to text node in Clark notation of QNames, i.e. Q{uri}local
 
-4: namespace-aware xpath from id and offset, Clark notation of QNames, i.e. Q{uri}local
+4: namespace-aware xpath from id to text node in Clark notation of QNames, i.e. Q{uri}local
 
-5: namespace-aware xpath and offset, notation {uri}local
+5: namespace-aware xpath to text node, notation {uri}local
 
-6: namespace-aware xpath from id and offset, notation {uri}local
-
-
-7: xpath to text node, not namespace-aware
-
-8: xpath from xml:id to text node, not namespace-aware
-
-9: namespace-aware xpath to text node in Clark notation of QNames, i.e. Q{uri}local
-
-10: namespace-aware xpath from id to text node in Clark notation of QNames, i.e. Q{uri}local
-
-11: namespace-aware xpath to text node, notation {uri}local
-
-12: namespace-aware xpath from id to text node, notation {uri}local
+6: namespace-aware xpath from id to text node, notation {uri}local
 
 
-modes 1-6 provide an xpath with name segments from element nodes and an offset of the text node in the parent's whole text (text nodes in parent's descendants)
+7: xpath and offset, not namespace-aware
 
-modes 7-12 provide the same xpath with name segements from element nodes and the text node, offset is always 0
+8: xpath from xml:id and offset, not namespace-aware
+
+9: namespace-aware xpath and offset, Clark notation of QNames, i.e. Q{uri}local
+
+10: namespace-aware xpath from id and offset, Clark notation of QNames, i.e. Q{uri}local
+
+11: namespace-aware xpath and offset, notation {uri}local
+
+12: namespace-aware xpath from id and offset, notation {uri}local
+
+
+modes 1-6 provide the same xpath with name segements from element nodes and the text node, offset is always 0
+
+modes 7-12 provide an xpath with name segments from element nodes and an offset of the text node in the parent's whole text (text nodes in parent's descendants)
 
 -->
 <xsl:package
@@ -79,7 +79,7 @@ modes 7-12 provide the same xpath with name segements from element nodes and the
   <xsl:variable name="source:name-mode" as="xs:integer"
     select="($source:mode mod 6 + $source:mode mod 2) mod 3" visibility="final"/>
 
-  <xsl:variable name="source:is-mode-to-text-node" as="xs:boolean" select="$source:mode gt 6"
+  <xsl:variable name="source:is-mode-to-text-node" as="xs:boolean" select="$source:mode lt 7"
     visibility="final"/>
 
   <xsl:variable name="source:is-mode-from-id" as="xs:boolean" select="$source:mode mod 2 eq 0"
@@ -91,11 +91,11 @@ modes 7-12 provide the same xpath with name segements from element nodes and the
   <xsl:variable name="source:is-mode-from-root-lname" as="xs:boolean"
     select="$source:mode mod 6 eq 1" visibility="final"/>
 
-  <xsl:variable name="source:is-mode-from-root-clarkname" as="xs:boolean" select="$source:mode eq 3"
+  <xsl:variable name="source:is-mode-from-root-clarkname" as="xs:boolean" select="$source:mode eq 9"
     visibility="final"/>
 
   <xsl:variable name="source:is-mode-from-root-to-text-node-clarkname" as="xs:boolean"
-    select="$source:mode eq 9" visibility="final"/>
+    select="$source:mode eq 3" visibility="final"/>
 
 
 
