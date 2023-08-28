@@ -32,38 +32,31 @@ to get something like
 The parameter source:mode determines how source information is included in the projection of the XML source.
 The mode is integer-encoded because it's much faster to compare two integers than two strings.
 
-0: no source information
+to print description of modes:
 
+target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/common/libsource.xsl -it:{http://scdh.wwu.de/transform/source#}mode-description
 
-1: xpath to text node, not namespace-aware
-
-2: xpath from xml:id to text node, not namespace-aware
-
-3: namespace-aware xpath to text node in Clark notation of QNames, i.e. Q{uri}local
-
-4: namespace-aware xpath from id to text node in Clark notation of QNames, i.e. Q{uri}local
-
-5: namespace-aware xpath to text node, notation {uri}local
-
-6: namespace-aware xpath from id to text node, notation {uri}local
-
-
-7: xpath and offset, not namespace-aware
-
-8: xpath from xml:id and offset, not namespace-aware
-
-9: namespace-aware xpath and offset, Clark notation of QNames, i.e. Q{uri}local
-
-10: namespace-aware xpath from id and offset, Clark notation of QNames, i.e. Q{uri}local
-
-11: namespace-aware xpath and offset, notation {uri}local
-
-12: namespace-aware xpath from id and offset, notation {uri}local
-
+{
+  "0": "no source information",
+  "1": "xpath to text node, not namespace-aware",
+  "2": "xpath from xml:id to text node, not namespace-aware",
+  "3": "namespace-aware xpath to text node in Clark notation of QNames, i.e. Q{uri}local",
+  "4": "namespace-aware xpath from id to text node in Clark notation of QNames, i.e. Q{uri}local",
+  "5": "namespace-aware xpath to text node, notation {uri}local",
+  "6": "namespace-aware xpath from id to text node, notation {uri}local",
+  "7": "xpath and offset, not namespace-aware",
+  "8": "xpath from xml:id and offset, not namespace-aware",
+  "9": "namespace-aware xpath and offset, Clark notation of QNames, i.e. Q{uri}local",
+  "10": "namespace-aware xpath from id and offset, Clark notation of QNames, i.e. Q{uri}local",
+  "11": "namespace-aware xpath and offset, notation {uri}local",
+  "12": "namespace-aware xpath from id and offset, notation {uri}local"
+}
 
 modes 1-6 provide the same xpath with name segements from element nodes and the text node, offset is always 0
 
 modes 7-12 provide an xpath with name segments from element nodes and an offset of the text node in the parent's whole text (text nodes in parent's descendants)
+
+
 
 -->
 <xsl:package
@@ -71,6 +64,9 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:source="http://scdh.wwu.de/transform/source#"
   exclude-result-prefixes="#all" version="3.0">
+
+  <!-- for the serializing the the template source:mode-description -->
+  <xsl:output method="json" indent="true" encoding="UTF-8"/>
 
   <!-- the mode determines how source data is included in the projection -->
   <xsl:param name="source:mode" as="xs:integer" select="0" required="false"/>
@@ -96,6 +92,33 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
 
   <xsl:variable name="source:is-mode-from-root-to-text-node-clarkname" as="xs:boolean"
     select="$source:mode eq 3" visibility="final"/>
+
+
+  <xsl:variable name="source:mode-description" as="text()*" visibility="final">
+    <xsl:text>no source information</xsl:text>
+
+    <xsl:text>xpath to text node, not namespace-aware</xsl:text>
+    <xsl:text>xpath from xml:id to text node, not namespace-aware</xsl:text>
+    <xsl:text>namespace-aware xpath to text node in Clark notation of QNames, i.e. Q{uri}local</xsl:text>
+    <xsl:text>namespace-aware xpath from id to text node in Clark notation of QNames, i.e. Q{uri}local</xsl:text>
+    <xsl:text>namespace-aware xpath to text node, notation {uri}local</xsl:text>
+    <xsl:text>namespace-aware xpath from id to text node, notation {uri}local</xsl:text>
+
+    <xsl:text>xpath and offset, not namespace-aware</xsl:text>
+    <xsl:text>xpath from xml:id and offset, not namespace-aware</xsl:text>
+    <xsl:text>namespace-aware xpath and offset, Clark notation of QNames, i.e. Q{uri}local</xsl:text>
+    <xsl:text>namespace-aware xpath from id and offset, Clark notation of QNames, i.e. Q{uri}local</xsl:text>
+    <xsl:text>namespace-aware xpath and offset, notation {uri}local</xsl:text>
+    <xsl:text>namespace-aware xpath from id and offset, notation {uri}local</xsl:text>
+  </xsl:variable>
+
+  <xsl:template name="source:mode-description" as="map(xs:integer, xs:string)" visibility="final">
+    <xsl:map>
+      <xsl:for-each select="$source:mode-description">
+        <xsl:map-entry key="position() - 1" select="string(.)"/>
+      </xsl:for-each>
+    </xsl:map>
+  </xsl:template>
 
 
 
