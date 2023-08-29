@@ -16,6 +16,21 @@ For example the name of the package in
 [xsl/libi18n.xsl](xsl/html/libi18n.xsl) is
 `https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl`.
 
+### Package versions
+
+**Use a primer version like `1.0.0` and keep it untouched through all
+your changes. Stay with only one version per package.** The packages
+in the repository must be **working set**.
+
+There may be a versioning in future, which will be based on a git tag
+and the version from the Maven pom and which will be fully
+automatically processed. Even then, the XSLT packages under version
+control will keep their single primer version; and only packages in
+distributions will get the version tag and only distributions may
+contain different versions of the same package. Even in this case, the
+primer version will be contained in such a distribution and it will be
+functionally equivalent with the package version with the current tag.
+
 
 ### Debugging
 
@@ -85,12 +100,14 @@ good practise.
 
 ### Types everywhere
 
-Declare the type of every variable, function, parameter.
+Declare the type of every variable, function, parameter!
 
-Stylesheet parameters without declared type
+Stylesheet parameters without declared type are breaking bad. They
+break the automatic type conversion of some applications like the SEED
+XML Transformer or tools for generating documentation.
 
 Even declare the type of the result set of templates, at least if it's
-not a node set.
+not a node set!
 
 ### No XSLT 1.0
 
