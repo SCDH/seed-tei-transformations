@@ -76,10 +76,12 @@ https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformati
 ```
 
 There are no transformation scenarios in the distribution, because we
-do not want to transformations with project-specific parameters, but
-only reusable resources. However, the XSLT resources can be used to
-declare scenarios based on it. We suggest to define such scenarios
-either project-wide in the xpr-file or in a framework.
+distribute reusable resources only and not transformations with
+project-specific parameter values. However, the XSLT resources can be
+used to declare scenarios based on it. We suggest to define such
+scenarios either project-wide in the xpr-file or in a framework. In
+fact, keeping XSLT in a repository like this one and distributing it
+for different platforms is a key to using the same set everywhere.
 
 #### Per scenario configuration
 
@@ -141,9 +143,8 @@ using the `${seed-config-xsl.url}` as `stylesheet` in
 
 ## Conventions
 
-There are many rules followed in this projects.
-
-For details see the [contributing notes](CONTRIBUTING.md).
+There are many rules and conventions followed throughout this
+projects. For details see the [contributing notes](CONTRIBUTING.md).
 
 
 ## Contributing
