@@ -132,6 +132,11 @@ target/bin/test.sh # all tests
 target/bin/test.sh TARGET-NAME # single test
 ```
 
+**Every transformation distributed for the SEED XML Transformer must
+be tested.** At least is must compile. Otherwise, the REST service
+will not pass its health test.
+
+
 ### Register packages
 
 Register new packages in the `saxon.xml` configuration file.
