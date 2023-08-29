@@ -1,65 +1,99 @@
 # XSL Transformations for TEI-XML documents
 
 This is a collection of XSL stylesheets and packages for TEI-XML
-documents. XSLT's package systems makes them highly reusable. The
-transformations were written for running in a web service and with the
-specific security requirements of such a runtime environment in mind.
+documents. [XSLT's package
+system](https://www.w3.org/TR/xslt-30/#packages-and-modules) makes
+them highly reusable. The transformations were written for running in
+a web service and with the specific security requirements of such a
+runtime environment in mind.
 
-## Packages
+## Getting started
 
 ### Using the packages
 
 For using an XSLT package, the XSLT processor has to be told where to
-find the package. The most convenient way to pass the information to
-the Saxon processor is through a [Saxon configuration
+find the package. The most convenient way to pass this information to
+a Saxon processor is through a [Saxon configuration
 file](https://www.saxonica.com/documentation11/index.html#!configuration/configuration-file).
 Such a file can link packages names and versions to source files and
 optionally compiled packages. [`saxon.xml`](saxon.xml) has such a
 mapping for the packages defined in this directory.
 
-The configuration file can be loaded from the commandline or in an
-Oxygen project.
+The Saxon configuration file can be loaded from the commandline or in
+an Oxygen project.
 
 Please note, that the package names cannot be mapped to locations
 through an XML catalog.
 
-#### Oxygen
+A Saxon configuration file also contains information about the edition
+(home, enterprise, professional) of the processor.
 
-Distribution as plugin from URL
+### Commandline
+
+By running the following command, you will get a current Saxon HE
+(home edition), wrapper scripts and a configuration file for this
+edition.
+
+```{shell}
+./mvnw package
+```
+
+After a successful build there is:
+1. a current Saxon HE and dependencies in `target/lib/*`
+1. wrapper scripts for running XSLT in `target/bin/*`
+1. `saxon.he.xml`, a Saxon configuration for the Home Edition, derived
+   from `saxon.xsml`
+
+Using all the packages is now as simple as running
+
+```{shell}
+target/bin/xslt.sh -config:saxon.he.xml -xsl:path-to-stylesheet.xsl -:s:path-to-source.xml
+```
+
+The commandline parameters are just passed through to the Saxon
+processor. Run `target/bin/xslt.sh -?` for help or have a look at the
+[Saxon
+documentation](https://www.saxonica.com/documentation10/index.html#!using-xsl/commandline).
+
+The wrapper scripts have [debugging](CONTRIBUTING.md#debugging) turned
+on by default. Use Saxons `-o:...` option or the shell's `1>` and `2>`
+redirection to fork output from stdout and stderr.
+
+Alternatively, you can go the hard way and not let Maven help you and
+use `-lib` to point to every package you want to use:
+
+```{shell}
+java -jar path-to-saxon.jar -lib:xsl/common/libentry2.xsl -lib:xsl/common/libapp2.xsl -lib:xsl/html/libapp2.xsl -lib:... -xsl:... -s:...
+```
+
+
+### Oxygen
+
+This whole project ist distributed as plugin which can be installed from the following URL:
 
 ```
 https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/descriptor.xml
 ```
 
-##### Per scenario configuration
+There are no transformation scenarios in the distribution, because we
+do not want to transformations with project-specific parameters, but
+only reusable resources. However, the XSLT resources can be used to
+declare scenarios based on it. We suggest to define such scenarios
+either project-wide in the xpr-file or in a framework.
 
-The Saxon config file can be declared on the basis of an XSLT
+#### Per scenario configuration
+
+The Saxon config file can be declared on the basis of an XSL
 Transformation scenario. See [Oxygen
 docs](https://www.oxygenxml.com/doc/versions/21.1/ug-editor/topics/advanced-saxon-xslt-options-x-publishing2.html).
 
-What to enter into the URL field? If you want to use the packages via
-the internet from a release of this project, enter `PAGES-CONFIG-URL`,
-see below. If you want to use the packages from the plugin use
-`PLUGIN-CONFIG-URL`, see below. While the latter enables you to run
-your transformations even when your offline, the former requires you
-to access the internet for each transformation based on the packages.
-
-
-`PLUGIN-CONFIG-URL` is
+What to enter into the URL field?
 
 ```
 ${pluginDirURL(de.wwu.scdh.tei.seed-transformations)}/saxon.xml
 ```
 
-`PAGES-CONFIG-URL` is
-
-```
-https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/saxon.xml
-```
-
-
-
-##### Project-wide configuration
+#### Project-wide configuration
 
 A project-wide config is very helpful for developing XSL
 transformations based on the packages. But please note, that it is not
@@ -78,89 +112,45 @@ needed for defining, distributing and using scenarios.
   `saxon.latest.config.file` and `saxon.latest.use.config.file` do the
   thing.
 
-#### Commandline
 
-```{shell}
-java -jar saxon.jar -config:PATH/TO/saxon.xml ...
-```
-
-You can also tell Saxon about every single package with the `-lib` option.
-
-#### XSpec
+### XSpec
 
 For testing a stylesheet that uses a package, put a configuration into
 the XSpec file, see [XSpec issue
-762](https://github.com/xspec/xspec/issues/762).
+762](https://github.com/xspec/xspec/issues/762). See any of the XSpec
+files in this repository.
 
 
-### Package names
 
-A package's name must be a URI. The name of each package in this
-repository is its relative name in this repository prefixed with the
-base URL
-`https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/`.
+## SEED XML Transformer
 
-For example the name of the package in
-[xsl/libi18n.xsl](xsl/html/libi18n.xsl) is
-`https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl`.
+Running `./mvnw clean package` makes a distribution that can be
+deployed as transformation resources on a *SEED XML Transformer*
+RESTful web service.  The bundled resources are in
+`target/seed-tei-transformations-VERSION-seed-resources.tar.zip` which
+can be passed into the Kybernetes deployment as a
+[configMap](https://kubernetes.io/docs/concepts/configuration/configmap/).
+
+The tar ball contains a yaml file that defines all resources available
+in the REST service. It is also in `target/seed-config.yaml` after
+running Maven. Its content is determined by the `transformationSet`
+using the `${seed-config-xsl.url}` as `stylesheet` in
+[`pom.xml`](pom.xml).
+
 
 
 ## Conventions
 
-### Debugging
+There are many rules followed in this projects.
 
-For performance reasons, debugging messages should be turned on or off
-at compile time, not by a stylesheet parameter. We are using the
-following compile time switch throughout the packages and stylesheets:
-
-```
-xsl:use-when="system-property('debug') eq 'true'"
-```
-
-To turn on debugging messages add `-Ddebug=true` when running the
-program. E.g. for Saxon write:
-
-```{shell}
-java -Ddebug=true -jar saxon.jar ...
-```
-The same command line switch can be used for Oxygen.
+For details see the [contributing notes](CONTRIBUTING.md).
 
 
-### Qualified names and namespaces
+## Contributing
 
-**Every component** from package, that is accessible from the outside,
-**must** have a *qualified* name! The same holds true for
-parameters. This avoids name conflicts.
-
-| scdh | |
-| i18n | http://scdh.wwu.de/transform/i18n# |
-
-To set a parameter value, use `{NAMESPACE}LNAME=...` to specify its
-qualified name.
+See [contributing notes](CONTRIBUTING.md)!
 
 
+## License
 
-## Convenience
-
-### `jar` files in `target/lib`
-
-If you once ran `mvn package`, then `jar` files are present on `target/lib`.
-
-```{shell}
-java -cp target/lib/Saxon-HE-11.4.jar:target/lib/xmlresolver-4.5.1.jar net.sf.saxon.Transform ...
-```
-
-### Wrapper scripts
-
-If you once ran `mvn package`, then the following wrapper scripts are
-present in the project directory:
-
-- `test.sh` is a wrapper around ant to run all the tests.
-
-- `xslt.sh` is a wrapper around Saxon to run a transformation.
-
-Example: run ALEA preview:
-
-```{shell}
-./xslt.sh -s:test/samples/BAlam53.tei.xml -xsl:xsl/projects/alea/preview.xsl -lib:xsl/html/libapp2.xsl:xsl/html/libi18n.xsl:xsl/common/libbetween.xsl:xsl/common/libcommon.xsl:xsl/html/libcouplet.xsl:xsl/html/librend.xsl:xsl/projects/alea/libmeta.xsl:xsl/html/libwit.xsl:xsl/common/libwit.xsl
-```
+MIT
