@@ -114,6 +114,29 @@ not a node set!
 XSLT 1.0 was an untyped language. We do not use it in this
 project. Use XSLT 2.0 or later.
 
+### Let the processor descend
+
+XSLT is such an extraordinary language because we do not have to tell
+the processor how to descend the XML tree as we have to in other
+languages like XQuery with its [`typeswitch`
+idiom](https://en.wikibooks.org/wiki/XQuery/Typeswitch_Transformations)
+idiom. Let the processor do his job by telling him
+`<xsl:apply-templates mode="#current"/>` even if you are quite sure
+that there will only a terminal text node you could easily catch with
+a select. Just provide the processor some templates with match
+conditions.  Also consider substituting branching with `<xsl:choose>`
+by writing templates with match conditions.
+
+These rules of thumb are the key to writing transformations that are
+*generic*, *reusable* and in particular: *extensible*. Extensible in a
+way, no `typeswitch` construction can ever be (unless you replace it
+with a higher order construct).
+
+### Avoid `normalize-space()`
+
+Avoid normalizing space. It makes the transformation result
+intransparent to its XML source when it comes to annotations. Do not
+try to heal spacing errors done by the editors.
 
 ### xsl:evaluate
 
