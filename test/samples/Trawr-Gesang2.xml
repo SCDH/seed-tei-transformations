@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+  <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Trawr-Gesang von der noth Christi am Oelberg in dem Garten</title>
+            <author>Friedrich Spee</author>
+         </titleStmt>
+         <publicationStmt>
+            <p>1649</p>
+         </publicationStmt>
+         <sourceDesc>
+            <listWit><witness xml:id="W"/></listWit>
+         </sourceDesc>
+      </fileDesc>
+  </teiHeader>
+  <text>
+      <body>
+            <lg>
+               <head>Trawr-Gesang von der noth Christi am Oelberg in dem Garten</head>
+               <lg>
+                  <l xml:id="v1">Bey stiller nacht <caesura/> zur ersten wacht</l>
+                  <l xml:id="v2"><app><lem>Ein stimm <gap reason="illegible" quantity="0" unit="word"/></lem><rdg wit="#W">Eine Stimme</rdg></app> sich gund zu klagen.</l>
+               </lg>
+               <lg>
+                  <l xml:id="v3"><unclear>Jch</unclear> nam in acht <caesura/> waß die doch sagt;</l>
+                  <l xml:id="v4">That hin mit <choice><sic>augen</sic><corr>Augen</corr></choice> schlagen. </l>
+               </lg>
+            </lg>
+      </body>
+  </text>
+</TEI>

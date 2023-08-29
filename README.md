@@ -47,7 +47,13 @@ After a successful build there is:
 Using all the packages is now as simple as running
 
 ```{shell}
-target/bin/xslt.sh -config:saxon.he.xml -xsl:path-to-stylesheet.xsl -:s:path-to-source.xml
+target/bin/xslt.sh -config:saxon.he.xml -xsl:STYLESHEET -:s:SOURCE PARAMETER=VALUE
+```
+
+For example:
+
+```{shell}
+target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/prose.xsl -s:test/samples/Trawr-Gesang2.xml use-libhtml=true {http://scdh.wwu.de/transform/source#}mode=6
 ```
 
 The commandline parameters are just passed through to the Saxon
