@@ -27,6 +27,9 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
 
     <xsl:output method="json" encoding="UTF-8" indent="true"/>
 
+    <!-- a prefix for transformation IDs and a leading path segment in relative paths. This is useful for name disambiguition when merging with other projects. -->
+    <xsl:param name="id-prefix" as="xs:string" select="''" required="false"/>
+
     <!-- URI of the saxon configuration file. -->
     <xsl:param name="saxon-config-uri" as="xs:string" required="true"/>
 
@@ -99,8 +102,12 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
                     select="($stylesheet//comment() => string-join('&#xa;') => tokenize('&#xa;'))[normalize-space() ne ''][1] => normalize-space()"/>
                 <xsl:map-entry key="'class'" select="$class"/>
                 <xsl:choose>
-                    <xsl:when test="$relative-uris">
+                    <xsl:when test="$relative-uris and $id-prefix eq ''">
                         <xsl:map-entry key="'location'" select="$location"/>
+                    </xsl:when>
+                    <xsl:when test="$relative-uris and $id-prefix ne ''">
+                        <xsl:map-entry key="'location'" select="concat($id-prefix, '/', $location)"
+                        />
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:map-entry key="'location'" select="resolve-uri($location, $upload-uri)"
@@ -194,8 +201,12 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
         </xsl:message>
         <xsl:map>
             <xsl:choose>
-                <xsl:when test="$relative-uris">
+                <xsl:when test="$relative-uris and $id-prefix eq ''">
                     <xsl:map-entry key="'location'" select="string(@sourceLocation)"/>
+                </xsl:when>
+                <xsl:when test="$relative-uris and $id-prefix ne ''">
+                    <xsl:map-entry key="'location'"
+                        select="concat($id-prefix, '/', @sourceLocation)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:map-entry key="'location'"
@@ -305,7 +316,7 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
         <xsl:param name="stylesheet" as="document-node()"/>
         <xsl:variable name="segments"
             select="($transformation => tokenize('\.'))[1] => tokenize('/')"/>
-        <xsl:sequence select="string-join($segments, '-')"/>
+        <xsl:sequence select="concat($id-prefix, string-join($segments, '-'))"/>
     </xsl:function>
 
     <!-- you may want to override this, e.g., if output format is encoded in the path -->
