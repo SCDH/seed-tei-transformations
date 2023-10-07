@@ -223,8 +223,22 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
     </xsl:template>
 
     <xsl:template mode="stylesheet-params" match="package/param | stylesheet/param">
+        <xsl:variable name="fqn" as="xs:string">
+            <xsl:choose>
+                <xsl:when test="matches(@name, ':')">
+                    <xsl:variable name="ns" as="xs:anyURI"
+                        select="substring-before(@name, ':') => namespace-uri-for-prefix(@name/parent::*)"/>
+                    <xsl:variable name="local-name" as="xs:string"
+                        select="substring-after(@name, ':')"/>
+                    <xsl:sequence select="concat('{', $ns, '}', $local-name, '')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="xs:string(@name)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:map>
-            <xsl:map-entry key="xs:string(@name)">
+            <xsl:map-entry key="$fqn">
                 <xsl:map>
                     <xsl:map-entry key="'required'">
                         <xsl:choose>
