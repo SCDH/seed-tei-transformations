@@ -12,8 +12,8 @@
 
    <fileSets>
       <fileSet>
-	 <directory>xsl</directory>
-	 <outputDirectory>/xsl</outputDirectory>
+	 <directory>${project.basedir}</directory>
+	 <outputDirectory>/${id-prefix}</outputDirectory>
 	 <includes>
 	    <include>**/*.xsl</include>
 	    <include>**/*.json</include>
@@ -23,13 +23,20 @@
 	 </includes>
 	 <excludes>
 	    <exclude>**/xspec/**.xsl</exclude>
+	    <exclude>distribution/**</exclude>
+	    <exclude>doc/**</exclude>
+	    <exclude>test/**</exclude>
+	    <exclude>utils/**</exclude>
+	    <exclude>test/**</exclude>
+	    <exclude>target/**</exclude>
+	    <exclude>frameworks/**</exclude>
 	 </excludes>
       </fileSet>
       <fileSet>
 	 <directory>distribution/seed</directory>
 	 <outputDirectory>/</outputDirectory>
 	 <includes>
-	    <include>saxon*.xml</include>
+	    <include>saxon.xml</include>
 	 </includes>
       </fileSet>
       <fileSet>
