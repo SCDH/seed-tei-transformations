@@ -2,8 +2,13 @@
 
 ## 0.5.0
 
+- changed to Saxon Home Edition in default config file `saxon.xml`
+  - Users of the oXygen plugin should now use `saxon.ee.xml` in order
+    to get the features of the enterprise edition!
 - added `libsource.xsl` for including information, that makes an
   (HTML) projection transparent on the XML source.
+- fixes in `xsl/json/witnesses.xsl`
+- improved documentation
 
 ## 0.4.0
 
