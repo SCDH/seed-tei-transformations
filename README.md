@@ -98,8 +98,15 @@ docs](https://www.oxygenxml.com/doc/versions/21.1/ug-editor/topics/advanced-saxo
 What to enter into the URL field?
 
 ```
-${pluginDirURL(de.wwu.scdh.tei.seed-transformations)}/saxon.xml
+${pluginDirURL(de.wwu.scdh.tei.seed-transformations)}/saxon.ee.xml
 ```
+
+Please notice the `ee` in the file name: There are versions of the
+config file for all three editions of Saxon in the plugin
+package. `ee` is for the Enterprise Edition, which ships with
+oXygen. The default `saxon.xml` config file is also present, but it
+would restrict the transformation engine to the functions of the Home
+Edition.
 
 #### Project-wide configuration
 
