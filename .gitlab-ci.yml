@@ -8,36 +8,36 @@ image: harbor.uni-muenster.de/proxy-docker/library/eclipse-temurin:17-alpine
 
 cache:
   paths:
-    - .m2/repository
+    - ~/.m2/repository
+
+stages:
+  - test
+  - deploy
 
 before_script:
   - apk update
   - apk add apache-ant
   - apk add unzip
 
-# For merge requests do not `deploy` but only run `verify`.
-.verify: &verify
+# Verify merge requests
+test:
   stage: test
   tags:
     - privileged
   script:
-    - './mvnw verify -s ci_settings.xml'
+    - './mvnw verify'
     - 'target/bin/test.sh'
-  except:
-    - master
-
-# Verify merge requests
-verify:jdk11:
-  <<: *verify
 
 # deploy using ci_settings.xml as maven settings
 # see https://gitlab.com/help/user/packages/maven_repository/index.md#creating-maven-packages-with-gitlab-cicd-using-maven
-deploy:jdk11:
+push-packages:
+  stage: deploy
   tags:
     - privileged
   script:
-    - './mvnw verify -s ci_settings.xml'
+    - './mvnw verify'
     - 'target/bin/test.sh'
+    - './mvnw deploy -s ci_settings.xml'
   artifacts:
     paths:
       - target
@@ -55,6 +55,8 @@ pages:
     - cp -v target/descriptor.xml public/
     - cp -v target/*-oxygen-distribution.jar public/
     - cp -v target/*-seed-resources.tar.gz public/
+  needs:
+    - push-packages
   artifacts:
     paths:
       - public

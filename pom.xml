@@ -47,6 +47,8 @@
 	<seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
 	<upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
         <release.url/>
+	<!-- for the gitlab maven registry -->
+	<distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
     </properties>
 
     <dependencies>
@@ -62,6 +64,26 @@
             <version>${saxon.version}</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+	<repository>
+	    <id>gitlab-maven</id>
+	    <url>${distribution.url}</url>
+	</repository>
+    </repositories>
+
+    <!-- get the build artifacts into the gitlab maven package registry -->
+    <distributionManagement>
+	<repository>
+	    <id>gitlab-maven</id>
+	    <url>${distribution.url}</url>
+	</repository>
+	<snapshotRepository>
+	    <id>gitlab-maven</id>
+	    <url>${distribution.url}</url>
+	</snapshotRepository>
+    </distributionManagement>
+
 
     <build>
 
