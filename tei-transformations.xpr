@@ -11,7 +11,7 @@
                     </entry>
                     <entry>
                         <String>saxon.latest.config.file</String>
-                        <String>${pdu}/saxon.xml</String>
+                        <String>${pdu}/saxon.ee.xml</String>
                     </entry>
                     <entry>
                         <String>saxon.latest.use.config.file</String>
@@ -33,9 +33,6 @@
                                                     <Boolean>true</Boolean>
                                                 </field>
                                                 <field name="enableAssertions">
-                                                    <Boolean>false</Boolean>
-                                                </field>
-                                                <field name="allowSyntaxExtensions">
                                                     <Boolean>false</Boolean>
                                                 </field>
                                                 <field name="showVersionWarnings">
@@ -72,7 +69,7 @@
                                                     <Boolean>true</Boolean>
                                                 </field>
                                                 <field name="configSystemID">
-                                                    <String>${pdu}/saxon.xml</String>
+                                                    <String>${pdu}/saxon.ee.xml</String>
                                                 </field>
                                                 <field name="initializer">
                                                     <String></String>
@@ -106,7 +103,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/xsl/projects/alea/prose-page.xsl</String>
+                                    <String>${pdu}/xsl/projects/alea/html/prose-page.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
