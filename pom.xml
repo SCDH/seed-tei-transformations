@@ -47,6 +47,7 @@
 	<seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
 	<upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
         <release.url/>
+	<id-prefix>seed</id-prefix>
 	<!-- for the gitlab maven registry -->
 	<distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
     </properties>
@@ -288,6 +289,10 @@
 			      <parameter>
 				 <name>saxon-config-uri</name>
 				 <value>${project.basedir}/saxon.xml</value>
+			      </parameter>
+			      <parameter>
+				 <name>id-prefix</name>
+				 <value>${id-prefix}</value>
 			      </parameter>
 			   </parameters>
 			   <stylesheet>${seed-config-xsl.url}</stylesheet>
