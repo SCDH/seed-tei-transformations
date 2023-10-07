@@ -316,7 +316,15 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
         <xsl:param name="stylesheet" as="document-node()"/>
         <xsl:variable name="segments"
             select="($transformation => tokenize('\.'))[1] => tokenize('/')"/>
-        <xsl:sequence select="concat($id-prefix, string-join($segments, '-'))"/>
+
+        <xsl:choose>
+            <xsl:when test="$id-prefix eq ''">
+                <xsl:sequence select="string-join($segments, '-')"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="string-join(($id-prefix, $segments), '-')"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:function>
 
     <!-- you may want to override this, e.g., if output format is encoded in the path -->
