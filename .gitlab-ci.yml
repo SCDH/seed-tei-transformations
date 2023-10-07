@@ -42,8 +42,9 @@ push-packages:
     paths:
       - target
   only:
-    - master
-    - tags
+    # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/27818
+    variables:
+      - $CI_COMMIT_TAG =~ /^v\d+.\d+.\d+$/
 
 pages:
   stage: deploy
