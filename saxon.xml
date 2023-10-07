@@ -5,7 +5,7 @@ This is a Saxon configuration file.
 For documentation on the contents of a Saxon configuration file, see
 http://www.saxonica.com/documentation/index/configuration-file.html
 -->
-<configuration edition="EE" xmlns="http://saxon.sf.net/ns/configuration">
+<configuration edition="HE" xmlns="http://saxon.sf.net/ns/configuration">
 
      <xsltPackages>
           <!-- replace the .../common/librend.xsl package with your rendering package by providing an other sourceLocation -->
