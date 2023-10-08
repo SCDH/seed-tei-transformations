@@ -54,7 +54,7 @@ See i18next documentation for more info: https://www.i18next.com
     <xsl:param name="i18n:locales" as="xs:string*" select="('ar', 'de', 'en')"/>
 
     <!-- name of i18next JSON translations file in $locales-directory/LOCALE/ -->
-    <xsl:param name="i18n:default-namespace" select="'translation'"/>
+    <xsl:param name="i18n:default-namespace" as="xs:string" select="'translation'"/>
 
 
 
