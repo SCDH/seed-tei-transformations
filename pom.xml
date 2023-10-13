@@ -68,6 +68,8 @@
         </dependency>
     </dependencies>
 
+    <packaging>pom</packaging>
+
     <repositories>
 	<repository>
 	    <id>gitlab-maven</id>
