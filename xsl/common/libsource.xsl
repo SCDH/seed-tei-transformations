@@ -316,4 +316,110 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
     </xsl:choose>
   </xsl:function>
 
+
+
+  <!-- The source:reverse-map mode operates on HTML with data-source-* annotations
+    and generates a mapping from HTML to the XML source. -->
+
+  <xsl:mode name="source:reverse-map" on-no-match="shallow-skip" visibility="public"/>
+
+  <xsl:template mode="source:reverse-map" match="/">
+    <xsl:map>
+      <xsl:map-entry key="'html-base-uri'" select="base-uri() => string()"/>
+      <!-- TODO: add more meta data -->
+      <xsl:map-entry key="'html-src-mapping'">
+        <xsl:map>
+          <xsl:apply-templates mode="source:reverse-map" select="*"/>
+        </xsl:map>
+      </xsl:map-entry>
+    </xsl:map>
+  </xsl:template>
+
+  <xsl:template mode="source:reverse-map" match="*[@data-source-xpath]">
+    <xsl:message use-when="system-property('debug') eq 'true'">
+      <xsl:text>element node </xsl:text>
+      <xsl:value-of select="path(.)"/>
+    </xsl:message>
+    <xsl:map-entry key="path(.)">
+      <xsl:call-template name="source:element-src-map"/>
+    </xsl:map-entry>
+    <xsl:if test="ancestor-or-self::*/@id">
+      <xsl:map-entry
+        key="source:recurse-to-html-id(., '', $source:name-mode, $source:is-mode-to-text-node)">
+        <xsl:call-template name="source:element-src-map"/>
+      </xsl:map-entry>
+    </xsl:if>
+    <xsl:apply-templates mode="source:reverse-map" select="*"/>
+  </xsl:template>
+
+  <xsl:template name="source:element-src-map">
+    <xsl:context-item as="element()" use="required"/>
+    <xsl:map>
+      <xsl:map-entry key="'xpath'" select="@data-source-xpath => string()"/>
+      <xsl:if test="@data-source-offset">
+        <xsl:map-entry key="'offset'" select="@data-source-offset => string()"/>
+      </xsl:if>
+      <xsl:if test="@data-source-length">
+        <xsl:map-entry key="'length'" select="@data-source-length => string()"/>
+      </xsl:if>
+    </xsl:map>
+  </xsl:template>
+
+  <xsl:template mode="source:reverse-map" match="*[@data-source-xpath]/text()">
+    <xsl:message use-when="system-property('debug') eq 'true'">
+      <xsl:text>text node </xsl:text>
+      <xsl:value-of select="path(.)"/>
+    </xsl:message>
+    <xsl:map-entry key="path(.)">
+      <xsl:call-template name="source:text-node-src-map"/>
+    </xsl:map-entry>
+    <xsl:if test="ancestor::*/@id">
+      <xsl:map-entry
+        key="source:recurse-to-html-id(parent::*, source:text-node-path-element(., $source:is-mode-to-text-node), $source:name-mode, $source:is-mode-to-text-node)">
+        <xsl:call-template name="source:text-node-src-map"/>
+      </xsl:map-entry>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="source:text-node-src-map">
+    <xsl:context-item as="text()" use="required"/>
+    <xsl:map>
+      <xsl:map-entry key="'xpath'" select="parent::*/@data-source-xpath => string()"/>
+      <xsl:if test="parent::*/@data-source-offset">
+        <xsl:map-entry key="'offset'" select="parent::*/@data-source-offset => string()"/>
+      </xsl:if>
+      <xsl:if test="parent::*/@data-source-length">
+        <xsl:map-entry key="'length'" select="parent::*/@data-source-length => string()"/>
+      </xsl:if>
+    </xsl:map>
+  </xsl:template>
+
+  <xsl:function name="source:recurse-to-html-id" as="xs:string" visibility="final">
+    <xsl:param name="node" as="element()"/>
+    <xsl:param name="path" as="xs:string"/>
+    <xsl:param name="name-mode" as="xs:integer"/>
+    <xsl:param name="is-text-node-path-element" as="xs:boolean"/>
+    <xsl:choose>
+      <xsl:when test="$node/@id">
+        <!-- node with @xml:id reached -->
+        <xsl:value-of
+          select="concat('id(', codepoints-to-string(39), $node/@id, codepoints-to-string(39), ')', $path)"
+        />
+      </xsl:when>
+      <xsl:when test="$node/parent::element()">
+        <!-- recursion step to parent -->
+        <xsl:variable name="name" as="xs:QName" select="node-name($node)"/>
+        <xsl:variable name="nth" as="xs:integer"
+          select="count($node/preceding-sibling::*[node-name(.) eq $name])"/>
+        <xsl:value-of
+          select="source:recurse-to-html-id($node/parent::*, concat('/', source:name($node, $name-mode), '[', $nth + 1, ']', $path), $name-mode, $is-text-node-path-element)"
+        />
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- root node reached -->
+        <xsl:value-of select="concat('/', source:name($node, $name-mode), '[1]', $path)"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
 </xsl:package>
