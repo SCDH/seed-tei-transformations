@@ -46,7 +46,7 @@
         </TEI>
     </x:variable>
 
-    <x:scenario label="no source info oer default">
+    <x:scenario label="no source info per default">
         <x:context select="$tei-text//text()[. eq 'Bey stiller nacht ']"/>
         <x:call template="source:text-node"/>
         <x:expect label="result" test="/text() eq 'Bey stiller nacht '"/>
