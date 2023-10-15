@@ -71,6 +71,8 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
   <!-- the mode determines how source data is included in the projection -->
   <xsl:param name="source:mode" as="xs:integer" select="0" required="false"/>
 
+  <!-- tag name for text node wrappers -->
+  <xsl:param name="source:text-node-wrapper" as="xs:string" select="'span'"/>
 
   <xsl:variable name="source:name-mode" as="xs:integer"
     select="(($source:mode - 1) mod 6 - ($source:mode - 1) mod 2) idiv 2" visibility="final"/>
@@ -186,12 +188,68 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="source:text-node-2" visibility="public">
+    <xsl:context-item as="text()" use="required"/>
+    <span>
+      <xsl:call-template name="source:source-annotation"/>
+      <xsl:value-of select="."/>
+    </span>
+  </xsl:template>
+
+  <xsl:template name="source:source-annotation" visibility="public">
+    <xsl:context-item as="node()" use="required"/>
+    <xsl:choose>
+      <!-- take care! order may matter since test predicates are not disjunctive for performance reasons-->
+      <xsl:when test="$source:mode eq 0">
+        <!-- no source information -->
+      </xsl:when>
+      <!-- the further order should depend on probablity of the value of $source:mode -->
+      <xsl:when test="$source:is-mode-from-id">
+        <xsl:attribute name="data-source-xpath"
+          select="source:xpath-from-id(., $source:name-mode, $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-offset"
+          select="source:offset(., $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-length" select="string-length(.)"/>
+      </xsl:when>
+      <xsl:when test="$source:is-mode-from-root-qname">
+        <xsl:attribute name="data-source-xpath"
+          select="source:xpath(., $source:name-mode, $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-offset"
+          select="source:offset(., $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-length" select="string-length(.)"/>
+      </xsl:when>
+      <xsl:when test="$source:is-mode-from-root-clarkname">
+        <xsl:attribute name="data-source-xpath" select="path(./parent::*)"/>
+        <xsl:attribute name="data-source-offset"
+          select="source:offset(., $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-length" select="string-length(.)"/>
+      </xsl:when>
+      <xsl:when test="$source:is-mode-from-root-to-text-node-clarkname">
+        <xsl:attribute name="data-source-xpath" select="path(.)"/>
+        <xsl:attribute name="data-source-offset"
+          select="source:offset(., $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-length" select="string-length(.)"/>
+      </xsl:when>
+      <xsl:when test="$source:is-mode-from-root-lname">
+        <xsl:attribute name="data-source-xpath"
+          select="source:xpath-nons(., $source:name-mode, $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-offset"
+          select="source:offset(., $source:is-mode-to-text-node)"/>
+        <xsl:attribute name="data-source-length" select="string-length(.)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- no source information -->
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:function name="source:xpath-nons" as="xs:string" visibility="final" new-each-time="no">
-    <xsl:param name="node" as="text()"/>
+    <xsl:param name="node" as="node()"/>
     <xsl:param name="name-mode" as="xs:integer"/>
     <xsl:param name="is-text-node-path-element" as="xs:boolean"/>
     <xsl:variable name="path-elements" as="xs:string*">
-      <xsl:for-each select="$node/ancestor::*">
+      <xsl:for-each
+        select="if ($node[text()]) then $node/ancestor::* else $node/ancestor-or-self::*">
         <xsl:variable name="name" as="xs:string" select="local-name(.)"/>
         <xsl:variable name="nth" as="xs:integer"
           select="count(preceding-sibling::*[local-name(.) eq $name])"/>
@@ -204,11 +262,12 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
   </xsl:function>
 
   <xsl:function name="source:xpath" as="xs:string" visibility="final" new-each-time="no">
-    <xsl:param name="node" as="text()"/>
+    <xsl:param name="node" as="node()"/>
     <xsl:param name="name-mode" as="xs:integer"/>
     <xsl:param name="is-text-node-path-element" as="xs:boolean"/>
     <xsl:variable name="path-elements" as="xs:string*">
-      <xsl:for-each select="$node/ancestor::*">
+      <xsl:for-each
+        select="if ($node[text()]) then $node/ancestor::* else $node/ancestor-or-self::*">
         <xsl:variable name="name" as="xs:QName" select="node-name(.)"/>
         <xsl:variable name="nth" as="xs:integer"
           select="count(preceding-sibling::*[node-name(.) eq $name])"/>
@@ -284,12 +343,12 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
     </xsl:choose>
   </xsl:function>
 
-  <xsl:function name="source:text-node-path-element" as="xs:string" visibility="private"
+  <xsl:function name="source:text-node-path-element" as="xs:string" visibility="final"
     new-each-time="no">
-    <xsl:param name="node" as="text()"/>
+    <xsl:param name="node" as="node()"/>
     <xsl:param name="present" as="xs:boolean"/>
     <xsl:choose>
-      <xsl:when test="$present">
+      <xsl:when test="$present and exists($node[text()])">
         <xsl:value-of
           select="concat('/text()[', $node/preceding-sibling::text() => count() + 1, ']')"/>
       </xsl:when>
