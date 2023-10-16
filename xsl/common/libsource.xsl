@@ -348,7 +348,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
     <xsl:param name="node" as="node()"/>
     <xsl:param name="present" as="xs:boolean"/>
     <xsl:choose>
-      <xsl:when test="$present and exists($node[text()])">
+      <xsl:when test="$present and $node[self::text()]">
         <xsl:value-of
           select="concat('/text()[', $node/preceding-sibling::text() => count() + 1, ']')"/>
       </xsl:when>
