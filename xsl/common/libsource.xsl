@@ -249,7 +249,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
     <xsl:param name="is-text-node-path-element" as="xs:boolean"/>
     <xsl:variable name="path-elements" as="xs:string*">
       <xsl:for-each
-        select="if ($node[text()]) then $node/ancestor::* else $node/ancestor-or-self::*">
+        select="if ($node[self::text()]) then $node/ancestor::* else $node/ancestor-or-self::*">
         <xsl:variable name="name" as="xs:string" select="local-name(.)"/>
         <xsl:variable name="nth" as="xs:integer"
           select="count(preceding-sibling::*[local-name(.) eq $name])"/>
@@ -267,7 +267,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
     <xsl:param name="is-text-node-path-element" as="xs:boolean"/>
     <xsl:variable name="path-elements" as="xs:string*">
       <xsl:for-each
-        select="if ($node[text()]) then $node/ancestor::* else $node/ancestor-or-self::*">
+        select="if ($node[self::text()]) then $node/ancestor::* else $node/ancestor-or-self::*">
         <xsl:variable name="name" as="xs:QName" select="node-name(.)"/>
         <xsl:variable name="nth" as="xs:integer"
           select="count(preceding-sibling::*[node-name(.) eq $name])"/>
@@ -281,12 +281,13 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
 
 
   <xsl:function name="source:xpath-from-id" as="xs:string" visibility="final" new-each-time="no">
-    <xsl:param name="node" as="text()"/>
+    <xsl:param name="node" as="node()"/>
     <xsl:param name="name-mode" as="xs:integer"/>
     <xsl:param name="is-text-node-path-element" as="xs:boolean"/>
     <xsl:value-of
-      select="source:recurse-to-id($node/parent::*, source:text-node-path-element($node, $is-text-node-path-element), $name-mode, $is-text-node-path-element)"
-    />
+      select="source:recurse-to-id(if ($node[self::text()]) then $node/parent::* else $node,
+                                   source:text-node-path-element($node, $is-text-node-path-element),
+                                   $name-mode, $is-text-node-path-element)"/>
   </xsl:function>
 
   <xsl:function name="source:recurse-to-id" as="xs:string" visibility="private">
@@ -359,18 +360,22 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
   </xsl:function>
 
   <xsl:function name="source:offset" as="xs:integer" visibility="final" new-each-time="no">
-    <xsl:param name="node" as="text()"/>
+    <xsl:param name="node" as="node()"/>
     <xsl:param name="zero" as="xs:boolean"/>
     <xsl:choose>
       <xsl:when test="$zero">
         <xsl:sequence select="0"/>
       </xsl:when>
-      <xsl:otherwise>
+      <xsl:when test="$node[self::text()]">
         <xsl:variable name="parent" as="element()" select="$node/parent::*"/>
         <!-- expensive! -->
         <xsl:variable name="preceding-text" as="text()*"
           select="$node/preceding::text() intersect $parent/descendant::text()"/>
         <xsl:sequence select="sum($preceding-text ! string-length())"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- element nodes -->
+        <xsl:sequence select="0"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
