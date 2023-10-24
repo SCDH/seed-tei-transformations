@@ -5,6 +5,9 @@ auto
 /frameworks
 /test/alea
 /test/edition-ibu-nubatah
+/seed-config.yaml
+/log.txt
+/test.*
 
 *.zip
 
