@@ -31,13 +31,24 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/scdh/tei-transformations.git</connection>
-        <developerConnection>scm:git:https://github.com/scdh/tei-transformations.git</developerConnection>
-        <url>scm:git:https://github.com/scdh/tei-transformations.git</url>
+        <connection>scm:git:${project.url}.git</connection>
+        <developerConnection>scm:git:${project.url}.git</developerConnection>
+        <url>scm:git:${project.url}.git</url>
         <tag>HEAD</tag>
     </scm>
 
     <properties>
+	<!-- prefix used in the transformation ID in the package for the SEED XML Transformer -->
+	<id-prefix>seed</id-prefix>
+
+	<!-- prefix used for the npm package with transformations compiled to the SEF format for Saxon-JS -->
+	<sef-package.prefix>@${id-prefix}/</sef-package.prefix>
+
+	<upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
+        <release.url/>
+	<!-- the gitlab package registry -->
+	<distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <saxon.version>11.5</saxon.version>
         <xmlresolver.version>4.5.1</xmlresolver.version>
@@ -45,11 +56,8 @@
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
 	<seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
-	<upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
-        <release.url/>
-	<id-prefix>seed</id-prefix>
-	<!-- for the gitlab maven registry -->
-	<distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
+	<sef-config-xsl.url>${project.basedir}/distribution/seed/sef-config.xsl</sef-config-xsl.url>
+	<sef-package.dir>${project.build.directory}/sef</sef-package.dir>
     </properties>
 
     <dependencies>
@@ -298,6 +306,15 @@
 				 <name>id-prefix</name>
 				 <value>${id-prefix}</value>
 			      </parameter>
+			      <parameter>
+				  <name>mk-sef</name>
+				  <value>true</value>
+			      </parameter>
+			      <parameter>
+				  <name>sef-output-base</name>
+				  <!-- Note the trailing slash! It's required for resolve-uri() -->
+				  <value>file://${sef-package.dir}/transformation-api/</value>
+			      </parameter>
 			   </parameters>
 			   <stylesheet>${seed-config-xsl.url}</stylesheet>
 			   <fileMappers>
@@ -306,6 +323,21 @@
 				 <targetExtension>.json</targetExtension>
 			      </fileMapper>
 			   </fileMappers>
+			</transformationSet>
+			<transformationSet>
+			    <!-- generate /transformations resource for the SEF package -->
+			    <dir>${project.basedir}</dir>
+			    <includes>
+				<include>pom.xml</include>
+			    </includes>
+			    <parameters>
+				<parameter>
+				    <name>sef-output-base</name>
+				    <!-- Note the trailing slash! It's required for resolve-uri() -->
+				    <value>file://${sef-package.dir}/transformation-api/</value>
+				</parameter>
+			    </parameters>
+			    <stylesheet>${sef-config-xsl.url}</stylesheet>
 			</transformationSet>
                     </transformationSets>
                 </configuration>
@@ -326,6 +358,26 @@
 	       <executions>
 		  <execution>
 		     <id>json-2-yaml</id>
+		     <phase>generate-resources</phase>
+		     <goals>
+			<goal>json-2-yaml</goal>
+		     </goals>
+		     <configuration>
+			<resources>
+			   <resource>
+                              <directory>${project.build.directory}/generated-resources/xml/xslt/xsl</directory>
+                              <filtering>false</filtering>
+                              <includes>
+				 <include>**/*.json</include>
+                              </includes>
+			   </resource>
+			</resources>
+			<outputExtension>yml</outputExtension>
+			<outputDirectory>${project.build.directory}/generated-resources/yml/xsl</outputDirectory>
+		     </configuration>
+		  </execution>
+		  <execution>
+		     <id>yaml-2-yaml</id>
 		     <phase>generate-resources</phase>
 		     <goals>
 			<goal>json-2-yaml</goal>
@@ -386,6 +438,31 @@
                                         <include>descriptor.xml</include>
                                     </includes>
                                     <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sef-package-transformations-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${sef-package.dir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/distribution/seed</directory>
+                                    <includes>
+                                        <include>package.json</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>LICENSE</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
