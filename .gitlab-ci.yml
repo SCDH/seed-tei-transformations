@@ -56,6 +56,7 @@ pages:
     - cp -v target/descriptor.xml public/
     - cp -v target/*-oxygen-distribution.jar public/
     - cp -v target/*-seed-resources.tar.gz public/
+    - cp -vr target/sef/transformation-api public/
   needs:
     - push-packages
   artifacts:
