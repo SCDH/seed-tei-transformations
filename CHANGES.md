@@ -8,7 +8,13 @@
 - added `libsource.xsl` for including information, that makes an
   (HTML) projection transparent on the XML source.
 - fixes in `xsl/json/witnesses.xsl`
+- fixed missing type information for `i18n:default-namespace`
+  parameter in `common/libi18n.xsl` and downstream packages
 - improved documentation
+- The CI/CD pipeline is the single source of truth for version
+  numbers, now.
+- workflow for packetizing transformations compiled for Saxon-JS, see
+  `target/sef`
 
 ## 0.4.0
 
