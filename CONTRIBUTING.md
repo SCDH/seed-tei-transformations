@@ -173,7 +173,7 @@ target/bin/test.sh TARGET-NAME # single test
 ```
 
 **Every transformation distributed for the SEED XML Transformer must
-be tested.** At least is must compile. Otherwise, the REST service
+be tested.** At least it must compile. Otherwise, the REST service
 will not pass its health test.
 
 
@@ -195,8 +195,22 @@ Report changes in [`changes.md`](changes.md).
 ## Maven
 
 The [Maven pom file](pom.xml) is the single point of truth in this
-project. It keeps the magic version number.
+project, except for version numbers which come from a git release tag.
 
-It can install everything required for this project.
+The pom file can install everything required for this project.
 
 It knows how to build the various distributions of this project.
+
+## Making Releases
+
+The gitlab CI/CD pipeline will deploy release packages to the [package
+registry](/SCDH/tei-processing/seed-tei-transformations/-/packages) on
+*release tags*. Release tags have the following pattern:
+
+`MAJOR.MINOR.BUGFIX`
+
+The CI/CD pipeline will take the release tag as version and overwrite
+the default version in `.mvn/maven.config`. So, release tags are the
+single source of truth for release versions.
+
+Changes should be documented in `CHANGES.md`.
