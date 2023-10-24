@@ -35,9 +35,9 @@ push-packages:
   tags:
     - privileged
   script:
-    - './mvnw verify'
+    - './mvnw -Drevision=$CI_COMMIT_TAG -Dchangelist="" verify'
     - 'target/bin/test.sh'
-    - './mvnw deploy -s ci_settings.xml'
+    - './mvnw -Drevision=$CI_COMMIT_TAG -Dchangelist="" deploy -s ci_settings.xml'
   artifacts:
     paths:
       - target
