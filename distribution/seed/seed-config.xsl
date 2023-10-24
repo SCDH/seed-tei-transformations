@@ -60,6 +60,13 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
                 }
             }"/>
 
+    <!-- whether or not to produce components for a distribution of SEF files -->
+    <xsl:param name="mk-sef" as="xs:boolean" select="false()"/>
+
+    <!-- output of components for the SEF package -->
+    <xsl:param name="sef-output-base" as="xs:anyURI" select="base-uri()"/>
+
+
     <xsl:variable name="saxon-config" select="doc($saxon-config-uri)"/>
 
 
@@ -96,7 +103,7 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
         <xsl:param name="transformation-id" as="xs:string" tunnel="true"/>
         <xsl:param name="location" as="xs:string" tunnel="true"/>
         <xsl:variable name="stylesheet" as="document-node()" select="."/>
-        <xsl:map-entry key="$transformation-id">
+        <xsl:variable name="info" as="map(*)">
             <xsl:map>
                 <xsl:map-entry key="'description'"
                     select="($stylesheet//comment() => string-join('&#xa;') => tokenize('&#xa;'))[normalize-space() ne ''][1] => normalize-space()"/>
@@ -136,18 +143,55 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
                 </xsl:map-entry>
 
             </xsl:map>
-        </xsl:map-entry>
+        </xsl:variable>
+
+        <!-- write the transformation info object to the output -->
+        <xsl:map-entry key="$transformation-id" select="$info"/>
+
+        <!-- generate output for the SEF package -->
+        <xsl:if test="$mk-sef">
+            <xsl:variable name="sef-location" as="xs:string"
+                select="replace(base-uri(.), '\.xsl$', '.sef')"/>
+            <!-- only produce something if there is a SEF file -->
+            <xsl:if test="unparsed-text-available($sef-location)">
+                <xsl:message>
+                    <xsl:text>Making SEF package components: </xsl:text>
+                    <xsl:value-of select="$transformation-id"/>
+                </xsl:message>
+                <xsl:result-document
+                    href="{resolve-uri(concat($transformation-id, '/transformation.sef'), $sef-output-base)}"
+                    method="text">
+                    <xsl:value-of select="unparsed-text($sef-location)"/>
+                </xsl:result-document>
+                <xsl:result-document
+                    href="{resolve-uri(concat($transformation-id, '/info'), $sef-output-base)}"
+                    method="json" encoding="UTF-8">
+                    <xsl:sequence select="$info"/>
+                </xsl:result-document>
+                <xsl:result-document
+                    href="{resolve-uri(concat($transformation-id, '/parameters'), $sef-output-base)}"
+                    method="json" encoding="UTF-8">
+                    <xsl:variable name="params" as="map(*)*">
+                        <xsl:apply-templates mode="compiler-generated-params" select="$stylesheet"/>
+                    </xsl:variable>
+                    <xsl:sequence select="map:merge($params, $merge-options)"/>
+                </xsl:result-document>
+            </xsl:if>
+        </xsl:if>
+
     </xsl:template>
 
     <xsl:mode name="libraries" on-no-match="shallow-skip"/>
     <xsl:mode name="stylesheet-params" on-no-match="shallow-skip"/>
+    <xsl:mode name="compiler-generated-params" on-no-match="shallow-skip"/>
 
     <!-- recurse into imported and included stylesheets -->
-    <xsl:template mode="libraries stylesheet-params" match="import | include">
+    <xsl:template mode="libraries stylesheet-params compiler-generated-params"
+        match="import | include">
         <xsl:apply-templates mode="#current" select="doc(resolve-uri(@href, base-uri(.)))"/>
     </xsl:template>
 
-    <xsl:template mode="libraries stylesheet-params" match="use-package">
+    <xsl:template mode="libraries stylesheet-params compiler-generated-params" match="use-package">
         <xsl:variable name="name" select="@name"/>
         <xsl:variable name="version" select="@package-version"/>
         <!-- There may be several packages configured for the same @name and @version.
@@ -230,7 +274,8 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
                         select="substring-before(@name, ':') => namespace-uri-for-prefix(@name/parent::*)"/>
                     <xsl:variable name="local-name" as="xs:string"
                         select="substring-after(@name, ':')"/>
-                    <xsl:sequence select="concat('{', $ns, '}', $local-name, '')"/>
+                    <!--xsl:sequence select="concat('{', $ns, '}', $local-name, '')"/-->
+                    <xsl:sequence select="xs:string(@name)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:sequence select="xs:string(@name)"/>
@@ -259,6 +304,41 @@ target/bin/xslt.sh -xsl:distribution/seed/seed-config.xsl saxon-config-uri=https
                             <xsl:value-of select="@select"/>
                         </xsl:map-entry>
                     </xsl:if>
+                </xsl:map>
+            </xsl:map-entry>
+        </xsl:map>
+    </xsl:template>
+
+    <xsl:template mode="compiler-generated-params" match="package/param | stylesheet/param">
+        <xsl:variable name="fqn" as="xs:string">
+            <xsl:choose>
+                <xsl:when test="matches(@name, ':')">
+                    <xsl:variable name="ns" as="xs:anyURI"
+                        select="substring-before(@name, ':') => namespace-uri-for-prefix(@name/parent::*)"/>
+                    <xsl:variable name="local-name" as="xs:string"
+                        select="substring-after(@name, ':')"/>
+                    <!--xsl:sequence select="concat('{', $ns, '}', $local-name, '')"/-->
+                    <xsl:sequence select="xs:string(@name)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="xs:string(@name)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:map>
+            <xsl:map-entry key="$fqn">
+                <xsl:map>
+                    <xsl:map-entry key="'occurrenceIndicator'">
+                        <xsl:value-of select="replace(@as, '([^*?+]+)([?+*]?)', '$2')"/>
+                    </xsl:map-entry>
+                    <xsl:map-entry key="'itemType'">
+                        <xsl:value-of select="replace(@as, '([^*?+]+)([?+*]?)', '$1')"/>
+                    </xsl:map-entry>
+                    <xsl:map-entry key="'underlyingDeclaredType'">
+                        <xsl:value-of select="string(@as)"/>
+                    </xsl:map-entry>
+                    <xsl:map-entry key="'isRequired'"
+                        select="@required eq 'true' or @required eq 'yes' or @required eq '1'"/>
                 </xsl:map>
             </xsl:map-entry>
         </xsl:map>
