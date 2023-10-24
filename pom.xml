@@ -9,6 +9,7 @@
     <version>${revision}${changelist}</version>
 
     <name>SEED TEI Transformations</name>
+    <description>XSLT Package library for transforming TEI</description>
     <url>https://github.com/scdh/tei-transformations</url>
 
     <developers>
