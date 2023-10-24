@@ -11,10 +11,18 @@
 
     <!-- the intial template generates the /transformation resource -->
     <xsl:template name="xsl:initial-template">
+        <!-- writing the file api.json
+            This asserts that we $sef-output-base exists.
+        -->
+        <xsl:result-document href="{resolve-uri('api.json', $sef-output-base)}" indent="true"
+            encoding="UTF-8" method="json">
+            <xsl:sequence select="map {}"/>
+        </xsl:result-document>
+        <!-- make an array of all the IDs of the compiled transformations that exist in the package. -->
         <xsl:variable name="directories"
             select="for $path in uri-collection(concat($sef-output-base, '?select=info&amp;recurse=yes')) return tokenize($path, '/')[last() - 1]"/>
         <xsl:message>
-            <xsl:text>SEF directories</xsl:text>
+            <xsl:text>SEF directories: </xsl:text>
             <xsl:value-of select="$directories"/>
         </xsl:message>
         <xsl:result-document href="{resolve-uri('transformations', $sef-output-base)}"
