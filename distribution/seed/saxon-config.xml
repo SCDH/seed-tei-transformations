@@ -8,7 +8,6 @@
   <global
     allowedProtocols="http,https,ftp,ftps"
     allowExternalFunctions="true"
-    allowSyntaxExtensions="true"
     unparsedTextURIResolver="net.sf.saxon.lib.StandardUnparsedTextResolver"
     uriResolver="net.sf.saxon.lib.StandardURIResolver"
     xInclude="true"

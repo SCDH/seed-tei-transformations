@@ -36,7 +36,7 @@
 	 <directory>distribution/seed</directory>
 	 <outputDirectory>/</outputDirectory>
 	 <includes>
-	    <include>saxon.xml</include>
+	    <include>saxon-config.xml</include>
 	 </includes>
       </fileSet>
       <fileSet>
