@@ -44,12 +44,12 @@
         <xspec.version>2.2.4</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
-	<seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
-	<upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
+        <seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
+        <upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
         <release.url/>
-	<id-prefix>seed</id-prefix>
-	<!-- for the gitlab maven registry -->
-	<distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
+        <id-prefix>seed</id-prefix>
+        <!-- for the gitlab maven registry -->
+        <distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
     </properties>
 
     <dependencies>
@@ -58,35 +58,35 @@
             <groupId>org.xmlresolver</groupId>
             <artifactId>xmlresolver</artifactId>
             <version>${xmlresolver.version}</version>
-	    <scope>test</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
             <version>${saxon.version}</version>
-	    <scope>test</scope>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <packaging>pom</packaging>
 
     <repositories>
-	<repository>
-	    <id>gitlab-maven</id>
-	    <url>${distribution.url}</url>
-	</repository>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>${distribution.url}</url>
+        </repository>
     </repositories>
 
     <!-- get the build artifacts into the gitlab maven package registry -->
     <distributionManagement>
-	<repository>
-	    <id>gitlab-maven</id>
-	    <url>${distribution.url}</url>
-	</repository>
-	<snapshotRepository>
-	    <id>gitlab-maven</id>
-	    <url>${distribution.url}</url>
-	</snapshotRepository>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>${distribution.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>gitlab-maven</id>
+            <url>${distribution.url}</url>
+        </snapshotRepository>
     </distributionManagement>
 
 
@@ -277,36 +277,36 @@
                                 </fileMapper>
                             </fileMappers>
                         </transformationSet>
-			<transformationSet>
-			   <!-- generate configuration for SEED XML Transformer -->
-			   <dir>${project.basedir}</dir>
-			   <includes>
-			      <!-- include every transformation resource for the SEED XML Transformer -->
-			      <include>xsl/common/libsource.xsl</include>
-			      <include>xsl/json/witnesses.xsl</include>
-			      <include>xsl/html/prose.xsl</include>
-			      <include>xsl/projects/alea/html/diwan.xsl</include>
-			      <include>xsl/projects/alea/html/prose-page.xsl</include>
-			      <include>xsl/projects/alea/latex/prose.xsl</include>
-			   </includes>
-			   <parameters>
-			      <parameter>
-				 <name>saxon-config-uri</name>
-				 <value>${project.basedir}/saxon.xml</value>
-			      </parameter>
-			      <parameter>
-				 <name>id-prefix</name>
-				 <value>${id-prefix}</value>
-			      </parameter>
-			   </parameters>
-			   <stylesheet>${seed-config-xsl.url}</stylesheet>
-			   <fileMappers>
-			      <fileMapper
-				  implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-				 <targetExtension>.json</targetExtension>
-			      </fileMapper>
-			   </fileMappers>
-			</transformationSet>
+                        <transformationSet>
+                            <!-- generate configuration for SEED XML Transformer -->
+                            <dir>${project.basedir}</dir>
+                            <includes>
+                                <!-- include every transformation resource for the SEED XML Transformer -->
+                                <include>xsl/common/libsource.xsl</include>
+                                <include>xsl/json/witnesses.xsl</include>
+                                <include>xsl/html/prose.xsl</include>
+                                <include>xsl/projects/alea/html/diwan.xsl</include>
+                                <include>xsl/projects/alea/html/prose-page.xsl</include>
+                                <include>xsl/projects/alea/latex/prose.xsl</include>
+                            </includes>
+                            <parameters>
+                                <parameter>
+                                    <name>saxon-config-uri</name>
+                                    <value>${project.basedir}/saxon.xml</value>
+                                </parameter>
+                                <parameter>
+                                    <name>id-prefix</name>
+                                    <value>${id-prefix}</value>
+                                </parameter>
+                            </parameters>
+                            <stylesheet>${seed-config-xsl.url}</stylesheet>
+                            <fileMappers>
+                                <fileMapper
+                                    implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                    <targetExtension>.json</targetExtension>
+                                </fileMapper>
+                            </fileMappers>
+                        </transformationSet>
                     </transformationSets>
                 </configuration>
                 <dependencies>
@@ -318,34 +318,34 @@
                 </dependencies>
             </plugin>
 
-	    <plugin>
-	       <!-- convert configurations from JSON to YAML -->
-	       <groupId>com.github.iarellano</groupId>
-	       <artifactId>iad-j2y2j-converter-maven-plugin</artifactId>
-	       <version>1.0</version>
-	       <executions>
-		  <execution>
-		     <id>json-2-yaml</id>
-		     <phase>generate-resources</phase>
-		     <goals>
-			<goal>json-2-yaml</goal>
-		     </goals>
-		     <configuration>
-			<resources>
-			   <resource>
-                              <directory>${project.build.directory}/generated-resources/xml/xslt/xsl</directory>
-                              <filtering>false</filtering>
-                              <includes>
-				 <include>**/*.json</include>
-                              </includes>
-			   </resource>
-			</resources>
-			<outputExtension>yml</outputExtension>
-			<outputDirectory>${project.build.directory}/generated-resources/yml/xsl</outputDirectory>
-		     </configuration>
-		  </execution>
-	       </executions>
-	    </plugin>
+            <plugin>
+                <!-- convert configurations from JSON to YAML -->
+                <groupId>com.github.iarellano</groupId>
+                <artifactId>iad-j2y2j-converter-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>json-2-yaml</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>json-2-yaml</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/generated-resources/xml/xslt/xsl</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>**/*.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <outputExtension>yml</outputExtension>
+                            <outputDirectory>${project.build.directory}/generated-resources/yml/xsl</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -398,9 +398,9 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
-		   <!-- let's have a license property -->
-		   <execution>
-		        <id>read-license</id>
+                    <!-- let's have a license property -->
+                    <execution>
+                        <id>read-license</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>run</goal>
@@ -413,26 +413,28 @@
                         </configuration>
                     </execution>
 
-		    <!-- concat SEED XML Transformer configurations to seed-config.yaml -->
-		    <execution>
-		        <id>concat-seed-xml-transformer-configurations</id>
+                    <!-- concat SEED XML Transformer configurations to seed-config.yaml -->
+                    <execution>
+                        <id>concat-seed-xml-transformer-configurations</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                           <target>
-			      <concat destfile="${project.build.directory}/seed-config.yaml" force="yes">
-				 <fileset dir="${project.build.directory}/generated-resources/yml">
-				    <include name="**/*.yml"/>
-				 </fileset>
-				 <filterchain>
-				    <!-- remove structure from yaml files -->
-				    <linecontainsregexp negate="true">
-				       <regexp pattern="^---$"/>
-				    </linecontainsregexp>
-				 </filterchain>
-			      </concat>
+                            <target>
+                                <concat destfile="${project.build.directory}/seed-config.yaml"
+                                    force="yes">
+                                    <fileset
+                                        dir="${project.build.directory}/generated-resources/yml">
+                                        <include name="**/*.yml"/>
+                                    </fileset>
+                                    <filterchain>
+                                        <!-- remove structure from yaml files -->
+                                        <linecontainsregexp negate="true">
+                                            <regexp pattern="^---$"/>
+                                        </linecontainsregexp>
+                                    </filterchain>
+                                </concat>
                             </target>
                         </configuration>
                     </execution>
@@ -520,7 +522,7 @@
                         </configuration>
                     </execution>
                     <execution>
-		       <!-- make oxygen distribution -->
+                        <!-- make oxygen distribution -->
                         <id>oxygen-distribution</id>
                         <phase>package</phase>
                         <goals>
@@ -535,7 +537,7 @@
                         </configuration>
                     </execution>
                     <execution>
-		        <!-- paketize resources for the SEED XML transformer -->
+                        <!-- paketize resources for the SEED XML transformer -->
                         <id>seed-distribution</id>
                         <phase>package</phase>
                         <goals>
