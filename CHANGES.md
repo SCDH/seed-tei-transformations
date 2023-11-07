@@ -9,6 +9,8 @@
   (HTML) projection transparent on the XML source.
 - fixes in `xsl/json/witnesses.xsl`
 - improved documentation
+- made git commit tags the single source of truth for version numbers
+  of releases
 
 ## 0.4.0
 

@@ -195,8 +195,17 @@ Report changes in [`changes.md`](changes.md).
 ## Maven
 
 The [Maven pom file](pom.xml) is the single point of truth in this
-project. It keeps the magic version number.
+project.
 
 It can install everything required for this project.
 
 It knows how to build the various distributions of this project.
+
+### Version Numbers
+
+The single source of truth for version numbers of releases, however,
+are git commit tags. Each tag following the pattern
+`MAJOR.MINOR.BUGFIX[extra]` results in a release. The pom file gets
+the version number through the `${revision}${changelist}` [maven
+variables](https://maven.apache.org/maven-ci-friendly.html), which are
+set in pipeline jobs that are run on release tags.
