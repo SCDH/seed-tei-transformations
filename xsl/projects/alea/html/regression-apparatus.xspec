@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:test="http://scdh.wwu.de/transform/testapp#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="../../../html/test-libapp2c.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+
+    <x:variable name="doc">
+        <t:TEI>
+            <t:teiHeader>
+                <t:encodingDesc>
+                    <t:variantEncoding method="double-end-point" location="internal"/>
+                </t:encodingDesc>
+            </t:teiHeader>
+            <t:text>
+                <t:body>
+                    <t:lg>
+                        <t:l xml:id="i9.1">
+                            <t:anchor xml:id="i9.1.a"/>a <t:app from="#i9.1.a" xml:id="i9.1.app">
+                                <t:rdg wit="#w"><t:gap reason="illegible"/></t:rdg>
+                            </t:app> b</t:l>
+                        <t:l xml:id="i9.2">
+                            <t:anchor xml:id="i9.2.a"/>a <t:app from="#i9.2.a" xml:id="i9.2.app">
+                                <t:rdg wit="#w">c<t:gap reason="illegible"/></t:rdg>
+                            </t:app> b</t:l>
+                    </t:lg>
+                </t:body>
+            </t:text>
+        </t:TEI>
+    </x:variable>
+
+    <x:scenario label="#9: gap nested in rdg, without sibling text">
+        <x:context select="$doc//*[@xml:id eq 'i9.1']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
+            <span class="reading">
+                <span class="static-text" data-i18n-key="illegible">illegible</span>
+                <span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="#9: gap nested in rdg, with sibling text">
+        <x:context select="$doc//*[@xml:id eq 'i9.2']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
+            <span class="reading">c[...]<span class="apparatus-sep"
+                    data-i18n-key="rdg-annotation-sep">, </span>
+                <span class="static-text" data-i18n-key="illegible">illegible</span>
+                <span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+        </x:expect>
+    </x:scenario>
+
+
+</x:description>
