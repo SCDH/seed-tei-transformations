@@ -102,7 +102,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
-            <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
@@ -118,7 +118,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
-            <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
@@ -134,7 +134,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
-            <xsl:text>| descendant::gap</xsl:text>
+            <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
     </xsl:variable>
