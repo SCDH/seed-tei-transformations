@@ -331,6 +331,10 @@ see xsl/projects/alea/preview.xsl
                 <xsl:apply-templates mode="app:reading-text" select="corr"/>
             </xsl:template>
 
+            <xsl:template mode="app:reading-text" match="gap[parent::rdg]">
+                <xsl:text>[...]</xsl:text>
+            </xsl:template>
+
             <xsl:template mode="app:reading-text" match="caesura">
                 <xsl:text> || </xsl:text>
             </xsl:template>
