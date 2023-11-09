@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <meta>
-        <filters directoryPatterns="" filePatterns="\Qtei-transformations.xpr\E" positiveFilePatterns="" showHiddenFiles="false"/>
+        <filters directoryPatterns="" filePatterns="\QSEED TEI Transformations.xpr\E" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
             <serialized xml:space="preserve">
                 <serializableOrderedMap>
@@ -169,7 +169,7 @@
             </serialized>
         </options>
     </meta>
-    <projectTree name="tei-transformations.xpr">
+    <projectTree name="SEED%20TEI%20Transformations.xpr">
         <folder path="."/>
     </projectTree>
 </project>
