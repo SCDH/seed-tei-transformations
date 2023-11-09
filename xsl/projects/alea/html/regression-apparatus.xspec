@@ -36,6 +36,10 @@
         <x:context select="$doc//*[@xml:id eq 'i9.1']"/>
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="reason present in apparatus entry"
+            test="some $txt in //*[@data-i18n-key]/text() satisfies $txt eq $doc//*[@xml:id eq 'i9.1']//@reason"/>
+        <x:expect label="reason present in apparatus entry and it is translated"
+            test="some $att in //@data-i18n-key satisfies $att eq $doc//*[@xml:id eq 'i9.1']//@reason"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
             <span class="reading">
                 <span class="static-text" data-i18n-key="illegible">illegible</span>
@@ -47,6 +51,10 @@
         <x:context select="$doc//*[@xml:id eq 'i9.2']"/>
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="reason present in apparatus entry"
+            test="some $txt in //*[@data-i18n-key]/text() satisfies $txt eq $doc//*[@xml:id eq 'i9.2']//@reason"/>
+        <x:expect label="reason present in apparatus entry and it is translated"
+            test="some $att in //@data-i18n-key satisfies $att eq $doc//*[@xml:id eq 'i9.2']//@reason"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
             <span class="reading">c[...]<span class="apparatus-sep"
                     data-i18n-key="rdg-annotation-sep">, </span>
