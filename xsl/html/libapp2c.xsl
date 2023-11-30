@@ -196,12 +196,9 @@
                         <xsl:with-param name="reading" select="node()"/>
                     </xsl:call-template>
                     <!-- handle nested gap etc. -->
-                    <xsl:if test="*/@reason">
-                        <span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
-                        <span class="static-text" data-i18n-key="{(*/@reason)[1]}">
-                            <xsl:value-of select="(*/@reason)[1]"/>
-                        </span>
-                    </xsl:if>
+                    <xsl:call-template name="app:reading-annotation">
+                        <xsl:with-param name="separator" select="true()"/>
+                    </xsl:call-template>
                     <xsl:if test="@wit">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
@@ -216,8 +213,8 @@
                 </span>
             </xsl:template>
 
-
-            <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) eq '']">
+            <!-- empty <rdg> -->
+            <xsl:template mode="app:reading-dspt" match="rdg[not(node())]">
                 <span class="reading">
                     <span class="static-text" data-i18n-key="omisit">&lre;om.&pdf;</span>
                     <xsl:if test="@wit">
@@ -234,13 +231,11 @@
                 </span>
             </xsl:template>
 
-            <!-- e.g. <rdg><gap reason="illegible"/></rdg> -->
-            <xsl:template mode="app:reading-dspt"
-                match="rdg[*/@reason and normalize-space(.) eq '']" priority="5">
+            <!-- <rdg> without text nodes, but other nodes, e.g. <rdg><gap reason="illegible"/></rdg> -->
+            <xsl:template mode="app:reading-dspt" match="rdg[node() and normalize-space(.) eq '']"
+                priority="5">
                 <span class="reading">
-                    <span class="static-text" data-i18n-key="{(*/@reason)[1]}">
-                        <xsl:value-of select="(*/@reason)[1]"/>
-                    </span>
+                    <xsl:call-template name="app:reading-annotation"/>
                     <xsl:if test="@wit">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
@@ -416,7 +411,41 @@
                 </span>
             </xsl:template>
 
+
+
+
+            <xsl:template name="app:reading-annotation">
+                <xsl:context-item as="element()" use="required"/>
+                <xsl:param name="separator" as="xs:boolean" select="false()"/>
+                <xsl:variable name="annotations" as="element()*">
+                    <span class="reading-annotation">
+                        <xsl:apply-templates mode="app:reading-annotation"/>
+                    </span>
+                </xsl:variable>
+                <!-- we have to filter out the spans with no content -->
+                <xsl:for-each select="$annotations[node()]">
+                    <xsl:if test="position() gt 1 or $separator">
+                        <span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
+                    </xsl:if>
+                    <xsl:sequence select="."/>
+                </xsl:for-each>
+            </xsl:template>
+
+
+            <!-- make reading annotation from nested <unclear>, <gap> etc. -->
+            <xsl:template mode="app:reading-annotation" match="*[@reason]">
+                <span class="static-text" data-i18n-key="{string(@reason)}">
+                    <xsl:value-of select="@reason"/>
+                </span>
+            </xsl:template>
+
+            <!-- make reading annotation for a nested <space> -->
+            <xsl:template mode="app:reading-annotation" match="space">
+                <span class="apparatus-sep" data-i18n-key="space">&lre;space&pdf;</span>
+            </xsl:template>
+
         </xsl:override>
     </xsl:use-package>
+
 
 </xsl:package>
