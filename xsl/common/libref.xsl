@@ -41,7 +41,7 @@ Example usage:
 ref:references-from-attribute(@target)[1] => ref:dereference()
 -->
 <xsl:package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ref="http://scdh.wwu.de/transform/ref#"
     exclude-result-prefixes="xs ref" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
