@@ -58,20 +58,29 @@
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
     </xsl:use-package>
 
-    <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))"
-        select="app:apparatus-entries(root()) => seed:note-based-apparatus-nodes-map(true())"/>
-    <xsl:variable name="editorial-notes" as="map(xs:string, map(*))"
-        select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
-
+    <!-- apparatus criticus -->
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/app-crit.xsl"
         package-version="1.0.0"/>
 
+    <!--xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="*" names="*" visibility="hidden"/>
+        <xsl:accept component="template" names="app:note-based-apparatus" visibility="private"/>
+        <xsl:accept component="function" names="app:apparatus-entries#3" visibility="private"/>
+    </xsl:use-package-->
+
+    <!-- apparatus comment. -->
+    <!--
+    <xsl:variable name="editorial-notes" as="map(xs:string, map(*))"
+        select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
+    -->
 
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libcouplet.xsl"
-        package-version="1.0.0"> </xsl:use-package>
+        package-version="1.0.0"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/libmeta.xsl"
@@ -92,6 +101,8 @@
 
     <xsl:param name="font-css" as="xs:string" select="''"/>
     <xsl:param name="font-name" as="xs:string" select="'Arabic Typesetting'"/>
+
+    <xsl:mode name="preview" on-no-match="shallow-copy"/>
 
     <xsl:template match="/ | TEI">
         <xsl:for-each select="//xi:include">
@@ -200,6 +211,7 @@
                 <section class="content">
                     <xsl:apply-templates select="/TEI/text/body" mode="text:text"/>
                 </section>
+                <!--
                 <hr/>
                 <section class="variants">
                     <xsl:call-template name="app:note-based-apparatus">
@@ -213,6 +225,7 @@
                     </xsl:call-template>
                 </section>
                 <hr/>
+                -->
                 <!--
                 <section class="comments">
                     <xsl:call-template name="scdhx:editorial-notes">
