@@ -94,7 +94,6 @@
     <xsl:param name="font-name" as="xs:string" select="'Arabic Typesetting'"/>
 
     <xsl:template match="/ | TEI">
-        <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;&lb;</xsl:text>
         <xsl:for-each select="//xi:include">
             <xsl:message>
                 <xsl:text>WARNING: </xsl:text>
