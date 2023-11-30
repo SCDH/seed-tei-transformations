@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- apparatus criticus for ALEA projects -->
 <xsl:package
-  name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
+  name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/app-crit.xsl"
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:test="http://scdh.wwu.de/transform/test#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
-  xmlns:common="http://scdh.wwu.de/transform/common#"
+  xmlns:common="http://scdh.wwu.de/transform/common#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="3.1">
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
     package-version="1.0.0"/>
 
+  <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))" visibility="public"
+    select="app:apparatus-entries(root()) => seed:note-based-apparatus-nodes-map(true())"/>
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
     package-version="1.0.0">
+
+    <xsl:accept component="*" names="*" visibility="public"/>
+    <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
 
     <xsl:override>
 
@@ -100,8 +106,8 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libentry2.xsl"
     package-version="1.0.0">
     <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
-    <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
-      visibility="public"/>
+    <!--xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
+      visibility="public"/-->
   </xsl:use-package>
 
   <!-- a utility just for unit testing the apparatus -->
