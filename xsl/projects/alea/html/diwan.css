@@ -1,0 +1,114 @@
+.title {
+    color: red;
+}
+body {
+    direction: ltr;
+    font-family: "Arabic Typesetting";
+    width: 30em;
+    font-size: 1.2em;
+}
+.metadata {
+    direction: ltr;
+    text-align: right;
+    margin: 0 2em;
+}
+.variants {
+    direction: ltr;
+}
+.comments {
+    direction: ltr;
+}
+hr {
+    margin: 1em 2em;
+}
+td {
+    text-align: right;
+    justify-content: space-between;
+    justify-self: stretch;
+}
+td.line-number,
+td.apparatus-line-number,
+td.editorial-note-number {
+    vertical-align: top;
+    padding-left: 10px;
+}
+.line-number,
+.apparatus-line-number,
+.apparatus-note-number,
+.editorial-note-number {
+    text-align: right;
+    font-size: 0.7em;
+    padding-top: 0.3em;
+}
+div.apparatus-line,
+div.editorial-note {
+    padding: 2px 0;
+    /* hanging indent for ltr */
+    /*
+                        padding-right: 3em;
+                        text-indent: -3em;
+                        direction: rtl !important;
+                        */
+}
+/*
+                    section > p {
+                        padding-right: 3em;
+                        padding-left: 3em;
+                        text-indent: -3em;
+                    }
+                    */
+span.line-number,
+span.note-number {
+    display: inline-block;
+    min-width: 3em;
+}
+td.text-col1 {
+    padding-left: 40px;
+}
+sup {
+    font-size: 6pt
+}
+sup + sup:before {
+    content: " ";
+}
+.static-text,
+.apparatus-sep,
+.siglum {
+    color: gray;
+}
+abbr {
+    text-decoration: none;
+}
+.lemma-gap {
+    font-size: .8em;
+}
+span.caesura {
+    width: 4em;
+    text-align: center;
+}
+.supplied:not(.reading):before {
+    content: "[";
+}
+.supplied:not(.reading):after {
+    content: "]";
+}
+.verbatim-holy:before {
+    content: "﴿";
+}
+.verbatim-holy:after {
+    content: "﴾";
+}
+.verbatim:before {
+    content: "(";
+}
+.verbatim:after {
+    content: ")";
+}
+@font-face {
+    font-family: "Arabic Typesetting";
+    src: url("../../../arabt100.ttf");
+}
+@font-face {
+    font-family: "Amiri Regular";
+    src: url("../../../resources/css/Amiri-Regular.ttf");
+}
