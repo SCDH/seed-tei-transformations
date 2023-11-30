@@ -62,75 +62,10 @@
         select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
 
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
-        package-version="1.0.0">
-        <xsl:override>
-            <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
-                <xsl:value-of>
-                    <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
-                    <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
-                    <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
-                    <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
-                    <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[unclear]</xsl:text>
-                    <xsl:text>| descendant::gap</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
-
-            <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string">
-                <xsl:value-of>
-                    <!-- choice+corr+sic+app+rdg was an old encoding of conjectures in ALEA -->
-                    <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
-                    <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
-                    <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
-                    <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[unclear]</xsl:text>
-                    <xsl:text>| descendant::gap</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
-
-            <xsl:variable name="app:entries-xpath-external-double-end-point" as="xs:string">
-                <xsl:value-of>
-                    <xsl:text>descendant::app</xsl:text>
-                    <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
-                    <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
-                    <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[unclear]</xsl:text>
-                    <xsl:text>| descendant::gap</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
-
-            <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string">
-                <xsl:value-of>
-                    <xsl:text>descendant::corr[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
-                    <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
-                    <xsl:text>| descendant::choice[unclear]</xsl:text>
-                    <xsl:text>| descendant::gap</xsl:text>
-                </xsl:value-of>
-            </xsl:variable>
-
-            <!-- drop mentioned -->
-            <xsl:template mode="app:reading-text" match="mentioned"/>
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/app-crit.xsl"
+        package-version="1.0.0"/>
 
 
-            <!-- use libwit in apparatus -->
-            <xsl:template name="app:sigla">
-                <xsl:param name="wit" as="node()"/>
-                <xsl:call-template name="wit:sigla">
-                    <xsl:with-param name="wit" select="$wit"/>
-                </xsl:call-template>
-            </xsl:template>
-
-        </xsl:override>
-    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libcouplet.xsl"
