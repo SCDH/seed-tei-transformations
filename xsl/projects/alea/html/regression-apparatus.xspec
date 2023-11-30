@@ -32,6 +32,11 @@
                                 xml:id="ifrw56.1.app">
                                 <t:rdg wit="#w">c<t:unclear reason="illegible"/></t:rdg>
                             </t:app> b</t:l>
+                        <t:l xml:id="ifrw49.1">
+                            <t:anchor xml:id="ifrw49.1.a"/>a <t:app from="#ifrw49.1.a"
+                                xml:id="ifrw49.1.app">
+                                <t:rdg wit="#w">c<t:unclear reason="illegible"/></t:rdg>
+                            </t:app> b</t:l>
                     </t:lg>
                 </t:body>
             </t:text>
@@ -81,6 +86,23 @@
             test="some $txt in //*[@data-i18n-key]/text() satisfies $txt eq $doc//*[@xml:id eq 'ifrw56.1']//@reason"/>
         <x:expect label="reason present in apparatus entry and it is translated"
             test="some $att in //@data-i18n-key satisfies $att eq $doc//*[@xml:id eq 'ifrw56.1']//@reason"/>
+        <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
+            <span class="reading">c<span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
+                <span class="reading-annotation"><span class="static-text" data-i18n-key="illegible"
+                        >illegible</span>
+                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario
+        label="#49 (framework): there should be no second apparatus entry for unclear nested in rdg">
+        <x:context select="$doc//*[@xml:id eq 'ifrw49.1']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="reason present in apparatus entry"
+            test="some $txt in //*[@data-i18n-key]/text() satisfies $txt eq $doc//*[@xml:id eq 'ifrw49.1']//@reason"/>
+        <x:expect label="reason present in apparatus entry and it is translated"
+            test="some $att in //@data-i18n-key satisfies $att eq $doc//*[@xml:id eq 'ifrw49.1']//@reason"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
             <span class="reading">c<span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
                 <span class="reading-annotation"><span class="static-text" data-i18n-key="illegible"
