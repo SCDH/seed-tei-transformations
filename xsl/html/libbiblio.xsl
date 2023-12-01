@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- An XSLT package for pulling in information from the Bibliography
+<!-- An XSLT package for printing references by pulling in information from the bibliography.
 
 This library offers a named template as an entry point for printing
 a bibliographic reference.
