@@ -5,13 +5,18 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:test="http://scdh.wwu.de/transform/test#" xmlns:t="http://www.tei-c.org/ns/1.0"
-    stylesheet="app-crit.xsl" run-as="external">
+    stylesheet="diwan.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
 
     <x:variable name="doc">
         <t:TEI>
             <t:teiHeader>
+                <t:fileDesc>
+                    <t:sourceDesc>
+                        <t:witness xml:id="w"/>
+                    </t:sourceDesc>
+                </t:fileDesc>
                 <t:encodingDesc>
                     <t:variantEncoding method="double-end-point" location="internal"/>
                 </t:encodingDesc>
@@ -56,7 +61,8 @@
                 <span class="reading-annotation">
                     <span class="static-text" data-i18n-key="illegible">illegible</span>
                 </span>
-                <span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+                <span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
+                    class="siglum">w</span></span>
         </x:expect>
     </x:scenario>
 
@@ -73,7 +79,8 @@
                     data-i18n-key="rdg-annotation-sep">, </span>
                 <span class="reading-annotation"><span class="static-text" data-i18n-key="illegible"
                         >illegible</span>
-                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
+                    class="siglum">w</span></span>
         </x:expect>
     </x:scenario>
 
@@ -90,7 +97,8 @@
             <span class="reading">c<span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
                 <span class="reading-annotation"><span class="static-text" data-i18n-key="illegible"
                         >illegible</span>
-                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
+                    class="siglum">w</span></span>
         </x:expect>
     </x:scenario>
 
@@ -107,7 +115,8 @@
             <span class="reading">c<span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
                 <span class="reading-annotation"><span class="static-text" data-i18n-key="illegible"
                         >illegible</span>
-                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span>w</span>
+                </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
+                    class="siglum">w</span></span>
         </x:expect>
     </x:scenario>
 
