@@ -10,13 +10,6 @@
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="3.1">
 
   <xsl:use-package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
-    package-version="1.0.0"/>
-
-  <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))" visibility="public"
-    select="app:apparatus-entries(root()) => seed:note-based-apparatus-nodes-map(true())"/>
-
-  <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
     package-version="1.0.0">
 
@@ -89,14 +82,6 @@
           <xsl:text>| descendant::supplied</xsl:text>
         </xsl:value-of>
       </xsl:variable>
-
-      <!-- use libwit in apparatus -->
-      <xsl:template name="app:sigla">
-        <xsl:param name="wit" as="node()"/>
-        <xsl:call-template name="wit:sigla">
-          <xsl:with-param name="wit" select="$wit"/>
-        </xsl:call-template>
-      </xsl:template>
 
     </xsl:override>
 
