@@ -58,10 +58,90 @@
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
     </xsl:use-package>
 
-    <!-- apparatus criticus -->
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/app-crit.xsl"
-        package-version="1.0.0"/>
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
+        package-version="1.0.0">
+
+        <xsl:override>
+
+            <!-- apparatus entries made for parallel segementation -->
+            <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string"
+                visibility="public">
+                <xsl:value-of>
+                    <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
+                    <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+                    <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+                    <xsl:text>| descendant::unclear[not(parent::choice | ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::choice[unclear]</xsl:text>
+                    <xsl:text>| descendant::gap[not(ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::space[not(ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
+                </xsl:value-of>
+            </xsl:variable>
+
+            <!-- XPath describing apparatus entries made for internal double end-point variant encoding -->
+            <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string"
+                visibility="public">
+                <xsl:value-of>
+                    <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
+                    <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+                    <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+                    <xsl:text>| descendant::unclear[not(parent::choice | ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::choice[unclear]</xsl:text>
+                    <xsl:text>| descendant::gap[not(ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::space[not(ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
+                </xsl:value-of>
+            </xsl:variable>
+
+            <!-- XPath describing apparatus entries made for external double end-point variant encoding -->
+            <xsl:variable name="app:entries-xpath-external-double-end-point" as="xs:string"
+                visibility="public">
+                <xsl:value-of>
+                    <xsl:text>descendant::app</xsl:text>
+                    <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+                    <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+                    <xsl:text>| descendant::unclear[not(parent::choice | ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::choice[unclear]</xsl:text>
+                    <xsl:text>| descendant::gap[not(ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::space[not(ancestor::rdg)]</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
+                </xsl:value-of>
+            </xsl:variable>
+
+            <!-- when no variant encoding is present -->
+            <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string" visibility="public">
+                <xsl:value-of>
+                    <xsl:text>descendant::corr[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+                    <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
+                    <xsl:text>| descendant::choice[unclear]</xsl:text>
+                    <xsl:text>| descendant::gap</xsl:text>
+                    <xsl:text>| descendant::space</xsl:text>
+                    <xsl:text>| descendant::supplied</xsl:text>
+                </xsl:value-of>
+            </xsl:variable>
+
+            <!-- use libwit in apparatus -->
+            <xsl:template name="app:sigla">
+                <xsl:param name="wit" as="node()"/>
+                <xsl:call-template name="wit:sigla">
+                    <xsl:with-param name="wit" select="$wit"/>
+                </xsl:call-template>
+            </xsl:template>
+
+        </xsl:override>
+
+    </xsl:use-package>
+
+
 
     <!--xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
@@ -71,11 +151,13 @@
         <xsl:accept component="function" names="app:apparatus-entries#3" visibility="private"/>
     </xsl:use-package-->
 
+    <!-- apparatus criticus -->
+    <xsl:variable name="apparatus-entries" as="map(*)*" visibility="public"
+        select="app:apparatus-entries(root())"/>
+
     <!-- apparatus comment. -->
-    <!--
-    <xsl:variable name="editorial-notes" as="map(xs:string, map(*))"
-        select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
-    -->
+    <xsl:variable name="editorial-notes" as="map(*)*"
+        select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2)"/>
 
 
     <xsl:use-package
@@ -211,21 +293,19 @@
                 <section class="content">
                     <xsl:apply-templates select="/TEI/text/body" mode="text:text"/>
                 </section>
-                <!--
                 <hr/>
                 <section class="variants">
-                    <xsl:call-template name="app:note-based-apparatus">
+                    <xsl:call-template name="app:line-based-apparatus">
                         <xsl:with-param name="entries" select="$apparatus-entries"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
                 <section class="comments">
-                    <xsl:call-template name="app:note-based-apparatus">
+                    <xsl:call-template name="app:line-based-apparatus">
                         <xsl:with-param name="entries" select="$editorial-notes"/>
                     </xsl:call-template>
                 </section>
                 <hr/>
-                -->
                 <!--
                 <section class="comments">
                     <xsl:call-template name="scdhx:editorial-notes">
