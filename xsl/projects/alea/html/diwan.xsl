@@ -38,11 +38,15 @@ target/bin/xslt.sh \
     <xsl:param name="use-libhtml" as="xs:boolean" select="true()"/>
 
     <!-- optional: the URI of the projects central witness catalogue -->
-    <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
+    <xsl:param name="wit-catalog" as="xs:string?"
+        select="resolve-uri('../../../WitnessCatalogue.xml', base-uri())"/>
 
     <xsl:variable name="witnesses" as="element()*">
         <xsl:choose>
-            <xsl:when test="$wit-catalog eq string()">
+            <xsl:when test="empty($wit-catalog) or not(doc-available($wit-catalog))">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>no witness catalog</xsl:text>
+                </xsl:message>
                 <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
             </xsl:when>
             <xsl:otherwise>
