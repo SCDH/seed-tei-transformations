@@ -2,9 +2,9 @@
     color: red;
 }
 body {
-    direction: ltr;
+    direction: rtl;
     font-family: "Arabic Typesetting";
-    width: 30em;
+    width: 40em;
     font-size: 1.2em;
 }
 .metadata {
@@ -13,10 +13,10 @@ body {
     margin: 0 2em;
 }
 .variants {
-    direction: ltr;
+    direction: rtl;
 }
 .comments {
-    direction: ltr;
+    direction: rtl;
 }
 hr {
     margin: 1em 2em;
@@ -43,7 +43,7 @@ td.editorial-note-number {
 div.apparatus-line,
 div.editorial-note {
     padding: 2px 0;
-    /* hanging indent for ltr */
+    /* hanging indent for rtl */
     /*
                         padding-right: 3em;
                         text-indent: -3em;
