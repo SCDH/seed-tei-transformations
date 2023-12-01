@@ -441,7 +441,7 @@
 
             <!-- make reading annotation for a nested <space> -->
             <xsl:template mode="app:reading-annotation" match="space">
-                <span class="apparatus-sep" data-i18n-key="space">&lre;space&pdf;</span>
+                <span class="static-text" data-i18n-key="space">&lre;space&pdf;</span>
             </xsl:template>
 
         </xsl:override>
