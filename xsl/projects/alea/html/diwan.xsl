@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- ALEA Preview for Diwan
+
+This XSLT package makes the HTML preview for poems from the Diwan of Ibn Nubatah al Misri.
+The poem will have line numbering and the apparatus will be line-based apparatus.
+
+USAGE:
+
+target/bin/xslt.sh \
+    -config:saxon.he.xml \
+    -xsl:xsl/projects/alea/html/diwan.xsl \
+    -s:test/alea/Diwan/lam/lam3/lam3.tei.xml.BB.xml \
+    wit-catalog=file:/home/clueck/Projekte/edition-ibn-nubatah/WitnessCatalogue.xml
+
+-->
 <!DOCTYPE stylesheet [
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
