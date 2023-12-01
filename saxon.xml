@@ -93,6 +93,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
                version="1.0.0" sourceLocation="xsl/html/libprose.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libbiblio.xsl"
+               version="1.0.0" sourceLocation="xsl/html/libbiblio.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/libmeta.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/html/libmeta.xsl"/>
      </xsltPackages>

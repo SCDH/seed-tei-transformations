@@ -29,9 +29,10 @@ target/bin/xslt.sh \
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:test="http://scdh.wwu.de/transform/test#"
-    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-    version="3.0" default-mode="preview">
+    xmlns:html="http://scdh.wwu.de/transform/html#"
+    xmlns:biblio="http://scdh.wwu.de/transform/biblio#"
+    xmlns:test="http://scdh.wwu.de/transform/test#" exclude-result-prefixes="#all"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -165,6 +166,10 @@ target/bin/xslt.sh \
                 </span>
             </xsl:template>
 
+            <xsl:template mode="app:reading-text" match="bibl">
+                <xsl:call-template name="biblio:reference"/>
+            </xsl:template>
+
         </xsl:override>
 
     </xsl:use-package>
@@ -189,6 +194,10 @@ target/bin/xslt.sh \
             <xsl:variable name="wit:witnesses" as="element()*" select="$witnesses"/>
         </xsl:override>
     </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libbiblio.xsl"
+        package-version="1.0.0"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libhtml.xsl"

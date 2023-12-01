@@ -26,7 +26,7 @@ USAGE:
     <!ENTITY lb "&#xa;" >
 ]>
 <xsl:package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbiblio.xsl"
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libbiblio.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ref="http://scdh.wwu.de/transform/ref#"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
