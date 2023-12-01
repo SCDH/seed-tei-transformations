@@ -30,12 +30,12 @@
                         <t:l xml:id="ifrw56.1">
                             <t:anchor xml:id="ifrw56.1.a"/>a <t:app from="#ifrw56.1.a"
                                 xml:id="ifrw56.1.app">
-                                <t:rdg wit="#w">c<t:unclear reason="illegible"/></t:rdg>
+                                <t:rdg wit="#w"><t:unclear reason="illegible">c</t:unclear></t:rdg>
                             </t:app> b</t:l>
                         <t:l xml:id="ifrw49.1">
                             <t:anchor xml:id="ifrw49.1.a"/>a <t:app from="#ifrw49.1.a"
                                 xml:id="ifrw49.1.app">
-                                <t:rdg wit="#w">c<t:unclear reason="illegible"/></t:rdg>
+                                <t:rdg wit="#w"><t:unclear reason="illegible">c</t:unclear></t:rdg>
                             </t:app> b</t:l>
                     </t:lg>
                 </t:body>
