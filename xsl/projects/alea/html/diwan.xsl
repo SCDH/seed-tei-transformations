@@ -159,6 +159,12 @@ target/bin/xslt.sh \
                 </xsl:call-template>
             </xsl:template>
 
+            <xsl:template mode="app:reading-annotation" match="unclear[not(@reason)]">
+                <span class="static-text" data-i18n-key="illegible">
+                    <xsl:text>illegible</xsl:text>
+                </span>
+            </xsl:template>
+
         </xsl:override>
 
     </xsl:use-package>
