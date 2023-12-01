@@ -95,9 +95,6 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/libmeta.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/html/libmeta.xsl"/>
-          <package
-               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/app-crit.xsl"
-               version="1.0.0" sourceLocation="xsl/projects/alea/html/app-crit.xsl"/>
      </xsltPackages>
 
 </configuration>
