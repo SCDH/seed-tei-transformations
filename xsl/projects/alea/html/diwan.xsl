@@ -29,8 +29,9 @@ target/bin/xslt.sh \
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-    xmlns:html="http://scdh.wwu.de/transform/html#" exclude-result-prefixes="#all"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:test="http://scdh.wwu.de/transform/test#"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -251,6 +252,17 @@ target/bin/xslt.sh \
                 <xsl:call-template name="html:content"/>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+
+
+    <!-- a utility just for unit testing the apparatus -->
+    <xsl:template name="test:single-app-entry" visibility="final">
+        <xsl:variable name="entries"
+            select="app:apparatus-entries(.) => seed:note-based-apparatus-nodes-map(true())"/>
+        <xsl:call-template name="app:note-based-apparatus">
+            <xsl:with-param name="entries" select="$entries"/>
+        </xsl:call-template>
     </xsl:template>
 
 </xsl:package>
