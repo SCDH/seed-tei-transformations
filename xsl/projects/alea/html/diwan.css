@@ -4,8 +4,6 @@
 body {
     direction: rtl;
     font-family: "Arabic Typesetting";
-    width: 40em;
-    font-size: 1.2em;
 }
 .metadata {
     direction: ltr;
