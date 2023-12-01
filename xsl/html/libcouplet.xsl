@@ -285,6 +285,14 @@
         <xsl:text>[...]</xsl:text>
     </xsl:template>
 
+    <xsl:template match="space">
+        <!--xsl:apply-templates mode="text:hook-before" select="."/-->
+        <!-- use hook instead? -->
+        <xsl:text>[ — ]</xsl:text>
+        <!--xsl:call-template name="text:inline-marks"/-->
+        <!--xsl:apply-templates mode="text:hook-after" select="."/-->
+    </xsl:template>
+
     <xsl:template match="unclear">
         <!--xsl:text>[? </xsl:text-->
         <xsl:apply-templates/>

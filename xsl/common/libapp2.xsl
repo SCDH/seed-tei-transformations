@@ -537,6 +537,13 @@ see xsl/projects/alea/preview.xsl
     <!-- handle <gap> as empty, what ever occurs -->
     <xsl:template mode="app:lemma-text-nodes-dspt" match="gap"/>
 
+    <!-- space -->
+
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="space">
+        <!--xsl:apply-templates mode="app:lemma-text-nodes-dspt"/-->
+        <xsl:text>—</xsl:text>
+    </xsl:template>
+
 
     <!-- supplied -->
 

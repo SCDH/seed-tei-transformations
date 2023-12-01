@@ -117,6 +117,14 @@ Note, that there is a default mode in this package.
                 <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
 
+            <xsl:template match="space">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <!-- use hook instead? -->
+                <xsl:text>[ — ]</xsl:text>
+                <xsl:call-template name="text:inline-marks"/>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+            </xsl:template>
+
             <xsl:template match="unclear">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="unclear">

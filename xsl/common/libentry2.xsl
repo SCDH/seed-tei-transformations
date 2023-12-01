@@ -351,5 +351,9 @@ see xsl/projects/alea/preview.xsl
     <xsl:template mode="seed:lemma-text-nodes"
         match="lem[matches(seed:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
 
+    <xsl:template mode="seed:lemma-text-nodes" match="space">
+        <xsl:text>—</xsl:text>
+    </xsl:template>
+
 
 </xsl:package>

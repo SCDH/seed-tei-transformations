@@ -42,6 +42,7 @@
                                 xml:id="ifrw49.1.app">
                                 <t:rdg wit="#w"><t:space/></t:rdg>
                             </t:app> b</t:l>
+                        <t:l xml:id="ifrw49.2">a <t:space/> b</t:l>
                         <t:l xml:id="ifrw57.1">
                             <t:anchor xml:id="ifrw57.1.a"/>a <t:app from="#ifrw57.1.a"
                                 xml:id="ifrw57.1.app">
@@ -107,8 +108,7 @@
         </x:expect>
     </x:scenario>
 
-    <x:scenario
-        label="#49 (framework): space nested in rdg">
+    <x:scenario label="#49 (framework): space nested in rdg">
         <x:context select="$doc//*[@xml:id eq 'ifrw49.1']"/>
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
@@ -117,10 +117,27 @@
         <x:expect label="reading annotation is translated"
             test="some $att in //@data-i18n-key satisfies $att eq 'space'"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
-            <span class="reading"><span class="reading-annotation"><span class="static-text" data-i18n-key="space"
-                        >...</span>
+            <span class="reading"><span class="reading-annotation"><span class="static-text"
+                        data-i18n-key="space">...</span>
                 </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
                     class="siglum">w</span></span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="#49 (framework): standalone space">
+        <x:context select="$doc//*[@xml:id eq 'ifrw49.2']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="static text 'space' present in apparatus entry"
+            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'space')"/>
+        <x:expect label="'space' is translated"
+            test="some $att in //@data-i18n-key satisfies $att eq 'space'"/>
+        <x:expect label="result (reading only)" test="//*[matches(@class, 'reading')]">
+            <span class="reading space"><span class="static-text" data-i18n-key="space">...</span>
+            </span>
+        </x:expect>
+        <x:expect label="sign in lemma" test="//*[@class eq 'apparatus-lemma']">
+            <span class="apparatus-lemma">—</span>
         </x:expect>
     </x:scenario>
 

@@ -386,6 +386,28 @@
                 </xsl:if>
             </xsl:template>
 
+            <xsl:template mode="app:reading-dspt" match="space">
+                <span class="reading space">
+                    <!-- TODO: latin -->
+                    <span class="static-text" data-i18n-key="space">&lre;space&pdf;</span>
+                    <!-- TODO: evaluate all dimension attributes -->
+                    <xsl:if test="@quantity and @unit">
+                        <span class="apparatus-sep" data-i18n-key="reason-quantity-sep">, </span>
+                        <span class="static-text">
+                            <xsl:value-of select="@quantity"/>
+                        </span>
+                        <xsl:text>&#160;</xsl:text>
+                        <span class="static-text" data-i18n-key="{@unit}">&lre;<xsl:value-of
+                                select="@unit"/>&pdf;</span>
+                    </xsl:if>
+                </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;</span>
+                </xsl:if>
+            </xsl:template>
+
+
             <xsl:template mode="app:reading-dspt" match="supplied">
                 <span class="reading supplied">
                     <span class="static-text" data-i18n-key="supplied">&lre;supplied&pdf;</span>
