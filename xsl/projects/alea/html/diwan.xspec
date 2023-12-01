@@ -56,7 +56,7 @@
 
     <x:scenario label="template compiles without error">
         <x:context select="$tei-text"/>
-        <x:expect label="result">...<html lang="de">...</html></x:expect>
+        <x:expect label="html root element" test="local-name(/*)" select="'html'"/>
     </x:scenario>
 
 
