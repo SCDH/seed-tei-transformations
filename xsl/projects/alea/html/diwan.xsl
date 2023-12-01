@@ -29,10 +29,13 @@ target/bin/xslt.sh \
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-    version="3.0" default-mode="preview">
+    xmlns:html="http://scdh.wwu.de/transform/html#" exclude-result-prefixes="#all"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
+
+    <!-- whether to use the HTML template from libhtml and make a full HTML file -->
+    <xsl:param name="use-libhtml" as="xs:boolean" select="true()"/>
 
     <!-- optional: the URI of the projects central witness catalogue -->
     <xsl:param name="wit-catalog" as="xs:string" select="string()"/>
@@ -155,16 +158,6 @@ target/bin/xslt.sh \
 
     </xsl:use-package>
 
-
-
-    <!--xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
-        package-version="1.0.0">
-        <xsl:accept component="*" names="*" visibility="hidden"/>
-        <xsl:accept component="template" names="app:note-based-apparatus" visibility="private"/>
-        <xsl:accept component="function" names="app:apparatus-entries#3" visibility="private"/>
-    </xsl:use-package-->
-
     <!-- apparatus criticus -->
     <xsl:variable name="apparatus-entries" as="map(*)*" visibility="public"
         select="app:apparatus-entries(root())"/>
@@ -186,120 +179,17 @@ target/bin/xslt.sh \
         </xsl:override>
     </xsl:use-package>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libhtml.xsl"
+        package-version="1.0.0">
 
-    <!-- 
-    <xsl:import href="libnote2.xsl"/>
-    <xsl:import href="libwit.xsl"/>
-    <xsl:import href="libbiblio.xsl"/>
-    <xsl:include href="libsurah.xsl"/>
-    -->
-    <!-- include for overriding -->
+        <xsl:accept component="mode" names="html:html" visibility="public"/>
+        <xsl:accept component="template" names="html:*" visibility="public"/>
 
-    <xsl:param name="font-css" as="xs:string" select="''"/>
-    <xsl:param name="font-name" as="xs:string" select="'Arabic Typesetting'"/>
+        <xsl:override>
 
-    <xsl:mode name="preview" on-no-match="shallow-copy"/>
-
-    <xsl:template match="/ | TEI">
-        <xsl:for-each select="//xi:include">
-            <xsl:message>
-                <xsl:text>WARNING: </xsl:text>
-                <xsl:text>XInclude element not expanded! @href="</xsl:text>
-                <xsl:value-of select="@href"/>
-                <xsl:text>" @xpointer="</xsl:text>
-                <xsl:value-of select="@xpointer"/>
-                <xsl:text>"</xsl:text>
-            </xsl:message>
-        </xsl:for-each>
-        <html lang="{i18n:language(/*)}">
-            <head>
-                <meta charset="utf-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <xsl:variable name="work-id" as="xs:string"
-                    select="(/*/@xml:id | //idno[@type eq 'local-work-id']/text())[1]"/>
-                <title>
-                    <xsl:value-of select="$work-id"/>
-                    <xsl:text> :: ALEA Vorschau</xsl:text>
-                </title>
-                <style>
-                    <xsl:if test="$font-css ne ''">
-                        <xsl:value-of select="unparsed-text($font-css)"/>
-                    </xsl:if>
-                    .title {
-                        color:red;
-                    }
-                    body {
-                        direction: <xsl:value-of select="i18n:language-direction(/TEI/text)"/>;
-                        font-family:"<xsl:value-of select="$font-name"/>";
-                    }
-                    .metadata {
-                        direction: ltr;
-                        text-align: right;
-                        margin: 0 2em;
-                    }
-                    .variants {
-                        direction: <xsl:value-of select="i18n:language-direction(/TEI/text)"/>;
-                    }
-                    .comments {
-                        direction: <xsl:value-of select="i18n:language-direction(/TEI/text)"/>;
-                    }
-                    hr {
-                        margin: 1em 2em;                    }
-                    td {
-                        text-align: <xsl:value-of select="i18n:language-align(/TEI/text)"/>;
-                        justify-content: space-between;
-                        justify-self: stretch;
-                    }
-                    td.line-number, td.apparatus-line-number, td.editorial-note-number {
-                        vertical-align:top;
-                        padding-left: 10px;
-                        }
-                    .line-number, .apparatus-line-number, .editor-note-number {
-                        text-align:right;
-                        font-size: 0.7em;
-                        padding-top: 0.3em;
-                    }
-                    div.apparatus-line,
-                    div.editorial-note {
-                        padding: 2px 0;
-                    }
-                    /*
-                    section > p {
-                        padding-right: 3em;
-                        padding-left: 3em;
-                        text-indent: -3em;
-                    }
-                    */
-                    span.line-number {
-                        display: inline-block;
-                        min-width: 3em;
-                    }
-                    td.text-col1 {
-                        padding-left: 40px;
-                    }
-                    sup {
-                        font-size: 6pt
-                    }
-                    .static-text, .apparatus-sep, .siglum {
-                        color: gray;
-                    }
-                    abbr {
-                        text-decoration: none;
-                    }
-                    .lemma-gap {
-                        font-size:.8em;
-                    }
-                    @font-face {
-                        font-family:"Arabic Typesetting";
-                        src:url("../../../arabt100.ttf");
-                    }
-                    @font-face {
-                        font-family:"Amiri Regular";
-                        src:url("../../../resources/css/Amiri-Regular.ttf");
-                    }
-                </style>
-            </head>
-            <body>
+            <!-- this makes the page content -->
+            <xsl:template name="html:content">
                 <section class="metadata">
                     <xsl:apply-templates select="/TEI/teiHeader" mode="meta:data"/>
                 </section>
@@ -320,22 +210,43 @@ target/bin/xslt.sh \
                     </xsl:call-template>
                 </section>
                 <hr/>
-                <!--
-                <section class="comments">
-                    <xsl:call-template name="scdhx:editorial-notes">
-                        <xsl:with-param name="notes"
-                            select="scdhx:editorial-notes(//text/body, 'descendant::note')"/>
-                    </xsl:call-template>
-                </section>
-                -->
-                <hr/>
                 <xsl:call-template name="i18n:language-chooser"/>
                 <xsl:call-template name="i18n:load-javascript"/>
                 <!--
                 <xsl:call-template name="surah-translations"/>
                 -->
-            </body>
-        </html>
+            </xsl:template>
+
+            <!-- a sequence of CSS files -->
+            <xsl:param name="html:css" as="xs:string*"
+                select="resolve-uri('diwan.css', static-base-uri())"/>
+
+            <xsl:template name="html:title" visibility="public">
+                <xsl:value-of select="(/*/@xml:id, //title ! normalize-space())[1]"/>
+                <xsl:text> :: ALEA</xsl:text>
+            </xsl:template>
+
+        </xsl:override>
+    </xsl:use-package>
+
+
+    <!-- 
+    <xsl:import href="libbiblio.xsl"/>
+    <xsl:include href="libsurah.xsl"/>
+    -->
+
+    <xsl:mode name="preview" on-no-match="shallow-copy"/>
+
+    <!-- if parameter $use-libhtml is true, switch to html:html mode -->
+    <xsl:template match="/ | TEI" priority="10">
+        <xsl:choose>
+            <xsl:when test="$use-libhtml">
+                <xsl:apply-templates mode="html:html" select="root()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="html:content"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:package>
