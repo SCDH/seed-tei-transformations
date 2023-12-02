@@ -41,6 +41,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <saxon.version>11.5</saxon.version>
         <xmlresolver.version>4.5.1</xmlresolver.version>
+        <xerces.version>2.12.2</xerces.version>
         <xspec.version>2.2.4</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
@@ -64,6 +65,12 @@
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
             <version>${saxon.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>${xerces.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -152,7 +159,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <includeArtifactIds>Saxon-HE,xmlresolver</includeArtifactIds>
+                            <includeArtifactIds>Saxon-HE,xmlresolver,xercesImpl</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
