@@ -36,6 +36,9 @@ Special references:
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libbiblio.xsl"
         package-version="1.0.0">
 
+        <xsl:accept component="*" names="*" visibility="public"/>
+        <xsl:accept component="template" names="biblio:reference" visibility="final"/>
+
         <xsl:override>
 
             <xsl:template priority="10" mode="biblio:reference" match="bibl[@xml:id eq 'Quran']">
