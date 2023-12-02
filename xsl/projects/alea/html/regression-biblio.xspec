@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:biblio="http://scdh.wwu.de/transform/biblio#"
+    xmlns:ref="http://scdh.wwu.de/transform/ref#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="test-aleabiblio.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <encodingDesc>
+                    <listPrefixDef>
+                        <prefixDef ident="bibl" matchPattern="(.+)" replacementPattern="#$1"
+                            relativeFrom="definition"/>
+                    </listPrefixDef>
+                </encodingDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
+                                objektive Realität im Satz über die Summe der Innenwinkel des <app
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.<note><bibl xml:id="ref1"
+                                        corresp="bibl:book1"/></note></p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
+                                eine dritte Gerade geschnitten werden.<bibl xml:id="ref2"
+                                    corresp="bibl:unknown"/></p>
+                        </div>
+                    </div>
+                    <div xml:id="d2">
+                        <head>Glauben</head>
+                        <p>Ob etwas starkes Glauben<note>Z.B. wie in <bibl xml:id="ref3"
+                                    corresp="bibl:Quran"><biblScope>114:2</biblScope></bibl></note>
+                            sei, entdeckt der Probierstein der Wette.</p>
+                    </div>
+                </body>
+                <back>
+                    <listBibl>
+                        <bibl xml:id="book1" xml:lang="en">
+                            <author>John Locke</author>: <title>An Essay</title>.</bibl>
+                        <bibl xml:id="Quran">Koran</bibl>
+                    </listBibl>
+                </back>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="reference to book1">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ref1']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="one entry found" test="count(./element())" select="1"/>
+        <x:expect label="span with class bibliographic entry" test="/span/@class => string()"
+            select="'bibliographic-reference'"/>
+        <x:expect label="language of entry" test="*/@lang => string()"
+            select="$tei-text//*[id('ref1')]/@xml:lang => string()"/>
+        <x:expect label="Author in entry" test="normalize-space() => matches('John Locke')"/>
+        <x:expect label="result" pending="trailing dot">
+            <span class="bibliographic-reference" lang="en" style="direction:ltr;">
+                <x:text>‪John Locke: An Essay.</x:text>‬</span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="reference unknown">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ref2']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="result">
+            <span class="..." lang="..." style="...">‪bibl:unknown‬</span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Special reference Quaran: single surah">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ref3']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="enclosed entry" test="count(/*)" select="1"/>
+        <x:expect label="bibliographic entry at start"
+            test="(/*/span[1]//text()) => string-join('')"
+            select="($tei-text//*[@xml:id eq 'Quran']//text()) => string-join('')"/>
+        <x:expect label="bibliographic entry is translated"
+            test="/*/span[1]/@data-i18n-key => string()" select="'Quran'"/>
+        <x:expect label="Surah title number as translation key"
+            test="matches(/*/span[3]/@data-i18n-key, '^surah-\d+$')"/>
+        <x:expect label="Surah verse number as translation key"
+            test="matches(/*/span[5]/@data-i18n-key, '^\d+$')"/>
+        <x:expect label="Translation namespace for Surah verse number"
+            test="matches(/*/span[5]/@data-i18n-ns, 'decimal')"/>
+    </x:scenario>
+
+</x:description>

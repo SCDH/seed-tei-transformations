@@ -17,7 +17,9 @@ Special references:
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
-        package-version="0.1.0"/>
+        package-version="0.1.0">
+        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
+    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
@@ -41,7 +43,7 @@ Special references:
 
         <xsl:override>
 
-            <xsl:template priority="10" mode="biblio:reference" match="bibl[@xml:id eq 'Quran']">
+            <xsl:template priority="10" mode="biblio:entry" match="bibl[@xml:id eq 'Quran']">
                 <xsl:param name="tpBiblScope" as="element()*" tunnel="yes"/>
                 <xsl:variable name="surah">
                     <xsl:analyze-string select="$tpBiblScope => normalize-space()"
@@ -75,7 +77,7 @@ Special references:
             </xsl:template>
 
             <!-- do not print biblScope for quran -->
-            <xsl:template mode="biblio:reference"
+            <xsl:template mode="biblio:entry"
                 match="biblScope[parent::bibl[@corresp eq 'bibl:Quran']]"/>
 
         </xsl:override>
