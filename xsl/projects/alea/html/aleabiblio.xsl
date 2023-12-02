@@ -25,11 +25,12 @@ Special references:
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
         package-version="1.0.0"/>
 
-    <xsl:template name="surah-translations">
+    <xsl:template name="surah-translations" visibility="public">
         <script type="module">
             <xsl:call-template name="i18n:language-resources-inline">
                 <xsl:with-param name="directory" select="'locales'"/>
                 <xsl:with-param name="namespace" select="'quran'"/>
+                <xsl:with-param name="base-uri" select="static-base-uri()"/>
             </xsl:call-template>
         </script>
     </xsl:template>

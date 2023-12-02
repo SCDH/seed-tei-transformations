@@ -232,9 +232,7 @@ target/bin/xslt.sh \
                 <hr/>
                 <xsl:call-template name="i18n:language-chooser"/>
                 <xsl:call-template name="i18n:load-javascript"/>
-                <!--
                 <xsl:call-template name="surah-translations"/>
-                -->
             </xsl:template>
 
             <!-- a sequence of CSS files -->
