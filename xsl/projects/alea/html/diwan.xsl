@@ -43,21 +43,36 @@ target/bin/xslt.sh \
     <xsl:param name="wit-catalog" as="xs:string?"
         select="resolve-uri('../../../WitnessCatalogue.xml', base-uri())"/>
 
-    <xsl:variable name="witnesses" as="element()*">
+    <xsl:variable name="witnesses" as="element()*" visibility="public">
         <xsl:choose>
             <xsl:when test="empty($wit-catalog) or not(doc-available($wit-catalog))">
                 <xsl:message use-when="system-property('debug') eq 'true'">
-                    <xsl:text>no witness catalog</xsl:text>
+                    <xsl:text>no witness catalog </xsl:text>
+                    <xsl:value-of select="$wit-catalog"/>
                 </xsl:message>
-                <xsl:sequence select="//sourceDesc//witness[@xml:id]"/>
+                <xsl:sequence>
+                    <xsl:try select="//sourceDesc//witness[@xml:id]">
+                        <xsl:catch errors="*" select="()"/>
+                    </xsl:try>
+                </xsl:sequence>
             </xsl:when>
             <xsl:otherwise>
                 <!-- a sequence from external and local witnesses -->
-                <xsl:sequence select="
-                        (doc($wit-catalog)/descendant::witness[@xml:id],
-                        //sourceDesc//witness[@xml:id])"/>
+                <xsl:sequence>
+                    <xsl:try select="(doc($wit-catalog)/descendant::witness[@xml:id],
+                        //sourceDesc//witness[@xml:id])">
+                        <xsl:catch errors="*"
+                            select="doc($wit-catalog)/descendant::witness[@xml:id]"/>
+                    </xsl:try>
+                </xsl:sequence>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="language" as="xs:string" visibility="public">
+        <xsl:try select="/*/@xml:lang">
+            <xsl:catch errors="*" select="'ar'"/>
+        </xsl:try>
     </xsl:variable>
 
 
@@ -65,7 +80,7 @@ target/bin/xslt.sh \
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
         <xsl:override>
-            <xsl:variable name="i18n:default-language" as="xs:string" select="/*/@xml:lang"/>
+            <xsl:variable name="i18n:default-language" as="xs:string" select="$language"/>
         </xsl:override>
     </xsl:use-package>
 
@@ -79,11 +94,16 @@ target/bin/xslt.sh \
         <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
             visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+        <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="hidden"/>
     </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
+
+        <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
+        <xsl:accept component="function" names="app:apparatus-entries#1" visibility="public"/>
+        <xsl:accept component="function" names="app:apparatus-entries#3" visibility="public"/>
 
         <xsl:override>
 
@@ -179,7 +199,7 @@ target/bin/xslt.sh \
         select="app:apparatus-entries(root())"/>
 
     <!-- apparatus comment. -->
-    <xsl:variable name="editorial-notes" as="map(*)*"
+    <xsl:variable name="editorial-notes" as="map(*)*" visibility="public"
         select="app:apparatus-entries(root(), 'descendant-or-self::note[ancestor::text]', 2)"/>
 
 
@@ -248,12 +268,7 @@ target/bin/xslt.sh \
     </xsl:use-package>
 
 
-    <!-- 
-    <xsl:import href="libbiblio.xsl"/>
-    <xsl:include href="libsurah.xsl"/>
-    -->
-
-    <xsl:mode name="preview" on-no-match="shallow-copy"/>
+    <xsl:mode name="preview" on-no-match="shallow-copy" visibility="public"/>
 
     <!-- if parameter $use-libhtml is true, switch to html:html mode -->
     <xsl:template match="/ | TEI" priority="10">
