@@ -70,11 +70,12 @@ See i18next documentation for more info: https://www.i18next.com
     <xsl:template name="i18n:language-resources-inline">
         <xsl:param name="directory" as="xs:string"/>
         <xsl:param name="namespace" as="xs:string"/>
+        <xsl:param name="base-uri" as="xs:string" select="static-base-uri()" required="false"/>
         <xsl:text>&newline;</xsl:text>
         <xsl:text>//import i18next from 'i18next';&newline;</xsl:text>
         <xsl:for-each select="$i18n:locales">
             <xsl:variable name="translation-file"
-                select="resolve-uri(concat($directory, '/', ., '/', $namespace, '.json'), static-base-uri())"/>
+                select="resolve-uri(concat($directory, '/', ., '/', $namespace, '.json'), $base-uri)"/>
             <!-- FIXME: why doesn't doc-available() work as expected? -->
             <xsl:if test="true() or doc-available($translation-file)">
                 <xsl:text>&newline;</xsl:text>
