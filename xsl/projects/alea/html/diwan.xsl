@@ -196,7 +196,7 @@ target/bin/xslt.sh \
     </xsl:use-package>
 
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libbiblio.xsl"
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/aleabiblio.xsl"
         package-version="1.0.0"/>
 
     <xsl:use-package
