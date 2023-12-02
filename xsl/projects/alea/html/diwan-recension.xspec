@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="diwan-recension.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+
+    <x:scenario label="template compiles without error" pending="context item missing">
+        <x:param name="source" select="'Pr'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="html root element" test="local-name(/*)" select="'html'"/>
+    </x:scenario>
+
+</x:description>

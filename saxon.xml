@@ -101,6 +101,12 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/aleabiblio.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/html/aleabiblio.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/diwan.xsl"
+               version="1.0.0" sourceLocation="xsl/projects/alea/html/diwan.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/tei/extract-recension.xsl"
+               version="1.0.0" sourceLocation="xsl/projects/alea/tei/extract-recension.xsl"/>
      </xsltPackages>
 
 </configuration>
