@@ -30,7 +30,8 @@
                                         corresp="bibl:book1"/></note></p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
-                                eine dritte Gerade geschnitten werden.</p>
+                                eine dritte Gerade geschnitten werden.<bibl xml:id="ref2"
+                                    corresp="bibl:unknown"/></p>
                         </div>
                     </div>
                 </body>
@@ -45,7 +46,7 @@
     </x:variable>
 
     <x:scenario label="reference to book1">
-        <x:context select="$tei-text//t:bibl[1]"/>
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ref1']"/>
         <x:call template="biblio:reference"/>
         <x:expect label="one entry found" test="count(./element())" select="1"/>
         <x:expect label="span with class bibliographic entry" test="/span/@class => string()"
@@ -56,6 +57,14 @@
         <x:expect label="result" pending="trailing dot">
             <span class="bibliographic-reference" lang="en" style="direction:ltr;">
                 <x:text>‪John Locke: An Essay.</x:text>‬</span>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="reference unknown">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ref2']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="result">
+            <span class="..." lang="..." style="...">‪bibl:unknown‬</span>
         </x:expect>
     </x:scenario>
 

@@ -65,21 +65,21 @@ USAGE:
             select="exists(parent::note[normalize-space(string-join((text() | *) except bibl, '')) eq ''])"/>
         <xsl:variable name="analogous" as="xs:boolean"
             select="exists(parent::note/parent::seg[matches(@type, '^analogous')])"/>
-        <xsl:variable name="ref" as="element()"
-            select="(ref:references-from-attribute(@corresp)[1] => ref:dereference(.)) treat as element()"/>
-        <xsl:variable name="ref-lang" select="i18n:language($ref)"/>
-        <span class="bibliographic-reference" lang="{i18n:language($ref)}"
-            style="direction:{i18n:language-direction($ref)};">
+        <xsl:variable name="ref" as="element()*"
+            select="(ref:references-from-attribute(@corresp)[1] => ref:dereference(.)) treat as element()*"/>
+        <xsl:variable name="ref-lang" select="i18n:language(($ref, .)[1])"/>
+        <span class="bibliographic-reference" lang="{i18n:language(($ref, .)[1])}"
+            style="direction:{i18n:language-direction(($ref, .)[1])};">
             <!-- This must be paired with pdf character entity,
                         because directional embeddings are an embedded CFG! -->
-            <xsl:value-of select="i18n:direction-embedding($ref)"/>
+            <xsl:value-of select="i18n:direction-embedding(($ref, .)[1])"/>
             <!-- [normalize-space((text()|*) except bibl) eq ''] -->
             <xsl:if test="$autotext and $analogous">
                 <span class="static-text" data-i18n-key="Cf.">&lre;Cf.&pdf;</span>
                 <xsl:text> </xsl:text>
             </xsl:if>
             <xsl:choose>
-                <xsl:when test="$ref">
+                <xsl:when test="count($ref) gt 0">
                     <xsl:apply-templates select="$ref" mode="biblio:entry">
                         <xsl:with-param name="tpBiblScope" as="element()*" select="biblScope"
                             tunnel="true"/>
@@ -95,7 +95,7 @@ USAGE:
             </xsl:if>
             <xsl:text>&pdf;</xsl:text>
             <xsl:call-template name="i18n:ltr-to-rtl-extra-space">
-                <xsl:with-param name="first-direction" select="i18n:language-direction($ref)"/>
+                <xsl:with-param name="first-direction" select="i18n:language-direction(($ref, .)[1])"/>
                 <xsl:with-param name="then-direction" select="i18n:language-direction(.)"/>
             </xsl:call-template>
         </span>
