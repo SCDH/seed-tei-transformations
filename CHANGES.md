@@ -2,6 +2,13 @@
 
 ## 0.5.0
 
+- ALEA's `diwan.xsl` and `diwan-recension.xsl` are up to date and used
+  in production the edition of the complete works of Ibn Nubatah
+  - added `libbiblio.xsl` for pulling in informations from the
+	bibliography for printing bibliographic references
+  - added `extract-recension.xsl` for extracting a single one from a
+    document that contains multiple recensions
+  - added regression tests for the critical apparatus (ALEA)
 - changed to Saxon Home Edition in default config file `saxon.xml`
   - Users of the oXygen plugin should now use `saxon.ee.xml` in order
     to get the features of the enterprise edition!
