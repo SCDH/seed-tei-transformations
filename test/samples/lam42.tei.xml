@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt xml:lang="en">
+            <title>lam42</title>
+            <respStmt n="transcribed">
+               <resp>edited and commented by</resp>
+               <persName sameAs="#nefeli">Nefeli Papoutsakis</persName>
+            </respStmt>
+            <respStmt n="checked">
+               <resp>double-checked by</resp>
+               <persName>Thomas Bauer</persName>
+            </respStmt>
+         </titleStmt>
+         <sourceDesc>
+            <listWit>
+               <listWit xml:id="Pr">
+                  <witness xml:id="K" n="143r"/>
+                  <witness xml:id="B" n="127r"/>
+                  <witness xml:id="Y" n="147r"/>
+               </listWit>
+               <listWit xml:id="BB">
+                  <witness xml:id="TU" n="217v"/>
+                  <witness xml:id="T" n="380"/>
+                  <witness xml:id="D" n="11r"/>
+                  <witness xml:id="N" n="226r"/>
+                  <witness xml:id="BR" n="54v"/>
+                  <witness xml:id="P" n="190r"/>
+               </listWit>
+            </listWit>
+         </sourceDesc>
+      </fileDesc>
+      <encodingDesc n="local">
+         <variantEncoding method="double-end-point" location="internal"/>
+         <appInfo>
+            <application ident="oxmre" version="0">
+               <label>oXbytao multiple recensions editor</label>
+               <ptr type="recension" subtype="visible"/>
+               <ptr type="recension" subtype="fading"/>
+               <ptr type="recension" subtype="othertarget"/>
+               <ptr type="recension" subtype="current"/>
+            </application>
+         </appInfo>
+      </encodingDesc>
+      <revisionDesc xml:lang="en">
+         <change when="2022-09-19Z" who="#nefeli" type="created">Transcription started.</change>
+      </revisionDesc>
+   </teiHeader>
+   <text>
+      <body>
+         <lg met="al-Hafif">
+            <head><anchor xml:id="rfl_yh2_vxb"/>وقال<app from="#rfl_yh2_vxb">
+                  <rdg wit="#TU"/>
+               </app>
+            </head>
+            <lg>
+               <l xml:id="hdw_h3k_x5b">أَحْمَدُ ٱللهَ كم أُجَوِّدُ في الخَلْـ<caesura/>ـقِ مقالًا
+                  ولا يُفيدُ المقالُ</l>
+               <l>
+                  <anchor xml:id="i53_vsl_x5b"/>كَلِمي<app from="#i53_vsl_x5b">
+                     <rdg wit="#N">كلي</rdg>
+                  </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ بَطّالُ</l>
+            </lg>
+         </lg>
+      </body>
+      <back>
+         <spanGrp/>
+      </back>
+   </text>
+</TEI>
