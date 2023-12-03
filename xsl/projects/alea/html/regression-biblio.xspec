@@ -31,7 +31,8 @@
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
                                 eine dritte Gerade geschnitten werden.<bibl xml:id="ref2"
-                                    corresp="bibl:unknown"/></p>
+                                    corresp="bibl:unknown"/><bibl xml:id="ref2.2"
+                                    corresp="veryunknown.xml#Essay"/></p>
                         </div>
                     </div>
                     <div xml:id="d2">
@@ -73,6 +74,15 @@
         <x:expect label="result">
             <span class="..." lang="..." style="...">‪bibl:unknown‬</span>
         </x:expect>
+    </x:scenario>
+
+    <x:scenario label="Issue 48 (FRW): reference unknown">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ref2.2']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="result">
+            <span class="..." lang="..." style="...">...</span>
+        </x:expect>
+        <x:expect label="broken link in content" test="matches(., 'veryunknown.xml')"/>
     </x:scenario>
 
     <x:scenario label="Special reference Quaran: single surah">
