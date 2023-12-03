@@ -4,7 +4,7 @@ auto
 
 /frameworks
 /test/alea
-/test/edition-ibu-nubatah
+/test/edition-ibn-nubatah
 
 *.zip
 
@@ -16,6 +16,8 @@ auto
 /test.sh
 /xslt.sh
 /saxon.*.xml
+/test.html
+/log.txt
 
 # xspec reports
 *-report.html
