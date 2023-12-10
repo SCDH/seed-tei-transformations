@@ -10,7 +10,7 @@
     <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
 
     <x:variable name="doc">
-        <t:TEI>
+        <t:TEI xml:lang="ar">
             <t:teiHeader>
                 <t:fileDesc>
                     <t:sourceDesc>
@@ -48,6 +48,8 @@
                                 xml:id="ifrw57.1.app">
                                 <t:rdg wit="#w"><t:unclear>c</t:unclear></t:rdg>
                             </t:app> b</t:l>
+                        <t:l xml:id="i22.1">a b <t:anchor xml:id="i22.1.a"/>c<t:span from="#i22.1.a">
+                                <t:note xml:id="i22.1.n">foo</t:note>/t:note></t:span> d e </t:l>
                     </t:lg>
                 </t:body>
             </t:text>
@@ -157,6 +159,15 @@
                 </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
                     class="siglum">w</span></span>
         </x:expect>
+    </x:scenario>
+
+    <x:scenario label="#22: apparatus entries when nested in span">
+        <x:context select="$doc//*[@xml:id eq 'i22.1.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'c'"/>
+        <x:expect label="note" test="//*[@class eq 'note-text'] => matches('foo')"/>
     </x:scenario>
 
 

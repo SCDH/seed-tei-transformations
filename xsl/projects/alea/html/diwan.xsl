@@ -293,4 +293,14 @@ target/bin/xslt.sh \
         </xsl:call-template>
     </xsl:template>
 
+    <!-- a utility just for unit testing the apparatus -->
+    <xsl:template name="test:single-editorial-note" visibility="final">
+        <xsl:variable name="entries"
+            select="app:apparatus-entries(., 'descendant-or-self::note[ancestor::text]', 2) => seed:note-based-apparatus-nodes-map(true())"/>
+        <xsl:call-template name="app:note-based-apparatus">
+            <xsl:with-param name="entries" select="$entries"/>
+        </xsl:call-template>
+    </xsl:template>
+
+
 </xsl:package>
