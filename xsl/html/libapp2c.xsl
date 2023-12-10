@@ -424,7 +424,9 @@
                     <!-- This must be paired with pdf character entity,
                                 because directional embeddings are an embedded CFG! -->
                     <xsl:value-of select="i18n:direction-embedding(.)"/>
+                    <xsl:apply-templates mode="app:pre-reading-text" select="."/>
                     <xsl:apply-templates mode="app:reading-text" select="node()"/>
+                    <xsl:apply-templates mode="app:post-reading-text" select="."/>
                     <xsl:text>&pdf;</xsl:text>
                     <xsl:if
                         test="i18n:language-direction(.) eq 'ltr' and i18n:language-direction(parent::*) ne 'ltr' and $i18n:ltr-to-rtl-extra-space">

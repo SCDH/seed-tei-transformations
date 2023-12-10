@@ -603,6 +603,10 @@ see xsl/projects/alea/preview.xsl
     </xsl:template>
 
 
+    <!-- hooks before and after the reading text -->
+    <xsl:mode name="app:pre-reading-text" on-no-match="deep-skip" visibility="public"/>
+    <xsl:mode name="app:post-reading-text" on-no-match="deep-skip" visibility="public"/>
+
 
     <!-- The mode app:reading-annotation is for adding (automatically generated) notes to an apparatus entry,
         e.g. when <unclear> or <gap> is nested in an apparatus entry, we may want to add information from the
