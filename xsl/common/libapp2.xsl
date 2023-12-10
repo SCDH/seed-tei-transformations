@@ -408,6 +408,36 @@ see xsl/projects/alea/preview.xsl
         <xsl:apply-templates mode="seed:lemma-text-nodes" select="lem"/>
     </xsl:template>
 
+
+    <!-- entry nested in span with @from -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="span[@from and not(@to)]/*" priority="2">
+        <xsl:variable name="from-id" select="substring(parent::span/@from, 2)"/>
+        <xsl:variable name="from" select="//*[@xml:id eq $from-id]"/>
+        <xsl:variable name="to" select="parent::span"/>
+        <xsl:apply-templates mode="seed:lemma-text-nodes"
+            select="seed:subtrees-between-anchors($from, $to)"/>
+    </xsl:template>
+
+    <!-- entry nested in span with @to -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="span[not(@from) and @to]/*" priority="2">
+        <xsl:variable name="from" select="parent::span"/>
+        <xsl:variable name="to-id" select="substring(parent::span/@to, 2)"/>
+        <xsl:variable name="to" select="//*[@xml:id eq $to-id]"/>
+        <xsl:apply-templates mode="seed:lemma-text-nodes"
+            select="seed:subtrees-between-anchors($from, $to)"/>
+    </xsl:template>
+
+    <!-- entry nested in span with @from and @to -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="span[@from and @to]/*" priority="2">
+        <xsl:variable name="from-id" select="substring(parent::span/@from, 2)"/>
+        <xsl:variable name="from" select="//*[@xml:id eq $from-id]"/>
+        <xsl:variable name="to-id" select="substring(parent::span/@to, 2)"/>
+        <xsl:variable name="to" select="//*[@xml:id eq $to-id]"/>
+        <xsl:apply-templates mode="seed:lemma-text-nodes"
+            select="seed:subtrees-between-anchors($from, $to)"/>
+    </xsl:template>
+
+
     <!-- for <note>: if there is no @targetEnd, the referring passage is the whole parent element -->
     <xsl:template mode="app:lemma-text-nodes-dspt"
         match="note[not(@targetEnd)] | noteGrp[not(@targetEnd)]">
