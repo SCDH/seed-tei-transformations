@@ -1,5 +1,13 @@
 # Changes
 
+## 0.7.0
+
+- `libbiblio.xsl`: allow punctuation marks in `<bibl>` when pulling in
+  the reference from the bibliography. This is required when multiple
+  `<biblscope>`s are separated by comma etc.
+- ALEA's bibliography: handle references to multipe Surah or verses of
+  them.
+
 ## 0.6.0
 
 - get lemma right for apparatus entries that are nested in `<span>`
