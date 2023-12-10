@@ -1,5 +1,16 @@
 # Changes
 
+## 0.6.0
+
+- get lemma right for apparatus entries that are nested in `<span>`
+  which defines the boundary with `@from` and `@to`. This is
+  especially good for editorial or explanatorial notes on analytical
+  spans.
+- added hooks `app:pre-reading-text` and `app:post-reading-text` for
+  getting extra text into apparatus entries
+- ALEA's Diwan:
+  - output for new conventions for annotating Tadmin and Isarah
+
 ## 0.5.0
 
 - ALEA's `diwan.xsl` and `diwan-recension.xsl` are up to date and used
