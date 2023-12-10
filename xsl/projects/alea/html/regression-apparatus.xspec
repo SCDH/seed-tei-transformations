@@ -187,13 +187,13 @@
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="static reason 'illegible' present in apparatus entry"
-            test="some $txt in //*[@data-i18n-key]/text() satisfies $txt eq 'illegible'"/>
+            test="some $txt in //*[@data-i18n-key]/text() satisfies $txt eq 'unclear'"/>
         <x:expect label="reason present in apparatus entry and it is translated"
-            test="some $att in //@data-i18n-key satisfies $att eq 'illegible'"/>
+            test="some $att in //@data-i18n-key satisfies $att eq 'unclear'"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
             <span class="reading">c<span class="apparatus-sep" data-i18n-key="rdg-annotation-sep">, </span>
-                <span class="reading-annotation"><span class="static-text" data-i18n-key="illegible"
-                        >illegible</span>
+                <span class="reading-annotation"><span class="static-text" data-i18n-key="unclear"
+                        >unclear</span>
                 </span><span class="..." style="..." data-i18n-key="rdg-siglum-sep">:</span><span
                     class="siglum">w</span></span>
         </x:expect>
