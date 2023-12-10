@@ -58,7 +58,7 @@ USAGE:
 
     <!-- bibliographic reference that needs text pulled from the bibliography -->
     <xsl:template
-        match="bibl[@corresp and normalize-space(string-join(child::node() except child::biblScope, '')) eq '' and $biblio:empty-reference-autotext]"
+        match="bibl[@corresp and matches(string-join(child::node() except child::biblScope, ''), '^\W*$') and $biblio:empty-reference-autotext]"
         mode="biblio:reference">
         <xsl:variable name="biblnode" select="."/>
         <xsl:variable name="autotext" as="xs:boolean"
@@ -103,7 +103,7 @@ USAGE:
 
     <!-- bibliographic reference where reference text is already present -->
     <xsl:template
-        match="bibl[@corresp and normalize-space(string-join(child::node() except child::biblScope, '')) ne '']"
+        match="bibl[@corresp and not(matches(string-join(child::node() except child::biblScope, ''), '^\W*$'))]"
         mode="biblio:reference">
         <xsl:variable name="biblnode" select="."/>
         <xsl:variable name="hasBiblText" as="xs:boolean"
