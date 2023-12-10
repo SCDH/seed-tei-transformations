@@ -41,6 +41,16 @@
                                     corresp="bibl:Quran"><biblScope>114:2</biblScope></bibl></note>
                             sei, entdeckt der Probierstein der Wette.</p>
                     </div>
+                    <div>
+                        <note>
+                            <bibl xml:id="ifrw42.1" corresp="bibl:Quran"
+                                    ><biblScope>81:3</biblScope>,<biblScope>69:14</biblScope></bibl>
+                        </note>
+                        <bibl xml:id="ifrw42.2" corresp="bibl:Quran"
+                            ><biblScope>99:1-2</biblScope></bibl>
+                        <bibl xml:id="ifrw42.3" corresp="bibl:Quran"><biblScope>15:26, 28,
+                                33</biblScope></bibl>
+                    </div>
                 </body>
                 <back>
                     <listBibl>
@@ -100,6 +110,34 @@
             test="matches(/*/span[5]/@data-i18n-key, '^\d+$')"/>
         <x:expect label="Translation namespace for Surah verse number"
             test="matches(/*/span[5]/@data-i18n-ns, 'decimal')"/>
+    </x:scenario>
+
+    <x:scenario label="Issue 42 (ALEA framework): 1: multiple Surahs with multiple biblScopes">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ifrw42.1']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="enclosed entry" test="count(*)" select="1"/>
+        <x:expect label="bibliographic entry at start"
+            test="(/*/span[1]//text()) => string-join('')"
+            select="($tei-text//*[@xml:id eq 'Quran']//text()) => string-join('')"/>
+        <x:expect label="two Surahs" test="count(/*/span) ge 6"/>
+    </x:scenario>
+
+    <x:scenario label="Issue 42 (ALEA framework): 2: span of verses">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ifrw42.2']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="Surah" test="exists(//span[@data-i18n-key eq 'surah-99'])"/>
+        <x:expect label="start verse" test="exists(//span[@data-i18n-key eq '1'])"/>
+        <x:expect label="to" test="exists(//span[@data-i18n-key eq '-'])"/>
+        <x:expect label="end verse" test="exists(//span[@data-i18n-key eq '2'])"/>
+    </x:scenario>
+
+    <x:scenario label="Issue 42 (ALEA framework): 3: sequence of verses">
+        <x:context select="$tei-text//t:bibl[@xml:id eq 'ifrw42.3']"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="Surah" test="exists(//span[@data-i18n-key eq 'surah-15'])"/>
+        <x:expect label="verse 26" test="exists(//span[@data-i18n-key eq '26'])"/>
+        <x:expect label="delim" test="exists(//span[@data-i18n-key eq ','])"/>
+        <x:expect label="verse 33" test="exists(//span[@data-i18n-key eq '33'])"/>
     </x:scenario>
 
 </x:description>

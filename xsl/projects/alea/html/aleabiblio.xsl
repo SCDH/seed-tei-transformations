@@ -46,35 +46,52 @@ Special references:
 
             <xsl:template priority="10" mode="biblio:entry" match="bibl[@xml:id eq 'Quran']">
                 <xsl:param name="tpBiblScope" as="element()*" tunnel="yes"/>
-                <xsl:variable name="surah">
-                    <xsl:analyze-string select="$tpBiblScope => normalize-space()"
-                        regex="^(\d+)(:\d+)?$">
-                        <xsl:matching-substring>
-                            <xsl:value-of select="regex-group(1)"/>
-                        </xsl:matching-substring>
-                    </xsl:analyze-string>
-                </xsl:variable>
-                <xsl:variable name="verse">
-                    <xsl:analyze-string select="$tpBiblScope => normalize-space()"
-                        regex="^(\d+):(\d+)?$">
-                        <xsl:matching-substring>
-                            <xsl:value-of select="regex-group(2)"/>
-                        </xsl:matching-substring>
-                    </xsl:analyze-string>
-                </xsl:variable>
+                <xsl:message use-when="system-property('debug') ne 'true'">
+                    <xsl:text>Reference to Quran with </xsl:text>
+                    <xsl:value-of select="count($tpBiblScope)"/>
+                    <xsl:text> biblScopes.</xsl:text>
+                </xsl:message>
                 <span data-i18n-key="Quran" data-i18n-ns="quran">
                     <xsl:apply-templates mode="#current"/>
                 </span>
                 <span data-i18n-key="quran-title-surah-delim" data-i18n-ns="quran">: </span>
-                <span data-i18n-key="surah-{$surah}" data-i18n-ns="quran">
-                    <xsl:apply-templates mode="#current" select="$tpBiblScope"/>
-                </span>
-                <xsl:if test="$verse ne ''">
-                    <span data-i18n-key="quran-surah-verse-delim" data-i18n-ns="quran">, </span>
-                    <span data-i18n-key="{$verse}" data-i18n-ns="decimal">
-                        <xsl:value-of select="$verse"/>
+                <xsl:for-each select="$tpBiblScope">
+                    <xsl:variable name="biblScope" as="element()" select="."/>
+                    <xsl:variable name="surah">
+                        <xsl:analyze-string select="$biblScope => normalize-space()"
+                            regex="^(\d+)(:((\d+)((\s*-\s*\d+|\s*,\s*\d+)*)))?$">
+                            <xsl:matching-substring>
+                                <xsl:value-of select="regex-group(1)"/>
+                            </xsl:matching-substring>
+                        </xsl:analyze-string>
+                    </xsl:variable>
+                    <xsl:variable name="verse">
+                        <xsl:analyze-string select="$biblScope => normalize-space()"
+                            regex="^(\d+)(:((\d+)((\s*-\s*\d+|\s*,\s*\d+)*)))?$">
+                            <xsl:matching-substring>
+                                <xsl:value-of select="regex-group(3)"/>
+                            </xsl:matching-substring>
+                        </xsl:analyze-string>
+                    </xsl:variable>
+                    <span data-i18n-key="surah-{$surah}" data-i18n-ns="quran">
+                        <xsl:apply-templates mode="#current" select="$biblScope"/>
                     </span>
-                </xsl:if>
+                    <xsl:if test="$verse ne ''">
+                        <span data-i18n-key="quran-surah-verse-delim" data-i18n-ns="quran">, </span>
+                        <xsl:analyze-string select="$verse" regex="\d+">
+                            <xsl:matching-substring>
+                                <span data-i18n-key="{regex-group(0)}" data-i18n-ns="decimal">
+                                    <xsl:value-of select="regex-group(0)"/>
+                                </span>
+                            </xsl:matching-substring>
+                            <xsl:non-matching-substring>
+                                <span data-i18n-key="{normalize-space(.)}" data-i18n-ns="quran">
+                                    <xsl:value-of select="."/>
+                                </span>
+                            </xsl:non-matching-substring>
+                        </xsl:analyze-string>
+                    </xsl:if>
+                </xsl:for-each>
             </xsl:template>
 
             <!-- do not print biblScope for quran -->
