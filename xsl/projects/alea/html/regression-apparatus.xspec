@@ -19,6 +19,12 @@
                 </t:fileDesc>
                 <t:encodingDesc>
                     <t:variantEncoding method="double-end-point" location="internal"/>
+                    <t:listPrefixDef>
+                        <t:prefixDef ident="bibl" matchPattern="(.+)" replacementPattern="#$1"
+                            relativeFrom="definition"/>
+                        <t:prefixDef ident="tag" matchPattern="(.+)" replacementPattern="#$1"
+                            relativeFrom="definition"/>
+                    </t:listPrefixDef>
                 </t:encodingDesc>
             </t:teiHeader>
             <t:text>
@@ -50,8 +56,40 @@
                             </t:app> b</t:l>
                         <t:l xml:id="i22.1">a b <t:anchor xml:id="i22.1.a"/>c<t:span from="#i22.1.a">
                                 <t:note xml:id="i22.1.n">foo</t:note>/t:note></t:span> d e </t:l>
+                        <t:l xml:id="ifrw67.1">Und <t:anchor xml:id="ifrw67.1.a"/>was gibt's sonst
+                                noch!?<t:span from="#ifrw67.1.a" ana="tag:Tadmin"><t:note
+                                    xml:id="ifrw67.1.n"><t:bibl>Wer: wo,
+                                            <t:biblScope>09</t:biblScope></t:bibl></t:note></t:span></t:l>
+                        <t:l xml:id="ifrw67.2">Und <t:anchor xml:id="ifrw67.2.a"/>was gibt's jetzt
+                                noch!?<t:span from="#ifrw67.2.a" ana="tag:Isarah"><t:note
+                                    xml:id="ifrw67.2.n"><t:bibl>Wer: wo,
+                                            <t:biblScope>09</t:biblScope></t:bibl></t:note></t:span></t:l>
+                        <t:l xml:id="ifrw67.3">Und <t:anchor xml:id="ifrw67.3.a"/>was gibt's jetzt
+                                noch!?<t:span from="#ifrw67.3.a" ana="tag:Tadmin"><t:note
+                                    xml:id="ifrw67.3.n"><t:bibl>Wer: wo,
+                                            <t:biblScope>09</t:biblScope></t:bibl>,
+                                aber!</t:note></t:span></t:l>
                     </t:lg>
                 </t:body>
+                <t:back>
+                    <t:listBibl>
+                        <t:bibl xml:id="book1" xml:lang="en">
+                            <t:author>John Locke</t:author>: <t:title>An Essay</t:title>.</t:bibl>
+                        <bibl xml:id="Quran">Koran</bibl>
+                    </t:listBibl>
+                    <t:taxonomy>
+                        <t:category xml:id="Tadmin">
+                            <t:desc xml:lang="en"><t:term xml:lang="ar-Latn">Taḍmīn</t:term>:
+                                incorporation of an existing line of poetry or part thereof</t:desc>
+                            <!-- 2, 9, 9 -->
+                        </t:category>
+                        <t:category xml:id="Isarah">
+                            <t:desc xml:lang="en"><t:term xml:lang="ar-Latn"
+                                >Išārah</t:term></t:desc>
+                            <!-- 0, 0 -->
+                        </t:category>
+                    </t:taxonomy>
+                </t:back>
             </t:text>
         </t:TEI>
     </x:variable>
@@ -170,5 +208,37 @@
         <x:expect label="note" test="//*[@class eq 'note-text'] => matches('foo')"/>
     </x:scenario>
 
+    <x:scenario label="#67 (framework): Diwan preview for Tadmin and Isarah: Tadmin">
+        <x:context select="$doc//*[@xml:id eq 'ifrw67.1.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'was … noch!?'"/>
+        <x:expect label="prefixed with Tadmin"
+            test="//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'] => matches('Taḍmīn')"
+        />
+    </x:scenario>
+
+    <x:scenario label="#67 (framework): Diwan preview for Tadmin and Isarah: Isarah">
+        <x:context select="$doc//*[@xml:id eq 'ifrw67.2.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'was … noch!?'"/>
+        <x:expect label="prefixed with Tadmin"
+            test="//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'] => matches('Išārah')"
+        />
+    </x:scenario>
+
+    <x:scenario
+        label="#67 (framework): Diwan preview for Tadmin and Isarah: Tadmin, but text in note.">
+        <x:context select="$doc//*[@xml:id eq 'ifrw67.3.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'was … noch!?'"/>
+        <x:expect label="not prefixed with Tadmin"
+            test="empty(//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'])"/>
+    </x:scenario>
 
 </x:description>

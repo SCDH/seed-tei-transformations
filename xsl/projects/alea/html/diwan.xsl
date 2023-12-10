@@ -31,8 +31,9 @@ target/bin/xslt.sh \
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:html="http://scdh.wwu.de/transform/html#"
     xmlns:biblio="http://scdh.wwu.de/transform/biblio#"
-    xmlns:test="http://scdh.wwu.de/transform/test#" exclude-result-prefixes="#all"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
+    xmlns:ref="http://scdh.wwu.de/transform/ref#" xmlns:test="http://scdh.wwu.de/transform/test#"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -86,6 +87,10 @@ target/bin/xslt.sh \
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
+        package-version="1.0.0"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
         package-version="1.0.0"/>
 
     <xsl:use-package
@@ -188,6 +193,39 @@ target/bin/xslt.sh \
 
             <xsl:template mode="app:reading-text" match="bibl">
                 <xsl:call-template name="biblio:reference"/>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-text" match="term[@xml:lang ne 'ar']">
+                <i>
+                    <xsl:if test="@sameAs">
+                        <xsl:attribute name="data-help-key" select="@sameAs"/>
+                    </xsl:if>
+                    <xsl:apply-templates mode="#current"/>
+                </i>
+            </xsl:template>
+
+            <xsl:template mode="app:pre-reading-text" priority="2"
+                match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Tadmin']/note[normalize-space(node() except child::bibl) eq '']">
+                <xsl:variable name="context" as="element()" select="."/>
+                <xsl:variable name="term" as="item()*"
+                    select="ref:process-reference('tag:Tadmin', .) => ref:dereference($context)"/>
+                <span class="pre-reading-text static-text" data-help-key="Tadmin">
+                    <xsl:apply-templates mode="app:reading-text"
+                        select="$term/desc[@xml:lang eq 'en']/term[1]"/>
+                    <span>: </span>
+                </span>
+            </xsl:template>
+
+            <xsl:template mode="app:pre-reading-text"
+                match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Isarah']/note[normalize-space(node() except child::bibl) eq '']">
+                <xsl:variable name="context" as="element()" select="."/>
+                <xsl:variable name="term" as="item()*"
+                    select="ref:process-reference('tag:Isarah', .) => ref:dereference($context)"/>
+                <span class="pre-reading-text static-text" data-help-key="Isarah">
+                    <xsl:apply-templates mode="app:reading-text"
+                        select="$term/desc[@xml:lang eq 'en']/term[1]"/>
+                    <span>: </span>
+                </span>
             </xsl:template>
 
         </xsl:override>
