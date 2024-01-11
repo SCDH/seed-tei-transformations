@@ -19,6 +19,9 @@
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
 
+    <xsl:param name="app:popup-anchor" as="xs:string" select="'?'" required="false"/>
+
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
@@ -127,13 +130,45 @@
                 </xsl:if>
             </xsl:template>
 
-            <!-- make an inline alternative for an entry at the context it.
-                See seed:note-based-apparatus-nodes-map#2 for making a required map.-->
-            <xsl:template name="app:inline-alternatives">
+            <!-- make an inline alternative for an entry at the context it appears in.
+                See seed:note-based-apparatus-nodes-map#2 for making a required map.
+                popup.css should be loaded when used; see named template
+                app:popup-css. -->
+            <xsl:template name="app:inline-alternatives" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
-                <!-- TODO -->
+                <xsl:variable name="element-id"
+                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:variable name="popup-id" select="concat($element-id, '-popup')"/>
+                <xsl:if test="map:contains($entries, $element-id)">
+                    <xsl:variable name="entry" as="map(*)" select="map:get($entries, $element-id)"/>
+                    <!-- cf. https://www.w3schools.com/howto/howto_js_popup.asp -->
+                    <span class="popup">
+                        <xsl:attribute name="onclick">
+                            <!-- call anonymous function onclick="'(()=>{...})()'" -->
+                            <xsl:text>(()=>{</xsl:text>
+                            <xsl:text use-when="system-property('debug') eq 'true'">console.log("clicked on apparatus entry ","</xsl:text>
+                            <xsl:value-of select="$popup-id"
+                                use-when="system-property('debug') eq 'true'"/>
+                            <xsl:text use-when="system-property('debug') eq 'true'">"); </xsl:text>
+                            <xsl:text>const popup = document.getElementById('</xsl:text>
+                            <xsl:value-of select="$popup-id"/>
+                            <xsl:text>'); popup.classList.toggle("show");</xsl:text>
+                            <xsl:text>})()</xsl:text>
+                        </xsl:attribute>
+                        <span class="static-text clickable-text popup-anchor">
+                            <xsl:if test="$app:popup-anchor eq ''">
+                                <xsl:attribute name="data-i18n-key" select="'popup-anchor'"/>
+                            </xsl:if>
+                            <xsl:value-of select="$app:popup-anchor"/>
+                        </span>
+                        <span class="popuptext" id="{$popup-id}">
+                            <xsl:call-template name="app:apparatus-entry">
+                                <xsl:with-param name="entries" select="map:get($entry, 'entries')"/>
+                            </xsl:call-template>
+                        </span>
+                    </span>
+                </xsl:if>
             </xsl:template>
-
 
 
             <!-- the template for an entry -->
@@ -471,5 +506,14 @@
         </xsl:override>
     </xsl:use-package>
 
+    <xsl:variable name="app:popup-css" as="xs:anyURI"
+        select="resolve-uri('popup.css', static-base-uri())" visibility="final"/>
+
+    <!-- load css required for app:inline-alternatives -->
+    <xsl:template name="app:popup-css" visibility="public">
+        <style>
+            <xsl:value-of select="$app:popup-css => unparsed-text()"/>
+        </style>
+    </xsl:template>
 
 </xsl:package>
