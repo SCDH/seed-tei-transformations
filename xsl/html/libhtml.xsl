@@ -55,6 +55,10 @@ Note, that the default mode is html:html!
   <xsl:variable name="html:canonical-uri" as="xs:string" select="''" visibility="public"/>
 
 
+  <!-- a second way additional to $html:css to pass in CSS files -->
+  <xsl:variable name="html:extra-css" as="xs:anyURI*" select="()" visibility="public"/>
+
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
     package-version="0.1.0">
@@ -132,7 +136,7 @@ Note, that the default mode is html:html!
     <xsl:variable name="base-uri" select="base-uri()"/>
     <xsl:choose>
       <xsl:when test="$html:css-method eq 'internal'">
-        <xsl:for-each select="$html:css">
+        <xsl:for-each select="$html:extra-css, $html:css">
           <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
           <xsl:choose>
             <xsl:when test="unparsed-text-available($href)">
