@@ -112,7 +112,7 @@ see xsl/projects/alea/preview.xsl
     <xsl:variable name="app:entries-xpath-internal-double-end-point" as="xs:string"
         visibility="public">
         <xsl:value-of>
-            <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
+            <xsl:text>descendant::app[not(parent::sic[parent::choice]) and not(@from eq '#' or @to eq '#')]</xsl:text>
             <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
