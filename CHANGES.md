@@ -1,5 +1,22 @@
 # Changes
 
+## 0.8.0
+
+- NEW: `prose-with-popups.xsl`
+  - a new simple transformation for prose to HTML with critical
+	apparatus presented as popups
+  - available as a SEED resource for end users
+- `libapp2.xsl`
+  - implemented template for presenting apparatus entries in popups
+  - Made critical apparatus a bit more robust by not using `app`
+	elements with `@from` or `@to` with values of pure `#`, which may
+	come from invalid imports to TEI. This condition is only tested in
+	the default XPath expression for the generation of apparatus
+	entries for a double end-point attached apparatus.
+- `libhtml.xsl`
+  - added variable `html:extra-css` for overriding in downstream
+    packages, while leaving `html:css` as a parameter to end users
+
 ## 0.7.0
 
 - `libbiblio.xsl`: allow punctuation marks in `<bibl>` when pulling in
