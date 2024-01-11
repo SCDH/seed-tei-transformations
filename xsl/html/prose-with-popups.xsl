@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- a transformation that just outputs the text using libprose.xsl and outputting apparatus and notes as popups -->
 <xsl:package
-  name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/prose.xsl"
+  name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/prose-with-popups.xsl"
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
