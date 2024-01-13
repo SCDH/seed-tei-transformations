@@ -1,5 +1,12 @@
 # Changes
 
+## 0.9.0
+
+- NEW: `bible-with-popups.xsl`
+  - a new transformation for text segmented in chapters and verses
+    like the books of the bible
+  - available as a SEED resource for end users
+
 ## 0.8.0
 
 - NEW: `prose-with-popups.xsl`
