@@ -1,0 +1,26 @@
+div[data-tei-type=chapter],
+.chapter {
+    margin-top: 2.8ex;
+}
+
+div[data-tei-type=chapter] > div,
+.chapter > div {
+    margin-top: 1.2ex;
+}
+
+div[data-chapter-verse]:before {
+    content: attr(data-chapter-verse);
+    display: inline-block;
+    min-width: 3em;
+    margin-left: 0.5em;
+    font-size: 0.8em;
+    color: silver;
+}
+
+.milestone[data-tei-n]:before {
+    content: attr(data-tei-n);
+    display: inline-block;
+    margin-left: 3.5em;
+    font-size: 0.8em;
+    font-weight: 900;
+}
