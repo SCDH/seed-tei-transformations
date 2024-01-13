@@ -27,6 +27,7 @@
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
         <antcall target="test-xsl-html-prose-with-popups.xsl"/>
+        <antcall target="test-xsl-html-bible-with-popups.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
         <antcall target="test-xsl-latex-libreledmac.xsl"/>
         <antcall target="test-xsl-latex-libapp2c.xsl"/>
@@ -86,6 +87,12 @@
     <target name="test-xsl-html-prose-with-popups.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/prose-with-popups.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-bible-with-popups.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/bible-with-popups.xspec"/>
         </antcall>
     </target>
 
