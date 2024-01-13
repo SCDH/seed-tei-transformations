@@ -17,8 +17,6 @@
 
   <xsl:param name="default-language" as="xs:string" select="'en'"/>
 
-  <xsl:global-context-item as="document-node()" use="required"/>
-
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
     package-version="0.1.0">
@@ -33,12 +31,16 @@
     <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
       visibility="public"/>
     <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+    <xsl:accept component="mode" names="*" visibility="public"/>
+    <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="hidden"/>
   </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
     package-version="1.0.0">
     <xsl:accept component="*" names="*" visibility="public"/>
+    <xsl:accept component="variable" names="app:popup-css" visibility="final"/>
+    <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
   </xsl:use-package>
 
   <xsl:variable name="prose:apparatus-entries" as="map(xs:string, map(*))" visibility="public"
@@ -71,7 +73,7 @@
         <xsl:apply-templates mode="text:text"/>
       </xsl:template>
 
-      <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css"/>
+      <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css" visibility="public"/>
 
     </xsl:override>
   </xsl:use-package>
