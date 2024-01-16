@@ -66,6 +66,7 @@
 
     <xsl:accept component="mode" names="html:html" visibility="public"/>
     <xsl:accept component="template" names="html:*" visibility="public"/>
+    <xsl:accept component="variable" names="*" visibility="public"/>
 
     <xsl:override>
 
