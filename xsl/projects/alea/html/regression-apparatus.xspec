@@ -69,6 +69,19 @@
                                     xml:id="ifrw67.3.n"><t:bibl>Wer: wo,
                                             <t:biblScope>09</t:biblScope></t:bibl>,
                                 aber!</t:note></t:span></t:l>
+                        <t:l xml:id="ifrw67.4">Und <t:anchor xml:id="ifrw67.4.a"/>was gibt's jetzt
+                                noch!?<t:span from="#ifrw67.4.a" ana="tag:Tadmin"><t:note
+                                    xml:id="ifrw67.4.n">Jedoch <t:bibl>Wer: wo,
+                                            <t:biblScope>09</t:biblScope></t:bibl></t:note></t:span></t:l>
+                        <t:l xml:id="ifrw67.5">Und <t:anchor xml:id="ifrw67.5.a"/>was gibt's jetzt
+                                noch!?<t:span from="#ifrw67.5.a" ana="tag:Isarah"><t:note
+                                    xml:id="ifrw67.5.n"><t:bibl>Wer: wo,
+                                            <t:biblScope>09</t:biblScope></t:bibl>,
+                                aber!</t:note></t:span></t:l>
+                        <t:l xml:id="ifrw67.6">Und <t:anchor xml:id="ifrw67.6.a"/>was gibt's jetzt
+                                noch!?<t:span from="#ifrw67.6.a" ana="tag:Isarah"><t:note
+                                    xml:id="ifrw67.6.n">Jedoch <t:bibl>Wer: wo,
+                                            <t:biblScope>09</t:biblScope></t:bibl></t:note></t:span></t:l>
                     </t:lg>
                 </t:body>
                 <t:back>
@@ -225,14 +238,26 @@
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
             select="'was … noch!?'"/>
-        <x:expect label="prefixed with Tadmin"
+        <x:expect label="prefixed with Isarah"
             test="//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'] => matches('Išārah')"
         />
     </x:scenario>
 
     <x:scenario
-        label="#67 (framework): Diwan preview for Tadmin and Isarah: Tadmin, but text in note.">
+        label="#67 (framework): Diwan preview for Tadmin and Isarah: Tadmin, text in note after bibl.">
         <x:context select="$doc//*[@xml:id eq 'ifrw67.3.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'was … noch!?'"/>
+        <x:expect label="prefixed with Tadmin"
+            test="//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'] => matches('Taḍmīn')"
+        />
+    </x:scenario>
+
+    <x:scenario
+        label="#67 (framework): Diwan preview for Tadmin and Isarah: no Tadmin, when text in note before bibl.">
+        <x:context select="$doc//*[@xml:id eq 'ifrw67.4.n']"/>
         <x:call template="test:single-editorial-note"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
@@ -240,5 +265,29 @@
         <x:expect label="not prefixed with Tadmin"
             test="empty(//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'])"/>
     </x:scenario>
+
+    <x:scenario
+        label="#67 (framework): Diwan preview for Tadmin and Isarah: Isarah, text in note after bibl.">
+        <x:context select="$doc//*[@xml:id eq 'ifrw67.5.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'was … noch!?'"/>
+        <x:expect label="prefixed with Isarah"
+            test="//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'] => matches('Išārah')"
+        />
+    </x:scenario>
+
+    <x:scenario
+        label="#67 (framework): Diwan preview for Tadmin and Isarah: no Isarah, when text in note before bibl.">
+        <x:context select="$doc//*[@xml:id eq 'ifrw67.6.n']"/>
+        <x:call template="test:single-editorial-note"/>
+        <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
+        <x:expect label="lemma" test="//*[@class eq 'apparatus-lemma'] => normalize-space()"
+            select="'was … noch!?'"/>
+        <x:expect label="not prefixed with Isarah"
+            test="empty(//*[some $cls in tokenize(@class) satisfies $cls eq 'pre-reading-text'])"/>
+    </x:scenario>
+
 
 </x:description>
