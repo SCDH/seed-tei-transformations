@@ -142,6 +142,24 @@ see xsl/projects/alea/preview.xsl
         </xsl:value-of>
     </xsl:variable>
 
+    <!-- apparatus entries made for location referenced -->
+    <xsl:variable name="app:entries-xpath-internal-location-referenced" as="xs:string"
+        visibility="public">
+        <xsl:value-of>
+            <xsl:text>descendant::app[not(parent::sic[parent::choice])]</xsl:text>
+            <xsl:text>| descendant::witDetail[not(parent::app)]</xsl:text>
+            <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
+            <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
+            <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+            <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
+            <xsl:text>| descendant::choice[unclear]</xsl:text>
+            <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
+            <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
+            <xsl:text>| descendant::supplied</xsl:text>
+        </xsl:value-of>
+    </xsl:variable>
+
+
     <!-- when no variant encoding is present -->
     <xsl:variable name="app:entries-xpath-no-textcrit" as="xs:string" visibility="public">
         <xsl:value-of>
@@ -187,6 +205,9 @@ see xsl/projects/alea/preview.xsl
                 </xsl:when>
                 <xsl:when test="$variant-encoding eq 'internal-parallel-segmentation'">
                     <xsl:value-of select="$app:entries-xpath-internal-parallel-segmentation"/>
+                </xsl:when>
+                <xsl:when test="$variant-encoding eq 'internal-location-referenced'">
+                    <xsl:value-of select="$app:entries-xpath-internal-location-referenced"/>
                 </xsl:when>
                 <xsl:when test="$variant-encoding eq '-'">
                     <xsl:value-of select="$app:entries-xpath-no-textcrit"/>
