@@ -1,5 +1,11 @@
 # Changes
 
+## 0.9.1
+
+- `libapp2.xsl`: handle internal location-references apparatus
+- `prose-with-popups.xml` enable `html:js` and `html:css` in
+  downstream packages
+
 ## 0.9.0
 
 - NEW: `bible-with-popups.xsl`
