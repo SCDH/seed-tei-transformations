@@ -1,5 +1,9 @@
 # Changes
 
+## 0.9.2
+
+- `alea/html/diwan.xsl`: fix handling of Tadmin and Isarah
+
 ## 0.9.1
 
 - `libapp2.xsl`: handle internal location-references apparatus
