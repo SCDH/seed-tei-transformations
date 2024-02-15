@@ -44,6 +44,9 @@ target/bin/xslt.sh \
     <xsl:param name="wit-catalog" as="xs:string?"
         select="resolve-uri('../../../WitnessCatalogue.xml', base-uri())"/>
 
+    <!-- font size -->
+    <xsl:param name="font-size" as="xs:string" select="'14pt'"/>
+
     <xsl:variable name="witnesses" as="element()*" visibility="public">
         <xsl:choose>
             <xsl:when test="empty($wit-catalog) or not(doc-available($wit-catalog))">
@@ -270,25 +273,27 @@ target/bin/xslt.sh \
 
             <!-- this makes the page content -->
             <xsl:template name="html:content">
-                <section class="metadata">
-                    <xsl:apply-templates select="/TEI/teiHeader" mode="meta:data"/>
-                </section>
-                <hr/>
-                <section class="content">
-                    <xsl:apply-templates select="/TEI/text/body" mode="text:text"/>
-                </section>
-                <hr/>
-                <section class="variants">
-                    <xsl:call-template name="app:line-based-apparatus">
-                        <xsl:with-param name="entries" select="$apparatus-entries"/>
-                    </xsl:call-template>
-                </section>
-                <hr/>
-                <section class="comments">
-                    <xsl:call-template name="app:line-based-apparatus">
-                        <xsl:with-param name="entries" select="$editorial-notes"/>
-                    </xsl:call-template>
-                </section>
+                <div style="font-size:{$font-size};">
+                    <section class="metadata">
+                        <xsl:apply-templates select="/TEI/teiHeader" mode="meta:data"/>
+                    </section>
+                    <hr/>
+                    <section class="content">
+                        <xsl:apply-templates select="/TEI/text/body" mode="text:text"/>
+                    </section>
+                    <hr/>
+                    <section class="variants">
+                        <xsl:call-template name="app:line-based-apparatus">
+                            <xsl:with-param name="entries" select="$apparatus-entries"/>
+                        </xsl:call-template>
+                    </section>
+                    <hr/>
+                    <section class="comments">
+                        <xsl:call-template name="app:line-based-apparatus">
+                            <xsl:with-param name="entries" select="$editorial-notes"/>
+                        </xsl:call-template>
+                    </section>
+                </div>
                 <hr/>
                 <xsl:call-template name="i18n:language-chooser"/>
                 <xsl:call-template name="i18n:load-javascript"/>
