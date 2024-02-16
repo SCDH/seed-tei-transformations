@@ -71,7 +71,8 @@ Note, that the default mode is html:html!
 
   <xsl:mode name="html:html" on-no-match="shallow-skip" visibility="public"/>
 
-  <xsl:template match="/">
+  <!-- Downstream packages may call the default mode on the document node or on the root element. -->
+  <xsl:template match="document-node() | /* | *">
     <xsl:text disable-output-escaping="yes" use-when="false()">&lt;!DOCTYPE html&gt;&lb;</xsl:text>
     <xsl:for-each select="//xi:include">
       <xsl:message>
