@@ -207,6 +207,18 @@ target/bin/xslt.sh \
                 </i>
             </xsl:template>
 
+            <xsl:template mode="app:reading-text" match="q">
+                <xsl:text>“</xsl:text>
+                <xsl:apply-templates mode="#current"/>
+                <xsl:text>”</xsl:text>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-text" match="*[@rend eq 'italic']" priority="0.8">
+                <i>
+                    <xsl:apply-templates mode="#current"/>
+                </i>
+            </xsl:template>
+
             <!-- we print Tadmin for <span> with tag Tadmin, if no text in <note> before <bibl> -->
             <xsl:template mode="app:pre-reading-text" priority="2"
                 match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Tadmin']/note[normalize-space(node() except (child::bibl, child::bibl/following-sibling::node())) eq '']">
@@ -260,7 +272,22 @@ target/bin/xslt.sh \
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/aleabiblio.xsl"
-        package-version="1.0.0"/>
+        package-version="1.0.0">
+        <xsl:override>
+            <xsl:template mode="biblio:entry" match="q">
+                <xsl:text>“</xsl:text>
+                <xsl:apply-templates mode="#current"/>
+                <xsl:text>”</xsl:text>
+            </xsl:template>
+
+            <xsl:template mode="biblio:entry" match="*[@rend eq 'italic']" priority="0.8">
+                <i>
+                    <xsl:apply-templates mode="#current"/>
+                </i>
+            </xsl:template>
+
+        </xsl:override>
+    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libhtml.xsl"
