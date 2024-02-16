@@ -1,5 +1,13 @@
 # Changes
 
+## 0.10.0
+
+- NEW: `xsl/html/xml-source.xsl`
+  - transform to html given a view on the source, formatted through html
+- `alea/html/diwan.xsl`:
+  - stylesheet parameter for setting the font size
+  - italics and quotes
+
 ## 0.9.2
 
 - `alea/html/diwan.xsl`: fix handling of Tadmin and Isarah
