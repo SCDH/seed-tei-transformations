@@ -26,6 +26,7 @@
         <antcall target="test-xsl-json-witnesses.xsl"/>
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
+        <antcall target="test-xsl-html-source-xml.xsl"/>
         <antcall target="test-xsl-html-prose-with-popups.xsl"/>
         <antcall target="test-xsl-html-bible-with-popups.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
@@ -81,6 +82,12 @@
     <target name="test-xsl-html-prose.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/prose.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-source-xml.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/xml-source.xspec"/>
         </antcall>
     </target>
 
