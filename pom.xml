@@ -293,6 +293,7 @@
                                 <include>xsl/json/witnesses.xsl</include>
                                 <include>xsl/html/prose.xsl</include>
                                 <include>xsl/html/prose-with-popups.xsl</include>
+                                <include>xsl/html/xml-source.xml</include>
                                 <include>xsl/projects/alea/html/diwan.xsl</include>
                                 <include>xsl/projects/alea/html/diwan-recension.xsl</include>
                                 <include>xsl/projects/alea/tei/extract-recension.xsl</include>
