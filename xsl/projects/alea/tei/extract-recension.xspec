@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="extract-recension.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+
+    <x:scenario label="template compiles without error">
+        <x:param name="source" select="'Pr'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="html root element" test="name(/*)" select="'TEI'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Recension Proto">
+        <x:param name="source" select="'Pr'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="no app entries" test="count(//t:app)" select="0"/>
+        <x:expect label="work ID" test="//t:TEI/@xml:id ! string(.)" select="'Plam42'"/>
+        <x:expect label="recension in title" test="//t:title ! string(.)" select="'Plam42'"
+            pending="true"/>
+        <x:expect label="title has rhyme and number"
+            test="//t:title ! string(.) ! matches(., 'lam42')"/>
+        <x:expect label="only listWit for current recension kept"
+            test="//t:listWit/@xml:id ! string(.)" select="('Pr')"/>
+        <x:expect label="count of kept witnesses" test="count(//t:witness)" select="3"/>
+        <x:expect label="result document contains comment about the extraction"
+            test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Recension Bashtaki Beta">
+        <x:param name="source" select="'BB'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="two app entries" test="count(//t:app)" select="2"/>
+        <x:expect label="work ID" test="//t:TEI/@xml:id ! string(.)" select="'BBlam42'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Error for unknown recension" catch="true">
+        <x:param name="source" select="'unknown'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="terminates with message" test="$x:result?err?value => string()"
+            select="'Recension not found'"/>
+        <x:expect label="error code" test="$x:result?err?code"
+            select="QName('http://www.w3.org/2005/xqt-errors', 'XTMM9000')"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Error when required source parameter is not present" catch="true">
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="error message" test="$x:result?err?description"
+            select="'No value supplied for required parameter source'"/>
+        <x:expect label="error code" test="$x:result?err?code"
+            select="QName('http://www.w3.org/2005/xqt-errors', 'XTDE0050')"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: empty string recension results in identity">
+        <x:param name="source" select="''"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <!-- path relative to the compiled stylesheet. This may break on other XSpec drivers than Ant! Use x:context instead! -->
+        <!--x:expect label="identity of root element"
+            test="deep-equal(/*, doc(resolve-uri('../../../../../test/samples/lam42.tei.xml', base-uri()))/*)"/-->
+        <x:expect label="identity of root element" test="deep-equal(/*, $x:context/*)"/>
+        <x:expect label="result document contains comment about the extraction"
+            test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+    </x:scenario>
+
+
+
+</x:description>
