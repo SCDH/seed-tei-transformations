@@ -102,7 +102,7 @@
         </x:expect>
     </x:scenario>
 
-    <x:scenario label="mre.xml: Recension R1">
+    <x:scenario label="mre.xml: TEI corpus">
         <x:context href="../../../../test/samples/mre.xml"/>
         <x:param name="source" select="'R1'" tunnel="true"/>
         <x:call template="recension:tei-corpus"/>
@@ -128,6 +128,15 @@
         <!--x:expect label="R1" test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']">
             <x:text>asdf</x:text>
         </x:expect-->
+    </x:scenario>
+
+    <x:scenario label="mre.xml: documents" pending="true">
+        <x:context href="../../../../test/samples/mre.xml"/>
+        <x:param name="source" select="'R1'" tunnel="true"/>
+        <x:call template="recension:separate-docs"/>
+        <x:expect label="R1 file exists"
+            test="doc-available('../../../../test/samples/mre.xml.R1.xml')"/>
+
     </x:scenario>
 
 </x:description>
