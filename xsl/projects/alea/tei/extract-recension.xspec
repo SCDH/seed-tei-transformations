@@ -2,8 +2,9 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
-    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="extract-recension.xsl" run-as="external">
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:recension="http://scdh.wwu.de/transform/recension#" stylesheet="extract-recension.xsl"
+    run-as="external">
 
     <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
 
@@ -62,6 +63,19 @@
         <x:expect label="identity of root element" test="deep-equal(/*, $x:context/*)"/>
         <x:expect label="result document contains comment about the extraction"
             test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: teiCorpus">
+        <x:param name="source" select="'never mind'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:call template="recension:tei-corpus"/>
+        <x:expect label="teiCorpus root element" test="/* ! name(.)" select="'teiCorpus'"/>
+        <x:expect label="two documents in corpus" test="count(/t:teiCorpus/t:TEI)" select="2"/>
+        <x:expect label="IDs of documents in corpus" test="/t:teiCorpus/t:TEI/@xml:id ! string(.)"
+            select="('Plam42', 'BBlam42')"/>
+        <x:expect label="result document contains comment about the extraction"
+            test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+        <x:expect label="common teiHeader" test="exists(/t:teiCorpus/t:teiHeader)"/>
     </x:scenario>
 
 
