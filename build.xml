@@ -40,6 +40,7 @@
         <antcall target="test-xsl-projects-alea-html-diwan-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-html-regression-apparatus.xsl"/>
         <antcall target="test-xsl-projects-alea-html-regression-biblio.xsl"/>
+        <antcall target="test-xsl-projects-alea-tei-extract-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
     </target>
 
@@ -171,6 +172,13 @@
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml"
                 location="${basedir}/xsl/projects/alea/html/regression-biblio.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-projects-alea-tei-extract-recension.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml"
+                location="${basedir}/xsl/projects/alea/tei/extract-recension.xspec"/>
         </antcall>
     </target>
 

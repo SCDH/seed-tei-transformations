@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:recension="http://scdh.wwu.de/transform/recension#" stylesheet="extract-recension.xsl"
+    run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+
+    <x:scenario label="template compiles without error">
+        <x:param name="source" select="'Pr'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="html root element" test="name(/*)" select="'TEI'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Recension Proto">
+        <x:param name="source" select="'Pr'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="no app entries" test="count(//t:app)" select="0"/>
+        <x:expect label="work ID" test="//t:TEI/@xml:id ! string(.)" select="'Plam42'"/>
+        <x:expect label="recension in title" test="//t:title ! string(.)" select="'Plam42'"
+            pending="true"/>
+        <x:expect label="title has rhyme and number"
+            test="//t:title ! string(.) ! matches(., 'lam42')"/>
+        <x:expect label="only listWit for current recension kept"
+            test="//t:listWit/@xml:id ! string(.)" select="('Pr')"/>
+        <x:expect label="count of kept witnesses" test="count(//t:witness)" select="3"/>
+        <x:expect label="result document contains comment about the extraction"
+            test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Recension Bashtaki Beta">
+        <x:param name="source" select="'BB'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="two app entries" test="count(//t:app)" select="2"/>
+        <x:expect label="work ID" test="//t:TEI/@xml:id ! string(.)" select="'BBlam42'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Error for unknown recension" catch="true">
+        <x:param name="source" select="'unknown'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="terminates with message" test="$x:result?err?value => string()"
+            select="'Recension not found'"/>
+        <x:expect label="error code" test="$x:result?err?code"
+            select="QName('http://www.w3.org/2005/xqt-errors', 'XTMM9000')"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: Error when required source parameter is not present" catch="true">
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:expect label="error message" test="$x:result?err?description"
+            select="'No value supplied for required parameter source'"/>
+        <x:expect label="error code" test="$x:result?err?code"
+            select="QName('http://www.w3.org/2005/xqt-errors', 'XTDE0050')"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: empty string recension results in identity">
+        <x:param name="source" select="''"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <!-- path relative to the compiled stylesheet. This may break on other XSpec drivers than Ant! Use x:context instead! -->
+        <!--x:expect label="identity of root element"
+            test="deep-equal(/*, doc(resolve-uri('../../../../../test/samples/lam42.tei.xml', base-uri()))/*)"/-->
+        <x:expect label="identity of root element" test="deep-equal(/*, $x:context/*)"/>
+        <x:expect label="result document contains comment about the extraction"
+            test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+    </x:scenario>
+
+    <x:scenario label="lam42: teiCorpus">
+        <x:param name="source" select="'never mind'"/>
+        <x:context href="../../../../test/samples/lam42.tei.xml"/>
+        <x:call template="recension:tei-corpus"/>
+        <x:expect label="teiCorpus root element" test="/* ! name(.)" select="'teiCorpus'"/>
+        <x:expect label="two documents in corpus" test="count(/t:teiCorpus/t:TEI)" select="2"/>
+        <x:expect label="IDs of documents in corpus" test="/t:teiCorpus/t:TEI/@xml:id ! string(.)"
+            select="('Plam42', 'BBlam42')"/>
+        <x:expect label="result document contains comment about the extraction"
+            test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
+        <x:expect label="common teiHeader" test="exists(/t:teiCorpus/t:teiHeader)"/>
+        <x:expect label="witnesses of Proto document"
+            test="sort(/t:teiCorpus/t:TEI[@xml:id eq 'Plam42']//t:sourceDesc//t:witness/@xml:id ! string(.))"
+            select="('B', 'K', 'Y')"/>
+        <x:expect label="witnesses of Bashtaki Beta document"
+            test="sort(/t:teiCorpus/t:TEI[@xml:id eq 'BBlam42']//t:sourceDesc//t:witness/@xml:id ! string(.))"
+            select="('BR', 'D', 'N', 'P', 'T', 'TU')"/>
+    </x:scenario>
+
+    <x:scenario label="mre.xml: Recension R1">
+        <x:context href="../../../../test/samples/mre.xml"/>
+        <x:param name="source" select="'R1'" tunnel="true"/>
+        <x:expect label="choice/seg: only segment from R1 kept" test="id('p1')">
+            <t:p xml:id="p1">
+                <x:text>We're on a road to nowhere. </x:text>
+                <x:text>But it's alright.</x:text>
+            </t:p>
+        </x:expect>
+        <x:expect label="app: only rdg from R1 kept" test="id('p2')//t:rdg">
+            <t:rdg wit="#A">We are</t:rdg>
+        </x:expect>
+        <x:expect label="app: only witnesses from R1 kept" test="id('p3')//t:rdg">
+            <t:rdg wit="#A">We are on</t:rdg>
+            <t:rdg wit="#B">There's</t:rdg>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mre.xml: TEI corpus">
+        <x:context href="../../../../test/samples/mre.xml"/>
+        <x:param name="source" select="'R1'" tunnel="true"/>
+        <x:call template="recension:tei-corpus"/>
+        <x:expect label="number of documents" test="/t:teiCorpus/t:TEI => count()" select="3"/>
+        <x:expect label="recensions" test="sort(/t:teiCorpus/t:TEI/@xml:id ! string(.))"
+            select="('R1mre', 'R2mre', 'R3mre')"/>
+        <x:expect label="segs in R1, p1"
+            test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']//t:p[@xml:id eq 'p1']">
+            <t:p xml:id="p1">
+                <x:text>We're on a road to nowhere. </x:text>
+                <x:text>But it's alright.</x:text>
+            </t:p>
+        </x:expect>
+        <x:expect label="rdgs in R1, p2"
+            test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']//t:p[@xml:id eq 'p2']//t:rdg">
+            <t:rdg wit="#A">We are</t:rdg>
+        </x:expect>
+        <x:expect label="rdgs in R1, p3"
+            test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']//t:p[@xml:id eq 'p3']//t:rdg">
+            <t:rdg wit="#A">We are on</t:rdg>
+            <t:rdg wit="#B">There's</t:rdg>
+        </x:expect>
+        <!--x:expect label="R1" test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']">
+            <x:text>asdf</x:text>
+        </x:expect-->
+    </x:scenario>
+
+    <x:scenario label="mre.xml: documents" pending="true">
+        <x:context href="../../../../test/samples/mre.xml"/>
+        <x:param name="source" select="'R1'" tunnel="true"/>
+        <x:call template="recension:separate-docs"/>
+        <x:expect label="R1 file exists"
+            test="doc-available('../../../../test/samples/mre.xml.R1.xml')"/>
+
+    </x:scenario>
+
+</x:description>
