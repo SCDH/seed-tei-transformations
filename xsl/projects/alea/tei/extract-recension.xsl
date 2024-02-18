@@ -153,7 +153,14 @@ We define a default mode in order to make stylesheet composition simpler.
     </xsl:template>
 
     <!-- delete recension and its witnesses from the source description -->
-    <xsl:template mode="recension:single" match="sourceDesc//listWit[@xml:id ne $source]"/>
+    <xsl:template mode="recension:single" match="sourceDesc//listWit[@xml:id]">
+        <xsl:param name="recension" tunnel="true"/>
+        <xsl:if test="string(@xml:id) eq $recension">
+            <xsl:copy>
+                <xsl:apply-templates mode="#current" select="node() | attribute()"/>
+            </xsl:copy>
+        </xsl:if>
+    </xsl:template>
 
     <!-- this rule applys for positive recension encoding, i.e. all
         recensions are explicitly given. -->
@@ -195,16 +202,27 @@ We define a default mode in order to make stylesheet composition simpler.
     </xsl:template>
 
     <!-- delete apparatus entries that only belong to other recensions -->
-    <xsl:template mode="recension:single" match="
-            app[every $wit in (string-join((child::rdg/@wit | child::witDetail/@wit), ' ') => tokenize()) ! substring(., 2)
-                satisfies not(exists(//teiHeader//sourceDesc//listWit[@xml:id eq $source]//witness[@xml:id eq $wit]))]">
+    <xsl:template mode="recension:single" match="app">
         <xsl:param name="recension" as="xs:string" tunnel="true"/>
-        <!-- handle the lemma according to variant encoding -->
-        <xsl:message use-when="system-property('debug') eq 'true'">
-            <xsl:text>delete whole app with readings from </xsl:text>
-            <xsl:value-of select="string-join((child::rdg/@wit, child::witDetail/@wit), ' ')"/>
-        </xsl:message>
-        <xsl:apply-templates select="lem" mode="lemma"/>
+        <xsl:choose>
+            <xsl:when
+                test="every $wit in (string-join((child::rdg/@wit | child::witDetail/@wit), ' ') => tokenize()) ! substring(., 2)
+                satisfies not(exists(//teiHeader//sourceDesc//listWit[@xml:id eq $recension]//witness[@xml:id eq $wit]))">
+                <!-- handle the lemma according to variant encoding -->
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>delete whole app with readings from </xsl:text>
+                    <xsl:value-of
+                        select="string-join((child::rdg/@wit, child::witDetail/@wit), ' ')"/>
+                </xsl:message>
+                <xsl:apply-templates select="lem" mode="lemma"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:copy>
+                    <xsl:apply-templates mode="#current"
+                        select="node() | attribute() | comment() | processing-instruction()"/>
+                </xsl:copy>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 
@@ -221,12 +239,22 @@ We define a default mode in order to make stylesheet composition simpler.
     <xsl:template mode="lemma" match="lem"/>
 
     <!-- remove variant readings not from the current recension -->
-    <xsl:template mode="recension:single" match="
-            (rdg | witDetail)[every $wit in (tokenize(@wit) ! substring(., 2))
-                satisfies empty(//teiHeader//sourceDesc//listWit[@xml:id eq $source]//witness[@xml:id eq $wit])]">
-        <xsl:message use-when="system-property('debug') eq 'true'">
-            <xsl:text>deleting single reading</xsl:text>
-        </xsl:message>
+    <xsl:template mode="recension:single" match="rdg[@wit] | witDetail[@wit]">
+        <xsl:param name="recension" as="xs:string" tunnel="true"/>
+        <xsl:choose>
+            <xsl:when test="every $wit in (tokenize(@wit) ! substring(., 2))
+                satisfies empty(//teiHeader//sourceDesc//listWit[@xml:id eq $recension]//witness[@xml:id eq $wit])">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>deleting single reading</xsl:text>
+                </xsl:message>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:copy>
+                    <xsl:apply-templates mode="#current"
+                        select="node() | attribute() | comment() | processing-instruction()"/>
+                </xsl:copy>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <!-- remove all sigla from other recensions -->

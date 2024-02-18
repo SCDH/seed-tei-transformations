@@ -76,8 +76,58 @@
         <x:expect label="result document contains comment about the extraction"
             test="/comment() ! string(.)" select="'Extracted from lam42.tei.xml. Do NOT change!'"/>
         <x:expect label="common teiHeader" test="exists(/t:teiCorpus/t:teiHeader)"/>
+        <x:expect label="witnesses of Proto document"
+            test="sort(/t:teiCorpus/t:TEI[@xml:id eq 'Plam42']//t:sourceDesc//t:witness/@xml:id ! string(.))"
+            select="('B', 'K', 'Y')"/>
+        <x:expect label="witnesses of Bashtaki Beta document"
+            test="sort(/t:teiCorpus/t:TEI[@xml:id eq 'BBlam42']//t:sourceDesc//t:witness/@xml:id ! string(.))"
+            select="('BR', 'D', 'N', 'P', 'T', 'TU')"/>
     </x:scenario>
 
+    <x:scenario label="mre.xml: Recension R1">
+        <x:context href="../../../../test/samples/mre.xml"/>
+        <x:param name="source" select="'R1'" tunnel="true"/>
+        <x:expect label="choice/seg: only segment from R1 kept" test="id('p1')">
+            <t:p xml:id="p1">
+                <x:text>We're on a road to nowhere. </x:text>
+                <x:text>But it's alright.</x:text>
+            </t:p>
+        </x:expect>
+        <x:expect label="app: only rdg from R1 kept" test="id('p2')//t:rdg">
+            <t:rdg wit="#A">We are</t:rdg>
+        </x:expect>
+        <x:expect label="app: only witnesses from R1 kept" test="id('p3')//t:rdg">
+            <t:rdg wit="#A">We are on</t:rdg>
+            <t:rdg wit="#B">There's</t:rdg>
+        </x:expect>
+    </x:scenario>
 
+    <x:scenario label="mre.xml: Recension R1">
+        <x:context href="../../../../test/samples/mre.xml"/>
+        <x:param name="source" select="'R1'" tunnel="true"/>
+        <x:call template="recension:tei-corpus"/>
+        <x:expect label="number of documents" test="/t:teiCorpus/t:TEI => count()" select="3"/>
+        <x:expect label="recensions" test="sort(/t:teiCorpus/t:TEI/@xml:id ! string(.))"
+            select="('R1mre', 'R2mre', 'R3mre')"/>
+        <x:expect label="segs in R1, p1"
+            test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']//t:p[@xml:id eq 'p1']">
+            <t:p xml:id="p1">
+                <x:text>We're on a road to nowhere. </x:text>
+                <x:text>But it's alright.</x:text>
+            </t:p>
+        </x:expect>
+        <x:expect label="rdgs in R1, p2"
+            test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']//t:p[@xml:id eq 'p2']//t:rdg">
+            <t:rdg wit="#A">We are</t:rdg>
+        </x:expect>
+        <x:expect label="rdgs in R1, p3"
+            test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']//t:p[@xml:id eq 'p3']//t:rdg">
+            <t:rdg wit="#A">We are on</t:rdg>
+            <t:rdg wit="#B">There's</t:rdg>
+        </x:expect>
+        <!--x:expect label="R1" test="/t:teiCorpus/t:TEI[@xml:id eq 'R1mre']">
+            <x:text>asdf</x:text>
+        </x:expect-->
+    </x:scenario>
 
 </x:description>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t:TEI xmlns:t="http://www.tei-c.org/ns/1.0">
+    <t:teiHeader>
+        <t:fileDesc>
+            <t:sourceDesc>
+                <t:listWit>
+                    <t:listWit xml:id="R1">
+                        <t:witness xml:id="A"/>
+                        <t:witness xml:id="B"/>
+                    </t:listWit>
+                    <t:listWit xml:id="R2">
+                        <t:witness xml:id="C"/>
+                        <t:witness xml:id="D"/>
+                    </t:listWit>
+                    <t:listWit xml:id="R3">
+                        <t:witness xml:id="E"/>
+                        <t:witness xml:id="F"/>
+                    </t:listWit>
+                </t:listWit>
+            </t:sourceDesc>
+        </t:fileDesc>
+        <t:encodingDesc>
+            <t:variantEncoding location="internal" method="parallel-segmentation"/>
+        </t:encodingDesc>
+    </t:teiHeader>
+    <t:text>
+        <t:body>
+            <t:p xml:id="p1">We're on a road to nowhere. <t:choice>
+                    <t:seg source="#R1">But it's alright.</t:seg>
+                    <t:seg source="#R2">Ha!</t:seg>
+                </t:choice></t:p>
+            <t:p xml:id="p2"><t:app>
+                    <t:lem>We're</t:lem>
+                    <t:rdg wit="#A">We are</t:rdg>
+                    <t:rdg wit="#D">We were</t:rdg>
+                </t:app> on a road to nowhere.</t:p>
+            <t:p xml:id="p3"><t:app>
+                    <t:lem>We're on</t:lem>
+                    <t:rdg wit="#A">We are on</t:rdg>
+                    <t:rdg wit="#B #E">There's</t:rdg>
+                </t:app> a road to nowhere.</t:p>
+        </t:body>
+    </t:text>
+</t:TEI>
