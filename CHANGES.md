@@ -1,5 +1,13 @@
 # Changes
 
+## 0.11.0
+
+- `alea/tei/extract-recension.xsl`:
+  - extract all recensions into a `teiCorpus`
+  - extract all recensions and write them into separate files via `xsl:result-document`
+- `alea/html/diwan.xsl`:
+  - allow passing in multiple CSS files separated by comma
+
 ## 0.10.0
 
 - NEW: `xsl/html/xml-source.xsl`
