@@ -27,7 +27,7 @@ We define a default mode in order to make stylesheet composition simpler.
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.1"
     default-mode="recension:extract">
 
-    <xsl:mode name="recension:extract" on-no-match="fail" visibility="final"/>
+    <xsl:mode name="recension:extract" on-no-match="fail" visibility="public"/>
 
     <xsl:param name="source" as="xs:string" required="true"/>
 
