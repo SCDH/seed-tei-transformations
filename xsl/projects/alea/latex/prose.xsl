@@ -377,6 +377,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
+    <xsl:text>&lb;\def\@verse@meter{?} %% always have verse meter!</xsl:text>
     <xsl:text>&lb;\newcommand*{\versemeter}[1]{\def\@verse@meter{#1}}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;\setlength{\stanzaindentbase}{10pt}</xsl:text>
