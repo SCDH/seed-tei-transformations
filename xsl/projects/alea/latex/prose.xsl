@@ -192,6 +192,11 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:value-of select="concat(generate-id(), '-end')"/>
       </xsl:template>
 
+      <!-- correct parens and brackets -->
+      <xsl:template mode="app:reading-text" match="text()">
+        <xsl:value-of select="alea:proc-text-node(.)"/>
+      </xsl:template>
+
     </xsl:override>
   </xsl:use-package>
 
@@ -261,6 +266,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:value-of select="$met"/>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:function>
+
+  <!-- we may need some corrections on text nodes -->
+  <xsl:function name="alea:proc-text-node" as="xs:string">
+    <xsl:param name="text" as="xs:string"/>
+    <xsl:sequence
+      select="$text => replace('\(', '\\arabicoparen{}') => replace('\)', '\\arabiccparen{}')"/>
   </xsl:function>
 
 
@@ -345,6 +357,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:text>&lb;\newcommand*{\arabicobracket}{]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabiccbracket}{[}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicoparen}{)}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabiccparen}{(}</xsl:text>
 
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
@@ -373,7 +387,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\renewcommand*{\pb}[1]{ /\ledinnernote{#1} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{[#1]}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{\arabicobracket{}#1\arabiccbracket{}}}</xsl:text>
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
