@@ -416,7 +416,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:text>&#x640;</xsl:text>
     </xsl:for-each>
     <xsl:text>}</xsl:text>
-    <xsl:text>&lb;\setlength{\hst@hemistich@width}{.5\textwidth-.5\hst@gutter@width-.5\stanzaindentbase}</xsl:text>
+    <xsl:text>&lb;%% for indent before verse say ...-0.5\stanzaindentbase</xsl:text>
+    <xsl:text>&lb;%% for indent on both sides say ...-\stanzaindentbase</xsl:text>
+    <xsl:text>&lb;\setlength{\hst@hemistich@width}{.5\textwidth-.5\hst@gutter@width-\stanzaindentbase}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
 
     <!-- set kashida elongation rule -->
