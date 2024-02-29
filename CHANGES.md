@@ -1,5 +1,13 @@
 # Changes
 
+## 0.11.1
+
+- fixed `alea/html/diwan-recension.xsl`
+- `html/libbiblio.xsl`:
+  - added some basic formatting for bibliographic entries
+- `alea/html/diwan.xsl`:
+  - italics and other formatting in footnotes
+
 ## 0.11.0
 
 - `alea/tei/extract-recension.xsl`:
