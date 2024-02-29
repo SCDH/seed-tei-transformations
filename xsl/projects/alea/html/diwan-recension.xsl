@@ -32,16 +32,9 @@ This is simply a composition of extract-recension.xsl and diwan.xsl.
                 Cf. https://www.w3.org/TR/xslt-30/#temporary-trees
                 This even works in combination with Base fixup for xi:include (tested).
             -->
-            <xsl:template mode="recension:extract" match="TEI">
-                <xsl:param name="recension" as="xs:string" tunnel="true"/>
-                <xsl:copy>
-                    <!-- we have to do everything like in the rule for TEI in extract-recension.xsl -->
-                    <xsl:apply-templates mode="recension:extract" select="@* except @xml:id"/>
-                    <xsl:attribute name="xml:id" select="recension:new-work-id(., $recension)"/>
-                    <!-- we use document URI from the source by explicitly passing / as a parameter. -->
-                    <xsl:attribute name="xml:base" select="document-uri(/)"/>
-                    <xsl:apply-templates mode="recension:extract" select="node()"/>
-                </xsl:copy>
+            <xsl:template name="recension:root-hook">
+                <xsl:context-item as="element()" use="required"/>
+                <xsl:attribute name="xml:base" select="document-uri(/)"/>
             </xsl:template>
         </xsl:override>
     </xsl:use-package>

@@ -27,7 +27,7 @@ We define a default mode in order to make stylesheet composition simpler.
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.1"
     default-mode="recension:extract">
 
-    <xsl:mode name="recension:extract" on-no-match="fail" visibility="public"/>
+    <xsl:mode name="recension:extract" on-no-match="fail" visibility="final"/>
 
     <xsl:param name="source" as="xs:string" required="true"/>
 
@@ -117,7 +117,7 @@ We define a default mode in order to make stylesheet composition simpler.
 
     <!-- mode recension:single does the extraction -->
 
-    <xsl:mode name="recension:single" on-no-match="shallow-copy" visibility="private"/>
+    <xsl:mode name="recension:single" on-no-match="shallow-copy" visibility="final"/>
 
     <xsl:template mode="recension:single" match="document-node()">
         <xsl:param name="recension" as="xs:string" tunnel="true"/>
@@ -148,8 +148,18 @@ We define a default mode in order to make stylesheet composition simpler.
         <xsl:copy>
             <xsl:apply-templates mode="#current" select="@* except @xml:id"/>
             <xsl:attribute name="xml:id" select="recension:new-work-id(., $recension)"/>
+            <!-- Enable downstream packages to do something on the root node.
+                This may be important on composition. -->
+            <xsl:if test="parent::document-node()">
+                <xsl:call-template name="recension:root-hook"/>
+            </xsl:if>
             <xsl:apply-templates mode="#current" select="node()"/>
         </xsl:copy>
+    </xsl:template>
+
+    <!-- this named template is a hook to do something on the root node if required -->
+    <xsl:template name="recension:root-hook" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
     </xsl:template>
 
     <!-- delete recension and its witnesses from the source description -->
