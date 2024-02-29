@@ -219,6 +219,19 @@ target/bin/xslt.sh \
                 </i>
             </xsl:template>
 
+            <xsl:template mode="app:reading-text" match="*[@type]" priority="0.6">
+                <span>
+                    <xsl:attribute name="class" select="@type"/>
+                    <xsl:apply-templates mode="#current"/>
+                </span>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-text" match="title" priority="0.7">
+                <span class="title">
+                    <xsl:apply-templates mode="#current"/>
+                </span>
+            </xsl:template>
+
             <!-- we print Tadmin for <span> with tag Tadmin, if no text in <note> before <bibl> -->
             <xsl:template mode="app:pre-reading-text" priority="2"
                 match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Tadmin']/note[normalize-space(node() except (child::bibl, child::bibl/following-sibling::node())) eq '']">
