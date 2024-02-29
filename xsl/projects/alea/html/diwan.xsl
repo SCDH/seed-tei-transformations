@@ -198,13 +198,13 @@ target/bin/xslt.sh \
                 <xsl:call-template name="biblio:reference"/>
             </xsl:template>
 
-            <xsl:template mode="app:reading-text" match="term[@xml:lang ne 'ar']">
-                <i>
+            <xsl:template mode="app:reading-text" match="term">
+                <span class="term">
                     <xsl:if test="@sameAs">
                         <xsl:attribute name="data-help-key" select="@sameAs"/>
                     </xsl:if>
                     <xsl:apply-templates mode="#current"/>
-                </i>
+                </span>
             </xsl:template>
 
             <xsl:template mode="app:reading-text" match="q">

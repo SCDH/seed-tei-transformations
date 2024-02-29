@@ -103,6 +103,10 @@ span.caesura {
     content: ")";
 }
 
+.note-text .term {
+    font-style: italic;
+}
+
 .note-text .booktitle,
 .note-text .title,
 .bibliographic-reference .title {
