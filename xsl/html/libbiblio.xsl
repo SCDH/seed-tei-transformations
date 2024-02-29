@@ -95,7 +95,8 @@ USAGE:
             </xsl:if>
             <xsl:text>&pdf;</xsl:text>
             <xsl:call-template name="i18n:ltr-to-rtl-extra-space">
-                <xsl:with-param name="first-direction" select="i18n:language-direction(($ref, .)[1])"/>
+                <xsl:with-param name="first-direction"
+                    select="i18n:language-direction(($ref, .)[1])"/>
                 <xsl:with-param name="then-direction" select="i18n:language-direction(.)"/>
             </xsl:call-template>
         </span>
@@ -171,6 +172,25 @@ USAGE:
             <xsl:apply-templates mode="#current"/>
         </span>
     </xsl:template>
+
+    <xsl:template match="title" mode="biblio:entry">
+        <span class="biblio title">
+            <xsl:apply-templates mode="#current"/>
+        </span>
+    </xsl:template>
+
+    <xsl:template match="author" mode="biblio:entry">
+        <span class="biblio author">
+            <xsl:apply-templates mode="#current"/>
+        </span>
+    </xsl:template>
+
+    <xsl:template match="editor" mode="biblio:entry">
+        <span class="biblio editor">
+            <xsl:apply-templates mode="#current"/>
+        </span>
+    </xsl:template>
+
 
     <xsl:template match="text()" mode="biblio:entry">
         <xsl:value-of select="."/>

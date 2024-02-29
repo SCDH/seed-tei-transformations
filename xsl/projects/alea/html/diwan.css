@@ -102,6 +102,12 @@ span.caesura {
 .verbatim:after {
     content: ")";
 }
+
+.bibliographic-reference .title {
+    color: black;
+    font-style: italic !important;
+}
+
 @font-face {
     font-family: "Arabic Typesetting";
     src: url("../../../arabt100.ttf");
