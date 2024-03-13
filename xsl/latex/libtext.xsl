@@ -248,6 +248,8 @@
     <xsl:call-template name="edmac:app-end"/>
   </xsl:template>
 
+  <xsl:template match="span/text() | interp/text()"/>
+
 
 
 

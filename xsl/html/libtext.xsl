@@ -83,6 +83,8 @@ Note, that there is a default mode in this package.
 
             <!-- markup that has to be invisible in the edited text -->
 
+            <xsl:template match="span/text() | interp/text()"/>
+
             <xsl:template match="note">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <xsl:call-template name="text:inline-marks"/>

@@ -346,7 +346,7 @@ see xsl/projects/alea/preview.xsl
 
     <!-- things that do not go into the base text -->
     <xsl:template mode="seed:lemma-text-nodes"
-        match="rdg | choice[corr]/sic | choice[reg]/orig | span | index | note | witDetail"/>
+        match="rdg | choice[corr]/sic | choice[reg]/orig | span | interp | index | note | witDetail"/>
 
     <xsl:template mode="seed:lemma-text-nodes"
         match="lem[matches(seed:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>

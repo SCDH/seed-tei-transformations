@@ -265,6 +265,8 @@
     </xsl:template>
     -->
 
+    <xsl:template match="span/text() | interp/text()"/>
+
     <xsl:template match="note"/>
 
     <xsl:template match="witDetail"/>

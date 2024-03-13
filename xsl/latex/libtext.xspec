@@ -227,6 +227,18 @@
         />
     </x:scenario>
 
+    <x:scenario label="span">
+        <x:context>
+            <tei:l>Auf der ein schäfers kind <tei:caesura/> wird spie<tei:span>
+                    <tei:note>Ach!</tei:note>
+                </tei:span>len mit den herden.</tei:l>
+        </x:context>
+        <x:expect label="text from span not in output"
+            test="normalize-space() => matches('spielen')"/>
+    </x:scenario>
+
+
+
 
     <!-- tests for stripping whitespace -->
 
@@ -295,7 +307,8 @@
         />
     </x:scenario>
 
-    <x:scenario label="stripping: nested caesura and whitespace at start/end of verse" pending="todo">
+    <x:scenario label="stripping: nested caesura and whitespace at start/end of verse"
+        pending="todo">
         <x:param name="edmac:normalization" as="xs:string" select="'space'"/>
         <x:context mode="text:text">
             <tei:l> Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf

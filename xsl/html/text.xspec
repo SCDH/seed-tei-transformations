@@ -45,6 +45,12 @@
                             </l>
                         </lg>
                     </div>
+                    <div xml:id="d3" n="3">
+                        <p xml:id="d3.1">So geht denn nun auch <anchor xml:id="d3.1.a1"/>wie<span
+                                from="#d3.1.a1">
+                                <note>Huch, was ist denn das?</note>
+                            </span>der ein Issue zu Ende.</p>
+                    </div>
                 </body>
             </text>
         </TEI>
@@ -108,6 +114,12 @@
         <x:expect label="result has a footnote" test="normalize-space()"
             select="'Vorausgesetzt werden die Sätze über Wechselwinkel und Gegenwinkel an Paralellen [sic!], die durch eine dritte Gerade geschnitten werden.'"
         />
+    </x:scenario>
+
+    <x:scenario label="text:text on span">
+        <x:context select="$tei-text//t:div[@xml:id eq 'd3']" mode="text:text"/>
+        <x:expect label="result contains the word 'wieder', without inner-word spacing"
+            test="normalize-space() => matches('wieder')"/>
     </x:scenario>
 
 </x:description>
