@@ -242,6 +242,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <!-- set the verse meter (metrum) before the verse environment starts -->
       <xsl:template mode="text:hook-ahead" match="*[@met]">
+        <xsl:message use-when="system-property('debug') eq 'true'">
+          <xsl:text>setting verse meter to </xsl:text>
+          <xsl:value-of select="@met"/>
+        </xsl:message>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
@@ -256,14 +260,19 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- a template for displaying the meter (metrum) of verse -->
   <xsl:function name="alea:meter" as="xs:string">
     <xsl:param name="met" as="attribute(met)"/>
+    <xsl:variable name="meter" as="xs:string" select="string($met)"/>
     <xsl:choose>
-      <xsl:when test="root($met)//teiHeader//metSym[@value eq $met]">
+      <xsl:when test="root($met)//teiHeader//metSym[@value eq $meter]//term[@xml:lang eq 'ar']">
         <!-- The meters name is pulled from the metDecl
             in the encodingDesc in the document header -->
-        <xsl:value-of select="root($met)//teiHeader//metSym[@value eq $met][1]//term[1]"/>
+        <xsl:value-of select="root($met)//teiHeader//metSym[@value eq $meter][1]//term[@xml:lang eq 'ar']"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$met"/>
+        <xsl:merge-key use-when="system-property('debug') eq 'true'">
+          <xsl:text>no metSym found for </xsl:text>
+          <xsl:value-of select="@met"/>
+        </xsl:merge-key>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
