@@ -1,7 +1,7 @@
 %% Stylesheet for ALEA volumes published by Ergon Verlag
 %% Christian Lück <christian.lueck@uni-muenster.de>, 2023
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesPackage{ergon}[2019/06/02 Ergon Verlag]
+\ProvidesPackage{ergon}[2024/02/29 Ergon Verlag]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % package options
@@ -11,28 +11,34 @@
 \DefineFamilyMember{ergon}
 
 %% font package option
-\newcommand*{\ergon@font}{Amiri}
-\DefineFamilyKey{ergon}{font}[Amiri]{%
+\newcommand*{\ergon@font}{ArabicTypesetting}
+\DefineFamilyKey{ergon}{font}[ArabicTypesetting]{%
   \renewcommand*\ergon@font{#1}%
   \FamilyKeyStateProcessed}
 
 
 %% font package option
 \newcommand*{\ergon@fontsize}{16pt}
-\DefineFamilyKey{ergon}{fontsize}[16pt]{%
+\DefineFamilyKey{ergon}{fontsize}[15pt]{%
   \renewcommand*\ergon@fontsize{#1}%
   \FamilyKeyStateProcessed}
 
+
+%% font scaling option
+\newcommand*{\ergon@fontscale}{1.4}
+\DefineFamilyKey{ergon}{fontscale}[1.4]{%
+  \renewcommand*\ergon@fontscale{#1}%
+  \FamilyKeyStateProcessed}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % font
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\babelfont{rm}{\ergon@font}
-\babelfont{sf}{\ergon@font}
-\babelfont{tt}{\ergon@font}
+\RequirePackage[fontsize=\ergon@fontsize]{scrextend}
 
-\RequirePackage[fontsize=\ergon@fontsize]{fontsize}
+\babelfont{rm}[Scale=\ergon@fontscale]{\ergon@font}
+\babelfont{sf}[Scale=\ergon@fontscale]{\ergon@font}
+\babelfont{tt}[Scale=\ergon@fontscale]{\ergon@font}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
