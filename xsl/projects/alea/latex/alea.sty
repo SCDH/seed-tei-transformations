@@ -1,0 +1,40 @@
+%% Stylesheet for ALEA -- Arabische Literatur Elfhundert bis Achtzehnhundert
+%% Christian Lück <christian.lueck@uni-muenster.de>, 2024
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{alea}[2024/02/29 ALEA]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% package options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DefineFamily{alea}
+\DefineFamilyMember{alea}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% arabic script
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[ngerman,english,bidi=basic]{babel}
+\babelprovide[import,main,justification=kashida,transforms=kashida.afterdiacritics.plain]{arabic}
+\directlua{Babel.arabic.kashida_after_diacritics = true}
+\directlua{Babel.arabic.kashida_after_ligature_allowed = false}
+
+\setRTLmain
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% parenthesis, brackets etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% In arabic text, brackets and parens should be written with macros:
+
+\newcommand*{\arabicobracket}{]} %% open bracket
+\newcommand*{\arabiccbracket}{[} %% close bracket
+\newcommand*{\arabicoparen}{)}   %% open paren
+\newcommand*{\arabiccparen}{(}   %% close paren
+
+
+\endinput
