@@ -1,5 +1,9 @@
 # Changes
 
+## 0.11.2
+
+- `*/libtext.xsl`: do not reproduce text from `<span>` or `<interp>`
+
 ## 0.11.1
 
 - fixed `alea/html/diwan-recension.xsl`
