@@ -245,6 +245,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>setting verse meter to </xsl:text>
           <xsl:value-of select="@met"/>
+          <xsl:text>: </xsl:text>
+          <xsl:value-of select="alea:meter(@met)"/>
         </xsl:message>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
@@ -269,10 +271,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$met"/>
-        <xsl:merge-key use-when="system-property('debug') eq 'true'">
+        <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>no metSym found for </xsl:text>
-          <xsl:value-of select="@met"/>
-        </xsl:merge-key>
+          <xsl:value-of select="$met"/>
+        </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
