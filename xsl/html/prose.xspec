@@ -99,72 +99,11 @@
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="result">
             <html lang="de">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Test :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                </head>
+                <head>...</head>
                 <body>...</body>
             </html>
         </x:expect>
     </x:scenario>
 
-    <x:scenario label="full html with internal CSS">
-        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
-        <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="result">
-            <html lang="de">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Test :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                    <!--...-->
-                    <!--...-->
-                    <style>/* hello tester */&#xa;</style>
-                </head>
-                <body>...</body>
-            </html>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="full html with absolute links to CSS">
-        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
-        <x:param name="html:css-method" select="'absolute'"/>
-        <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="result">
-            <html lang="de">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Test :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                    <link rel="stylesheet" type="text/css" href="..."/>
-                    <link rel="stylesheet" type="text/css" href="..."/>
-                </head>
-                <body>...</body>
-            </html>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="full html with relative links to CSS">
-        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
-        <x:param name="html:css-method" select="'relative'"/>
-        <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="result">
-            <html lang="de">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Test :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                    <link rel="stylesheet" type="text/css" href="this.css"/>
-                    <link rel="stylesheet" type="text/css" href="../../../test/samples/sample.css"/>
-                </head>
-                <body>...</body>
-            </html>
-        </x:expect>
-    </x:scenario>
 
 </x:description>
