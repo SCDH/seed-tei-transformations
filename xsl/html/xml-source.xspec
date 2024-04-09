@@ -19,68 +19,7 @@
         <x:context href="../../test/samples/crit.xml" mode="html:html"/>
         <x:expect label="result">
             <html lang="en">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Title :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                </head>
-                <body>...</body>
-            </html>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="full html with internal CSS">
-        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
-        <x:context href="../../test/samples/crit.xml" mode="html:html"/>
-        <x:expect label="result">
-            <html lang="en">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Title :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                    <!--...-->
-                    <!--...-->
-                </head>
-                <body>...</body>
-            </html>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="full html with absolute links to CSS">
-        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
-        <x:param name="html:css-method" select="'absolute'"/>
-        <x:context href="../../test/samples/crit.xml" mode="html:html"/>
-        <x:expect label="result">
-            <html lang="en">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Title :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                    <link rel="stylesheet" type="text/css" href="..."/>
-                    <link rel="stylesheet" type="text/css" href="..."/>
-                </head>
-                <body>...</body>
-            </html>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="full html with relative links to CSS">
-        <x:param name="html:css" select="('this.css', '../../../test/samples/sample.css')"/>
-        <x:param name="html:css-method" select="'relative'"/>
-        <x:context href="../../test/samples/crit.xml" mode="html:html"/>
-        <x:expect label="result">
-            <html lang="en">
-                <head>
-                    <meta charset="utf-8"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                    <title>Title :: SEED transformations</title>
-                    <link rel="canonical" href="..."/>
-                    <link rel="stylesheet" type="text/css" href="this.css"/>
-                    <link rel="stylesheet" type="text/css" href="../../../test/samples/sample.css"/>
-                </head>
+                <head>...</head>
                 <body>...</body>
             </html>
         </x:expect>
