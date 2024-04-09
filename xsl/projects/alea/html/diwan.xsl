@@ -302,11 +302,6 @@ target/bin/xslt.sh \
         </xsl:override>
     </xsl:use-package>
 
-    <!-- a comma separated list of CSS files -->
-    <xsl:param name="html:css-csv" as="xs:string"
-        select="resolve-uri('diwan.css', static-base-uri())"/>
-
-
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libhtml.xsl"
         package-version="1.0.0">
@@ -345,9 +340,6 @@ target/bin/xslt.sh \
                 <xsl:call-template name="surah-translations"/>
             </xsl:template>
 
-
-            <!-- a sequence of CSS files -->
-            <xsl:param name="html:css" as="xs:string*" select="tokenize($html:css-csv, ',')"/>
 
             <xsl:template name="html:title" visibility="public">
                 <xsl:value-of select="(/*/@xml:id, //title ! normalize-space())[1]"/>
