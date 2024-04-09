@@ -1,5 +1,13 @@
 # Changes
 
+## 0.11.3
+
+- `xsl/html/libhtml.xsl`
+  - offer stylesheet parameter to pass in multiple CSS or JS files,
+    separated by comma
+  - offer stylesheet parameters to set the html title
+  - unit tests
+
 ## 0.11.2
 
 - `*/libtext.xsl`: do not reproduce text from `<span>` or `<interp>`
