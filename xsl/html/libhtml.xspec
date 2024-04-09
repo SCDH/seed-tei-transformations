@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="test-libhtml.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <body>
+                    <p>Hello!</p>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="html structure">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="html root element" test="exists(/html)"/>
+        <x:expect label="html body element" test="exists(/html/body)"/>
+        <x:expect label="html head element" test="exists(/html/head)"/>
+    </x:scenario>
+
+    <x:scenario label="meta data">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="character encoding information is present"
+            test="exists(/html/head/meta/@charset)"/>
+        <x:expect label="UTF 8" test="/html/head/meta/@charset ! string()" select="'utf-8'"/>
+    </x:scenario>
+
+    <x:scenario label="html language attribute">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="html language attribute present" test="exists(/html/@lang)"/>
+        <x:expect label="html language attribute from TEI root element"
+            test="/html/@lang ! string()" select="'de'"/>
+    </x:scenario>
+
+    <x:scenario label="head: title element">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="title element present" test="exists(/html/head/title)"/>
+        <x:expect label="title element contains title from TEI header"
+            test="matches(/html/head/title, 'Test')"/>
+        <x:expect label="title element contains title suffix"
+            test="matches(/html/head/title, 'SEED TEI Transformations')"/>
+        <x:expect label="full title" test="/html/head/title/text()">
+            <x:text>Test :: SEED TEI Transformations</x:text>
+        </x:expect>
+    </x:scenario>
+
+
+    <!-- CSS -->
+
+    <x:scenario label="no CSS">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="no CSS style elements" test="not(exists(/html/head/style))"/>
+        <x:expect label="no CSS links"
+            test="not(exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']))"/>
+        <x:expect label="no info about CSS not available"
+            test="not(matches(/html/head/comment(), '^CSS not available'))"/>
+    </x:scenario>
+
+    <x:scenario label="internal CSS">
+        <x:param name="html:css" select="('../../../test/samples/sample.css')"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="style element present" test="exists(/html/head/style)"/>
+        <x:expect label="info about CSS source in comment"
+            test="matches(/html/head/style/preceding-sibling::comment(), 'sample.css$')"/>
+        <x:expect label="style element contains CSS from file" test="/html/head/style ! string()"
+            select="unparsed-text('../../../test/samples/sample.css')"/>
+    </x:scenario>
+
+    <x:scenario label="internal CSS, non-existing CSS source">
+        <x:param name="html:css" select="('unknown.css')"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="style element not present" test="not(exists(/html/head/style))"/>
+        <x:expect label="CSS not available"
+            test="matches(/html/head/comment(), '^CSS not available')"/>
+        <x:expect label="info about CSS source in comment"
+            test="matches(/html/head/comment(), 'unknown.css$')"/>
+    </x:scenario>
+
+
+    <x:scenario label="absolute link to CSS">
+        <x:param name="html:css" select="('../../../test/samples/sample.css')"/>
+        <x:param name="html:css-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to CSS present"
+            test="exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css'])"/>
+        <x:expect label="file linked"
+            test="matches(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href, 'sample.css$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="absolute links to multiple CSS (sequence)">
+        <x:param name="html:css"
+            select="('../../../test/samples/sample.css', '../../../test/samples/other.css')"/>
+        <x:param name="html:css-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to CSS present"
+            test="count(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css'])" select="2"/>
+        <x:expect label="sample.css linked"
+            test="some $href in /html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href satisfies matches($href, 'sample.css$')"/>
+        <x:expect label="other.css linked"
+            test="some $href in /html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href satisfies matches($href, 'other.css$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="absolute links to multiple CSS (csv)">
+        <x:param name="html:css-csv"
+            select="('../../../test/samples/sample.css,../../../test/samples/other.css')"/>
+        <x:param name="html:css-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to CSS present"
+            test="count(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css'])" select="2"/>
+        <x:expect label="sample.css linked"
+            test="some $href in /html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href satisfies matches($href, 'sample.css$')"/>
+        <x:expect label="other.css linked"
+            test="some $href in /html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href satisfies matches($href, 'other.css$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="absolute links to CSS, non-existing source">
+        <x:param name="html:css" select="('unknown.css')"/>
+        <x:param name="html:css-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to CSS present nevertheless"
+            test="exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css'])"/>
+        <x:expect label="file linked nevertheless"
+            test="matches(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href, 'unknown.css$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="relative links to CSS">
+        <x:param name="html:css" select="('../../../test/samples/sample.css')"/>
+        <x:param name="html:css-method" select="'relative'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to CSS present"
+            test="exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css'])"/>
+        <x:expect label="file linked"
+            test="matches(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href, 'sample.css$')"
+        />
+    </x:scenario>
+
+
+    <!-- Javascript -->
+
+    <x:scenario label="no JS">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="no JS script elements" test="not(exists(/html/head/script))"/>
+        <x:expect label="JS not available"
+            test="not(matches(/html/head/comment(), '^JS not available'))"/>
+    </x:scenario>
+
+    <x:scenario label="internal JS">
+        <x:param name="html:js" select="('../../../test/samples/sample.js')"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="style element present" test="exists(/html/head/script)"/>
+        <x:expect label="info about JS source in comment"
+            test="matches(/html/head/script/preceding-sibling::comment(), 'sample.js$')"/>
+        <x:expect label="style element contains JS from file" test="/html/head/script ! string()"
+            select="unparsed-text('../../../test/samples/sample.js')"/>
+    </x:scenario>
+
+    <x:scenario label="internal JS, non-existing JS source">
+        <x:param name="html:js" select="('unknown.js')"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="style element not present" test="not(exists(/html/head/script))"/>
+        <x:expect label="JS not available" test="matches(/html/head/comment(), '^JS not available')"/>
+        <x:expect label="info about JS source in comment"
+            test="matches(/html/head/comment(), 'unknown.js$')"/>
+    </x:scenario>
+
+    <x:scenario label="internal JS">
+        <x:param name="html:js"
+            select="('../../../test/samples/sample.js', '../../../test/samples/other.js')"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="style element present" test="exists(/html/head/script)"/>
+        <x:expect label="style element contains JS from file"
+            test="some $js in /html/head/script/text() satisfies $js eq unparsed-text('../../../test/samples/sample.js')"/>
+        <x:expect label="style element contains JS from file"
+            test="some $js in /html/head/script/text() satisfies $js eq unparsed-text('../../../test/samples/other.js')"
+        />
+    </x:scenario>
+
+
+    <x:scenario label="absolute scripts to multiple JS (sequence)">
+        <x:param name="html:js"
+            select="('../../../test/samples/sample.js', '../../../test/samples/other.js')"/>
+        <x:param name="html:js-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="script to JS present"
+            test="count(/html/head/script[@type eq 'text/javascript'])" select="2"/>
+        <x:expect label="sample.js scripted"
+            test="some $href in /html/head/script[@type eq 'text/javascript']/@src satisfies matches($href, 'sample.js$')"/>
+        <x:expect label="other.js scripted"
+            test="some $href in /html/head/script[@type eq 'text/javascript']/@src satisfies matches($href, 'other.js$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="absolute scripts to multiple JS (csv)">
+        <x:param name="html:js-csv"
+            select="('../../../test/samples/sample.js,../../../test/samples/other.js')"/>
+        <x:param name="html:js-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="script to JS present"
+            test="count(/html/head/script[@type eq 'text/javascript'])" select="2"/>
+        <x:expect label="sample.js scripted"
+            test="some $href in /html/head/script[@type eq 'text/javascript']/@src satisfies matches($href, 'sample.js$')"/>
+        <x:expect label="other.js scripted"
+            test="some $href in /html/head/script[@type eq 'text/javascript']/@src satisfies matches($href, 'other.js$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="absolute links to JS, non-existing source">
+        <x:param name="html:js" select="('unknown.js')"/>
+        <x:param name="html:js-method" select="'absolute'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to JS present nevertheless"
+            test="exists(/html/head/script[@type eq 'text/javascript'])"/>
+        <x:expect label="file linked nevertheless"
+            test="matches(/html/head/script[@type eq 'text/javascript']/@src, 'unknown.js$')"/>
+    </x:scenario>
+
+    <x:scenario label="relative links to JS">
+        <x:param name="html:js" select="('../../../test/samples/sample.js')"/>
+        <x:param name="html:js-method" select="'relative'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to JS present"
+            test="exists(/html/head/script[@type eq 'text/javascript'])"/>
+        <x:expect label="file linked"
+            test="matches(/html/head/script[@type eq 'text/javascript']/@src, 'sample.js$')"/>
+    </x:scenario>
+
+
+    <x:scenario label="JS modules">
+        <x:param name="html:js-modules" select="('../../../test/samples/sample.js')"/>
+        <x:param name="html:js-method" select="'internal'"/>
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="link to JS" test="exists(/html/head/script[@type eq 'module'])"/>
+        <x:expect label="file linked"
+            test="matches(/html/head/script[@type eq 'module']/@src, 'sample.js$')"/>
+    </x:scenario>
+
+</x:description>
