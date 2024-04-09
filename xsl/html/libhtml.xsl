@@ -26,22 +26,35 @@ Note, that the default mode is html:html!
   <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
   <!-- a sequence of CSS files -->
-  <xsl:param name="html:css" as="xs:string*" select="()"/>
+  <xsl:param name="html:css" as="xs:string*" select="tokenize($html:css-csv, ',')"/>
+
+  <!-- URLs to CSS, separated by comma -->
+  <xsl:param name="html:css-csv" as="xs:string" select="''"/>
 
   <!-- should be one of 'internal', 'absolute', 'relative' -->
   <xsl:param name="html:css-method" as="xs:string" select="'internal'"/>
 
   <!-- a sequence of Javascript modules to be linked -->
-  <xsl:param name="html:js-modules" as="xs:string*" select="()"/>
+  <xsl:param name="html:js-modules" as="xs:string*" select="tokenize($html:js-modules-csv, ',')"/>
+
+  <!-- Javascript modules to be linked, multiple URLs separated by commas -->
+  <xsl:param name="html:js-modules-csv" as="xs:string" select="''"/>
 
   <!-- a sequence of Javascript files to be included on the header -->
-  <xsl:param name="html:js" as="xs:string*" select="()"/>
+  <xsl:param name="html:js" as="xs:string*" select="tokenize($html:js-csv, ',')"/>
+
+  <!-- URLs to Javascript files to be included in the header, separated by comma -->
+  <xsl:param name="html:js-csv" as="xs:string" select="''"/>
 
   <!-- should be one of 'internal', 'absolute', 'relative' -->
   <xsl:param name="html:js-method" as="xs:string" select="'internal'"/>
 
   <!-- a sequence of javascript files to be included after the document body -->
-  <xsl:param name="html:after-body-js" as="xs:string*" select="()"/>
+  <xsl:param name="html:after-body-js" as="xs:string*"
+    select="tokenize($html:after-body-js-csv, ',')"/>
+
+  <!-- URLs to Javascript files to be included after the document body, separated by comma -->
+  <xsl:param name="html:after-body-js-csv" as="xs:string" select="''"/>
 
   <!-- javascript file defining the makeScrollTarget function -->
   <xsl:param name="html:scroll-target" as="xs:string*" select="()"/>
@@ -57,6 +70,11 @@ Note, that the default mode is html:html!
 
   <!-- a second way additional to $html:css to pass in CSS files -->
   <xsl:variable name="html:extra-css" as="xs:anyURI*" select="()" visibility="public"/>
+
+
+  <xsl:param name="html:title-sep" as="xs:string" select="' :: '"/>
+
+  <xsl:param name="html:title-suffix" as="xs:string?" select="'SEED TEI Transformations'"/>
 
 
   <xsl:use-package
@@ -129,8 +147,8 @@ Note, that the default mode is html:html!
   </xsl:template>
 
   <xsl:template name="html:title" visibility="public">
-    <xsl:value-of select="(//title ! normalize-space()) => string-join(' :: ')"/>
-    <xsl:text> :: SEED transformations</xsl:text>
+    <xsl:value-of
+      select="((//title ! normalize-space()), $html:title-suffix) => string-join($html:title-sep)"/>
   </xsl:template>
 
   <xsl:template name="html:css" visibility="public">
