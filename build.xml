@@ -42,6 +42,7 @@
         <antcall target="test-xsl-projects-alea-html-regression-biblio.xsl"/>
         <antcall target="test-xsl-projects-alea-tei-extract-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
+        <antcall target="test-xsl-html-libhtml.xsl"/>
     </target>
 
     <target name="test-xsl-common-libwit.xsl">
@@ -107,6 +108,12 @@
     <target name="test-xsl-html-libapp2c.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/libapp2c.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-libhtml.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/libhtml.xspec"/>
         </antcall>
     </target>
 
