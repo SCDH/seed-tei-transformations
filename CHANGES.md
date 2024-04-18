@@ -1,5 +1,10 @@
 # Changes
 
+## 0.12.0
+
+- `xsl/common/libapp2.xsl`
+  - sort readings
+
 ## 0.11.3
 
 - `xsl/html/libhtml.xsl`
