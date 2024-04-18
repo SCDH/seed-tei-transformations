@@ -124,4 +124,31 @@
         <xsl:sequence select="$something"/>
     </xsl:function>
 
+
+    <!-- a function for getting a sortkey for the witnesses used in @wit.
+        This hands over to wit:sortkey-single for each witness reference in @wit.
+    -->
+    <xsl:function name="wit:sortkey" as="item()" visibility="final">
+        <xsl:param name="wit" as="attribute()?"/>
+        <xsl:choose>
+            <xsl:when test="$wit">
+                <xsl:variable name="wits" as="item()"
+                    select="tokenize($wit) ! wit:sortkey-single(.)"/>
+                <xsl:sequence select="sort($wits)[1]"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="0"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <!-- Get a sortkey for a single witness reference.
+        This default implementation gets the position of the witness. -->
+    <xsl:function name="wit:sortkey-single" as="item()" visibility="public">
+        <xsl:param name="wit" as="xs:string"/>
+        <xsl:sequence
+            select="$wit:witnesses/descendant-or-self::witness[@xml:id eq substring($wit, 2)]/preceding::witness => count()"
+        />
+    </xsl:function>
+
 </xsl:package>
