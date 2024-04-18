@@ -56,6 +56,7 @@ see xsl/projects/alea/preview.xsl
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:app="http://scdh.wwu.de/transform/app#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
 
@@ -73,6 +74,12 @@ see xsl/projects/alea/preview.xsl
         <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="final"/>
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="function" names="wit:sortkey#1" visibility="private"/>
     </xsl:use-package>
 
 
@@ -491,7 +498,18 @@ see xsl/projects/alea/preview.xsl
     <xsl:mode name="app:reading-dspt" on-no-match="shallow-skip" visibility="public"/>
 
     <xsl:template mode="app:reading-dspt" match="app">
-        <xsl:apply-templates mode="app:reading-dspt" select="rdg | witDetail | note"/>
+        <xsl:apply-templates mode="app:reading-dspt" select="rdg | witDetail | note">
+            <xsl:sort>
+                <xsl:choose>
+                    <xsl:when test="self::rdg">
+                        <xsl:sequence select="wit:sortkey(rdg/@wit)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="100"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:sort>
+        </xsl:apply-templates>
     </xsl:template>
 
     <!-- Format sigla from @wit. Potentianally you will override this with your own. -->
