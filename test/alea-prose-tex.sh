@@ -8,9 +8,11 @@ XSLT_LOG=$OUTPUT.transform.log
 
 SEED_DIR=$(dirname $(realpath $0))/..
 
+EDITION=$(realpath ~/Projekte/edition-ibn-nubatah)
+
 STYLESHEET=$SEED_DIR/xsl/projects/alea/latex/prose.xsl
 
-PARAMS="wit-catalog=$(realpath test/alea/WitnessCatalogue.xml) {http://scdh.wwu.de/transform/edmac#}pstart-opt=[\noindent\setRL]"
+PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=[\noindent\setRL]"
 
 #FONTPARAMS="font=ArabicTypesetting fontsize=15pt fontscale=1.4"
 
