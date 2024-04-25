@@ -5,11 +5,15 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
+    xmlns:prose="http://scdh.wwu.de/transform/prose#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.0" default-mode="text:text">
 
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
+
+    <!-- whether or not lb elements are evaluated in the HTML -->
+    <xsl:param name="prose:linebreaks" as="xs:boolean" select="false()" required="false"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
@@ -65,6 +69,9 @@
                 <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
 
+            <xsl:template match="lb[$prose:linebreaks]">
+                <br/>
+            </xsl:template>
 
             <!-- minimal support for verses -->
 
