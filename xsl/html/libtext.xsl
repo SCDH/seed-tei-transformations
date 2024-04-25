@@ -20,7 +20,7 @@ Note, that there is a default mode in this package.
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:source="http://scdh.wwu.de/transform/source#" exclude-result-prefixes="#all"
+    xmlns:align="http://scdh.wwu.de/transform/align#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
@@ -36,7 +36,7 @@ Note, that there is a default mode in this package.
     </xsl:use-package>
 
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libsource.xsl"
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libalign.xsl"
         package-version="1.0.0"/>
 
     <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
@@ -52,7 +52,7 @@ Note, that there is a default mode in this package.
                 inserting project-specific things before and after an element -->
 
             <xsl:template mode="text:text" match="text()">
-                <xsl:call-template name="source:text-node"/>
+                <xsl:call-template name="align:text-node-wrapper"/>
             </xsl:template>
 
             <!-- parts of the document -->
