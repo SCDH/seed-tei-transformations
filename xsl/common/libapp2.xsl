@@ -76,13 +76,6 @@ see xsl/projects/alea/preview.xsl
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
     </xsl:use-package>
 
-    <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
-        package-version="1.0.0">
-        <xsl:accept component="function" names="wit:sortkey#1" visibility="private"/>
-    </xsl:use-package>
-
-
     <xsl:expose component="mode" names="*" visibility="public"/>
     <xsl:expose component="template" names="app:*" visibility="public"/>
     <xsl:expose component="variable" names="app:*" visibility="public"/>
@@ -501,16 +494,26 @@ see xsl/projects/alea/preview.xsl
         <xsl:apply-templates mode="app:reading-dspt" select="rdg | witDetail | note">
             <xsl:sort>
                 <xsl:choose>
-                    <xsl:when test="self::rdg">
-                        <xsl:sequence select="wit:sortkey(rdg/@wit)"/>
+                    <xsl:when test="@wit">
+                        <xsl:sequence select="app:entry-sortkey-from-wit(@wit)"/>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:sequence select="100"/>
+                        <xsl:sequence select="app:entry-sortkey(.)"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:sort>
         </xsl:apply-templates>
     </xsl:template>
+
+    <xsl:function name="app:entry-sortkey-from-wit" as="item()" visibility="public">
+        <xsl:param name="wit" as="attribute(wit)"/>
+        <xsl:sequence select="100"/>
+    </xsl:function>
+
+    <xsl:function name="app:entry-sortkey" as="item()" visibility="public">
+        <xsl:param name="wit" as="element()"/>
+        <xsl:sequence select="100"/>
+    </xsl:function>
 
     <!-- Format sigla from @wit. Potentianally you will override this with your own. -->
     <xsl:template name="app:sigla" visibility="public">
