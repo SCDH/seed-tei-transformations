@@ -191,26 +191,31 @@ target/bin/xslt.sh \
             <!-- function for sorting variant readings -->
             <xsl:function name="app:entry-sortkey-from-wit" as="item()">
                 <xsl:param name="wit" as="attribute(wit)"/>
-                <xsl:variable name="wit-id" as="xs:string" select="substring($wit, 2)"/>
-                <xsl:variable name="witness" select="$witnesses[@xml:id eq $wit-id]"/>
-                <xsl:choose>
-                    <xsl:when test="$witness">
-                        <xsl:message use-when="system-property('debug') eq 'true'">
-                            <xsl:text>sort key for witness </xsl:text>
-                            <xsl:value-of select="$wit-id"/>
-                            <xsl:text>: </xsl:text>
-                            <xsl:value-of select="$witness/preceding::witness => count()"/>
-                        </xsl:message>
-                        <xsl:sequence select="$witness/preceding::witness => count()"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:message use-when="system-property('debug') eq 'true'">
-                            <xsl:text>unknown witness: </xsl:text>
-                            <xsl:value-of select="$wit-id"/>
-                        </xsl:message>
-                        <xsl:sequence select="1000"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:variable name="sortkeys" as="xs:integer*">
+                    <xsl:for-each select="tokenize($wit)">
+                        <xsl:variable name="wit-id" as="xs:string" select="substring(., 2)"/>
+                        <xsl:variable name="witness" select="$witnesses[@xml:id eq $wit-id]"/>
+                        <xsl:choose>
+                            <xsl:when test="$witness">
+                                <xsl:message use-when="system-property('debug') eq 'true'">
+                                    <xsl:text>sort key for witness </xsl:text>
+                                    <xsl:value-of select="$wit-id"/>
+                                    <xsl:text>: </xsl:text>
+                                    <xsl:value-of select="$witness/preceding::witness => count()"/>
+                                </xsl:message>
+                                <xsl:sequence select="$witness/preceding::witness => count()"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:message use-when="system-property('debug') eq 'true'">
+                                    <xsl:text>unknown witness: </xsl:text>
+                                    <xsl:value-of select="$wit-id"/>
+                                </xsl:message>
+                                <xsl:sequence select="1000"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </xsl:variable>
+                <xsl:sequence select="min($sortkeys)"/>
             </xsl:function>
 
             <xsl:template mode="app:reading-annotation" match="unclear[not(@reason)]">
