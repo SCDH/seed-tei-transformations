@@ -394,5 +394,21 @@
             select="'رﺑ'"/>
     </x:scenario>
 
+    <x:scenario label="sort readings, multiple witnesses, with catalog; witness order">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l3']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T, P, first wit"
+            test="(//*[@class eq 'siglum'])[1] ! tokenize(., '\p{P}?\s')[1]" select="'ت'"/>
+        <x:expect label="order of readings: 1: T, P, second wit"
+            test="(//*[@class eq 'siglum'])[1] ! tokenize(., '\p{P}?\s')[2]" select="'پ'"/>
+        <x:expect label="order of readings: 2: N, D, first wit"
+            test="(//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s')[1]" select="'د'"/>
+        <x:expect label="order of readings: 2: N, D, second wit"
+            test="(//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s')[2]" select="'ن'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+    </x:scenario>
+
 
 </x:description>
