@@ -19,6 +19,7 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
         package-version="1.0.0">
         <xsl:accept component="function" names="wit:sigla-for-idrefs#1" visibility="public"/>
+        <xsl:accept component="function" names="wit:*" visibility="public"/>
         <xsl:accept component="variable" names="wit:*" visibility="public"/>
         <xsl:accept component="variable" names="wit:witnesses" visibility="abstract"/>
     </xsl:use-package>
