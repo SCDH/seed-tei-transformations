@@ -381,14 +381,15 @@
             select="'رﺑ'"/>
     </x:scenario>
 
-    <x:scenario label="sort readings, multiple witnesses, with catalog">
+    <x:scenario
+        label="sort readings, multiple witnesses, with catalog; witness order irrelevant, because using existential comparison">
         <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
         <x:context select="$BBlam42//*[@xml:id eq 'l3']"/>
         <x:call template="test:single-app-entry"/>
-        <x:expect label="order of readings: 1: T, P" test="(//*[@class eq 'siglum'])[1] ! string()"
-            select="'ت, پ'"/>
-        <x:expect label="order of readings: 2: N, D" test="(//*[@class eq 'siglum'])[2] ! string()"
-            select="'ن, د'"/>
+        <x:expect label="order of readings: 1: T, P"
+            test="every $siglum in (//*[@class eq 'siglum'])[1] ! tokenize(., '\p{P}?\s') satisfies $siglum = ('پ', 'ت')"/>
+        <x:expect label="order of readings: 2: N, D"
+            test="every $siglum in (//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s') satisfies $siglum = ('ن', 'د')"/>
         <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
             select="'رﺑ'"/>
     </x:scenario>
