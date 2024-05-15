@@ -94,7 +94,6 @@ target/bin/xslt.sh \
         <xsl:override>
             <xsl:template name="wit:sigla">
                 <xsl:param name="wit" as="node()"/>
-                <xsl:message>SORTING WITs</xsl:message>
                 <span class="siglum">
                     <xsl:for-each
                         select="tokenize($wit) ! substring(., 2) ! xs:ID(.) ! wit:get-witness(., $wit)">
@@ -122,7 +121,7 @@ target/bin/xslt.sh \
                 <xsl:sequence select="$witness/preceding::witness => count()"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:message use-when="true() or system-property('debug') eq 'true'">
+                <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>unknown witness</xsl:text>
                 </xsl:message>
                 <xsl:sequence select="1000"/>
