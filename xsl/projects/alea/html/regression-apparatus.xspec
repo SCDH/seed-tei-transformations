@@ -340,7 +340,15 @@
                                 <anchor xml:id="i53_vsl_x5b"/>كَلِمي<app from="#i53_vsl_x5b"
                                     xml:id="l2.a1">
                                     <rdg wit="#N">كلي</rdg>
-                                    <rdg wit="#TU">كلي</rdg>
+                                    <rdg wit="#T">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                            <l xml:id="l3">
+                                <anchor xml:id="i53_vsl_x5c"/>كَلِمي<app from="#i53_vsl_x5c"
+                                    xml:id="l2.a1">
+                                    <rdg wit="#N #D">كلي</rdg>
+                                    <rdg wit="#T #P">كلي</rdg>
                                     <rdg wit="#BR">كلي</rdg>
                                 </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
                                 بَطّالُ</l>
@@ -354,21 +362,33 @@
         </TEI>
     </x:variable>
 
-    <x:scenario label="sort readings: without witness catalog, so order from header">
+    <x:scenario label="sort readings: without witness catalog, order from header">
         <x:context select="$BBlam42//*[@xml:id eq 'l2']"/>
         <x:call template="test:single-app-entry"/>
         <x:expect label="order of readings" test="//*[@class eq 'siglum'] ! string()"
-            select="('TU', 'BR', 'N')"/>
+            select="('T', 'BR', 'N')"/>
     </x:scenario>
 
-    <x:scenario label="sort readings">
+    <x:scenario label="sort readings, single witness, with catalog">
         <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
         <x:context select="$BBlam42//*[@xml:id eq 'l2']"/>
         <x:call template="test:single-app-entry"/>
-        <x:expect label="order of readings: 1: TU" test="(//*[@class eq 'siglum'])[1] ! string()"
-            select="'TU'"/>
+        <x:expect label="order of readings: 1: T" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'ت'"/>
         <x:expect label="order of readings: 2: N" test="(//*[@class eq 'siglum'])[2] ! string()"
             select="'ن'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+    </x:scenario>
+
+    <x:scenario label="sort readings, multiple witnesses, with catalog">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l3']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T, P" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'ت, پ'"/>
+        <x:expect label="order of readings: 2: N, D" test="(//*[@class eq 'siglum'])[2] ! string()"
+            select="'ن, د'"/>
         <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
             select="'رﺑ'"/>
     </x:scenario>
