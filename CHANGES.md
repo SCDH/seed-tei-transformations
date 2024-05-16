@@ -2,8 +2,12 @@
 
 ## 0.13.0
 
+- `xsl/html/libi18n.xsl` and its javascript:
+  - allow setting local initial language with the `@data-i18n-lang`
+    attribute
 - `xsl/projects/alea/html/diwan.xsl`:
-  sort readings and witnesses
+  - sort readings and witnesses
+  - surah titles initially in english
 
 ## 0.12.0
 
