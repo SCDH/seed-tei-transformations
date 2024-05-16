@@ -17,40 +17,50 @@ i18next
     //updateContent();
   });
 
-function updateContent() {
-    // var el = document.getElementById("i18n-direction-indicator");
-    // el.innerHTML = i18next.dir(i18next.language);
+const updateContent = (initial) => {
+    return () => {
+        // var el = document.getElementById("i18n-direction-indicator");
+        // el.innerHTML = i18next.dir(i18next.language);
 
-    var allElements = document.getElementsByTagName('*');
-    for (var i = 0, n = allElements.length; i < n; i++) {
-        // translate non-interpolation phrases
-        var key = allElements[i].getAttribute('data-i18n-key');
-        if (key !== null) {
+        var allElements = document.getElementsByTagName('*');
+        for (var i = 0, n = allElements.length; i < n; i++) {
+            // translate non-interpolation phrases
+            var key = allElements[i].getAttribute('data-i18n-key');
             var namespace = allElements[i].getAttribute('data-i18n-ns');
-	    var transl = null;
-            if (namespace == null) {
-                namespace = defaultNamespace;
-		// translate with i18next translations
-		transl = i18next.t(key, { ns: namespace });
-            } else if  (namespace == 'decimal') {
-		// translate number
-		transl = translateDecimal(key);
-	    } else {
-		// translate with i18next translations
-		transl = i18next.t(key, { ns: namespace });
-	    }
-            if (unidir.test(transl)) {
-                allElements[i].innerHTML = transl;
-            } else {
-                allElements[i].innerHTML = "".concat(directionPrefix(), transl, directionSuffix());
+            var lng = allElements[i].getAttribute('data-i18n-lang');
+            if (key !== null) {
+                var transl = null;
+                var options = {};
+                // The initial call of updateContent overrides the default
+                // language with the language from the @data-i18n-lang
+                // attribute if it is present.
+                if (lng !== null && initial) {
+                    options = { ...options, lng: lng };
+                }
+                if (namespace === null) {
+                    // translate with i18next translations
+                    transl = i18next.t(key, { ...options, ns: defaultNamespace });
+                } else if  (namespace == 'decimal') {
+                    // translate number
+                    const l = lng ?? i18n.language;
+                    transl = translateDecimal(key, l);
+                } else {
+                    // translate with i18next translations
+                    transl = i18next.t(key, { ...options, ns: namespace });
+                }
+                if (unidir.test(transl)) {
+                    allElements[i].innerHTML = transl;
+                } else {
+                    allElements[i].innerHTML = "".concat(directionPrefix(), transl, directionSuffix());
+                }
             }
+            // TODO: translate interpolation and pluralization phrases
         }
-        // TODO: translate interpolation and pluralization phrases
     }
 }
 
 // register translation function
-window.onload = updateContent;
+window.onload = updateContent(true);
 
 function directionPrefix() {
     var dir = i18next.dir(i18next.language);
@@ -79,9 +89,9 @@ function getZeroCodepoint(language) {
 }
 
 // translate a decimal to the current language's script
-function translateDecimal(dec) {
+function translateDecimal(dec, lang) {
     var fromZero = 0x30;
-    var toZero = getZeroCodepoint(i18next.language);
+    var toZero = getZeroCodepoint(lang);
     if (fromZero == toZero) {
 	return dec;
     } else {
@@ -96,5 +106,5 @@ function translateDecimal(dec) {
 }
 
 i18next.on('languageChanged', () => {
-  updateContent();
+    updateContent(false)();
 });
