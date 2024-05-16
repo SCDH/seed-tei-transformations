@@ -42,7 +42,7 @@ const updateContent = (initial) => {
                     transl = i18next.t(key, { ...options, ns: defaultNamespace });
                 } else if  (namespace == 'decimal') {
                     // translate number
-                    const l = lng ?? i18n.language;
+                    const l = options?.lng ?? i18next.language;
                     transl = translateDecimal(key, l);
                 } else {
                     // translate with i18next translations
