@@ -314,6 +314,7 @@
                                 <witness xml:id="BR" n="54v"/>
                                 <witness xml:id="N" n="226r"/>
                                 <witness xml:id="P" n="190r"/>
+                                <witness xml:id="PS" n="190r"/>
                             </listWit>
                         </listWit>
                     </sourceDesc>
@@ -349,6 +350,23 @@
                                     xml:id="l2.a1">
                                     <rdg wit="#N #D">كلي</rdg>
                                     <rdg wit="#T #P">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                            <l xml:id="l4">
+                                <anchor xml:id="i53_vsl_x5d"/>كَلِمي<app from="#i53_vsl_x5d"
+                                    xml:id="l4.a1">
+                                    <rdg wit="#N">كلي</rdg>
+                                    <rdg wit="#TUG">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                            <l xml:id="l5">
+                                <anchor xml:id="i53_vsl_x5e"/>كَلِمي<app from="#i53_vsl_x5e"
+                                    xml:id="l5.a1">
+                                    <rdg wit="#PS">كلي</rdg>
+                                    <rdg wit="#N">كلي</rdg>
+                                    <rdg wit="#TU">كلي</rdg>
                                     <rdg wit="#BR">كلي</rdg>
                                 </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
                                 بَطّالُ</l>
@@ -408,6 +426,34 @@
             test="(//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s')[2]" select="'ن'"/>
         <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
             select="'رﺑ'"/>
+    </x:scenario>
+
+    <x:scenario label="sort readings, unknown witness">
+        <x:context select="$BBlam42//*[@xml:id eq 'l4']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'BR'"/>
+        <x:expect label="order of readings: 2: N" test="(//*[@class eq 'siglum'])[2] ! string()"
+            select="'N'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'TUG'"
+            pending="we do not need this, since the schematron validation will fail in such a case"
+        />
+    </x:scenario>
+
+    <x:scenario label="sort readings, single witness not in the catalog, with catalog"
+        pending="handling witnesses not in catalog is only needed in rare cases. So this is postponed.">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l5']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: TU" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'TU'"/>
+        <x:expect label="order of readings: 2: N" test="(//*[@class eq 'siglum'])[2] ! string()"
+            select="'ن'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+        <x:expect label="order of readings: 3: PS" test="(//*[@class eq 'siglum'])[4] ! string()"
+            select="'PS'"/>
     </x:scenario>
 
 
