@@ -51,7 +51,7 @@ const updateContent = (initial) => {
                 if (unidir.test(transl)) {
                     allElements[i].innerHTML = transl;
                 } else {
-                    allElements[i].innerHTML = "".concat(directionPrefix(), transl, directionSuffix());
+                    allElements[i].innerHTML = "".concat(directionPrefix(lng), transl, directionSuffix(lng));
                 }
             }
             // TODO: translate interpolation and pluralization phrases
@@ -62,8 +62,8 @@ const updateContent = (initial) => {
 // register translation function
 window.onload = updateContent(true);
 
-function directionPrefix() {
-    var dir = i18next.dir(i18next.language);
+function directionPrefix(lang) {
+    var dir = i18next.dir(lang ?? i18next.language);
     if (dir == "rtl") {
         return "&#x202B;"; // right-to-left embedding
     } else {
