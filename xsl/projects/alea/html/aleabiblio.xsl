@@ -51,10 +51,10 @@ Special references:
                     <xsl:value-of select="count($tpBiblScope)"/>
                     <xsl:text> biblScopes.</xsl:text>
                 </xsl:message>
-                <span data-i18n-key="Quran" data-i18n-ns="quran">
+                <span data-i18n-key="Quran" data-i18n-ns="quran" data-i18n-lang="en">
                     <xsl:apply-templates mode="#current"/>
                 </span>
-                <span data-i18n-key="quran-title-surah-delim" data-i18n-ns="quran">: </span>
+                <span data-i18n-key="quran-title-surah-delim" data-i18n-ns="quran" data-i18n-lang="en">: </span>
                 <xsl:for-each select="$tpBiblScope">
                     <xsl:variable name="biblScope" as="element()" select="."/>
                     <xsl:variable name="surah">
@@ -73,19 +73,19 @@ Special references:
                             </xsl:matching-substring>
                         </xsl:analyze-string>
                     </xsl:variable>
-                    <span data-i18n-key="surah-{$surah}" data-i18n-ns="quran">
+                    <span data-i18n-key="surah-{$surah}" data-i18n-ns="quran" data-i18n-lang="en">
                         <xsl:apply-templates mode="#current" select="$biblScope"/>
                     </span>
                     <xsl:if test="$verse ne ''">
-                        <span data-i18n-key="quran-surah-verse-delim" data-i18n-ns="quran">, </span>
+                        <span data-i18n-key="quran-surah-verse-delim" data-i18n-ns="quran" data-i18n-lang="en">, </span>
                         <xsl:analyze-string select="$verse" regex="\d+">
                             <xsl:matching-substring>
-                                <span data-i18n-key="{regex-group(0)}" data-i18n-ns="decimal">
+                                <span data-i18n-key="{regex-group(0)}" data-i18n-ns="decimal" data-i18n-lang="en">
                                     <xsl:value-of select="regex-group(0)"/>
                                 </span>
                             </xsl:matching-substring>
                             <xsl:non-matching-substring>
-                                <span data-i18n-key="{normalize-space(.)}" data-i18n-ns="quran">
+                                <span data-i18n-key="{normalize-space(.)}" data-i18n-ns="quran" data-i18n-lang="en">
                                     <xsl:value-of select="."/>
                                 </span>
                             </xsl:non-matching-substring>
