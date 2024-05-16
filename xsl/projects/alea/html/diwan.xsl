@@ -31,9 +31,9 @@ target/bin/xslt.sh \
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:html="http://scdh.wwu.de/transform/html#"
     xmlns:biblio="http://scdh.wwu.de/transform/biblio#"
-    xmlns:ref="http://scdh.wwu.de/transform/ref#" xmlns:test="http://scdh.wwu.de/transform/test#"
-    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-    version="3.0" default-mode="preview">
+    xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:ref="http://scdh.wwu.de/transform/ref#"
+    xmlns:test="http://scdh.wwu.de/transform/test#" exclude-result-prefixes="#all"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -90,7 +90,44 @@ target/bin/xslt.sh \
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libwit.xsl"
-        package-version="1.0.0"/>
+        package-version="1.0.0">
+        <xsl:override>
+            <xsl:template name="wit:sigla">
+                <xsl:param name="wit" as="node()"/>
+                <span class="siglum">
+                    <xsl:for-each
+                        select="tokenize($wit) ! substring(., 2) ! xs:ID(.) ! wit:get-witness(., $wit)">
+                        <xsl:sort select="alea:sigla-sort-key(.)"/>
+                        <xsl:value-of select="wit:siglum(.)"/>
+                        <xsl:if test="position() ne last()">
+                            <span data-i18n-key="witness-sep">, </span>
+                        </xsl:if>
+                    </xsl:for-each>
+                </span>
+            </xsl:template>
+        </xsl:override>
+    </xsl:use-package>
+
+    <xsl:function name="alea:sigla-sort-key" as="xs:integer">
+        <xsl:param name="witness" as="element(witness)?"/>
+        <xsl:choose>
+            <xsl:when test="$witness">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>sort key for witness </xsl:text>
+                    <xsl:value-of select="$wit-id"/>
+                    <xsl:text>: </xsl:text>
+                    <xsl:value-of select="$witness/preceding::witness => count()"/>
+                </xsl:message>
+                <xsl:sequence select="$witness/preceding::witness => count()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>unknown witness</xsl:text>
+                </xsl:message>
+                <xsl:sequence select="1000"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
@@ -187,6 +224,36 @@ target/bin/xslt.sh \
                     <xsl:with-param name="wit" select="$wit"/>
                 </xsl:call-template>
             </xsl:template>
+
+            <!-- function for sorting variant readings -->
+            <xsl:function name="app:entry-sortkey-from-wit" as="item()">
+                <xsl:param name="wit" as="attribute(wit)"/>
+                <xsl:variable name="sortkeys" as="xs:integer*">
+                    <xsl:for-each select="tokenize($wit)">
+                        <xsl:variable name="wit-id" as="xs:string" select="substring(., 2)"/>
+                        <xsl:variable name="witness" select="$witnesses[@xml:id eq $wit-id]"/>
+                        <xsl:choose>
+                            <xsl:when test="$witness">
+                                <xsl:message use-when="system-property('debug') eq 'true'">
+                                    <xsl:text>sort key for witness </xsl:text>
+                                    <xsl:value-of select="$wit-id"/>
+                                    <xsl:text>: </xsl:text>
+                                    <xsl:value-of select="$witness/preceding::witness => count()"/>
+                                </xsl:message>
+                                <xsl:sequence select="$witness/preceding::witness => count()"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:message use-when="system-property('debug') eq 'true'">
+                                    <xsl:text>unknown witness: </xsl:text>
+                                    <xsl:value-of select="$wit-id"/>
+                                </xsl:message>
+                                <xsl:sequence select="1000"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:for-each>
+                </xsl:variable>
+                <xsl:sequence select="min($sortkeys)"/>
+            </xsl:function>
 
             <xsl:template mode="app:reading-annotation" match="unclear[not(@reason)]">
                 <span class="static-text" data-i18n-key="unclear">

@@ -1,5 +1,15 @@
 # Changes
 
+## 0.13.0
+
+- `xsl/projects/alea/html/diwan.xsl`:
+  sort readings and witnesses
+
+## 0.12.0
+
+- `xsl/common/libapp2.xsl`
+  - sort readings
+
 ## 0.11.3
 
 - `xsl/html/libhtml.xsl`

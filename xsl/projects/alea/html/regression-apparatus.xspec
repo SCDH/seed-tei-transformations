@@ -290,4 +290,171 @@
     </x:scenario>
 
 
+    <x:variable name="BBlam42">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt xml:lang="en">
+                        <title>lam42</title>
+                        <respStmt n="transcribed">
+                            <resp>edited and commented by</resp>
+                            <persName sameAs="#nefeli">Nefeli Papoutsakis</persName>
+                        </respStmt>
+                        <respStmt n="checked">
+                            <resp>double-checked by</resp>
+                            <persName>Thomas Bauer</persName>
+                        </respStmt>
+                    </titleStmt>
+                    <sourceDesc>
+                        <listWit>
+                            <listWit xml:id="BB">
+                                <witness xml:id="TU" n="217v"/>
+                                <witness xml:id="T" n="380"/>
+                                <witness xml:id="D" n="11r"/>
+                                <witness xml:id="BR" n="54v"/>
+                                <witness xml:id="N" n="226r"/>
+                                <witness xml:id="P" n="190r"/>
+                                <witness xml:id="PS" n="190r"/>
+                            </listWit>
+                        </listWit>
+                    </sourceDesc>
+                </fileDesc>
+                <encodingDesc n="local">
+                    <variantEncoding method="double-end-point" location="internal"/>
+                </encodingDesc>
+                <revisionDesc xml:lang="en">
+                    <change when="2022-09-19Z" who="#nefeli" type="created">Transcription
+                        started.</change>
+                </revisionDesc>
+            </teiHeader>
+            <text>
+                <body>
+                    <lg met="al-Hafif">
+                        <head><anchor xml:id="rfl_yh2_vxb"/>وقال<app from="#rfl_yh2_vxb">
+                                <rdg wit="#TU"/>
+                            </app>
+                        </head>
+                        <lg>
+                            <l xml:id="hdw_h3k_x5b">أَحْمَدُ ٱللهَ كم أُجَوِّدُ في
+                                الخَلْـ<caesura/>ـقِ مقالًا ولا يُفيدُ المقالُ</l>
+                            <l xml:id="l2">
+                                <anchor xml:id="i53_vsl_x5b"/>كَلِمي<app from="#i53_vsl_x5b"
+                                    xml:id="l2.a1">
+                                    <rdg wit="#N">كلي</rdg>
+                                    <rdg wit="#T">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                            <l xml:id="l3">
+                                <anchor xml:id="i53_vsl_x5c"/>كَلِمي<app from="#i53_vsl_x5c"
+                                    xml:id="l2.a1">
+                                    <rdg wit="#N #D">كلي</rdg>
+                                    <rdg wit="#T #P">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                            <l xml:id="l4">
+                                <anchor xml:id="i53_vsl_x5d"/>كَلِمي<app from="#i53_vsl_x5d"
+                                    xml:id="l4.a1">
+                                    <rdg wit="#N">كلي</rdg>
+                                    <rdg wit="#TUG">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                            <l xml:id="l5">
+                                <anchor xml:id="i53_vsl_x5e"/>كَلِمي<app from="#i53_vsl_x5e"
+                                    xml:id="l5.a1">
+                                    <rdg wit="#PS">كلي</rdg>
+                                    <rdg wit="#N">كلي</rdg>
+                                    <rdg wit="#TU">كلي</rdg>
+                                    <rdg wit="#BR">كلي</rdg>
+                                </app> في الأَنامِ سِحْرٌ ولكن<caesura/>أنا والسِحْرُ باطِلٌ
+                                بَطّالُ</l>
+                        </lg>
+                    </lg>
+                </body>
+                <back>
+                    <spanGrp/>
+                </back>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="sort readings: without witness catalog, order from header">
+        <x:context select="$BBlam42//*[@xml:id eq 'l2']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings" test="//*[@class eq 'siglum'] ! string()"
+            select="('T', 'BR', 'N')"/>
+    </x:scenario>
+
+    <x:scenario label="sort readings, single witness, with catalog">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l2']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'ت'"/>
+        <x:expect label="order of readings: 2: N" test="(//*[@class eq 'siglum'])[2] ! string()"
+            select="'ن'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+    </x:scenario>
+
+    <x:scenario
+        label="sort readings, multiple witnesses, with catalog; witness order irrelevant, because using existential comparison">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l3']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T, P"
+            test="every $siglum in (//*[@class eq 'siglum'])[1] ! tokenize(., '\p{P}?\s') satisfies $siglum = ('پ', 'ت')"/>
+        <x:expect label="order of readings: 2: N, D"
+            test="every $siglum in (//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s') satisfies $siglum = ('ن', 'د')"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+    </x:scenario>
+
+    <x:scenario label="sort readings, multiple witnesses, with catalog; witness order">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l3']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T, P, first wit"
+            test="(//*[@class eq 'siglum'])[1] ! tokenize(., '\p{P}?\s')[1]" select="'ت'"/>
+        <x:expect label="order of readings: 1: T, P, second wit"
+            test="(//*[@class eq 'siglum'])[1] ! tokenize(., '\p{P}?\s')[2]" select="'پ'"/>
+        <x:expect label="order of readings: 2: N, D, first wit"
+            test="(//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s')[1]" select="'د'"/>
+        <x:expect label="order of readings: 2: N, D, second wit"
+            test="(//*[@class eq 'siglum'])[2] ! tokenize(., '\p{P}?\s')[2]" select="'ن'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+    </x:scenario>
+
+    <x:scenario label="sort readings, unknown witness">
+        <x:context select="$BBlam42//*[@xml:id eq 'l4']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: T" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'BR'"/>
+        <x:expect label="order of readings: 2: N" test="(//*[@class eq 'siglum'])[2] ! string()"
+            select="'N'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'TUG'"
+            pending="we do not need this, since the schematron validation will fail in such a case"
+        />
+    </x:scenario>
+
+    <x:scenario label="sort readings, single witness not in the catalog, with catalog"
+        pending="handling witnesses not in catalog is only needed in rare cases. So this is postponed.">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context select="$BBlam42//*[@xml:id eq 'l5']"/>
+        <x:call template="test:single-app-entry"/>
+        <x:expect label="order of readings: 1: TU" test="(//*[@class eq 'siglum'])[1] ! string()"
+            select="'TU'"/>
+        <x:expect label="order of readings: 2: N" test="(//*[@class eq 'siglum'])[2] ! string()"
+            select="'ن'"/>
+        <x:expect label="order of readings: 3: BR" test="(//*[@class eq 'siglum'])[3] ! string()"
+            select="'رﺑ'"/>
+        <x:expect label="order of readings: 3: PS" test="(//*[@class eq 'siglum'])[4] ! string()"
+            select="'PS'"/>
+    </x:scenario>
+
+
 </x:description>
