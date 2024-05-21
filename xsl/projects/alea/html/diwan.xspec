@@ -59,5 +59,12 @@
         <x:expect label="html root element" test="local-name(/*)" select="'html'"/>
     </x:scenario>
 
+    <x:scenario label="project's CSS">
+        <x:context select="$tei-text"/>
+        <x:expect label="diwan.css included"
+            test="some $css in /html/head/style/text() satisfies $css eq unparsed-text('../diwan.css')"
+        />
+    </x:scenario>
+
 
 </x:description>

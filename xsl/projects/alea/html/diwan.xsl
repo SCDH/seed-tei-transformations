@@ -378,6 +378,10 @@ target/bin/xslt.sh \
 
         <xsl:override>
 
+            <!-- a comma separated list of CSS files -->
+            <xsl:param name="html:css-csv" as="xs:string"
+                select="resolve-uri('diwan.css', static-base-uri())"/>
+
             <!-- this makes the page content -->
             <xsl:template name="html:content">
                 <div style="font-size:{$font-size};">
