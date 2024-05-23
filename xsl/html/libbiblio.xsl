@@ -102,31 +102,16 @@ USAGE:
         </span>
     </xsl:template>
 
-    <!-- bibliographic reference where reference text is already present -->
-    <xsl:template
-        match="bibl[@corresp and not(matches(string-join(child::node() except child::biblScope, ''), '^\W*$'))]"
-        mode="biblio:reference">
+    <!-- default template for bibliographic references: reproduce text in it -->
+    <xsl:template match="bibl" mode="biblio:reference">
         <xsl:variable name="biblnode" select="."/>
-        <xsl:variable name="hasBiblText" as="xs:boolean"
-            select="normalize-space(node() except biblScope) ne ''"/>
-        <xsl:variable name="autotext" as="xs:boolean"
-            select="exists(parent::note[normalize-space(string-join((text() | *) except bibl, '')) eq ''])"/>
-        <xsl:variable name="analogous" as="xs:boolean"
-            select="exists(parent::note/parent::seg[matches(@type, '^analogous')])"/>
         <span class="bibliographic-reference" lang="{i18n:language(.)}"
             style="direction:{i18n:language-direction(.)};">
             <!-- This must be paired with pdf character entity,
                         because directional embeddings are an embedded CFG! -->
             <xsl:value-of select="i18n:direction-embedding(.)"/>
             <!-- [normalize-space((text()|*) except bibl) eq ''] -->
-            <xsl:if test="$autotext and $analogous">
-                <span class="static-text" data-i18n-key="Cf.">&lre;Cf.&pdf;</span>
-                <xsl:text> </xsl:text>
-            </xsl:if>
             <xsl:apply-templates mode="biblio:entry"/>
-            <xsl:if test="$autotext">
-                <xsl:text>.</xsl:text>
-            </xsl:if>
             <xsl:text>&pdf;</xsl:text>
         </span>
     </xsl:template>
