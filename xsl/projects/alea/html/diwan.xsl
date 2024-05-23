@@ -301,7 +301,7 @@ target/bin/xslt.sh \
 
             <!-- we print Tadmin for <span> with tag Tadmin, if no text in <note> before <bibl> -->
             <xsl:template mode="app:pre-reading-text" priority="2"
-                match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Tadmin']/note[normalize-space(node() except (child::bibl, child::bibl/following-sibling::node())) eq '']">
+                match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Tadmin']/note[normalize-space(string-join(node() except (child::bibl, child::bibl/following-sibling::node()))) eq '']">
                 <xsl:variable name="context" as="element()" select="."/>
                 <xsl:variable name="term" as="item()*"
                     select="ref:process-reference('tag:Tadmin', .) => ref:dereference($context)"/>
@@ -314,7 +314,7 @@ target/bin/xslt.sh \
 
             <!-- dito, for tag Isarah -->
             <xsl:template mode="app:pre-reading-text"
-                match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Isarah']/note[normalize-space(node() except (child::bibl, child::bibl/following-sibling::node())) eq '']">
+                match="span[some $t in tokenize(@ana) satisfies $t eq 'tag:Isarah']/note[normalize-space(string-join(node() except (child::bibl, child::bibl/following-sibling::node()))) eq '']">
                 <xsl:variable name="context" as="element()" select="."/>
                 <xsl:variable name="term" as="item()*"
                     select="ref:process-reference('tag:Isarah', .) => ref:dereference($context)"/>
