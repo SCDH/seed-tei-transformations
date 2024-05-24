@@ -30,5 +30,6 @@
     "Cf.": "‪Cf.‬",
     "rdg-annotation-pre": " ",
     "rdg-annotation-post": "",
-    "rdg-annotation-sep": ", "
+    "rdg-annotation-sep": ", ",
+    "author-title-sep": ", "
 }
