@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE stylesheet [
+    <!ENTITY lre "&#x202a;" >
+    <!ENTITY rle "&#x202b;" >
+    <!ENTITY pdf "&#x202c;" >
+    <!ENTITY nbsp "&#xa0;" >
+    <!ENTITY emsp "&#x2003;" >
+    <!ENTITY lb "&#xa;" >
+]>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:biblio="http://scdh.wwu.de/transform/biblio#"
@@ -56,7 +64,7 @@
                     <listBibl>
                         <bibl xml:id="book1" xml:lang="en">
                             <author>John Locke</author>: <title>An Essay</title>.</bibl>
-                        <bibl xml:id="Quran">Koran</bibl>
+                        <bibl xml:id="Quran"><title>Koran</title></bibl>
                     </listBibl>
                 </back>
             </text>
@@ -104,8 +112,10 @@
             select="($tei-text//*[@xml:id eq 'Quran']//text()) => string-join('')"/>
         <x:expect label="bibliographic entry is translated"
             test="/*/span[1]/@data-i18n-key => string()" select="'Quran'"/>
+        <x:expect label="Surah title number" test="/*/span[3] => string()" select="'114'"/>
         <x:expect label="Surah title number as translation key"
             test="matches(/*/span[3]/@data-i18n-key, '^surah-\d+$')"/>
+        <x:expect label="Surah verse number" test="/*/span[5] => string()" select="'2'"/>
         <x:expect label="Surah verse number as translation key"
             test="matches(/*/span[5]/@data-i18n-key, '^\d+$')"/>
         <x:expect label="Translation namespace for Surah verse number"
@@ -138,6 +148,91 @@
         <x:expect label="verse 26" test="exists(//span[@data-i18n-key eq '26'])"/>
         <x:expect label="delim" test="exists(//span[@data-i18n-key eq ','])"/>
         <x:expect label="verse 33" test="exists(//span[@data-i18n-key eq '33'])"/>
+    </x:scenario>
+
+    <x:variable name="hello-tei">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader>
+                <encodingDesc>
+                    <listPrefixDef>
+                        <prefixDef ident="bibl" matchPattern="(.*)" replacementPattern="#$1"/>
+                    </listPrefixDef>
+                </encodingDesc>
+            </teiHeader>
+            <text>
+                <body>
+                    <l xml:id="l1">Hallo Welt!<note anchored="true" xml:id="kdk_vtk_w1c"
+                            xml:lang="en">The poet probably means here the chancellery scribe (<hi
+                                rend="italic" xml:lang="ar-Latn">kātib ad-darǧ</hi>) ʿAbd al-Wahhāb
+                            Faḫraddīn (b. 716/1316). <bibl xml:id="l1-oldstyle"
+                                corresp="bibl:asSafadiWafi"
+                            ><biblScope>19:304-306</biblScope></bibl></note></l>
+                    <l xml:id="l2">Hallo Welt!<note anchored="true" xml:id="zdm_v3k_w1c"
+                            xml:lang="en"><hi rend="italic" xml:lang="ar-Latn">Lāḏ</hi> is the
+                            plural of <hi rend="italic" xml:lang="ar-Latn">lāḏa</hi>, <q>dress of
+                                raw chinese silk</q>: see<bibl xml:id="l2-newstyle"
+                                corresp="bibl:SteingassDictionary"
+                            ><biblScope>904</biblScope></bibl></note></l>
+                    <l xml:id="l3"> هذا على أنّ لي عَيْنًا مُسَهَّدةً<caesura/>للحُبِّ <seg
+                            type="analogousholy">مخلوقةَ الإنسانِ مِن عَجَلِ<note
+                                xml:id="zys_ykg_rwb" xml:lang="en">
+                                <bibl xml:id="l3-analogousholy" corresp="bibl:Quran"
+                                        ><biblScope>21:37</biblScope></bibl>
+                            </note>
+                        </seg>
+                    </l>
+                </body>
+                <back>
+                    <listBibl>
+                        <bibl xml:id="asSafadiWafi">
+                            <!-- old style entry, parsed from word -->
+                            <choice>
+                                <abbr><author>aṣ-Ṣafadī</author>, <title>Wāfī</title><am> = </am>
+                                </abbr>
+                                <expan>Ḫalīl ibn Aybak aṣ-Ṣafadī, al-Wāfī bi-l-wafayāt. Das
+                                    biographische Lexikon des Ṣalāḥaddīn Ḫalīl Ibn Aibak aṣ-Ṣafadī,
+                                    ed. Hellmut Ritter et al. 30 vols., Wiesbaden 1962-2010.</expan>
+                            </choice>
+                        </bibl>
+                        <bibl xml:id="SteingassDictionary">
+                            <!-- new style entry, entered manually -->
+                            <author>Steingass</author>, <title>Arabic-English Dictionary</title>,
+                            London, Crosby Lockwood and Son <date> n.d.</date>.</bibl>
+                    </listBibl>
+                </back>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="old style entry">
+        <x:context select="$hello-tei/id('l1-oldstyle')"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="text of reference" test="string-join(.) => normalize-space()"
+            select="'‪aṣ-Ṣafadī, Wāfī, 19:304-306‬'"/>
+        <x:expect label="author" test="//span[matches(@class, 'author')] ! string(.)"
+            select="'aṣ-Ṣafadī'"/>
+        <x:expect label="title" test="//span[matches(@class, 'title')] ! string(.)" select="'Wāfī'"/>
+        <x:expect label="date" test="//span[matches(@class, 'date')] ! string(.)" select="()"/>
+    </x:scenario>
+
+    <x:scenario label="new style entry">
+        <x:context select="$hello-tei/id('l2-newstyle')"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="text of reference" test="string-join(.) => normalize-space()"
+            select="'‪Steingass, Arabic-English Dictionary, 904‬'"/>
+        <x:expect label="author" test="//span[matches(@class, 'author')] ! string(.)"
+            select="'Steingass'"/>
+        <x:expect label="title" test="//span[matches(@class, 'title')] ! string(.)"
+            select="'Arabic-English Dictionary'"/>
+        <x:expect label="date" test="//span[matches(@class, 'date')] ! string(.)" select="()"/>
+    </x:scenario>
+
+    <x:scenario label="analogousholy">
+        <x:context select="$hello-tei//id('l3-analogousholy')"/>
+        <x:call template="biblio:reference"/>
+        <x:expect label="has Cf." test="/span/span[1] => string()" select="'‪Cf.‬'"/>
+        <x:expect label="English is default language of Cf." test="/span/span[1]/@data-i18n-lang => string()" select="'en'"/>
+        <x:expect label="has trailing dot" test="/span/text()[last()] => string()" select="'.'"/>
     </x:scenario>
 
 </x:description>
