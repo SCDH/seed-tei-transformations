@@ -56,15 +56,11 @@ USAGE:
         <xsl:apply-templates select="." mode="biblio:reference"/>
     </xsl:template>
 
-    <!-- bibliographic reference that needs text pulled from the bibliography -->
+    <!-- bibliographic reference that pulls in text from the bibliography -->
     <xsl:template
         match="bibl[@corresp and matches(string-join(child::node() except child::biblScope, ''), '^\W*$') and $biblio:empty-reference-autotext]"
         mode="biblio:reference">
         <xsl:variable name="biblnode" select="."/>
-        <xsl:variable name="autotext" as="xs:boolean"
-            select="exists(parent::note[normalize-space(string-join((text() | *) except bibl, '')) eq ''])"/>
-        <xsl:variable name="analogous" as="xs:boolean"
-            select="exists(parent::note/parent::seg[matches(@type, '^analogous')])"/>
         <xsl:variable name="ref" as="element()*"
             select="(ref:references-from-attribute(@corresp)[1] => ref:dereference(.)) treat as element()*"/>
         <xsl:variable name="ref-lang" select="i18n:language(($ref, .)[1])"/>
@@ -74,13 +70,9 @@ USAGE:
                         because directional embeddings are an embedded CFG! -->
             <xsl:value-of select="i18n:direction-embedding(($ref, .)[1])"/>
             <!-- [normalize-space((text()|*) except bibl) eq ''] -->
-            <xsl:if test="$autotext and $analogous">
-                <span class="static-text" data-i18n-key="Cf.">&lre;Cf.&pdf;</span>
-                <xsl:text> </xsl:text>
-            </xsl:if>
             <xsl:choose>
                 <xsl:when test="count($ref) gt 0">
-                    <xsl:apply-templates select="$ref" mode="biblio:entry">
+                    <xsl:apply-templates select="$ref" mode="biblio:entry-from-biblio">
                         <xsl:with-param name="tpBiblScope" as="element()*" select="biblScope"
                             tunnel="true"/>
                     </xsl:apply-templates>
@@ -89,10 +81,8 @@ USAGE:
                     <xsl:value-of select="@corresp"/>
                 </xsl:otherwise>
             </xsl:choose>
+            <!-- biblScope and other children -->
             <xsl:apply-templates mode="biblio:entry"/>
-            <xsl:if test="$autotext">
-                <xsl:text>.</xsl:text>
-            </xsl:if>
             <xsl:text>&pdf;</xsl:text>
             <xsl:call-template name="i18n:ltr-to-rtl-extra-space">
                 <xsl:with-param name="first-direction"
@@ -102,7 +92,7 @@ USAGE:
         </span>
     </xsl:template>
 
-    <!-- default template for bibliographic references: reproduce text in it -->
+    <!-- default template for bibliographic references: use markup and text in it -->
     <xsl:template match="bibl" mode="biblio:reference">
         <xsl:variable name="biblnode" select="."/>
         <span class="bibliographic-reference" lang="{i18n:language(.)}"
@@ -116,21 +106,20 @@ USAGE:
         </span>
     </xsl:template>
 
-    <!-- mode for printing a bibliographic entry -->
+    <!-- mode for printing a bibliographic entry from children of bibl -->
     <xsl:mode name="biblio:entry" on-no-match="shallow-skip" visibility="public"/>
 
-    <xsl:template match="choice[child::abbr and child::expan]" mode="biblio:entry">
-        <xsl:apply-templates select="abbr" mode="#current"/>
-    </xsl:template>
-
-    <xsl:template match="am[parent::abbr/parent::choice[child::expan]]" mode="biblio:entry"/>
+    <!-- mode for printing a bibliographic entry pulled in from the bibliography -->
+    <xsl:mode name="biblio:entry-from-biblio" on-no-match="shallow-skip" visibility="public"/>
 
     <!-- Exclude whitespace nodes from the bibliographic reference,
         because they break the interpunctation at the end.
         This may lead to unwanted effects with some bibliographies. -->
-    <xsl:template match="text()[ancestor::listBibl and matches(., '^\s+$')]" mode="biblio:entry"/>
+    <xsl:template match="text()[ancestor::listBibl and matches(., '^\s+$')]"
+        mode="biblio:entry biblio:entry-from-biblio"/>
 
-    <xsl:template match="biblScope[@unit][@from and @to]" mode="biblio:entry">
+    <xsl:template match="biblScope[@unit][@from and @to]"
+        mode="biblio:entry biblio:entry-from-biblio">
         <xsl:text>, </xsl:text>
         <span class="bibl-scope">
             <span class="static-text" data-i18n-key="{@unit}">&lre;<xsl:value-of select="@unit"
@@ -142,7 +131,7 @@ USAGE:
         </span>
     </xsl:template>
 
-    <xsl:template match="biblScope[@unit]" mode="biblio:entry">
+    <xsl:template match="biblScope[@unit]" mode="biblio:entry biblio:entry-from-biblio">
         <xsl:text>, </xsl:text>
         <span class="bibl-scope">
             <span class="static-text" data-i18n-key="{@unit}">&lre;<xsl:value-of select="@unit"
@@ -151,33 +140,33 @@ USAGE:
         </span>
     </xsl:template>
 
-    <xsl:template match="biblScope" mode="biblio:entry">
+    <xsl:template match="biblScope" mode="biblio:entry biblio:entry-from-biblio">
         <xsl:text>, </xsl:text>
         <span class="bibl-scope">
             <xsl:apply-templates mode="#current"/>
         </span>
     </xsl:template>
 
-    <xsl:template match="title" mode="biblio:entry">
+    <xsl:template match="title" mode="biblio:entry biblio:entry-from-biblio">
         <span class="biblio title">
             <xsl:apply-templates mode="#current"/>
         </span>
     </xsl:template>
 
-    <xsl:template match="author" mode="biblio:entry">
+    <xsl:template match="author" mode="biblio:entry biblio:entry-from-biblio">
         <span class="biblio author">
             <xsl:apply-templates mode="#current"/>
         </span>
     </xsl:template>
 
-    <xsl:template match="editor" mode="biblio:entry">
+    <xsl:template match="editor" mode="biblio:entry biblio:entry-from-biblio">
         <span class="biblio editor">
             <xsl:apply-templates mode="#current"/>
         </span>
     </xsl:template>
 
 
-    <xsl:template match="text()" mode="biblio:entry">
+    <xsl:template match="text()" mode="biblio:entry biblio:entry-from-biblio">
         <xsl:value-of select="."/>
     </xsl:template>
 
