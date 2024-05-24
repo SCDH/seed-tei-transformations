@@ -28,7 +28,6 @@ td.line-number,
 td.apparatus-line-number,
 td.editorial-note-number {
     vertical-align: top;
-    padding-left: 10px;
 }
 .line-number,
 .apparatus-line-number,
@@ -55,6 +54,7 @@ div.editorial-note {
                         text-indent: -3em;
                     }
                     */
+td.line-number,
 span.line-number,
 span.note-number {
     display: inline-block;
