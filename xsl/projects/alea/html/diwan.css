@@ -63,6 +63,10 @@ span.note-number {
 td.text-col1 {
     padding-left: 40px;
 }
+div.apparatus-container {
+     display: grid;
+     grid-template-columns: var(--line-count-width, 3em) 1fr;
+}
 sup {
     font-size: 6pt
 }

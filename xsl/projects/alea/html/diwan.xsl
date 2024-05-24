@@ -394,13 +394,13 @@ target/bin/xslt.sh \
                     </section>
                     <hr/>
                     <section class="variants">
-                        <xsl:call-template name="app:line-based-apparatus">
+                        <xsl:call-template name="app:line-based-apparatus-block">
                             <xsl:with-param name="entries" select="$apparatus-entries"/>
                         </xsl:call-template>
                     </section>
                     <hr/>
                     <section class="comments">
-                        <xsl:call-template name="app:line-based-apparatus">
+                        <xsl:call-template name="app:line-based-apparatus-block">
                             <xsl:with-param name="entries" select="$editorial-notes"/>
                         </xsl:call-template>
                     </section>
