@@ -63,9 +63,34 @@ span.note-number {
 td.text-col1 {
     padding-left: 40px;
 }
+div.couplet-container {
+    display: inline-grid;
+    grid-template-columns: var(--line-count-width, 3em) auto auto;
+}
+div.couplet-container > div.text-col1-2 {
+    grid-column: 2/-1;
+}
+div.couplet-container > div.text-col1,
+div.couplet-container > div.text-col2
+{
+    text-align: justify;
+    text-align-last: justify; /* important, since in general lines are not wrapped */
+    text-justify: auto; /* i.e. kashida for modern browsers */
+}
+div.couplet-container > div.text-col1,
+div.couplet-container > div.text-col2,
+div.couplet-container > div.text-col1-2 {
+    margin-bottom: 1ex; /* vertical space between verses */
+}
+div.couplet-container > div.text-col1 {
+    margin-left: 1em; /* caesura space */
+}
+div.couplet-container > div.text-col2 {
+    margin-right: 1em; /* caesura space */
+}
 div.apparatus-container {
-     display: grid;
-     grid-template-columns: var(--line-count-width, 3em) 1fr;
+    display: grid;
+    grid-template-columns: var(--line-count-width, 3em) 1fr;
 }
 sup {
     font-size: 6pt
