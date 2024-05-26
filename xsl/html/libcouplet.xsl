@@ -6,7 +6,7 @@ Here is what you will want in your CSS:
 
 div.couplet-container {
     display: inline-grid;
-    grid-template-columns: 3em auto auto; /* first col: line numbers */
+    grid-template-columns: 3em auto auto; /* first col: line numbers, "3em 1fr 1fr" for columns of equal width */
 }
 div.couplet-container > div.text-col1-2 {
     grid-column: 2/-1;
@@ -23,8 +23,11 @@ div.couplet-container > div.text-col2,
 div.couplet-container > div.text-col1-2 {
     margin-bottom: 1ex; /* vertical space between verses */
 }
+div.couplet-container > div.text-col1 {
+    margin-right: 1em; /* 1/2 caesura space */
+}
 div.couplet-container > div.text-col2 {
-    padding-right: 2em; /* caesura space */
+    margin-left: 1em; /* 1/2 caesura space */
 }
 -->
 <!DOCTYPE stylesheet [
