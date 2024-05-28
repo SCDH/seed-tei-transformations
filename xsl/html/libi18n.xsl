@@ -45,7 +45,7 @@ See i18next documentation for more info: https://www.i18next.com
         as="xs:string"/>
 
     <!-- path to your i18n.js with setup for i18next-->
-    <xsl:param name="i18n:js" select="'i18n.js'" as="xs:string"/>
+    <xsl:param name="i18n:js" select="resolve-uri('i18n.js', static-base-uri())" as="xs:string"/>
 
     <!-- path to the translation files, relative to this stylesheet or absolute -->
     <xsl:param name="i18n:locales-directory" select="'locales'" as="xs:string"/>
@@ -110,8 +110,8 @@ See i18next documentation for more info: https://www.i18next.com
         <script>
             <xsl:call-template name="i18n:initialisation"/>
         </script>
-        <script src="{resolve-uri($i18n:js, static-base-uri())}">
-            <!--xsl:value-of select="unparsed-text(resolve-uri($i18n, static-base-uri()))"/-->
+        <script>
+            <xsl:value-of select="unparsed-text($i18n:js)"/>
         </script>
         <script type="module">
             <xsl:call-template name="i18n:language-resources-inline">
