@@ -9,6 +9,14 @@
   - use CSS grid layout instead of a table
 - `xsl/projects/alea/html/diwan.xsl`:
   - use these new grid-based layouts
+- `xsl/html/libhtml.xsl`:
+  - Removed all components related to scroll target calculation, which
+    is now done by SEED Frontend Components alone.
+- `xsl/html/libprose.xsl`:
+  - new boolean switch
+    `{http://scdh.wwu.de/transform/prose#}linebreaks` for optional
+    output of `<lb/>` elements as `<br/>`
+  - this allows output of structural or of diplomatic HTML projections
 
 ## 0.12.0
 
