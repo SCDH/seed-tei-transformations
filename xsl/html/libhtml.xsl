@@ -56,12 +56,6 @@ Note, that the default mode is html:html!
   <!-- URLs to Javascript files to be included after the document body, separated by comma -->
   <xsl:param name="html:after-body-js-csv" as="xs:string" select="''"/>
 
-  <!-- javascript file defining the makeScrollTarget function -->
-  <xsl:param name="html:scroll-target" as="xs:string*" select="()"/>
-
-  <!-- should be one of 'internal', 'absolute', 'relative' -->
-  <xsl:param name="html:scroll-target-method" as="xs:string" select="'internal'"/>
-
   <!-- the canonical URL, if not set, a default value will be used -->
   <xsl:param name="html:canonical" as="xs:string" select="''"/>
 
@@ -291,59 +285,13 @@ Note, that the default mode is html:html!
       </xsl:when>
       <xsl:otherwise>
         <xsl:message terminate="yes">
-          <xsl:text>ERROR: invalid value for parameter html:css-method: </xsl:text>
+          <xsl:text>ERROR: invalid value for parameter html:js-method: </xsl:text>
           <xsl:value-of select="$html:js-method"/>
         </xsl:message>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:call-template name="html:scroll-target"/>
     <xsl:call-template name="html:after-body-additional-js"/>
   </xsl:template>
-
-  <xsl:template name="html:scroll-target">
-    <xsl:variable name="base-uri" select="base-uri()"/>
-    <xsl:choose>
-      <xsl:when test="$html:scroll-target-method eq 'internal'">
-        <xsl:for-each select="$html:scroll-target">
-          <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
-          <xsl:choose>
-            <xsl:when test="unparsed-text-available($href)">
-              <xsl:comment>
-                <xsl:text>JS from </xsl:text>
-                <xsl:value-of select="$href"/>
-              </xsl:comment>
-              <script>
-                <xsl:value-of select="unparsed-text($href)"/>
-              </script>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:comment>
-              <xsl:text>JS not available </xsl:text>
-              <xsl:value-of select="$href"/>
-            </xsl:comment>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$html:scroll-target-method eq 'absolute'">
-        <xsl:for-each select="$html:scroll-target">
-          <link rel="stylesheet" type="text/css" href="{resolve-uri(., $base-uri)}"/>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$html:scroll-target-method eq 'relative'">
-        <xsl:for-each select="$html:scroll-target">
-          <link rel="stylesheet" type="text/css" href="{.}"/>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:message terminate="yes">
-          <xsl:text>ERROR: invalid value for parameter html:css-method: </xsl:text>
-          <xsl:value-of select="$html:scroll-target-method"/>
-        </xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
 
   <xsl:template name="html:after-body-additional-js" visibility="public"/>
 
