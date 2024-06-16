@@ -151,3 +151,16 @@ span.caesura {
     font-family: "Amiri Regular";
     src: url("../../../resources/css/Amiri-Regular.ttf");
 }
+
+/* styles for print output */
+@media print {
+
+    section,
+    br
+    {
+        break-before: avoid !important;
+        break-after: avoid !important;
+        page-break-before: avoid !important;
+        page-break-after: avoid !important;
+    }
+}
