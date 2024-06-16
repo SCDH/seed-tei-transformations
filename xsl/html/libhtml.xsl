@@ -214,7 +214,7 @@ Note, that the default mode is html:html!
           <xsl:choose>
             <xsl:when test="unparsed-text-available($href)">
               <xsl:comment>
-                <xsl:text>CSS from </xsl:text>
+                <xsl:text>JS from </xsl:text>
                 <xsl:value-of select="$href"/>
               </xsl:comment>
               <script type="text/javascript">
@@ -242,7 +242,7 @@ Note, that the default mode is html:html!
       </xsl:when>
       <xsl:otherwise>
         <xsl:message terminate="yes">
-          <xsl:text>ERROR: invalid value for parameter html:css-method: </xsl:text>
+          <xsl:text>ERROR: invalid value for parameter html:js-method: </xsl:text>
           <xsl:value-of select="$html:js-method"/>
         </xsl:message>
       </xsl:otherwise>
@@ -263,7 +263,7 @@ Note, that the default mode is html:html!
           <xsl:choose>
             <xsl:when test="unparsed-text-available($href)">
               <xsl:comment>
-                <xsl:text>CSS from </xsl:text>
+                <xsl:text>JS from </xsl:text>
                 <xsl:value-of select="$href"/>
               </xsl:comment>
               <script type="text/javascript">
