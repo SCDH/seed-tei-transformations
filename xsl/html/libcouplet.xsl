@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- XSLT pacakge for couplets (verse, hemistichion) edited text (main text) -->
+<!-- XSLT pacakge for couplets (verse, hemistichion) edited text (main text)
+
+
+Here is what you will want in your CSS:
+
+div.couplet-container {
+    display: inline-grid;
+    grid-template-columns: 3em auto auto; /* first col: line numbers, "3em 1fr 1fr" for columns of equal width */
+}
+div.couplet-container > div.text-col1-2 {
+    grid-column: 2/-1;
+}
+div.couplet-container > div.text-col1,
+div.couplet-container > div.text-col2
+{
+    text-align: justify;
+    text-align-last: justify; /* important, since in general lines are not wrapped */
+    text-justify: auto; /* justification algorithm, see CSS4 specs */
+}
+div.couplet-container > div.text-col1,
+div.couplet-container > div.text-col2,
+div.couplet-container > div.text-col1-2 {
+    margin-bottom: 1ex; /* vertical space between verses */
+}
+div.couplet-container > div.text-col1 {
+    margin-right: 1em; /* 1/2 caesura space */
+}
+div.couplet-container > div.text-col2 {
+    margin-left: 1em; /* 1/2 caesura space */
+}
+-->
 <!DOCTYPE stylesheet [
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
@@ -94,11 +124,11 @@
         there must be left and right text columns. -->
     <xsl:template match="lg">
         <!-- This kind of poem goes into a table of columns -->
-        <table>
+        <div class="couplet-container">
             <!-- this table has 3 columns: 1: line number,
                 2 and 3: hemispheres of a verse or something else with @colspan="2" -->
             <xsl:apply-templates select="*"/>
-        </table>
+        </div>
     </xsl:template>
 
     <!-- nested group of verses, i.e. a stanza -->
@@ -108,27 +138,25 @@
 
     <!-- header of a poem -->
     <xsl:template match="head[ancestor::lg]">
-        <tr>
-            <td class="line-number">
-                <xsl:value-of select="common:line-number(.)"/>
-            </td>
-            <td colspan="2" class="title text-col1">
-                <!-- Note: The head should not contain a verse, because that would result in
+        <div class="line-number">
+            <xsl:value-of select="common:line-number(.)"/>
+        </div>
+        <div class="title text-col1-2">
+            <!-- Note: The head should not contain a verse, because that would result in
                     a table row nested in a tabel row. -->
-                <xsl:apply-templates/>
-                <!-- verse meter (metrum) is printed along with the poems header -->
-                <xsl:if test="ancestor::*/@met">
-                    <xsl:variable name="met" select="ancestor::*/@met[1]"/>
-                    <span class="static-text">
-                        <xsl:text> [</xsl:text>
-                        <!-- The meters name is pulled from the metDecl
+            <xsl:apply-templates/>
+            <!-- verse meter (metrum) is printed along with the poems header -->
+            <xsl:if test="ancestor::*/@met">
+                <xsl:variable name="met" select="ancestor::*/@met[1]"/>
+                <span class="static-text">
+                    <xsl:text> [</xsl:text>
+                    <!-- The meters name is pulled from the metDecl
                             in the encodingDesc in the document header -->
-                        <xsl:value-of select="/TEI/teiHeader//metSym[@value eq $met]//term[1]"/>
-                        <xsl:text>] </xsl:text>
-                    </span>
-                </xsl:if>
-            </td>
-        </tr>
+                    <xsl:value-of select="/TEI/teiHeader//metSym[@value eq $met]//term[1]"/>
+                    <xsl:text>] </xsl:text>
+                </span>
+            </xsl:if>
+        </div>
     </xsl:template>
 
     <!-- single verse with caesura: The hemistichion must be split by caesura and distributed
@@ -138,26 +166,24 @@
         Implementation note: xsl:for-each-group may seem as an alternative, but isn't well-suited
         for handling nested structures and we only have 2 target groups. -->
     <xsl:template match="l[not(ancestor::head) and descendant::caesura]">
-        <tr>
-            <td class="line-number">
-                <xsl:value-of select="common:line-number(.)"/>
-            </td>
-            <td class="text-col1">
-                <!-- output of nodes that preceed caesura -->
-                <xsl:apply-templates
-                    select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except text:non-lemma-nodes(.)"/>
-                <!-- recursively handle nodes, that contain caesura -->
-                <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
-            </td>
-            <td>
-                <!-- recursively handle nodes, that contain caesura -->
-                <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
-                <!-- output nodes that follow caesura -->
-                <xsl:apply-templates
-                    select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except text:non-lemma-nodes(.)"
-                />
-            </td>
-        </tr>
+        <div class="line-number">
+            <xsl:value-of select="common:line-number(.)"/>
+        </div>
+        <div class="text-col1">
+            <!-- output of nodes that preceed caesura -->
+            <xsl:apply-templates
+                select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except text:non-lemma-nodes(.)"/>
+            <!-- recursively handle nodes, that contain caesura -->
+            <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+        </div>
+        <div class="text-col2">
+            <!-- recursively handle nodes, that contain caesura -->
+            <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
+            <!-- output nodes that follow caesura -->
+            <xsl:apply-templates
+                select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except text:non-lemma-nodes(.)"
+            />
+        </div>
     </xsl:template>
 
     <!-- nodes that contain caesura: recursively output everything preceding caesura -->
@@ -199,28 +225,24 @@
     <xsl:template
         match="l[not(ancestor::head) and descendant::caesura[ancestor::rdg] and not(descendant::caesura[ancestor::lem])]"
         priority="1">
-        <tr>
-            <td class="line-number">
-                <xsl:value-of select="common:line-number(.)"/>
-            </td>
-            <td class="text-col1">
-                <!--xsl:apply-templates select="descendant::caesura/preceding-sibling::node()"/-->
-                <xsl:apply-templates select="node() except text:non-lemma-nodes(.)"/>
-            </td>
-            <td/>
-        </tr>
+        <div class="line-number">
+            <xsl:value-of select="common:line-number(.)"/>
+        </div>
+        <div class="text-col1">
+            <!--xsl:apply-templates select="descendant::caesura/preceding-sibling::node()"/-->
+            <xsl:apply-templates select="node() except text:non-lemma-nodes(.)"/>
+        </div>
+        <div class="text-col2"/>
     </xsl:template>
 
     <!-- verse without caesura, but within group of verses: the whole verse spans the two text columns -->
     <xsl:template match="l[not(ancestor::head) and not(descendant::caesura) and ancestor::lg]">
-        <tr>
-            <td class="apparatus-line-number">
-                <xsl:value-of select="common:line-number(.)"/>
-            </td>
-            <td colspan="2" class="text-col1">
-                <xsl:apply-templates select="node() except text:non-lemma-nodes(.)"/>
-            </td>
-        </tr>
+        <div class="apparatus-line-number">
+            <xsl:value-of select="common:line-number(.)"/>
+        </div>
+        <div class="text-col1-2">
+            <xsl:apply-templates select="node() except text:non-lemma-nodes(.)"/>
+        </div>
     </xsl:template>
 
     <!-- verses nested in head -->

@@ -289,6 +289,11 @@ see xsl/projects/alea/preview.xsl
         <xsl:param name="entries" as="map(*)*"/>
     </xsl:template>
 
+    <!-- generate a line-based apparatus as grid layout for a sequence of prepared maps -->
+    <xsl:template name="app:line-based-apparatus-block" visibility="abstract">
+        <xsl:param name="entries" as="map(*)*"/>
+    </xsl:template>
+
     <!-- generate a note-based apparatus for a sequence of prepared maps -->
     <xsl:template name="app:note-based-apparatus" visibility="abstract">
         <xsl:param name="entries" as="map(xs:string, map(*))"/>

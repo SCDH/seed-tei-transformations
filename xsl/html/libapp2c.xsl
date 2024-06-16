@@ -84,6 +84,45 @@
                 </div>
             </xsl:template>
 
+            <!-- generate a line-based apparatus (as CSS grid layout) for a sequence of prepared maps -->
+            <xsl:template name="app:line-based-apparatus-block" visibility="public">
+                <xsl:param name="entries" as="map(*)*"/>
+                <div class="apparatus-container">
+                    <!-- we first group the entries by line number -->
+                    <xsl:for-each-group select="$entries" group-by="map:get(., 'line-number')">
+                        <xsl:message use-when="system-property('debug') eq 'true'">
+                            <xsl:text>Apparatus entries for line </xsl:text>
+                            <xsl:value-of select="current-grouping-key()"/>
+                            <xsl:text> : </xsl:text>
+                            <xsl:value-of select="count(current-group())"/>
+                        </xsl:message>
+
+                        <span class="apparatus-line-number line-number">
+                            <xsl:value-of select="current-grouping-key()"/>
+                            <xsl:text>&sp;</xsl:text>
+                        </span>
+                        <span class="apparatus-line-entries">
+                            <!-- we then group by such entries, that get their lemma (repetition of the base text)
+                            from the same set of text nodes, because we want to join them into one entry -->
+                            <xsl:for-each-group select="current-group()"
+                                group-by="map:get(., 'lemma-grouping-ids')">
+                                <xsl:message use-when="system-property('debug') eq 'true'">
+                                    <xsl:text>Joining </xsl:text>
+                                    <xsl:value-of select="count(current-group())"/>
+                                    <xsl:text> apparatus entries referencing text nodes </xsl:text>
+                                    <xsl:value-of select="current-grouping-key()"/>
+                                </xsl:message>
+                                <!-- call the template that outputs an apparatus entries -->
+                                <xsl:call-template name="app:apparatus-entry">
+                                    <xsl:with-param name="entries" select="current-group()"/>
+                                </xsl:call-template>
+                            </xsl:for-each-group>
+                        </span>
+
+                    </xsl:for-each-group>
+                </div>
+            </xsl:template>
+
             <!-- generate a note-based apparatus for a sequence of prepared maps -->
             <xsl:template name="app:note-based-apparatus" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
