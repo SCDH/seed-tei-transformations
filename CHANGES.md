@@ -1,5 +1,15 @@
 # Changes
 
+## 0.13.0
+
+- `xsl/common/libapp2.xsl` and `xsl/html/libapp2.xsl`:
+  - new template named `app:line-based-apparatus-block` for CSS grid
+    layout
+- `xsl/html/libcouplet.xsl`
+  - use CSS grid layout instead of a table
+- `xsl/projects/alea/html/diwan.xsl`:
+  - use these new grid-based layouts
+
 ## 0.12.0
 
 - `xsl/html/libi18n.xsl` and its javascript:
