@@ -48,7 +48,7 @@
         <seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
         <upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
         <release.url/>
-        <id-prefix>seed</id-prefix>
+        <id-prefix>${project.artifactId}</id-prefix>
         <!-- for the gitlab maven registry -->
         <distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
     </properties>
@@ -424,7 +424,7 @@
                         </configuration>
                     </execution>
 
-                    <!-- concat SEED XML Transformer configurations to seed-config.yaml -->
+                    <!-- concat SEED XML Transformer configurations to yaml -->
                     <execution>
                         <id>concat-seed-xml-transformer-configurations</id>
                         <phase>generate-resources</phase>
@@ -433,7 +433,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <concat destfile="${project.build.directory}/seed-config.yaml"
+                                <concat destfile="${project.build.directory}/${id-prefix}.yaml"
                                     force="yes">
                                     <fileset
                                         dir="${project.build.directory}/generated-resources/yml">
