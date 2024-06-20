@@ -1,5 +1,10 @@
 # Changes
 
+## 0.13.1
+
+- SEED and ZIP packages contain `seed-tei-transformations` root folder,
+  so that they confirm the Tooling infrastructure
+
 ## 0.13.0
 
 - `xsl/common/libapp2.xsl` and `xsl/html/libapp2.xsl`:
