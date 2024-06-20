@@ -128,6 +128,36 @@ needed for defining, distributing and using scenarios.
   thing.
 
 
+#### Stylesheet parameters with fully qualified names
+
+```xml
+<transformationParameter>
+  <field name="paramDescription">
+	<paramDescriptor>
+	  <field name="localName">
+		<String>lb-start</String>
+	  </field>
+	  <field name="prefix">
+		<null/>
+	  </field>
+	  <field name="namespace">
+		<String>http://scdh.wwu.de/hsde/transform/hidefacs#</String>
+	  </field>
+	</paramDescriptor>
+  </field>
+  <field name="value">
+	<String>'µ'</String>
+  </field>
+  <field name="hasXPathValue">
+	<Boolean>false</Boolean>
+  </field>
+  <field name="isStatic">
+	<Boolean>false</Boolean>
+  </field>
+</transformationParameter>
+```
+
+
 ### XSpec
 
 For testing a stylesheet that uses a package, put a configuration into
