@@ -1,5 +1,8 @@
 # Changes
 
+## 0.13.2
+- fixed typo in `xsl/html/libtext.xsl` and `xsl/html/libcouplet.xsl`
+
 ## 0.13.1
 
 - SEED and ZIP packages contain `seed-tei-transformations` root folder,
