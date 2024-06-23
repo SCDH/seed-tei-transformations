@@ -297,7 +297,7 @@ div.couplet-container > div.text-col2 {
         <xsl:apply-templates select="lem"/>
     </xsl:template>
 
-    <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
+    <xsl:template match="lem[//variantEncoding/@method ne 'parallel-segmentation']"/>
 
     <xsl:template
         match="lem[//variantEncoding/@method eq 'parallel-segmentation' and empty(node())]">

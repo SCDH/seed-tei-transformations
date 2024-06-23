@@ -103,7 +103,7 @@ Note, that there is a default mode in this package.
                 <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
 
-            <xsl:template match="lem[//variantEncoding/@medthod ne 'parallel-segmentation']"/>
+            <xsl:template match="lem[//variantEncoding/@method ne 'parallel-segmentation']"/>
 
             <xsl:template
                 match="lem[//variantEncoding/@method eq 'parallel-segmentation' and empty(node())]">
