@@ -1,5 +1,10 @@
 # Changes
 
+## 0.13.3
+
+- `xsl/html/bible-with-popups.xsl`
+  - registered as reusable package
+
 ## 0.13.2
 - fixed typo in `xsl/html/libtext.xsl` and `xsl/html/libcouplet.xsl`
 

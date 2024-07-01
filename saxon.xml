@@ -99,6 +99,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/prose-with-popups.xsl"
                version="1.0.0" sourceLocation="xsl/html/prose-with-popups.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/bible-with-popups.xsl"
+               version="1.0.0" sourceLocation="xsl/html/bible-with-popups.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libbiblio.xsl"
                version="1.0.0" sourceLocation="xsl/html/libbiblio.xsl"/>
           <package
