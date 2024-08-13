@@ -427,7 +427,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\renewcommand*{\pb}[1]{ |\ledinnernote{#1} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\LR{\arabicobracket{}#1\arabiccbracket{}}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{\arabicobracket{}#1\arabiccbracket{}}}</xsl:text>
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
