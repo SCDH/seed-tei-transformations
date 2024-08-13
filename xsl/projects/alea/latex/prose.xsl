@@ -28,6 +28,11 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   <xsl:output method="text" encoding="UTF-8"/>
 
+  <xsl:param name="latex-header-csv" as="xs:string" select="''"/>
+
+  <xsl:param name="latex-header" as="xs:anyURI*"
+    select="tokenize($latex-header-csv, ',\s*') ! xs:anyURI(.)"/>
+
   <xsl:param name="language" as="xs:string" select="/TEI/@xml:lang"/>
 
   <!-- optional: the URI of the projects central witness catalogue -->
@@ -305,7 +310,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:mode on-no-match="shallow-skip"/>
 
   <xsl:template match="/ | TEI">
-    <xsl:call-template name="latex-header"/>
+    <xsl:choose>
+      <xsl:when test="$latex-header">
+        <xsl:for-each select="$latex-header">
+          <xsl:value-of select="resolve-uri(., static-base-uri()) => unparsed-text()"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="latex-header"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
     <xsl:call-template name="latex-front"/>
     <xsl:text>&lb;&lb;%% main content</xsl:text>
