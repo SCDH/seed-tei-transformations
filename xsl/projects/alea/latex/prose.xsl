@@ -287,7 +287,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:when test="root($met)//teiHeader//metSym[@value eq $meter]//term[@xml:lang eq 'ar']">
         <!-- The meters name is pulled from the metDecl
             in the encodingDesc in the document header -->
-        <xsl:value-of select="root($met)//teiHeader//metSym[@value eq $meter][1]//term[@xml:lang eq 'ar']"/>
+        <xsl:value-of
+          select="root($met)//teiHeader//metSym[@value eq $meter][1]//term[@xml:lang eq 'ar']"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$met"/>
