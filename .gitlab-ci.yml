@@ -4,7 +4,7 @@
 # image: openjdk:17 # openjdk:* is deprecated! See https://hub.docker.com/_/openjdk
 
 ## we use a proxied docker image in order to not run into a pull rate limit
-image: harbor.uni-muenster.de/proxy-docker/library/eclipse-temurin:17-alpine
+image: harbor.uni-muenster.de/proxy-docker/library/eclipse-temurin:21-alpine
 
 cache:
   paths:
