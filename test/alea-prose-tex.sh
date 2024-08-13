@@ -14,7 +14,7 @@ STYLESHEET=$SEED_DIR/xsl/projects/alea/latex/prose.xsl
 
 PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=[\noindent\setRL]"
 
-#FONTPARAMS="font=ArabicTypesetting fontsize=15pt fontscale=1.4"
+FONTPARAMS="font=ArabicTypesetting fontsize=15pt fontscale=1.4"
 
 XSLT_CMD=$SEED_DIR/target/bin/xslt.sh
 
