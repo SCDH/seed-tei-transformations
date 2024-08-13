@@ -254,6 +254,21 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>}%&lb;</xsl:text>
       </xsl:template>
 
+
+      <xsl:template mode="text:text" match="head">
+        <!-- workaround for the echo issue SCDH/hees-alea/edition-ibn-nubatah#3 -->
+        <xsl:text>&lb;&lb;</xsl:text>
+        <xsl:call-template name="edmac:par-start"/>
+        <xsl:text>&lb;\Large{</xsl:text>
+        <xsl:apply-templates mode="text:text"/>
+        <xsl:text>}</xsl:text>
+        <xsl:text>\addcontentsline{toc}{section}{</xsl:text>
+        <xsl:apply-templates mode="text:text-only"/>
+        <xsl:text>}</xsl:text>
+        <xsl:call-template name="edmac:par-end"/>
+      </xsl:template>
+
+
     </xsl:override>
   </xsl:use-package>
 
