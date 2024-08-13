@@ -1,0 +1,29 @@
+\newcommand*{\@arabicnum}[1]{%
+  \ifcase#1%
+    ٠%
+  \or
+    ١%
+  \or
+    ٢%
+  \or
+    ٣%
+  \or
+    ٤%
+  \or
+    ٥%
+  \or
+    ٦%
+  \or
+    ٧%
+  \or
+    ٨%
+  \or
+    ٩%
+  \else
+    \@ctrerr
+  \fi
+}
+\newcommand*{\arabicnum}[1]{%
+  \expandafter\@arabicnum\csname c@#1\endcsname
+}
+\endinput
