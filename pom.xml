@@ -39,7 +39,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <saxon.version>11.5</saxon.version>
+        <saxon.version>12.5</saxon.version>
         <xmlresolver.version>4.5.1</xmlresolver.version>
         <xerces.version>2.12.2</xerces.version>
         <xspec.version>2.2.4</xspec.version>
