@@ -323,7 +323,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     </xsl:choose>
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
 
-    <!--xsl:text>&lb;\pagenumbering{arabicnum}</xsl:text-->
+    <xsl:text>&lb;\pagenumbering{arabicnummult}</xsl:text>
 
     <!-- Durchschuss -->
     <xsl:text>&lb;\setlength{\baselineskip}{28pt}</xsl:text>
@@ -497,6 +497,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   <xsl:template name="arabic-numbering">
     <xsl:text>
+\usepackage{alphalph}
 \makeatletter
 \newcommand*{\@arabicnum}[1]{%
   \ifcase#1%
@@ -523,9 +524,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     \@ctrerr
   \fi
 }
-\newcommand*{\arabicnum}[1]{%
-  \expandafter\@arabicnum\csname c@#1\endcsname
-}
+%\newcommand*{\arabicnum}[1]{%
+%  \expandafter\@arabicnum\csname c@#1\endcsname
+% }
+\newalphalph{\arabicnummult}[mult]{\@arabicnum}{}
 \makeatother
     </xsl:text>
   </xsl:template>
