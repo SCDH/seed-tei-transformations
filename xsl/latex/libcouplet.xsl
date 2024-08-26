@@ -31,7 +31,7 @@
   <xsl:template name="verse:verse">
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:choose>
-      <xsl:when test="descendant::caesura">
+      <xsl:when test="descendant::caesura[not(ancestor::note)]">
         <xsl:text>\hemistichs</xsl:text>
         <xsl:call-template name="verse:fill-caesura"/>
         <xsl:text>{</xsl:text>
@@ -43,19 +43,19 @@
           <!-- text of first hemistich -->
           <!-- output of nodes that preceed caesura -->
           <xsl:apply-templates mode="text:text"
-            select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
+            select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/preceding::node() except verse:non-lemma-nodes(.)"/>
           <!-- recursively handle nodes, that contain caesura -->
-          <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+          <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]" mode="before-caesura"/>
         </xsl:variable>
         <xsl:value-of select="edmac:normalize($first)"/>
         <xsl:text>}{</xsl:text>
         <xsl:variable name="second" as="xs:string*">
           <!-- second hemistich -->
           <!-- recursively handle nodes, that contain caesura -->
-          <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
+          <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]" mode="after-caesura"/>
           <!-- output nodes that follow caesura -->
           <xsl:apply-templates mode="text:text"
-            select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"
+            select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/following::node() except verse:non-lemma-nodes(.)"
           />
         </xsl:variable>
         <xsl:value-of select="edmac:normalize($second)"/>
@@ -86,7 +86,7 @@
   <xsl:template name="verse:fill-tatweel" as="text()*">
     <xsl:context-item as="element(l)" use="required"/>
     <xsl:variable name="caesura" as="element(caesura)"
-      select="descendant::caesura[not(ancestor::rdg)]"/>
+      select="descendant::caesura[not(ancestor::rdg | ancestor::note) and not (ancestor::note)]"/>
     <xsl:variable name="before-text">
       <xsl:apply-templates mode="text:text" select="$caesura/preceding-sibling::node()"/>
     </xsl:variable>
@@ -107,7 +107,7 @@
 
 
   <!-- nodes that contain caesura: recursively output everything preceding caesura -->
-  <xsl:template match="*[descendant::caesura]" mode="before-caesura">
+  <xsl:template match="*[descendant::caesura[not(ancestor::note)]]" mode="before-caesura">
     <xsl:message use-when="system-property('debug') eq 'true'">
       <xsl:text>Entered before-caesura mode: </xsl:text>
       <xsl:value-of select="local-name()"/>
@@ -119,22 +119,22 @@
     </xsl:call-template>
     <!-- output of nodes that preced caesura -->
     <xsl:apply-templates mode="text:text"
-      select="node() intersect descendant::caesura[not(ancestor::rdg)]/preceding::node() except verse:non-lemma-nodes(.)"/>
+      select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/preceding::node() except verse:non-lemma-nodes(.)"/>
     <!-- recursively handle nodes, that contain caesura -->
-    <xsl:apply-templates select="*[descendant::caesura]" mode="before-caesura"/>
+    <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdf | ancestor::note)]]" mode="before-caesura"/>
   </xsl:template>
 
   <!-- nodes that contain caesura: recursively output everything following caesura -->
-  <xsl:template match="*[descendant::caesura]" mode="after-caesura">
+  <xsl:template match="*[descendant::caesura[not(ancestor::rdf | ancestor::note)]]" mode="after-caesura">
     <xsl:message use-when="system-property('debug') eq 'true'">
       <xsl:text>Entered after-caesura mode: </xsl:text>
       <xsl:value-of select="local-name()"/>
     </xsl:message>
     <!-- recursively handle nodes, that contain caesura -->
-    <xsl:apply-templates select="*[descendant::caesura]" mode="after-caesura"/>
+    <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]" mode="after-caesura"/>
     <!-- output nodes that follow caesura -->
     <xsl:apply-templates mode="text:text"
-      select="node() intersect descendant::caesura[not(ancestor::rdg)]/following::node() except verse:non-lemma-nodes(.)"/>
+      select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/following::node() except verse:non-lemma-nodes(.)"/>
     <!-- after element hooks -->
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-end'"/>
@@ -154,7 +154,7 @@
   <!-- TODO: this needs a better implementation -->
   <xsl:function name="verse:non-lemma-nodes" as="node()*">
     <xsl:param name="element" as="node()"/>
-    <xsl:sequence select="$element/descendant-or-self::rdg/descendant-or-self::node()"/>
+    <xsl:sequence select="$element/(descendant-or-self::rdg | descendant-or-self::note)/descendant-or-self::node()"/>
   </xsl:function>
 
 
