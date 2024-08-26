@@ -31,6 +31,18 @@
         />
     </x:scenario>
 
+    <x:scenario label="note with nested caesura">
+        <x:context>
+            <tei:l>Du siehst, wohin du <tei:hi>siehst, <tei:caesura/> nur</tei:hi> eitelkeit auf
+                        erden.<tei:note><tei:l>Ja,<tei:caesura/>oder
+                Nein?</tei:l></tei:note></tei:l>
+        </x:context>
+        <x:call template="verse:verse"/>
+        <x:expect label="result has edlabels, no note"
+            test="matches(., '\\hemistichs\[\\hfill\]\{\\edlabel\{[a-zA-Z0-9]+-start\}Du siehst, wohin du \\edlabel\{[a-zA-Z0-9]+-start\}siehst, \}\{ nur\\edlabel\{[a-zA-Z0-9]+-end\} eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9]+-end\}\}')"
+        />
+    </x:scenario>
+
     <x:scenario label="verse without caesura">
         <x:context>
             <tei:l>Du siehst, wohin du siehst, nur eitelkeit auf erden.</tei:l>
