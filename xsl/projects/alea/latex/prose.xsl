@@ -56,6 +56,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- where kashida elongation is to be applied -->
   <xsl:param name="kashida" as="xs:string" select="'verse'" required="false"/>
 
+  <!-- types of div in which verses are embedded and thus are printed without extra vertical space -->
+  <xsl:param name="embedded-verse-contexts" as="xs:string*" select="('letter', 'bio')"/>
+
 
   <xsl:variable name="current" as="node()*" select="root()"/>
 
@@ -245,8 +248,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
-      <!-- set the verse meter (metrum) before the verse environment starts -->
       <xsl:template mode="text:hook-ahead" match="*[@met]">
+        <!-- set the verse meter (metrum) before the verse environment starts -->
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>setting verse meter to </xsl:text>
           <xsl:value-of select="@met"/>
@@ -257,8 +260,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
         <xsl:text>}%&lb;</xsl:text>
+        <!-- set vskip if context requires it-->
+        <xsl:variable name="is-embedded" as="xs:boolean"
+          select="ancestor::div[1]/@type = $embedded-verse-contexts"/>
+        <xsl:text>&lb;\embeddedverse{</xsl:text>
+        <xsl:value-of select="string($is-embedded)"/>
+        <xsl:text>}% </xsl:text>
+        <xsl:value-of select="ancestor::div[1]/@type"/>
+        <xsl:text>&lb;</xsl:text>
       </xsl:template>
-
 
       <xsl:template mode="text:text" match="head">
         <!-- workaround for the echo issue SCDH/hees-alea/edition-ibn-nubatah#3 -->
@@ -438,11 +448,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{\arabicobracket{}#1\arabiccbracket{}}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\gap}{ \arabicobracket{}...\arabiccbracket{} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
+    <xsl:text>&lb;\usepackage{ifthen}</xsl:text>
+    <xsl:text>&lb;\newcommand{\true}{true}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\def\@verse@meter{?} %% always have verse meter!</xsl:text>
     <xsl:text>&lb;\newcommand*{\versemeter}[1]{\def\@verse@meter{#1}}</xsl:text>
+    <xsl:text>&lb;\def\@verse@isembedded{false} %% always have embedding information</xsl:text>
+    <xsl:text>&lb;\newcommand*{\embeddedverse}[1]{\def\@verse@isembedded{#1}}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;\setlength{\stanzaindentbase}{10pt}</xsl:text>
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
@@ -454,11 +469,12 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax}</xsl:text>
-    <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
-    <xsl:text>&lb;  \smallskip%</xsl:text>
+    <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{\smallskip}</xsl:text>
+    <xsl:text>&lb;  %\smallskip% skip after stanza</xsl:text>
     <xsl:text>&lb;  \let\pb\oldpb%</xsl:text>
     <xsl:text>&lb;  }</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;\usepackage{calc}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\settowidth{\hst@gutter@width}{</xsl:text>
