@@ -57,7 +57,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:param name="kashida" as="xs:string" select="'verse'" required="false"/>
 
   <!-- types of div in which verses are embedded and thus are printed without extra vertical space -->
-  <xsl:param name="embedded-verse-contexts" as="xs:string*" select="('letter', 'bio')"/>
+  <xsl:param name="embedded-verse-contexts" as="xs:string*" select="('letter', 'bio', 'intro')"/>
 
 
   <xsl:variable name="current" as="node()*" select="root()"/>
