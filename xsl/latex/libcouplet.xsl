@@ -154,7 +154,7 @@
   <!-- TODO: this needs a better implementation -->
   <xsl:function name="verse:non-lemma-nodes" as="node()*">
     <xsl:param name="element" as="node()"/>
-    <xsl:sequence select="$element/(descendant-or-self::rdg | descendant-or-self::note)/descendant-or-self::node()"/>
+    <xsl:sequence select="$element/descendant-or-self::rdg/descendant-or-self::node()"/>
   </xsl:function>
 
 
