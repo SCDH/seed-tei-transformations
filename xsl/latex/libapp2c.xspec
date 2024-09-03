@@ -37,7 +37,8 @@
                                     >n-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
-                                eine dritte Gerade geschnitten werden.<note>Genaus.</note></p>
+                                eine dritte Gerade geschnitten werden.<note>Genaus
+                                <gap/>!</note></p>
                         </div>
                     </div>
                     <div xml:id="d2" n="2">
@@ -62,17 +63,26 @@
         'lemma-text-nodes': $tei-text//t:app[1]/t:lem/text(),
         'lemma-grouping-ids': '$tei-text//t:app[1]/t:lem/text() ! generate-id(.)' }"/>
 
-    <x:variable name="sic1" select="map {'entry-id': generate-id($tei-text//t:sic[1]),
-                     'entry': $tei-text//t:sic[1],
+    <x:variable name="note1" select="map {'entry-id': generate-id($tei-text//t:note[1]),
+                     'entry': $tei-text//t:note[1],
                      'type': 1,
                      'number': 2,
                      'line-number': 7,
-                     'lemma-text-nodes': $tei-text//t:sic[1]/text(),
-                     'lemma-grouping-ids': $tei-text//t:sic[1]/text() ! generate-id(.) }"/>
+                     'lemma-text-nodes': $tei-text//t:note[1]//text(),
+                     'lemma-grouping-ids': $tei-text//t:note[1]//text() ! generate-id(.) }"/>
+
+    <x:variable name="sic1" select="map {'entry-id': generate-id($tei-text//t:sic[1]),
+        'entry': $tei-text//t:sic[1],
+        'type': 1,
+        'number': 2,
+        'line-number': 7,
+        'lemma-text-nodes': $tei-text//t:sic[1]/text(),
+        'lemma-grouping-ids': $tei-text//t:sic[1]/text() ! generate-id(.) }"/>
 
     <x:variable name="apparatus-entries" select="$sic1, $app1"/>
 
     <x:variable name="apparatus-entry-map" select="map{
+        map:get($note1, 'entry-id'): map {'entry': map:get($note1, 'entry-id'), 'entries': $note1, 'number': 2, 'after': true()},
         map:get($sic1, 'entry-id'): map {'entry': map:get($sic1, 'entry-id'), 'entries': $sic1, 'number': 2, 'after': true()},
         map:get($app1, 'entry-id'): map {'entry': map:get($app1, 'entry-id'), 'entries': $app1, 'number': 1, 'after': true()}
         }"/>
@@ -90,6 +100,16 @@
             select="$x:context//t:sic[1]"/>
         <x:expect label="entry 1: lemma-text-nodes" test="(.)[1] => map:get('lemma-text-nodes')"
             >Paralellen</x:expect>
+    </x:scenario>
+
+    <x:scenario label="apparatus footnote marks on note">
+        <x:context select="$tei-text//t:note[1]"/>
+        <x:variable name="app:apparatus-entries" select="$apparatus-entry-map"/>
+        <x:call template="app:footnote-marks">
+            <x:param name="entries" select="$apparatus-entry-map"/>
+        </x:call>
+        <x:expect label="note has nested gap (regression issue #30)"
+            test="matches(., 'Genaus\s+\\gap\{\}!')"/>
     </x:scenario>
 
     <x:scenario label="apparatus footnote marks on sic">
