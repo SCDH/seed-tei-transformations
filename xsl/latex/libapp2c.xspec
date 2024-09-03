@@ -131,6 +131,58 @@
     </x:scenario>
 
 
+    <x:variable name="tei-text2">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+                <encodingDesc>
+                    <variantEncoding method="parallel-segmentation" location="internal"/>
+                </encodingDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <div xml:id="t2.d3">
+                    <p xml:id="t2.d3.p1">
+                        <app xml:id="t2.d3.a1">
+                            <lem>So!</lem>
+                            <rdg wit="#N">
+                                <l>Eins<caesura/>zwei.</l>
+                                <l>Zwei<caesura/>drei.</l>
+                            </rdg>
+                        </app>
+                    </p>
+                </div>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:variable name="app2" select="map {'entry-id': 't2.d3.a1',
+        'entry': $tei-text2//t:app[1],
+        'type': 1, 
+        'number': 1, 
+        'line-number': 5,
+        'lemma-text-nodes': $tei-text2//t:app[1]/t:lem//text(),
+        'lemma-grouping-ids': $tei-text2//t:app[1]/t:lem//text() ! generate-id(.) }"/>
+
+    <x:variable name="apparatus-entry-map2" select="map{
+        map:get($app2, 'entry-id'): map {'entry': map:get($app2, 'entry-id'), 'entries': $app2, 'number': 1, 'after': true()}
+        }"/>
+
+
+    <x:scenario label="apparatus with caesura">
+        <x:context select="$tei-text2//t:app[1]"/>
+        <x:variable name="app:apparatus-entries" select="$apparatus-entry-map2"/>
+        <x:call template="app:footnote-marks">
+            <x:param name="entries" select="$apparatus-entry-map2"/>
+        </x:call>
+        <x:expect label="has caesura macro and verse separator"
+            test="matches(., 'Eins\\caesura\{\}zwei\. / Zwei\\caesura\{\}drei\.')"/>
+    </x:scenario>
+
+
 
     <x:scenario label="apparatus footnotes">
         <x:context select="$tei-text"/>
