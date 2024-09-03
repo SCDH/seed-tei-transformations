@@ -361,7 +361,7 @@ see xsl/projects/alea/preview.xsl
                 <xsl:apply-templates mode="app:reading-text" select="corr"/>
             </xsl:template>
 
-            <xsl:template mode="app:reading-text" match="gap[parent::rdg]">
+            <xsl:template mode="app:reading-text" match="gap[parent::rdg | ancestor::note]">
                 <xsl:text>[...]</xsl:text>
             </xsl:template>
 
