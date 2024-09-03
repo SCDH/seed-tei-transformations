@@ -349,6 +349,16 @@
                 </xsl:if>
             </xsl:template>
 
+
+
+            <xsl:template mode="app:reading-text" match="gap">
+                <xsl:text>\gap{}</xsl:text>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-text" match="caesura">
+                <xsl:text>\caesura{}</xsl:text>
+            </xsl:template>
+
         </xsl:override>
     </xsl:use-package>
 
@@ -366,6 +376,7 @@
         <xsl:text>&lb;\newcommand*{\appnote}[1]{#1}</xsl:text>
         <xsl:text>&lb;\newcommand*{\sigla}[1]{#1}</xsl:text>
         <xsl:text>&lb;\newcommand*{\siglum}[1]{#1}</xsl:text>
+        <xsl:text>&lb;\newcommand*{\gap}{\,[...]\,}</xsl:text>
     </xsl:template>
 
 
