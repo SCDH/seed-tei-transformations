@@ -50,6 +50,14 @@
     <xsl:text>&lb;&lb;%% end of text body&lb;\endnumbering&lb;&lb;</xsl:text>
   </xsl:template>
 
+  <xsl:template match="element()">
+    <xsl:apply-templates mode="text:hook-ahead" select="."/>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
+    <xsl:apply-templates/>
+    <xsl:apply-templates mode="text:hook-after" select="."/>
+    <xsl:apply-templates mode="text:hook-behind" select="."/>
+  </xsl:template>
+
 
   <!-- document structure -->
 
