@@ -284,6 +284,20 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>\arabicornatecparen{}</xsl:text>
       </xsl:template>
 
+      <xsl:template mode="text:hook-ahead" match="quote[@type eq 'verbatim']">
+        <xsl:message use-when="system-property('debug') eq 'true'">
+          <xsl:text>opening parenthesis for verbatim citation of holy text</xsl:text>
+        </xsl:message>
+        <xsl:text>\arabicoparen{}</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="text:hook-after" match="quote[@type eq 'verbatim']">
+        <xsl:message use-when="system-property('debug') eq 'true'">
+          <xsl:text>closing parenthesis for verbatim citation of holy text</xsl:text>
+        </xsl:message>
+        <xsl:text>\arabiccparen{}</xsl:text>
+      </xsl:template>
+
       <xsl:template mode="text:text" match="head-OFF">
         <!-- workaround for the echo issue SCDH/hees-alea/edition-ibn-nubatah#3 -->
         <!-- Turned off in favour of re-defining the sectioning macro! -->
