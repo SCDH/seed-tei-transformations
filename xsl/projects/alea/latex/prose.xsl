@@ -518,6 +518,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:otherwise>
     </xsl:choose>
 
+    <xsl:call-template name="text:latex-header-workaround36"/>
+
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
 
