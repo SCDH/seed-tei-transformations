@@ -11,6 +11,10 @@
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
+
+  <!-- corrects how the section level is set from the level of divs a head coccurs in -->
+  <xsl:param name="text:section-level-delta" as="xs:integer" select="0" required="false"/>
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
     package-version="1.0.0"/>
@@ -61,16 +65,43 @@
 
   <!-- document structure -->
 
+  <xsl:variable name="text:section-levels" as="xs:string*"
+    select="'chapter', 'section', 'subsection', 'subsubsection'"
+    visibility="public"/>
+
   <xsl:template match="head">
-    <!-- TODO -->
-    <!--xsl:text>&lb;&lb;\noindent{}</xsl:text-->
+    <xsl:variable name="level" as="xs:integer">
+      <xsl:choose>
+        <xsl:when test="parent::div">
+          <xsl:sequence select="ancestor::div => count()"/>
+        </xsl:when>
+        <xsl:when test="matches(name(parent::*), '^div')">
+          <xsl:sequence select="name(parent::*) => replace('^div(\d+)', '$1') => xs:integer()"/>
+        </xsl:when>
+        <xsl:when test="parent::lg">
+          <xsl:sequence select="(ancestor::lg | ancestor::div) => count()"/>
+        </xsl:when>
+        <xsl:when test="matches(name(parent::*), '^list')">
+          <xsl:sequence select="(ancestor::*[matches(name(.), '^list')] | ancestor::div) => count()"
+          />
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- we are in <body> or so! TODO -->
+          <xsl:sequence select="1"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="edmac:par-start"/>
-    <xsl:text>&lb;&lb;\eledsection[</xsl:text>
+    <xsl:text>&lb;\eled</xsl:text>
+    <xsl:value-of select="$text:section-levels[$level + $text:section-level-delta]"/>
+    <xsl:text>[</xsl:text>
     <xsl:apply-templates mode="text:text-only"/>
     <xsl:text>]{</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>}</xsl:text>
     <xsl:call-template name="edmac:par-end"/>
+    <xsl:text>&lb;&lb;</xsl:text>
   </xsl:template>
 
   <xsl:template match="p">

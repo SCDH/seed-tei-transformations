@@ -320,4 +320,50 @@
         />
     </x:scenario>
 
+
+    <x:variable name="structured-doc">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader/>
+            <text>
+                <body>
+                    <head>Title</head>
+                    <div>
+                        <head>Chapter 1</head>
+                        <p>One</p>
+                    </div>
+                    <div>
+                        <head>Chapter 2</head>
+                        <div>
+                            <head>Section 2.1</head>
+                            <p>Two one</p>
+                        </div>
+                    </div>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="document structure and sectioning">
+        <x:context select="$structured-doc"/>
+        <x:expect label="Title in \eledchapter"
+            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Title\]\{Title\}\s*\\pend\s*%')"/>
+        <x:expect label="Chapter 1 in \eledchapter"
+            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Chapter\s1\]\{Chapter\s1\}\s*\\pend')"/>
+        <x:expect label="Section 2.1 in \eledsection"
+            test="matches(. , '\\pstart\{\}%\s*\\eledsection\[Section\s2\.1\]\{Section\s2\.1\}\s*\\pend\s*%')"
+        />
+    </x:scenario>
+
+    <x:scenario label="document structure and sectioning with delta of 2">
+        <x:param name="text:section-level-delta" select="2"/>
+        <x:context select="$structured-doc"/>
+        <x:expect label="Title in \eledsubsection"
+            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Title\]\{Title\}\s*\\pend\s*%')"/>
+        <x:expect label="Chapter 1 in \eledsubsection"
+            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Chapter\s1\]\{Chapter\s1\}\s*\\pend')"/>
+        <x:expect label="Section 2.1 in \eledsubsubsection"
+            test="matches(. , '\\pstart\{\}%\s*\\eledsubsubsection\[Section\s2\.1\]\{Section\s2\.1\}\s*\\pend\s*%')"
+        />
+    </x:scenario>
+
 </x:description>
