@@ -537,8 +537,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <!-- workaround for echos of section commands, see /SCDH/hees-alea/edition-ibn-nubatah#3 -->
     <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \Large{#2}%</xsl:text>
-    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \large{#2}%</xsl:text>
+    <xsl:text>&lb;  %\smallskip{}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#1}}%</xsl:text>
