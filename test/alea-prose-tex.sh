@@ -12,7 +12,7 @@ EDITION=$(realpath ~/Projekte/edition-ibn-nubatah)
 
 STYLESHEET=$SEED_DIR/xsl/projects/alea/latex/prose.xsl
 
-PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=[\noindent\setRL]"
+PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=\noindent"
 
 FONTPARAMS="font=ArabicTypesetting fontsize=15pt fontscale=1.4"
 

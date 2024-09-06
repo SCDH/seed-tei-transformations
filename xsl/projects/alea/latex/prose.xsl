@@ -2,7 +2,7 @@
 
 EXAMPLE USAGE:
 
-target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -s:test/alea/Prosa/Sag_al_mutawwaq/Sag_al_mutawwaq.tei.xml wit-catalog=../../WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt="[\noindent\setRL]"
+target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -s:test/alea/Prosa/Sag_al_mutawwaq/Sag_al_mutawwaq.tei.xml wit-catalog=../../WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt="\noindent"
 
 -->
 <!DOCTYPE package [
@@ -298,21 +298,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>\arabiccparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:text" match="head-OFF">
-        <!-- workaround for the echo issue SCDH/hees-alea/edition-ibn-nubatah#3 -->
-        <!-- Turned off in favour of re-defining the sectioning macro! -->
-        <xsl:text>&lb;&lb;</xsl:text>
-        <xsl:call-template name="edmac:par-start"/>
-        <xsl:text>&lb;\Large{</xsl:text>
-        <xsl:apply-templates mode="text:text"/>
-        <xsl:text>}</xsl:text>
-        <xsl:text>\addcontentsline{toc}{section}{</xsl:text>
-        <xsl:apply-templates mode="text:text-only"/>
-        <xsl:text>}</xsl:text>
-        <xsl:call-template name="edmac:par-end"/>
-      </xsl:template>
-
-
     </xsl:override>
   </xsl:use-package>
 
@@ -532,17 +517,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>&lb;\directlua{Babel.arabic.justify_enabled=false}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-
-    <!-- workarounds for bugs in reledmac -->
-    <!-- workaround for echos of section commands, see /SCDH/hees-alea/edition-ibn-nubatah#3 -->
-    <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
-    <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \large{#2}%</xsl:text>
-    <xsl:text>&lb;  %\smallskip{}%</xsl:text>
-    <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
-    <xsl:text>&lb;    \addcontentsline{toc}{section}{#2}}{%</xsl:text>
-    <xsl:text>&lb;    \addcontentsline{toc}{section}{#1}}%</xsl:text>
-    <xsl:text>&lb;}</xsl:text>
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
