@@ -10,10 +10,15 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
+    xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.0">
 
     <!-- reledmac for line numbering -->
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libi18n.xsl"
+        package-version="1.0.0"/>
 
     <xsl:expose component="mode" names="edmac:*" visibility="public"/>
     <xsl:expose component="template" names="edmac:*" visibility="public"/>
@@ -21,8 +26,8 @@
     <!-- how to normalize generated latex of block elements like verses and paragraphs. VALUES: empty string, 'space' -->
     <xsl:param name="edmac:normalization" as="xs:string" select="''" required="false"/>
 
-    <!-- optional parameter passed to every \pstart. E.g. '[\setRL]' -->
-    <xsl:param name="edmac:pstart-opt" as="xs:string" select="''"/>
+    <!-- optional parameter passed to every \pstart. E.g. '\noindent' -->
+    <xsl:param name="edmac:pstart-opt" as="xs:string?" select="()"/>
 
     <!-- The templates named edmac:*-(start|end)-macro are used to make \pstart
         and \pend etc. homogenously in various places.
@@ -35,9 +40,14 @@
     -->
 
     <xsl:template name="edmac:par-start-macro" visibility="public">
+        <xsl:context-item as="element()" use="required"/>
         <xsl:param name="comment" as="xs:string" select="''" required="false"/>
         <xsl:text>&lb;\pstart</xsl:text>
-        <xsl:value-of select="$edmac:pstart-opt"/>
+        <xsl:if test="not(empty(($edmac:pstart-opt, edmac:pstart-bidi-macro(.))))">
+            <xsl:text>[</xsl:text>
+            <xsl:value-of select="($edmac:pstart-opt, edmac:pstart-bidi-macro(.)) => string-join()"/>
+            <xsl:text>]</xsl:text>
+        </xsl:if>
         <!-- to end macro, instead of {} -->
         <xsl:text>{}%</xsl:text>
         <xsl:value-of select="$comment"/>
@@ -65,6 +75,26 @@
         <xsl:value-of select="$comment"/>
         <xsl:text>&lb;&lb;&lb;</xsl:text>
     </xsl:template>
+
+    <!-- get bidi macro used in optional \pstart argument -->
+    <xsl:function name="edmac:pstart-bidi-macro" as="xs:string" visibility="private">
+        <xsl:param name="context" as="element()"/>
+        <xsl:choose>
+            <xsl:when test="i18n:language-direction($context) eq 'rtl'">
+                <xsl:choose>
+                    <xsl:when test="$context/self::head">
+                        <!-- in sectioning commands, we need \RTL
+                            Otherwise there will be an echo of the heading!
+                        -->
+                        <xsl:text>\RTL</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>\setRL</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:function>
 
 
 
