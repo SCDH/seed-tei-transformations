@@ -4,7 +4,8 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:t="http://www.tei-c.org/ns/1.0"
-    xmlns:edmac="http://scdh.wwu.de/transform/edmac#" stylesheet="libtext.xsl" run-as="external">
+    xmlns:edmac="http://scdh.wwu.de/transform/edmac#" stylesheet="libtext-testwrapper.xsl"
+    run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
