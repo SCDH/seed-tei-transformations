@@ -18,7 +18,9 @@
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libi18n.xsl"
-        package-version="1.0.0"/>
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="i18n:default-language" visibility="hidden"/>
+    </xsl:use-package>
 
     <xsl:expose component="mode" names="edmac:*" visibility="public"/>
     <xsl:expose component="template" names="edmac:*" visibility="public"/>
@@ -77,21 +79,15 @@
     </xsl:template>
 
     <!-- get bidi macro used in optional \pstart argument -->
-    <xsl:function name="edmac:pstart-bidi-macro" as="xs:string" visibility="private">
+    <xsl:function name="edmac:pstart-bidi-macro" as="xs:string?" visibility="private">
         <xsl:param name="context" as="element()"/>
         <xsl:choose>
             <xsl:when test="i18n:language-direction($context) eq 'rtl'">
-                <xsl:choose>
-                    <xsl:when test="$context/self::head">
-                        <!-- in sectioning commands, we need \RTL
-                            Otherwise there will be an echo of the heading!
-                        -->
-                        <xsl:text>\RTL</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>\setRL</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <!-- in either context, be it in normal paragraphs,
+                    be it in section headings, we have to use \setRL.
+                    See issue #37. See also issue #36.
+                -->
+                <xsl:text>\setRL</xsl:text>
             </xsl:when>
         </xsl:choose>
     </xsl:function>
