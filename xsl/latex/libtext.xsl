@@ -307,4 +307,19 @@
     <xsl:text>&lb;\newcommand*{\caesura}{||}</xsl:text>
   </xsl:template>
 
+  <!-- contribution to the header for workaround towards issue #36 -->
+  <xsl:template name="text:latex-header-workaround36" visibility="public">
+    <xsl:text>&lb;\makeatletter%</xsl:text>
+    <xsl:text>&lb;\@ifpackageloaded{ifthen}{}{\usepackage{ifthen}}%</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
+    <xsl:text>&lb;%% redefining reledmac's sectioning commands to workaround issue #36</xsl:text>
+    <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
+    <xsl:text>&lb;  \bigskip{}%</xsl:text>
+    <xsl:text>&lb;  \large{#2}%</xsl:text>
+    <xsl:text>&lb;  %\smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{section}{#2}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{section}{#1}}%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+  </xsl:template>
 </xsl:package>
