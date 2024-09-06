@@ -342,15 +342,44 @@
   <xsl:template name="text:latex-header-workaround36" visibility="public">
     <xsl:text>&lb;\makeatletter%</xsl:text>
     <xsl:text>&lb;\@ifpackageloaded{ifthen}{}{\usepackage{ifthen}}%</xsl:text>
+    <xsl:text>&lb;\@ifpackageloaded{nowidow}{}{\usepackage{nowidow}}%</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;%% redefining reledmac's sectioning commands to workaround issue #36</xsl:text>
+    <xsl:text>&lb;\renewcommand{\eledchapter}[2][]{%</xsl:text>
+    <xsl:text>&lb;  \bigskip{}%</xsl:text>
+    <xsl:text>&lb;  \LARGE{#2}%</xsl:text>
+    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{chapter}{#2}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{chapter}{#1}}%</xsl:text>
+    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \large{#2}%</xsl:text>
-    <xsl:text>&lb;  %\smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \Large{#2}%</xsl:text>
+    <xsl:text>&lb;  \smallskip{}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#1}}%</xsl:text>
+    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+    <xsl:text>&lb;\renewcommand{\eledsubsection}[2][]{%</xsl:text>
+    <xsl:text>&lb;  \bigskip{}%</xsl:text>
+    <xsl:text>&lb;  \large{#2}%</xsl:text>
+    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{subsection}{#2}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{subsection}{#1}}%</xsl:text>
+    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+    <xsl:text>&lb;\renewcommand{\eledsubsubsection}[2][]{%</xsl:text>
+    <xsl:text>&lb;  \bigskip{}%</xsl:text>
+    <xsl:text>&lb;  \large{#2}%</xsl:text>
+    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{subsubsection}{#2}}{%</xsl:text>
+    <xsl:text>&lb;    \addcontentsline{toc}{subsubsection}{#1}}%</xsl:text>
+    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
   </xsl:template>
 </xsl:package>
