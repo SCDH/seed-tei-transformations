@@ -16,6 +16,13 @@ in the base text, the apparatus and in the editorial notes. -->
     <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
 
 
+    <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]" priority="0.6">
+        <span>
+            <xsl:call-template name="text:class-attribute"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </span>
+    </xsl:template>
+
     <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'bold']">
         <b>
             <xsl:call-template name="text:class-attribute-opt"/>
