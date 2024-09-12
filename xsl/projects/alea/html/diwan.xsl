@@ -114,7 +114,7 @@ target/bin/xslt.sh \
             <xsl:when test="$witness">
                 <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>sort key for witness </xsl:text>
-                    <xsl:value-of select="$wit-id"/>
+                    <xsl:value-of select="$witness/@xml:id"/>
                     <xsl:text>: </xsl:text>
                     <xsl:value-of select="$witness/preceding::witness => count()"/>
                 </xsl:message>
