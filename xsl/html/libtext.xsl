@@ -69,6 +69,7 @@ Note, that there is a default mode in this package.
                         <xsl:attribute name="lang" select="$lang"/>
                         <xsl:attribute name="dir" select="i18n:language-code-to-direction($lang)"/>
                     </xsl:if>
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </div>
             </xsl:template>
@@ -130,6 +131,7 @@ Note, that there is a default mode in this package.
             <xsl:template match="unclear">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="unclear">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -139,6 +141,7 @@ Note, that there is a default mode in this package.
             <xsl:template match="choice[child::sic and child::corr]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="choice-with-sic-and-corr">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | corr"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -148,6 +151,7 @@ Note, that there is a default mode in this package.
             <xsl:template match="sic[not(parent::choice)]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="sic">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -157,6 +161,7 @@ Note, that there is a default mode in this package.
             <xsl:template match="corr[not(parent::choice)]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="corr">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
@@ -166,6 +171,7 @@ Note, that there is a default mode in this package.
             <xsl:template match="supplied[not(parent::choice)]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="supplied">
+                    <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="text.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+                <encodingDesc>
+                    <tagsDecl>
+                        <rendition xml:id="it" scheme="ccs">font-style: italics</rendition>
+                    </tagsDecl>
+                </encodingDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile <hi rendition="#it">a
+                                    priori</hi> beweisen objektive Realität im Satz über die Summe
+                                der Innenwinkel des <app xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg
+                                        wit="#N"><hi rendition="#it">n</hi>-Ecks</rdg></app>.</p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic rendition="#it"
+                                    >Paralellen</sic>, die durch eine dritte Gerade geschnitten
+                                werden.</p>
+                        </div>
+                    </div>
+                    <div xml:id="d3" n="3">
+                        <p xml:id="d3.1">So geht denn nun auch <anchor xml:id="d3.1.a1"/>wie<span
+                                from="#d3.1.a1">
+                                <note>Huch, was ist denn das?</note>
+                            </span>der ein Issue zu Ende.</p>
+                    </div>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="rendition of hi">
+        <x:context select="$tei-text/id('d1.1.p1')" mode="text:text"/>
+        <x:expect label="has a hi with class 'it'" test="exists(//*:span[matches(@class, 'it')])"/>
+        <x:expect label="has exactly one hi with class 'it'"
+            test="count(//*:span[matches(@class, 'it')])" select="1"/>
+        <x:expect label="has span with class it around 'a priori'"
+            test="some $hi in //*:span[matches(@class, 'it')] ! string(.) satisfies matches($hi, 'a\s+priori')"
+        />
+    </x:scenario>
+
+    <x:scenario label="rendition of other element sic">
+        <x:context select="$tei-text/id('d1.1.p2')" mode="text:text"/>
+        <x:expect label="has a hi with class 'it'" test="exists(//*:span[matches(@class, 'it')])"/>
+        <x:expect label="has exactly one hi with class 'it'"
+            test="count(//*:span[matches(@class, 'it')])" select="1"/>
+        <x:expect label="has element with class it around 'Parallelen'"
+            test="some $hi in //*[matches(@class, 'it')] ! string(.) satisfies matches($hi, 'Paralellen')"
+        />
+    </x:scenario>
+
+</x:description>
