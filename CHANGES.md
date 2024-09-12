@@ -1,5 +1,9 @@
 # Changes
 
+## 0.14.0
+
+- support `@rendition` when using `xsl/html/librend.xsl` (issue #39)
+
 ## 0.13.3
 
 - `xsl/html/bible-with-popups.xsl`
