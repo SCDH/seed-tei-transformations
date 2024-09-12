@@ -278,7 +278,7 @@
                     <xsl:call-template name="app:reading-annotation">
                         <xsl:with-param name="separator" select="true()"/>
                     </xsl:call-template>
-                    <xsl:if test="@wit">
+                    <xsl:if test="@wit and not(wit)">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
                         <xsl:call-template name="app:sigla">
@@ -296,7 +296,7 @@
             <xsl:template mode="app:reading-dspt" match="rdg[not(node())]">
                 <span class="reading">
                     <span class="static-text" data-i18n-key="omisit">&lre;om.&pdf;</span>
-                    <xsl:if test="@wit">
+                    <xsl:if test="@wit and not(wit)">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
                         <xsl:call-template name="app:sigla">
@@ -315,7 +315,7 @@
                 priority="5">
                 <span class="reading">
                     <xsl:call-template name="app:reading-annotation"/>
-                    <xsl:if test="@wit">
+                    <xsl:if test="@wit and not(wit)">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
                         <xsl:call-template name="app:sigla">
@@ -346,7 +346,7 @@
                     <xsl:value-of select="i18n:direction-embedding(.)"/>
                     <xsl:apply-templates select="node()" mode="app:reading-text"/>
                     <xsl:text>&pdf;</xsl:text>
-                    <xsl:if test="@wit">
+                    <xsl:if test="@wit and not(wit)">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
                         <xsl:call-template name="app:sigla">
