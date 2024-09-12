@@ -21,6 +21,8 @@
 
     <xsl:param name="app:popup-anchor" as="xs:string" select="'?'" required="false"/>
 
+    <!-- whether or not to have the "lemma]" in apparatus entries -->
+    <xsl:param name="app:lemma" as="xs:boolean" select="true()" required="false"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -214,10 +216,13 @@
             <xsl:template name="app:apparatus-entry" visibility="public">
                 <xsl:param name="entries" as="map(*)*"/>
                 <span class="apparatus-entry">
-                    <xsl:call-template name="app:apparatus-lemma">
-                        <xsl:with-param name="entry" select="$entries[1]"/>
-                    </xsl:call-template>
-                    <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
+                    <xsl:if test="$app:lemma">
+                        <xsl:call-template name="app:apparatus-lemma">
+                            <xsl:with-param name="entry" select="$entries[1]"/>
+                        </xsl:call-template>
+                        <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
+                        <xsl:text> </xsl:text>
+                    </xsl:if>
                     <xsl:for-each select="$entries">
                         <xsl:apply-templates mode="app:reading-dspt" select="map:get(., 'entry')">
                             <xsl:with-param name="apparatus-entry-map" as="map(*)" select="."
