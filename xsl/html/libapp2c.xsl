@@ -118,6 +118,10 @@
                                 <xsl:call-template name="app:apparatus-entry">
                                     <xsl:with-param name="entries" select="current-group()"/>
                                 </xsl:call-template>
+                                <xsl:if test="position() ne last()">
+                                    <span class="apparatus-sep" data-i18n-key="app-entry-sep"
+                                        >&nbsp;|&emsp;</span>
+                                </xsl:if>
                             </xsl:for-each-group>
                         </span>
 
@@ -233,10 +237,6 @@
                                 data-i18n-key="rdgs-sep">;</span>
                         </xsl:if>
                     </xsl:for-each>
-                    <xsl:if test="position() ne last()">
-                        <span class="apparatus-sep" data-i18n-key="app-entry-sep"
-                            >&nbsp;|&emsp;</span>
-                    </xsl:if>
                 </span>
             </xsl:template>
 
