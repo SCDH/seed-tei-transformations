@@ -3,6 +3,12 @@
 ## 0.14.0
 
 - support `@rendition` when using `xsl/html/librend.xsl` (issue #39)
+- apparatus by `xsl/html/libapp2c.xsl`:
+  - make repetion of lemma optional (issue #28)
+	- via boolean stylesheet parameter `app:lemma`
+	- having no lemma makes sense, e.g., in a popup apparatus
+  - remove trailing entries delimiter `|` from popups and footnotes (issue #26)
+  - allow sigla from `<wit>` instead of `@wit` (issue #27)
 
 ## 0.13.3
 
