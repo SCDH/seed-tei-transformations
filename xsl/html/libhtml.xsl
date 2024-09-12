@@ -119,6 +119,7 @@ Note, that the default mode is html:html!
           </xsl:choose>
         </xsl:variable>
         <link rel="canonical" href="{$canonical}"/>
+        <xsl:call-template name="html:rendition-css"/>
         <xsl:call-template name="html:css"/>
         <xsl:call-template name="html:js-modules"/>
         <xsl:call-template name="html:js"/>
@@ -313,5 +314,40 @@ Note, that the default mode is html:html!
     <xsl:value-of select="$include-element/@xpointer"/>
     <xsl:text>"</xsl:text>
   </xsl:template>
+
+
+  <xsl:template name="html:rendition-css" as="item()*" visibility="public">
+    <xsl:context-item as="node()" use="required"/>
+    <xsl:variable name="root" select="root(.)"/>
+    <xsl:text>&#xa;</xsl:text>
+    <xsl:comment>CSS from tagsDecl/rendition</xsl:comment>
+    <xsl:text>&#xa;</xsl:text>
+    <style>
+      <xsl:apply-templates mode="html:css"
+        select="$root//teiHeader/encodingDesc/tagsDecl/rendition[@scheme eq 'css']"/>
+    </style>
+    <xsl:text>&#xa;</xsl:text>
+  </xsl:template>
+
+  <xsl:mode name="html:css" on-no-match="shallow-skip" visibility="public"/>
+
+  <xsl:template mode="html:css" match="rendition[@selector]">
+    <xsl:text>&#xa;</xsl:text>
+    <xsl:value-of select="@selector"/>
+    <xsl:text> { </xsl:text>
+    <xsl:value-of select="text()"/>
+    <xsl:text> } </xsl:text>
+  </xsl:template>
+
+  <xsl:template mode="html:css" match="rendition[@xml:id and not(@selector)]">
+    <xsl:text>&#xa;.</xsl:text>
+    <xsl:value-of select="@xml:id"/>
+    <xsl:text> { </xsl:text>
+    <xsl:value-of select="text()"/>
+    <xsl:text> } </xsl:text>
+  </xsl:template>
+
+  <xsl:template mode="html:css" match="rendition[empty(node())]" priority="10"/>
+
 
 </xsl:package>

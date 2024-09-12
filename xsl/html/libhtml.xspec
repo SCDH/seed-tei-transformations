@@ -15,6 +15,13 @@
                         <title>Test</title>
                     </titleStmt>
                 </fileDesc>
+                <encodingDesc>
+                    <tagsDecl>
+                        <rendition xml:id="it" scheme="css">font-style: italics</rendition>
+                        <rendition xml:id="sup" scheme="latex">\superscript</rendition>
+                        <rendition selector=".sup" scheme="css">vertical-align: super</rendition>
+                    </tagsDecl>
+                </encodingDesc>
             </teiHeader>
             <text xml:id="the-text">
                 <body>
@@ -60,13 +67,17 @@
 
     <!-- CSS -->
 
-    <x:scenario label="no CSS">
+    <x:scenario label="no CSS but from tagsDecl">
         <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="no CSS style elements" test="not(exists(/html/head/style))"/>
+        <x:expect label="no CSS style elements, but from tagsDecl" test="count(/html/head/style)"
+            select="1"/>
+        <x:expect label="CSS from tagsDecl"
+            test="/html/head/style ! matches(., '\s*\.it\s\{\sfont-style:\sitalics\s\}\s*\.sup\s\{\svertical-align:\ssuper\s\}\s*')"/>
         <x:expect label="no CSS links"
             test="not(exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']))"/>
         <x:expect label="no info about CSS not available"
-            test="not(matches(/html/head/comment(), '^CSS not available'))"/>
+            test="every $c in /html/head/comment() satisfies not(matches($c, '^CSS not available'))"
+        />
     </x:scenario>
 
     <x:scenario label="internal CSS">
@@ -74,19 +85,21 @@
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="style element present" test="exists(/html/head/style)"/>
         <x:expect label="info about CSS source in comment"
-            test="matches(/html/head/style/preceding-sibling::comment(), 'sample.css$')"/>
-        <x:expect label="style element contains CSS from file" test="/html/head/style ! string()"
-            select="unparsed-text('../../../test/samples/sample.css')"/>
+            test="some $c in /html/head/style/preceding-sibling::comment() satisfies matches($c, 'sample.css$')"/>
+        <x:expect label="style element contains CSS from file"
+            test="some $s in /html/head/style ! string() satisfies $s eq unparsed-text('../../../test/samples/sample.css')"
+        />
     </x:scenario>
 
     <x:scenario label="internal CSS, non-existing CSS source">
         <x:param name="html:css" select="('unknown.css')"/>
         <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="style element not present" test="not(exists(/html/head/style))"/>
+        <x:expect label="style element not present than that from tagsDecl"
+            test="count(/html/head/style)" select="1"/>
         <x:expect label="CSS not available"
-            test="matches(/html/head/comment(), '^CSS not available')"/>
+            test="some $c in /html/head/comment() satisfies not(matches($c, '^CSS not available'))"/>
         <x:expect label="info about CSS source in comment"
-            test="matches(/html/head/comment(), 'unknown.css$')"/>
+            test="some $c in /html/head/comment() satisfies matches($c, 'unknown.css$')"/>
     </x:scenario>
 
 
@@ -97,7 +110,7 @@
         <x:expect label="link to CSS present"
             test="exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css'])"/>
         <x:expect label="file linked"
-            test="matches(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href, 'sample.css$')"
+            test="some $l in /html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']/@href satisfies matches($l, 'sample.css$')"
         />
     </x:scenario>
 
@@ -166,7 +179,7 @@
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="style element present" test="exists(/html/head/script)"/>
         <x:expect label="info about JS source in comment"
-            test="matches(/html/head/script/preceding-sibling::comment(), 'sample.js$')"/>
+            test="some $c in /html/head/script/preceding-sibling::comment() satisfies matches($c, 'sample.js$')"/>
         <x:expect label="style element contains JS from file" test="/html/head/script ! string()"
             select="unparsed-text('../../../test/samples/sample.js')"/>
     </x:scenario>
@@ -175,9 +188,10 @@
         <x:param name="html:js" select="('unknown.js')"/>
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="style element not present" test="not(exists(/html/head/script))"/>
-        <x:expect label="JS not available" test="matches(/html/head/comment(), '^JS not available')"/>
+        <x:expect label="JS not available"
+            test="some $c in /html/head/comment() satisfies matches($c, '^JS not available')"/>
         <x:expect label="info about JS source in comment"
-            test="matches(/html/head/comment(), 'unknown.js$')"/>
+            test="some $c in /html/head/comment() satisfies matches($c, 'unknown.js$')"/>
     </x:scenario>
 
     <x:scenario label="internal JS">
