@@ -46,11 +46,10 @@
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
         <seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
-        <upload.uri>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/</upload.uri>
         <release.url/>
         <id-prefix>${project.artifactId}</id-prefix>
-        <!-- for the gitlab maven registry -->
-        <distribution.url>https://zivgitlab.uni-muenster.de/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</distribution.url>
+        <!-- for the github maven registry -->
+        <distribution.url>https://maven.pkg.github.com/SCDH/seed-tei-transformations</distribution.url>
     </properties>
 
     <dependencies>
@@ -79,19 +78,19 @@
 
     <repositories>
         <repository>
-            <id>gitlab-maven</id>
+            <id>github</id>
             <url>${distribution.url}</url>
         </repository>
     </repositories>
 
-    <!-- get the build artifacts into the gitlab maven package registry -->
+    <!-- get the build artifacts into the github maven package registry -->
     <distributionManagement>
         <repository>
-            <id>gitlab-maven</id>
+            <id>github</id>
             <url>${distribution.url}</url>
         </repository>
         <snapshotRepository>
-            <id>gitlab-maven</id>
+            <id>github</id>
             <url>${distribution.url}</url>
         </snapshotRepository>
     </distributionManagement>
