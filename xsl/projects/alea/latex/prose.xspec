@@ -38,6 +38,14 @@
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
                                 eine dritte Gerade geschnitten werden.<note>Genaus!</note></p>
+                            <p n="3" xml:id="d1.1.p3">
+                                <pb n="1b"/>
+                                <quote type="verbatim">بسم اللّه الرحمن</quote> الرحيم ، <anchor
+                                    xml:id="bd3e126"/><quote type="verbatim-holy" source="bib:quran"
+                                    >رَبّ أوزِعْني أنْ أشكر نعمتك التي أنعمْتَ عليّ وعلى والِديَّ
+                                    وأنْ أعمَل صالحًا تَرضاه وأدخِلْني برحمتك في عبادك
+                                    الصالحين</quote>
+                            </p>
                         </div>
                     </div>
                     <div xml:id="d2" n="2">
@@ -92,6 +100,15 @@
         <x:expect label="editorial note in paragraph"
             test="matches(., 'werden.%\s+\\edtext\{\\edlabel\{d1.1.p2-end\}\}\{%\s+\\xxref\{d1.1.p2-start\}\{d1.1.p2-end\}\\lemma\{Vorausgesetzt\s+…\s+werden.\}\\Bfootnote\{\\appnote\{Genaus!\}\}\}%')"
         />
+    </x:scenario>
+
+    <x:scenario
+        label="verbatim citation of holy text has Quran parenthesis (regression test for issue #35)">
+        <x:context select="$tei-text"/>
+        <x:expect label="has open and close Quran parens"
+            test="matches(., '\\arabicornateoparen\{\}رَبّ أوزِعْني أنْ أشكر نعمتك التي أنعمْتَ عليّ وعلى والِديَّ وأنْ أعمَل صالحًا تَرضاه وأدخِلْني برحمتك في عبادك الصالحين\\arabicornatecparen\{\}')"/>
+        <x:expect label="has open and close simple parens"
+            test="matches(., '\\arabicoparen\{\}بسم اللّه الرحمن\\arabiccparen\{\}')"/>
     </x:scenario>
 
 </x:description>
