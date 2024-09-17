@@ -1,0 +1,112 @@
+name: Release
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+-?**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run the Maven verify phase
+        run: ./mvnw -Drevision=${{ github.ref_name }} -Dchangelist="" -Drelease.url=https://github.com/SCDH/seed-tei-transformations/releases/download/${{ github.ref_name }}/ --batch-mode --update-snapshots verify
+
+      - name: Run XSpec tests
+        run: target/bin/test.sh
+
+      - name: Push packages to the package registry, commit tag is the single source of truth for the release version
+        run: ./mvnw -Drevision=${{ github.ref_name }} -Dchangelist="" -Drelease.url=https://github.com/SCDH/seed-tei-transformations/releases/download/${{ github.ref_name }}/ --batch-mode --update-snapshots deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: store oxygen plugin descriptor file
+        uses: actions/upload-artifact@v4
+        with:
+          name: oxygen-plugin-descriptor
+          path: target/descriptor.xml
+          retention-days: 1
+
+      - name: create release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body_path: CHANGES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: upload SEED package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/*-${{ github.ref_name }}-seed-resources.tar.gz
+          asset_name: seed-tei-transformations-${{ github.ref_name }}-seed-resources.tar.gz
+          asset_content_type: application/gzip
+
+      - name: upload package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/*-${{ github.ref_name }}-package.zip
+          asset_name: seed-tei-transformations-${{ github.ref_name }}-package.zip
+          asset_content_type: application/zip
+
+      - name: upload oXygen plugin to release, it will be downloadable from there, hence the -Drelease.url=... above
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/*-${{ github.ref_name }}-oxygen-distribution.jar
+          asset_name: seed-tei-transformations-${{ github.ref_name }}-oxygen-distribution.jar
+          asset_content_type: application/java-archive
+
+
+  pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+
+      - name: Download descriptor artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: oxygen-plugin-descriptor
+
+      - name: Download descriptor artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: oxygen-plugin
+
+      - name: create directory for github pages
+        run: mkdir -p public
+
+      - name: copy descriptor file
+        run: cp target/descriptor.xml public/
+
+      - name: Deploy descriptor file on Github pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
