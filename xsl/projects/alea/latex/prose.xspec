@@ -46,6 +46,15 @@
                                     وأنْ أعمَل صالحًا تَرضاه وأدخِلْني برحمتك في عبادك
                                     الصالحين</quote>
                             </p>
+                            <lg xml:id="d1.1.p4">
+                                <l>أمَعْهَد سُعدى بالعُذيب سَقاكا <caesura/><anchor
+                                        xml:id="bd3e6808"/>مُلِثُّ<note xml:id="d3e78855"
+                                        target="#bd3e6808">أَلْثَثْتَ بالمكان إِلثاثًا: أَقَمْتَ به
+                                        ولم تبرحه <gap reason="irrelevant"/> أَلَثَّ المطر إلثاثًا
+                                        أي دام أيّامًا لا تُقْلِع، وأَلَثَّتِ السحابة: دامت أيّامًا
+                                        فلم تُقْلِع (لسان العرب، مادّة لثث).</note> الحيا حتّى
+                                    يَبُلَّ صَداكا</l>
+                            </lg>
                         </div>
                     </div>
                     <div xml:id="d2" n="2">
@@ -109,6 +118,13 @@
             test="matches(., '\\arabicornateoparen\{\}رَبّ أوزِعْني أنْ أشكر نعمتك التي أنعمْتَ عليّ وعلى والِديَّ وأنْ أعمَل صالحًا تَرضاه وأدخِلْني برحمتك في عبادك الصالحين\\arabicornatecparen\{\}')"/>
         <x:expect label="has open and close simple parens"
             test="matches(., '\\arabicoparen\{\}بسم اللّه الرحمن\\arabiccparen\{\}')"/>
+    </x:scenario>
+
+    <x:scenario label="notes nested in verses (regression test for issue #33)">
+        <x:context select="$tei-text"/>
+        <x:expect label="has note"
+            test="matches(., '\\xxref\{bd3e6808\}\{d12e52-end\}\\lemma\{مُلِثُّ\}\\Bfootnote\{\\appnote')"
+        />
     </x:scenario>
 
 </x:description>
