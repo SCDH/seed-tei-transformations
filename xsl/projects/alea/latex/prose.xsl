@@ -298,6 +298,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>\arabiccparen{}</xsl:text>
       </xsl:template>
 
+      <xsl:template mode="text:hook-before" match="supplied">
+        <xsl:text>\arabicobracket{}</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="text:hook-after" match="supplied">
+        <xsl:text>\arabiccbracket{}</xsl:text>
+      </xsl:template>
+
     </xsl:override>
   </xsl:use-package>
 
