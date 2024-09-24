@@ -363,6 +363,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\setlength{\lineskiplimit}{-100pt}</xsl:text>
 
     <xsl:call-template name="latex-front"/>
+    <xsl:text>&lb;&lb;\selectlanguage{arabic}</xsl:text>
     <xsl:text>&lb;&lb;%% main content</xsl:text>
     <xsl:apply-templates mode="text:text" select="/TEI/text/body"/>
     <xsl:text>&lb;</xsl:text>
@@ -434,10 +435,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
     </xsl:for-each>
-    <xsl:text>&lb;\setRTLmain</xsl:text>
 
-    <xsl:text>&lb;\newcommand*{\arabicobracket}{]}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabiccbracket}{[}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicobracket}{[}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabiccbracket}{]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicoparen}{)}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabiccparen}{(}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicornateoparen}{﴿}</xsl:text>
@@ -461,10 +461,11 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
-    <xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
-    <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text>
-    <xsl:text>&lb;\AtEveryPstart{\noindent\setRL}</xsl:text>
+    <!--xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
+    <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text-->
     <xsl:text>&lb;\setlength{\parindent}{0pt}</xsl:text>
+    <xsl:text>&lb;%% setting for rtl</xsl:text>
+    <xsl:text>&lb;\Xbhookgroup{\textdir TRT}</xsl:text>
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
@@ -526,7 +527,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:call-template name="text:latex-header-workaround36"/>
+    <!--xsl:call-template name="text:latex-header-workaround36"/-->
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>

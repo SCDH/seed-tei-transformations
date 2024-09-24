@@ -87,7 +87,7 @@
                     be it in section headings, we have to use \setRL.
                     See issue #37. See also issue #36.
                 -->
-                <xsl:text>\setRL</xsl:text>
+                <!--xsl:text>\setRL</xsl:text-->
             </xsl:when>
         </xsl:choose>
     </xsl:function>
