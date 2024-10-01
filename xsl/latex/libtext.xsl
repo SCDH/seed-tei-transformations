@@ -15,6 +15,9 @@
   <!-- corrects how the section level is set from the level of divs a head coccurs in -->
   <xsl:param name="text:section-level-delta" as="xs:integer" select="0" required="false"/>
 
+  <!-- whether to use a workaround for issues related to sectioning in reledmac, e.g., #976 and #976 -->
+  <xsl:param name="edmac:section-workaround" as="xs:boolean" select="false()" required="false"/>
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
     package-version="1.0.0"/>
@@ -66,23 +69,78 @@
   <!-- document structure -->
 
   <xsl:variable name="text:section-levels" as="xs:string*"
-    select="'chapter', 'section', 'subsection', 'subsubsection'"
-    visibility="public"/>
+    select="'chapter', 'section', 'subsection', 'subsubsection'" visibility="public"/>
 
   <xsl:template match="head">
+    <xsl:variable name="level" as="xs:integer" select="text:section-level(.)"/>
+    <xsl:apply-templates mode="text:hook-ahead" select=".">
+      <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
+    </xsl:apply-templates>
+    <xsl:text>&lb;</xsl:text>
+    <xsl:call-template name="edmac:par-start"/>
+    <xsl:apply-templates mode="text:hook-before" select=".">
+      <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
+    </xsl:apply-templates>
+    <xsl:text>&lb;\eled</xsl:text>
+    <xsl:value-of select="$text:section-levels[$level]"/>
+    <xsl:text>[</xsl:text>
+    <xsl:apply-templates mode="text:text-only"/>
+    <xsl:text>]{</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:text>}</xsl:text>
+    <xsl:apply-templates mode="text:hook-after" select=".">
+      <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
+    </xsl:apply-templates>
+    <xsl:call-template name="edmac:par-end"/>
+    <xsl:text>&lb;&lb;</xsl:text>
+    <xsl:apply-templates mode="text:hook-behind" select=".">
+      <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template mode="text:hook-ahead" match="head">
+    <xsl:param name="level" as="xs:integer" select="0" tunnel="true"/>
+    <xsl:choose>
+      <xsl:when test="not($edmac:section-workaround)"/>
+      <xsl:when test="parent::*/preceding-sibling::*">
+        <xsl:text>&lb;&lb;\seed</xsl:text>
+        <xsl:value-of select="$text:section-levels[$level]"/>
+        <xsl:text>beforeskip&lb;&lb;</xsl:text>
+      </xsl:when>
+      <xsl:otherwise/>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template mode="text:hook-after" match="head">
+    <xsl:param name="level" as="xs:integer" select="0" tunnel="true"/>
+    <xsl:choose>
+      <xsl:when test="not($edmac:section-workaround)"/>
+      <xsl:when test="following-sibling::*[1][self::*[child::*[1][self::head]]]">
+        <xsl:text>&lb;&lb;\seed</xsl:text>
+        <xsl:value-of select="$text:section-levels[$level]"/>
+        <xsl:text>afterskip&lb;&lb;</xsl:text>
+      </xsl:when>
+      <xsl:otherwise/>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:function name="text:section-level" as="xs:integer" visibility="public">
+    <xsl:param name="context" as="element(head)"/>
     <xsl:variable name="level" as="xs:integer">
       <xsl:choose>
-        <xsl:when test="parent::div">
-          <xsl:sequence select="ancestor::div => count()"/>
+        <xsl:when test="$context/parent::div">
+          <xsl:sequence select="$context/ancestor::div => count()"/>
         </xsl:when>
-        <xsl:when test="matches(name(parent::*), '^div')">
-          <xsl:sequence select="name(parent::*) => replace('^div(\d+)', '$1') => xs:integer()"/>
+        <xsl:when test="matches(name($context/parent::*), '^div')">
+          <xsl:sequence
+            select="name($context/parent::*) => replace('^div(\d+)', '$1') => xs:integer()"/>
         </xsl:when>
-        <xsl:when test="parent::lg">
-          <xsl:sequence select="(ancestor::lg | ancestor::div) => count()"/>
+        <xsl:when test="$context/parent::lg">
+          <xsl:sequence select="($context/ancestor::lg | $context/ancestor::div) => count()"/>
         </xsl:when>
-        <xsl:when test="matches(name(parent::*), '^list')">
-          <xsl:sequence select="(ancestor::*[matches(name(.), '^list')] | ancestor::div) => count()"
+        <xsl:when test="matches(name($context/parent::*), '^list')">
+          <xsl:sequence
+            select="($context/ancestor::*[matches(name(.), '^list')] | $context/ancestor::div) => count()"
           />
         </xsl:when>
         <xsl:otherwise>
@@ -91,18 +149,8 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:text>&lb;</xsl:text>
-    <xsl:call-template name="edmac:par-start"/>
-    <xsl:text>&lb;\eled</xsl:text>
-    <xsl:value-of select="$text:section-levels[$level + $text:section-level-delta]"/>
-    <xsl:text>[</xsl:text>
-    <xsl:apply-templates mode="text:text-only"/>
-    <xsl:text>]{</xsl:text>
-    <xsl:apply-templates/>
-    <xsl:text>}</xsl:text>
-    <xsl:call-template name="edmac:par-end"/>
-    <xsl:text>&lb;&lb;</xsl:text>
-  </xsl:template>
+    <xsl:sequence select="$level + $text:section-level-delta"/>
+  </xsl:function>
 
   <xsl:template match="p">
     <xsl:call-template name="edmac:par-start"/>
@@ -343,43 +391,44 @@
     <xsl:text>&lb;\makeatletter%</xsl:text>
     <xsl:text>&lb;\@ifpackageloaded{ifthen}{}{\usepackage{ifthen}}%</xsl:text>
     <xsl:text>&lb;\@ifpackageloaded{nowidow}{}{\usepackage{nowidow}}%</xsl:text>
-    <xsl:text>&lb;\makeatother</xsl:text>
+    <xsl:text>&lb;% Note: skips around section commands must be outside \pstart...\pend!</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedchapterbeforeskip}{\vspace{-3.5ex \@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedchapterafterskip}{\vspace{2.3ex \@plus.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsectionbeforeskip}{\vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsectionafterskip}{\vspace{1.5ex \@plus .2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsectionbeforeskip}{\vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsectionafterskip}{\vspace{1.5ex \@plus .2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsubsectionbeforeskip}{\vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsubsectionafterskip}{\vspace{1.5ex \@plus .2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedchapterfont}[1]{\LARGE #1}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsectionfont}[1]{\Large #1}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsectionfont}[1]{\large #1}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;%% redefining reledmac's sectioning commands to workaround issue #36</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledchapter}[2][]{%</xsl:text>
-    <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \LARGE{#2}%</xsl:text>
-    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \seedchapterfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{chapter}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{chapter}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
-    <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \Large{#2}%</xsl:text>
-    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \seedsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsection}[2][]{%</xsl:text>
-    <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \large{#2}%</xsl:text>
-    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \seedsubsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsection}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsubsection}[2][]{%</xsl:text>
-    <xsl:text>&lb;  \bigskip{}%</xsl:text>
-    <xsl:text>&lb;  \large{#2}%</xsl:text>
-    <xsl:text>&lb;  \smallskip{}%</xsl:text>
+    <xsl:text>&lb;  \seedsubsubsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsubsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsubsection}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \noclub[10000]%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
   </xsl:template>
 </xsl:package>
