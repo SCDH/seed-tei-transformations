@@ -47,6 +47,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- scaling factor of the main font -->
   <xsl:param name="fontscale" as="xs:string" select="'1'" required="false"/>
 
+  <!-- additional font features, must start with a comma, e.g. ,AutoFakeBold=3.5 -->
+  <xsl:param name="fontfeatures" as="xs:string" select="''"/>
+
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
   <xsl:param name="tatweel-times" as="xs:integer" select="8" required="false"/>
 
@@ -433,6 +436,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:value-of select="."/>
       <xsl:text>}[Scale=</xsl:text>
       <xsl:value-of select="$fontscale"/>
+      <xsl:value-of select="$fontfeatures"/>
       <xsl:text>]{</xsl:text>
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
