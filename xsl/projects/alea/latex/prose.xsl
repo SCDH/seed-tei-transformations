@@ -47,6 +47,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- scaling factor of the main font -->
   <xsl:param name="fontscale" as="xs:string" select="'1'" required="false"/>
 
+  <!-- additional font features, must start with a comma, e.g. ,AutoFakeBold=3.5 -->
+  <xsl:param name="fontfeatures" as="xs:string" select="''"/>
+
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
   <xsl:param name="tatweel-times" as="xs:integer" select="8" required="false"/>
 
@@ -232,6 +235,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     package-version="1.0.0">
     <xsl:override>
 
+      <xsl:param name="edmac:section-workaround" as="xs:boolean" select="true()"/>
+
       <!-- make apparatus footnotes -->
       <xsl:template name="text:inline-footnotes">
         <xsl:context-item as="element()" use="required"/>
@@ -363,6 +368,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\setlength{\lineskiplimit}{-100pt}</xsl:text>
 
     <xsl:call-template name="latex-front"/>
+    <xsl:text>&lb;&lb;\selectlanguage{arabic}</xsl:text>
     <xsl:text>&lb;&lb;%% main content</xsl:text>
     <xsl:apply-templates mode="text:text" select="/TEI/text/body"/>
     <xsl:text>&lb;</xsl:text>
@@ -430,6 +436,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:value-of select="."/>
       <xsl:text>}[Scale=</xsl:text>
       <xsl:value-of select="$fontscale"/>
+      <xsl:value-of select="$fontfeatures"/>
       <xsl:text>]{</xsl:text>
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
@@ -453,6 +460,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
     -->
     <xsl:text>&lb;\usepackage{reledmac}</xsl:text>
+    <xsl:if test="$debug-latex">
+      <xsl:text>&lb;\firstlinenum{1}</xsl:text>
+      <xsl:text>&lb;\linenumincrement{1}</xsl:text>
+    </xsl:if>
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{100}</xsl:text>
     <xsl:text>&lb;\lineation{page}</xsl:text>
     <xsl:text>&lb;\linenummargin{outer}</xsl:text>
@@ -461,10 +472,12 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
-    <xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
-    <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text>
-    <xsl:text>&lb;\AtEveryPstart{\noindent\setRL}</xsl:text>
+    <xsl:text>&lb;\Xlemmafont{\normalfont}</xsl:text>
+    <!--xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
+    <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text-->
     <xsl:text>&lb;\setlength{\parindent}{0pt}</xsl:text>
+    <xsl:text>&lb;%% setting for rtl</xsl:text>
+    <xsl:text>&lb;\Xbhookgroup{\textdir TRT}</xsl:text>
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
@@ -526,7 +539,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:otherwise>
     </xsl:choose>
 
+    <!-- workaround for broken sectioning commands in reledmac -->
     <xsl:call-template name="text:latex-header-workaround36"/>
+    <xsl:text>&lb;\renewcommand*{\seedchapterfont}[1]{\bfseries #1}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsectionfont}[1]{\bfseries #1}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionfont}[1]{\bfseries #1}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
+
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>

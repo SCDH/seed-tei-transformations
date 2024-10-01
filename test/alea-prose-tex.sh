@@ -12,9 +12,9 @@ EDITION=$(realpath ~/Projekte/edition-ibn-nubatah)
 
 STYLESHEET=$SEED_DIR/xsl/projects/alea/latex/prose.xsl
 
-PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=\noindent"
+PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=\noindent debug-latex=true"
 
-FONTPARAMS="font=ArabicTypesetting fontsize=15pt fontscale=1.4"
+FONTPARAMS="font=ArabicTypesetting fontsize=15pt fontscale=1.4 fontfeatures=,AutoFakeBold=2.5"
 
 XSLT_CMD=$SEED_DIR/target/bin/xslt.sh
 
