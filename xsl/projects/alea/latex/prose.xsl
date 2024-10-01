@@ -232,6 +232,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     package-version="1.0.0">
     <xsl:override>
 
+      <xsl:param name="edmac:section-workaround" as="xs:boolean" select="true()"/>
+
       <!-- make apparatus footnotes -->
       <xsl:template name="text:inline-footnotes">
         <xsl:context-item as="element()" use="required"/>
@@ -435,9 +437,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
     </xsl:for-each>
+    <xsl:text>&lb;\setRTLmain</xsl:text>
 
-    <xsl:text>&lb;\newcommand*{\arabicobracket}{[}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabiccbracket}{]}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicobracket}{]}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabiccbracket}{[}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicoparen}{)}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabiccparen}{(}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicornateoparen}{﴿}</xsl:text>
@@ -453,6 +456,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
     -->
     <xsl:text>&lb;\usepackage{reledmac}</xsl:text>
+    <xsl:if test="$debug-latex">
+      <xsl:text>&lb;\firstlinenum{1}</xsl:text>
+      <xsl:text>&lb;\linenumincrement{1}</xsl:text>
+    </xsl:if>
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{100}</xsl:text>
     <xsl:text>&lb;\lineation{page}</xsl:text>
     <xsl:text>&lb;\linenummargin{outer}</xsl:text>
@@ -461,6 +468,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
+    <xsl:text>&lb;\Xlemmafont{\normalfont}</xsl:text>
     <!--xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
     <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text-->
     <xsl:text>&lb;\setlength{\parindent}{0pt}</xsl:text>
@@ -527,7 +535,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:otherwise>
     </xsl:choose>
 
-    <!--xsl:call-template name="text:latex-header-workaround36"/-->
+    <!-- workaround for broken sectioning commands in reledmac -->
+    <xsl:call-template name="text:latex-header-workaround36"/>
+    <xsl:text>&lb;\renewcommand*{\seedchapterfont}[1]{\bfseries #1}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsectionfont}[1]{\bfseries #1}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionfont}[1]{\bfseries #1}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
+
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
