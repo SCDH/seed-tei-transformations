@@ -460,10 +460,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\usepackage[perpage,para]{manyfoot}</xsl:text>
     -->
     <xsl:text>&lb;\usepackage{reledmac}</xsl:text>
-    <xsl:if test="$debug-latex">
-      <xsl:text>&lb;\firstlinenum{1}</xsl:text>
-      <xsl:text>&lb;\linenumincrement{1}</xsl:text>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$debug-latex">
+        <xsl:text>&lb;\firstlinenum{1}</xsl:text>
+        <xsl:text>&lb;\linenumincrement{1}</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>&lb;\firstlinenum{1}</xsl:text>
+        <xsl:text>&lb;\linenumincrement{1}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{100}</xsl:text>
     <xsl:text>&lb;\lineation{page}</xsl:text>
     <xsl:text>&lb;\linenummargin{outer}</xsl:text>
