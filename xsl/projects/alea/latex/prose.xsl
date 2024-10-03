@@ -265,14 +265,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
         <xsl:text>}%&lb;</xsl:text>
-        <!-- set vskip if context requires it-->
+      </xsl:template>
+
+      <xsl:template mode="text:hook-behind" match="*[@met]">
         <xsl:variable name="is-embedded" as="xs:boolean"
-          select="ancestor::div[1]/@type = $embedded-verse-contexts"/>
-        <xsl:text>&lb;\embeddedverse{</xsl:text>
-        <xsl:value-of select="string($is-embedded)"/>
-        <xsl:text>}% </xsl:text>
-        <xsl:value-of select="ancestor::div[1]/@type"/>
-        <xsl:text>&lb;</xsl:text>
+          select="some $t in tokenize(ancestor::div[1]/@type) satisfies  $embedded-verse-contexts = $t"/>
+        <xsl:if test="not($is-embedded)">
+          <xsl:text>&lb;\poemafterskip&lb;</xsl:text>
+        </xsl:if>
       </xsl:template>
 
       <xsl:template mode="text:hook-ahead" match="quote[@type eq 'verbatim-holy']">
@@ -529,6 +529,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;%% for indent on both sides say ...-\stanzaindentbase</xsl:text>
     <xsl:text>&lb;\setlength{\hst@hemistich@width}{.5\textwidth-.5\hst@gutter@width-\stanzaindentbase}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
+    <xsl:text>&lb;\newcommand{\poemafterskip}{}</xsl:text>
 
     <!-- set kashida elongation rule -->
     <xsl:choose>
