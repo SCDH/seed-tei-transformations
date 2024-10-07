@@ -174,34 +174,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         </xsl:call-template>
       </xsl:template>
 
-      <!-- note with @target, but should be @targetEnd. TODO: remove after TEI has been fixed -->
-      <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@target] | noteGrp[@target]">
-        <xsl:variable name="targetEnd" as="xs:string" select="substring(@target, 2)"/>
-        <xsl:variable name="target-end-node" as="node()*" select="//*[@xml:id eq $targetEnd]"/>
-        <xsl:choose>
-          <xsl:when test="empty($target-end-node)">
-            <xsl:message>
-              <xsl:text>No anchor for message with @target: </xsl:text>
-              <xsl:value-of select="$targetEnd"/>
-            </xsl:message>
-          </xsl:when>
-          <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
-            <xsl:apply-templates mode="seed:lemma-text-nodes"
-              select="seed:subtrees-between-anchors(., $target-end-node)"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates mode="seed:lemma-text-nodes"
-              select="seed:subtrees-between-anchors($target-end-node, .)"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:template>
-      <!-- dito -->
-      <xsl:template mode="edmac:edlabel-start" match="note[@target]">
-        <xsl:value-of select="substring(@target, 2)"/>
-      </xsl:template>
-      <xsl:template mode="edmac:edlabel-end" match="note[@target]">
-        <xsl:value-of select="concat(generate-id(), '-end')"/>
-      </xsl:template>
 
       <!-- correct parens and brackets -->
       <xsl:template mode="app:reading-text" match="text()">

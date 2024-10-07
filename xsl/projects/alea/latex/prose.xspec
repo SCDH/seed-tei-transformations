@@ -123,7 +123,7 @@
     <x:scenario label="notes nested in verses (regression test for issue #33)">
         <x:context select="$tei-text"/>
         <x:expect label="has note"
-            test="matches(., '\\xxref\{bd3e6808\}\{d12e52-end\}\\lemma\{مُلِثُّ\}\\Bfootnote\{\\appnote')"
+            test="matches(., '\\xxref\{bd3e6808\}\{d3e78855-end\}\\lemma\{مُلِثُّ\}\\Bfootnote\{\\appnote')"
         />
     </x:scenario>
 

@@ -380,11 +380,19 @@
         />
     </xsl:template>
 
-    <xsl:template mode="edmac:edlabel-start" match="note[@fromTarget]">
+    <xsl:template mode="edmac:edlabel-start" match="note[@target]">
+        <xsl:value-of select="substring(@target, 2)"/>
+    </xsl:template>
+
+    <xsl:template mode="edmac:edlabel-end" match="note[@target]">
+        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+    </xsl:template>
+
+    <xsl:template mode="edmac:edlabel-start" match="note[@fromTarget]" priority="3">
         <xsl:value-of select="substring(@fromTarget, 2)"/>
     </xsl:template>
 
-    <xsl:template mode="edmac:edlabel-end" match="note[@fromTarget]">
+    <xsl:template mode="edmac:edlabel-end" match="note[@fromTarget]" priority="3">
         <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
     </xsl:template>
 
