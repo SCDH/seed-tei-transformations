@@ -56,6 +56,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- whether to show LaTeX debugging features like frames etc. -->
   <xsl:param name="debug-latex" as="xs:boolean" select="false()" required="false"/>
 
+  <!-- value of reledmac's footfudgefiddle -->
+  <xsl:param name="footfudgefiddle" as="xs:integer" select="90"/>
+
   <!-- where kashida elongation is to be applied -->
   <xsl:param name="kashida" as="xs:string" select="'verse'" required="false"/>
 
@@ -442,7 +445,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>&lb;\linenumincrement{1}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>&lb;\renewcommand{\footfudgefiddle}{100}</xsl:text>
+    <xsl:text>&lb;\renewcommand{\footfudgefiddle}{</xsl:text>
+    <xsl:value-of select="$footfudgefiddle"/>
+    <xsl:text>}</xsl:text>
     <xsl:text>&lb;\lineation{page}</xsl:text>
     <xsl:text>&lb;\linenummargin{outer}</xsl:text>
     <xsl:text>&lb;\fnpos{critical-familiar}</xsl:text>
