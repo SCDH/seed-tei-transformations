@@ -464,30 +464,36 @@ see xsl/projects/alea/preview.xsl
     </xsl:template>
 
 
-    <!-- for <note>: if there is no @targetEnd, the referring passage is the whole parent element -->
+    <!-- for <note>: if there is no @target, the referring passage is the whole parent element -->
     <xsl:template mode="app:lemma-text-nodes-dspt"
-        match="note[not(@targetEnd)] | noteGrp[not(@targetEnd)]">
+        match="note[not(@target)] | noteGrp[not(@target)]">
         <xsl:apply-templates mode="seed:lemma-text-nodes" select="parent::*"/>
     </xsl:template>
 
-    <!-- note with @targetEnd -->
-    <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@targetEnd] | noteGrp[@targetEnd]">
-        <xsl:variable name="targetEnd" as="xs:string" select="substring(@targetEnd, 2)"/>
-        <xsl:variable name="target-end-node" as="node()" select="//*[@xml:id eq $targetEnd]"/>
+    <!-- note with @target -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="note[@target] | noteGrp[@target]">
+        <xsl:variable name="target" as="xs:string" select="substring(@target, 2)"/>
+        <xsl:variable name="target-node" as="node()?" select="//id($target)"/>
         <xsl:choose>
-            <xsl:when test="empty($target-end-node)">
+            <xsl:when test="empty($target-node)">
                 <xsl:message>
-                    <xsl:text>No anchor for message with @targetEnd: </xsl:text>
-                    <xsl:value-of select="$targetEnd"/>
+                    <xsl:text>No target element found for note with @target: </xsl:text>
+                    <xsl:value-of select="$target"/>
                 </xsl:message>
             </xsl:when>
-            <xsl:when test="following-sibling::*[@xml:id eq $targetEnd]">
+            <xsl:when test="exists($target-node/node())">
+                <!-- @target points to a non-milestone element -->
+                <xsl:apply-templates mode="seed:lemma-text-nodes" select="$target-node"/>
+            </xsl:when>
+            <xsl:when test="following-sibling::*[@xml:id eq $target]">
+                <!-- @target points to a milestone after the note, similar to @to -->
                 <xsl:apply-templates mode="seed:lemma-text-nodes"
-                    select="seed:subtrees-between-anchors(., $target-end-node)"/>
+                    select="seed:subtrees-between-anchors(., $target-node)"/>
             </xsl:when>
             <xsl:otherwise>
+                <!-- @target points to a milestone before the note, similar to @from -->
                 <xsl:apply-templates mode="seed:lemma-text-nodes"
-                    select="seed:subtrees-between-anchors($target-end-node, .)"/>
+                    select="seed:subtrees-between-anchors($target-node, .)"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
