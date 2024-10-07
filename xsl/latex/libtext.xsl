@@ -30,6 +30,11 @@
   <xsl:mode name="text:hook-behind" on-no-match="deep-skip" visibility="public"/>
 
 
+  <!-- write PIs from latex target to the output -->
+  <xsl:template match="processing-instruction('latex')">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
   <!-- you may want to override the rule content, e.g., by \txarb{.} -->
   <xsl:template match="text()">
     <!-- some characters need to be escaped -->
@@ -86,7 +91,13 @@
     <xsl:text>[</xsl:text>
     <xsl:apply-templates mode="text:text-only"/>
     <xsl:text>]{</xsl:text>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
     <xsl:text>}</xsl:text>
     <xsl:apply-templates mode="text:hook-after" select=".">
       <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
@@ -152,9 +163,27 @@
     <xsl:sequence select="$level + $text:section-level-delta"/>
   </xsl:function>
 
+  <xsl:template match="div | div1 | div2 | div3 | div4 | div5 | div6 | div7">
+    <xsl:apply-templates mode="text:hook-ahead" select="."/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
+    <xsl:apply-templates/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-behind" select="."/>
+  </xsl:template>
+
   <xsl:template match="p">
     <xsl:call-template name="edmac:par-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
     <xsl:call-template name="edmac:par-end"/>
     <xsl:text>&lb;&lb;&lb;</xsl:text>
   </xsl:template>
@@ -162,9 +191,15 @@
   <xsl:template match="lg[not(lg)]">
     <xsl:apply-templates mode="text:hook-ahead" select="."/>
     <xsl:call-template name="edmac:stanza-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:apply-templates/>
     <xsl:apply-templates mode="text:hook-after" select="."/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
     <xsl:call-template name="edmac:stanza-end"/>
     <xsl:apply-templates mode="text:hook-behind" select="."/>
   </xsl:template>
@@ -173,18 +208,30 @@
   <xsl:template match="l[not(ancestor::lg)]">
     <xsl:apply-templates mode="text:hook-ahead" select="."/>
     <xsl:call-template name="edmac:stanza-start"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:apply-templates mode="text:hook-before" select="."/>
     <xsl:variable name="latex" as="text()*">
       <xsl:call-template name="text:verse"/>
     </xsl:variable>
     <xsl:value-of select="edmac:normalize($latex)"/>
     <xsl:apply-templates mode="text:hook-after" select="."/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
     <xsl:call-template name="edmac:stanza-end"/>
     <xsl:apply-templates mode="text:hook-behind" select="."/>
   </xsl:template>
 
   <xsl:template match="l[ancestor::lg]">
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
     <xsl:call-template name="text:verse"/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
     <xsl:call-template name="edmac:verse-end"/>
   </xsl:template>
 

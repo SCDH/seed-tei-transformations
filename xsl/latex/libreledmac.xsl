@@ -374,10 +374,9 @@
         />
     </xsl:template>
 
+    <!-- contained note: end is always determined by the note itself -->
     <xsl:template mode="edmac:edlabel-end" match="note">
-        <xsl:value-of
-            select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-end')"
-        />
+        <xsl:value-of select="if (@xml:id) then @xml:id else generate-id(.)"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="note[@target]">
