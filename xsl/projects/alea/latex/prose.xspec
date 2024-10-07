@@ -107,7 +107,7 @@
             test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}Paralellen%\s+\\edtext\{\\edlabel\{[a-zA-Z0-9]+-end\}\}\{%\s+\\xxref\{[a-zA-Z0-9]+-start\}\{[a-zA-Z0-9]+-end\}\\lemma\{Paralellen\}\\Afootnote\{\\apptranslate\{sic\}\}\}%&#xa;\s*\{\}\s*,')"/>
         <x:expect label="editorial note" test="matches(., '\\Bfootnote\{\\appnote\{Genaus!\}\}')"/>
         <x:expect label="editorial note in paragraph"
-            test="matches(., 'werden.%\s+\\edtext\{\\edlabel\{d1.1.p2-end\}\}\{%\s+\\xxref\{d1.1.p2-start\}\{d1.1.p2-end\}\\lemma\{Vorausgesetzt\s+…\s+werden.\}\\Bfootnote\{\\appnote\{Genaus!\}\}\}%')"
+            test="matches(., 'werden.%\s+\\edtext\{\\edlabel\{[A-Za-z0-9_-]+\}\}\{%\s+\\xxref\{d1.1.p2-start\}\{[A-Za-z0-9_-]+\}\\lemma\{Vorausgesetzt\s+…\s+werden.\}\\Bfootnote\{\\appnote\{Genaus!\}\}\}%')"
         />
     </x:scenario>
 

@@ -45,13 +45,13 @@
         <x:expect label="starts numbering"
             test="matches(., '^\s*%% begin of text body&#xa;\\beginnumbering')"/>
         <x:expect label="has verse 1"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.&amp;%&#xa;')"/>
+            test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%&#xa;')"/>
         <x:expect label="has verse 2"
-            test="matches(., 'Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,&amp;%&#xa;')"/>
+            test="matches(., '\\edlabel\{[a-zA-Z0-9_-]+\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%&#xa;')"/>
         <x:expect label="has verse 3"
-            test="matches(., 'Wo jetz und städte stehn, \\caesura\{\} wird eine wiese sein,&amp;%&#xa;')"/>
+            test="matches(., '\\edlabel\{[a-zA-Z0-9_-]+\}Wo jetz und städte stehn, \\caesura\{\} wird eine wiese sein,\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%&#xa;')"/>
         <x:expect label="has verse 4"
-            test="matches(., 'Auf der ein schäfers kind \\caesura\{\} wird spielen mit den herden.\\&amp;%&#xa;')"/>
+            test="matches(., '\\edlabel\{[a-zA-Z0-9_-]+\}Auf der ein schäfers kind \\caesura\{\} wird spielen mit den herden.\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%&#xa;')"/>
         <x:expect label="ends numbering"
             test="matches(., '%% end of text body&#xa;\\endnumbering\s+$')"/>
     </x:scenario>
@@ -62,7 +62,7 @@
                 erden.</tei:l>
         </x:context>
         <x:expect label="is treated as a stanza"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.\\&amp;%\s+')"
+            test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf erden.\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%\s+')"
         />
     </x:scenario>
 
@@ -75,7 +75,7 @@
             </tei:lg>
         </x:context>
         <x:expect label="has verse ending and stanza ending"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;%\s+')"
+            test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%\s+\\edlabel\{[a-zA-Z0-9_-]+\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%\s+')"
         />
     </x:scenario>
 
@@ -93,12 +93,13 @@
             </tei:app>
         </x:context>
         <x:expect label="has verse ending and stanza ending"
-            test="matches(., 'Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
+            test="matches(., 'Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%\s+\\edlabel\{[a-zA-Z0-9_-]+\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;')"/>
         <x:expect label="has preferred start macro from anchor"
             test="matches(., '^\s*\\stanza\\relax %preferred from tei:anchor&#xa;')"/>
-        <x:expect label="has edlabel from anchor" test="matches(., '\\edlabel\{a1\}Du')"/>
+        <x:expect label="has edlabel from anchor"
+            test="matches(., '\\edlabel\{a1\}\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du')"/>
         <x:expect label="delayed end macro from app"
-            test="matches(., 'ein,\\&amp;%\s?delayed from tei:app\s+$')"/>
+            test="matches(., 'ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%\s?delayed from tei:app\s+$')"/>
         <x:expect label="preferred start macro from anchor is inside stanza"
             test="matches(., '^\s*\\stanza')"/>
     </x:scenario>
@@ -117,8 +118,10 @@
             </tei:lg>
         </x:context>
         <x:expect label="has verse ending and stanza ending and label from anchor"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+\\edlabel\{a2\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
-        <x:expect label="no delayed end macro from app" test="matches(., 'ein,\\&amp;%\s+$')"/>
+            test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%\s+\\edlabel\{a2\}\\edlabel\{[a-zA-Z0-9_-]+\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;')"/>
+        <x:expect label="no delayed end macro from app"
+            test="matches(., 'ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%\s+$')"
+        />
     </x:scenario>
 
     <x:scenario label="parallel segmentation apparatus, single missing verse in stanza">
@@ -136,8 +139,10 @@
             </tei:lg>
         </x:context>
         <x:expect label="has verse ending and stanza ending and label from anchor"
-            test="matches(., '\\stanza\\relax %&#xa;Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.&amp;%\s+\\edlabel\{a3-start\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\&amp;')"/>
-        <x:expect label="no delayed end macro from app" test="matches(., 'ein,\\&amp;%\s+$')"/>
+            test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du siehst, wohin du siehst, \\caesura\{\} nur eitelkeit auf\s+erden.\\edlabel\{[a-zA-Z0-9_-]+\}&amp;%\s+\\edlabel\{a3-start\}\\edlabel\{[a-zA-Z0-9_-]+\}Was dieser heute baut, \\caesura\{\} reißt jener morgen ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;')"/>
+        <x:expect label="no delayed end macro from app"
+            test="matches(., 'ein,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%\s+$')"
+        />
     </x:scenario>
 
     <x:scenario label="double end-point apparatus around several block elements">
@@ -154,9 +159,9 @@
             </tei:app>
         </x:context>
         <x:expect label="paragraph with preferred \pstart and regular \pend"
-            test="matches(., '^\s*\\pstart\{\}%preferred from tei:anchor&#xa;\\edlabel\{a3\}Ein\s+Barock-Gedicht\s+weiß:&#xa;\\pend %&#xa;')"/>
+            test="matches(., '^\s*\\pstart\{\}%preferred from tei:anchor&#xa;\\edlabel\{a3\}\\edlabel\{[a-zA-Z0-9_-]+\}Ein\s+Barock-Gedicht\s+weiß:\\edlabel\{[a-zA-Z0-9_-]+\}&#xa;\\pend %&#xa;')"/>
         <x:expect label="verse with regular \stanza and delayed \&amp;"
-            test="matches(., '\\stanza\\relax %&#xa;Du\s+siehst,\s+wohin\s+du\s+siehst,\s+\\caesura\{\}\s+nur\s+eitelkeit\s+auf\s+erden.\\&amp;%delayed from tei:app&#xa;\s*$')"
+            test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du\s+siehst,\s+wohin\s+du\s+siehst,\s+\\caesura\{\}\s+nur\s+eitelkeit\s+auf\s+erden.\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%delayed from tei:app&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -174,9 +179,9 @@
             </tei:app>
         </x:context>
         <x:expect label="verse with preferred \stanza and regular \&amp;"
-            test="matches(., '^\s*\\stanza\\relax %preferred from tei:anchor&#xa;\\edlabel\{a3\}Du\s+siehst,\s+wohin\s+du\s+siehst,\s+\\caesura\{\}\s+nur\s+eitelkeit\s+auf\s+erden,\\&amp;%&#xa;')"/>
+            test="matches(., '^\s*\\stanza\\relax %preferred from tei:anchor&#xa;\\edlabel\{a3\}\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du\s+siehst,\s+wohin\s+du\s+siehst,\s+\\caesura\{\}\s+nur\s+eitelkeit\s+auf\s+erden,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%&#xa;')"/>
         <x:expect label="paragraph with regular \pstart and delayed \pend"
-            test="matches(., '\\pstart\{\}%&#xa;weiß\s+ein\s+Barock-Gedicht.&#xa;\s*\\pend %delayed from tei:app&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}weiß\s+ein\s+Barock-Gedicht.\\edlabel\{[a-zA-Z0-9_-]+\}&#xa;\s*\\pend %delayed from tei:app&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -186,7 +191,7 @@
             <tei:p>The quick <tei:sic>braun</tei:sic> fox</tei:p>
         </x:context>
         <x:expect label="has start label"
-            test="matches(., '\\pstart\{\}%&#xa;The quick \\edlabel\{[a-zA-Z0-9]+-start\}braun fox\s+\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The quick \\edlabel\{[a-zA-Z0-9]+-start\}braun fox\\edlabel\{[a-zA-Z0-9_-]+\}\s+\\pend\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -195,7 +200,7 @@
             <tei:p>The quick <tei:corr>brown</tei:corr> fox</tei:p>
         </x:context>
         <x:expect label="has start label"
-            test="matches(., '\\pstart\{\}%&#xa;The quick \\edlabel\{[a-zA-Z0-9]+-start\}brown fox\s+\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The quick \\edlabel\{[a-zA-Z0-9]+-start\}brown fox\\edlabel\{[a-zA-Z0-9_-]+\}\s+\\pend\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -206,7 +211,7 @@
                 fox</tei:p>
         </x:context>
         <x:expect label="has start label and text from corr"
-            test="matches(., '\\pstart\{\}%&#xa;The\s+quick\s+\\edlabel\{[a-zA-Z0-9]+-start\}brown\s+fox\s+\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+\\edlabel\{[a-zA-Z0-9]+-start\}brown\s+fox\\edlabel\{[a-zA-Z0-9_-]+\}\s+\\pend\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -215,7 +220,7 @@
             <tei:p>The quick brown <tei:gap unit="characters" quatity="2"/>x jumps</tei:p>
         </x:context>
         <x:expect label="has start label and dots"
-            test="matches(., '\\pstart\{\}%&#xa;The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}\[\.\.\.\]x\s+jumps\s*\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}\[\.\.\.\]x\s+jumps\\edlabel\{[a-zA-Z0-9_-]+\}\s*\\pend\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -224,7 +229,7 @@
             <tei:p>The quick brown <tei:supplied>fo</tei:supplied>x jumps</tei:p>
         </x:context>
         <x:expect label="has start label"
-            test="matches(., '\\pstart\{\}%&#xa;The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}fox\s+jumps\s*\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}fox\s+jumps\\edlabel\{[a-zA-Z0-9_-]+\}\s*\\pend\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -346,11 +351,11 @@
     <x:scenario label="document structure and sectioning">
         <x:context select="$structured-doc"/>
         <x:expect label="Title in \eledchapter"
-            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Title\]\{Title\}\s*\\pend\s*%')"/>
+            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Title\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Title\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"/>
         <x:expect label="Chapter 1 in \eledchapter"
-            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Chapter\s1\]\{Chapter\s1\}\s*\\pend')"/>
+            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Chapter\s1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Chapter\s1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
         <x:expect label="Section 2.1 in \eledsection"
-            test="matches(. , '\\pstart\{\}%\s*\\eledsection\[Section\s2\.1\]\{Section\s2\.1\}\s*\\pend\s*%')"
+            test="matches(. , '\\pstart\{\}%\s*\\eledsection\[Section\s2\.1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Section\s2\.1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"
         />
     </x:scenario>
 
@@ -358,11 +363,11 @@
         <x:param name="text:section-level-delta" select="2"/>
         <x:context select="$structured-doc"/>
         <x:expect label="Title in \eledsubsection"
-            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Title\]\{Title\}\s*\\pend\s*%')"/>
+            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Title\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Title\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"/>
         <x:expect label="Chapter 1 in \eledsubsection"
-            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Chapter\s1\]\{Chapter\s1\}\s*\\pend')"/>
+            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Chapter\s1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Chapter\s1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
         <x:expect label="Section 2.1 in \eledsubsubsection"
-            test="matches(. , '\\pstart\{\}%\s*\\eledsubsubsection\[Section\s2\.1\]\{Section\s2\.1\}\s*\\pend\s*%')"
+            test="matches(. , '\\pstart\{\}%\s*\\eledsubsubsection\[Section\s2\.1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Section\s2\.1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"
         />
     </x:scenario>
 
