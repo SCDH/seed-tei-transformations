@@ -478,4 +478,16 @@
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
   </xsl:template>
+
+  <xsl:template name="text:latex-header-full-seedskips" visibility="public">
+    <xsl:text>&lb;\renewcommand*{\seedchapterbeforeskip}{\bigskip}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedchapterafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsectionbeforeskip}{\bigskip}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{\bigskip}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{\bigskip}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{}</xsl:text>
+  </xsl:template>
+
 </xsl:package>
