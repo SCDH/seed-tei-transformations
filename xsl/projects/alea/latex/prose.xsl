@@ -279,11 +279,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:template>
 
       <xsl:template mode="text:hook-before" match="supplied">
-        <xsl:text>\arabicobracket{}</xsl:text>
+        <xsl:text>{\normalfont\arabicobracket{}}</xsl:text>
       </xsl:template>
 
       <xsl:template mode="text:hook-after" match="supplied">
-        <xsl:text>\arabiccbracket{}</xsl:text>
+        <xsl:text>{\normalfont\arabiccbracket{}}</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="text:hook-ahead" match="div[not(head)]">
+        <xsl:text>&lb;\bigskip</xsl:text>
       </xsl:template>
 
     </xsl:override>
@@ -464,11 +468,11 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\pb}[1]{ |\ledinnernote{#1} }</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{#1} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{\arabicobracket{}#1\arabiccbracket{}}}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\gap}{ \arabicobracket{}...\arabiccbracket{} }</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{{\normalfont\arabicobracket{}}#1{\normalfont\arabiccbracket{}}}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\gap}{ {\normalfont\arabicobracket{}...\arabiccbracket{}} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% typesetting arabic poetry</xsl:text>
     <xsl:text>&lb;\usepackage{ifthen}</xsl:text>
