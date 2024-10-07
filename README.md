@@ -1,11 +1,45 @@
-# XSL Transformations for TEI-XML documents
+# SEED TEI Transformations
 
-This is a collection of XSL stylesheets and packages for TEI-XML
-documents. [XSLT's package
-system](https://www.w3.org/TR/xslt-30/#packages-and-modules) makes
-them highly reusable. The transformations were written for running in
-a web service and with the specific security requirements of such a
-runtime environment in mind.
+This project is a collection of XSL stylesheets and packages for
+transforming TEI-XML documents to HTML and to LaTeX. It offers lower
+level building blocks for putting together sophisticated
+transformations, as well as it offers some example transformations put
+together from these building blocks. The [XSLT package
+system](https://www.w3.org/TR/xslt-30/#packages-and-modules) makes the
+building blocks highly reusable.
+
+- support right-to-left as well as left-to-right scripts
+- critical apparatus
+  - support all encoding methods (parallel segmentation, double
+	end-point, location referenced)
+  - support an arbitrary number of distinct critical apparatus
+  - support a variety of ways of printing out (visualizing)
+	- HTML: popups, or endnotes with backlinks, or linenumber-based
+      referencing for short texts like poems, standalone apparatus to
+      be scrolled with main text in sync
+	- LaTeX; reledmac
+  - i18n for scholar terms like "omisit"
+- editorial comments
+  - support an arbitrary number of separate comment types
+  - support the same ways of output as critical apparatus
+- named entities
+  - output either as a type of comment or a type of critical apparatus
+    or mixed into one of these
+- support TEI's `@rendition` and `@rend`
+- provide fully configurable internationalization support for HTML
+  output by using `i18next.js` and for LaTeX output by translation
+  files
+- security: written for running in a web service and with the specific
+  security requirements of such a runtime environment in mind: Do not
+  allow the caller to run arbitrary code by giving access to
+  `<xsl:evaluate>`
+
+See the documentation in the
+[Wiki](https://github.com/SCDH/seed-tei-transformations/wiki)!
+
+This is part of the SEED, which is an recursive acronym for SEED
+electronic editions, or–if you dislike recursion–SCDH electronic
+editions.
 
 ## Getting started
 
