@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- we are using ../html/libapp2c.xsl as stylesheet because libapp2.xsl has abstract components -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="../html/libapp2c.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+                <encodingDesc>
+                    <!--variantEncoding method="parallel-segmentation" location="internal"/-->
+                </encodingDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
+                                objektive Realität im Satz über die Summe der Innenwinkel des <app
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"><hi
+                                            rendition="it">n</hi>-Ecks</rdg></app>.</p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic xml:id="sic1"
+                                >Paralellen</sic>, die durch eine dritte Gerade geschnitten
+                                    werden.<note xml:id="note2">Enthalten!</note></p>
+                        </div>
+                    </div>
+                    <div xml:id="d2" n="2">
+                        <lg>
+                            <l>
+                                <w n="1">Beim</w>
+                                <w n="2"><anchor xml:id="anote3"/>Styx</w><pc>!</pc>
+                                <w n="3">Drüber</w>
+                                <note target="#anote3">Endpunkte.</note>
+                            </l>
+                        </lg>
+                    </div>
+                </body>
+                <back>
+                    <note xml:id="note1" type="editiorial" target="#sic1">Parallelen Geraden.</note>
+                </back>
+            </text>
+        </TEI>
+    </x:variable>
+
+
+    <x:scenario label="note with @target pointing to a subtree">
+        <x:call function="app:apparatus-entries">
+            <x:param name="context" select="$tei-text"/>
+            <x:param name="app-entries-xpath" select="'//back//note'"/>
+            <x:param name="type" select="1"/>
+        </x:call>
+        <x:expect label="lemma text nodes" test="map:get(., 'lemma-text-nodes')"
+            select="$tei-text//id('sic1')/text()"/>
+        <x:expect label="lemma grouping IDs" test="map:get(., 'lemma-grouping-ids')"
+            select="$tei-text//id('sic1')/text() ! generate-id(.)"/>
+    </x:scenario>
+
+    <x:scenario label="note without @target">
+        <x:call function="app:apparatus-entries">
+            <x:param name="context" select="$tei-text"/>
+            <x:param name="app-entries-xpath" select="'//p/note[not(ancestor::back)]'"/>
+            <x:param name="type" select="1"/>
+        </x:call>
+        <x:variable name="lemma-nodes"
+            select="$tei-text//id('d1.1.p2')/text()[1], $tei-text//id('d1.1.p2')/tei:sic/text(), $tei-text//id('d1.1.p2')/text()[2]"/>
+        <x:expect label="lemma text nodes" test="map:get(., 'lemma-text-nodes')"
+            select="$lemma-nodes"/>
+        <x:expect label="lemma grouping IDs" test="map:get(., 'lemma-grouping-ids')"
+            select="$lemma-nodes ! generate-id(.) => string-join('-')"/>
+    </x:scenario>
+
+    <x:scenario label="note with @target pointing to a milestone">
+        <x:call function="app:apparatus-entries">
+            <x:param name="context" select="$tei-text"/>
+            <x:param name="app-entries-xpath" select="'//l/note[not(ancestor::back)]'"/>
+            <x:param name="type" select="1"/>
+        </x:call>
+        <x:variable name="lemma-nodes"
+            select="$tei-text//id('d2')/tei:lg/tei:l/tei:w[2]/text(), $tei-text//id('d2')/tei:lg/tei:l/tei:pc/text(), $tei-text//id('d2')/tei:lg/tei:l/tei:w[3]/text()"/>
+        <x:expect label="lemma text nodes" test="map:get(., 'lemma-text-nodes')"
+            select="$lemma-nodes"/>
+        <x:expect label="lemma grouping IDs" test="map:get(., 'lemma-grouping-ids')"
+            select="$lemma-nodes ! generate-id(.) => string-join('-')"/>
+    </x:scenario>
+
+</x:description>

@@ -19,6 +19,7 @@
 
     <!-- default rule: run all tests -->
     <target name="test">
+        <antcall target="test-xsl-common-libapp2.xsl"/>
         <antcall target="test-xsl-common-libwit.xsl"/>
         <antcall target="test-xsl-common-libref.xsl"/>
         <antcall target="test-xsl-common-libentry2.xsl"/>
@@ -45,6 +46,12 @@
         <antcall target="test-xsl-projects-alea-tei-extract-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
         <antcall target="test-xsl-html-libhtml.xsl"/>
+    </target>
+
+    <target name="test-xsl-common-libapp2.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libapp2.xspec"/>
+        </antcall>
     </target>
 
     <target name="test-xsl-common-libwit.xsl">
