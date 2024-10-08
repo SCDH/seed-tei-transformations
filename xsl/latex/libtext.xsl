@@ -18,6 +18,10 @@
   <!-- whether to use a workaround for issues related to sectioning in reledmac, e.g., #976 and #976 -->
   <xsl:param name="edmac:section-workaround" as="xs:boolean" select="false()" required="false"/>
 
+  <!-- names of indices (used by imakeidx) -->
+  <xsl:param name="text:indices" as="xs:string*" required="false"
+    select="'person', 'place', 'org', 'event'"/>
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
     package-version="1.0.0"/>
@@ -385,6 +389,85 @@
   <xsl:template match="span/text() | interp/text()"/>
 
 
+  <!-- named entities make up indices. Its up to downstream packages to use them or to let the go. -->
+
+  <xsl:template match="rs">
+    <xsl:call-template name="text:index-entity">
+      <xsl:with-param name="index" select="@type"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="persName">
+    <xsl:call-template name="text:index-entity">
+      <xsl:with-param name="index">person</xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="placeName">
+    <xsl:call-template name="text:index-entity">
+      <xsl:with-param name="index">place</xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="orgName">
+    <xsl:call-template name="text:index-entity">
+      <xsl:with-param name="index">org</xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="eventName">
+    <xsl:call-template name="text:index-entity">
+      <xsl:with-param name="index">event</xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+
+  <!-- named template that generates entries to the indices.
+    This also calls the hooks.
+    The index parameter should be of the values of rs/@type, i.e., 'person', 'place', 'org', 'event', etc. -->
+  <xsl:template name="text:index-entity" visibility="public">
+    <xsl:context-item as="element()" use="required"/>
+    <xsl:param name="index" as="xs:string" required="true"/>
+    <!-- early hooks and start label -->
+    <xsl:apply-templates mode="text:hook-ahead" select="."/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-start'"/>
+    </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-before" select="."/>
+    <!-- output index macro -->
+    <xsl:for-each select="text:index-keys(., $index)">
+      <xsl:text>\index[</xsl:text>
+      <xsl:value-of select="$index"/>
+      <xsl:text>]{</xsl:text>
+      <xsl:value-of select="."/>
+      <xsl:text>}</xsl:text>
+    </xsl:for-each>
+    <!-- current mode on children -->
+    <xsl:apply-templates mode="#current"/>
+    <!-- late hooks and ending label -->
+    <xsl:apply-templates mode="text:hook-after" select="."/>
+    <xsl:call-template name="edmac:edlabel">
+      <xsl:with-param name="suffix" select="'-end'"/>
+    </xsl:call-template>
+    <xsl:apply-templates mode="text:hook-behind" select="."/>
+  </xsl:template>
+
+  <!-- likely to be replaced with a more sophisticated function that gets names for keys -->
+  <xsl:function name="text:index-keys" as="xs:string*" visibility="public">
+    <xsl:param name="context" as="element()"/>
+    <xsl:param name="index" as="xs:string"/>
+    <xsl:variable name="keys" as="xs:string*">
+      <xsl:choose>
+        <xsl:when test="$context/@key">
+          <xsl:value-of select="$context/@key"/>
+        </xsl:when>
+        <xsl:when test="$context/@ref">
+          <xsl:value-of select="$context/@ref => replace('#', '')"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:sequence select="tokenize($keys)"/>
+  </xsl:function>
 
 
   <!-- a mode if text text only (without macros that can cause run away arguments) is needed,
@@ -431,6 +514,21 @@
     <xsl:text>&lb;\newcommand*{\pb}[1]{[#1]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\milestone}[2]{[#1]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\caesura}{||}</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="text:latex-header-index" visibility="public">
+    <xsl:context-item as="item()" use="required"/>
+    <xsl:text>&lb;\makeatletter%</xsl:text>
+    <xsl:text>&lb;\@ifpackageloaded{imakeidx}{}{\usepackage{imakeidx}}%</xsl:text>
+    <xsl:text>&lb;\makeatother%</xsl:text>
+    <xsl:for-each select="(root(.)//rs/@type ! string(), $text:indices) => distinct-values()">
+      <xsl:text>&lb;\makeindex[name=</xsl:text>
+      <xsl:value-of select="."/>
+      <xsl:text>,title={</xsl:text>
+      <xsl:value-of select="."/>
+      <xsl:text>}]</xsl:text>
+    </xsl:for-each>
+    <xsl:text>&lb;&lb;</xsl:text>
   </xsl:template>
 
   <!-- contribution to the header for workaround towards issue #36 -->
