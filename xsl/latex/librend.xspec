@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:edmac="http://scdh.wwu.de/transform/edmac#" stylesheet="librend.xsl"
+    run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+
+    <x:scenario label="index from persName">
+        <x:context mode="text:text">
+            <tei:persName ref="#oma">Oma</tei:persName>
+        </x:context>
+        <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
+        <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[person\]\{oma\}')"/>
+        <x:expect label="has text" test="matches(., 'Oma')"/>
+        <x:expect label="result"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[person\]\{oma\}Oma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="index from placeName">
+        <x:context mode="text:text">
+            <tei:placeName ref="#rome">Roma</tei:placeName>
+        </x:context>
+        <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
+        <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[place\]\{rome\}')"/>
+        <x:expect label="has text" test="matches(., 'Roma')"/>
+        <x:expect label="result"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[place\]\{rome\}Roma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="index from orgName">
+        <x:context mode="text:text">
+            <tei:orgName key="teic">TEI-C</tei:orgName>
+        </x:context>
+        <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
+        <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[org\]\{teic\}')"/>
+        <x:expect label="has text" test="matches(., 'TEI-C')"/>
+        <x:expect label="result"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[org\]\{teic\}TEI-C\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="index from eventName">
+        <x:context mode="text:text">
+            <tei:eventName ref="#pragueDefenestration">Prager Fenstersturz</tei:eventName>
+        </x:context>
+        <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
+        <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
+        <x:expect label="has index entry"
+            test="matches(., '\\index\[event\]\{pragueDefenestration\}')"/>
+        <x:expect label="has text" test="matches(., 'Prager\s*Fenstersturz')"/>
+        <x:expect label="result"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[event\]\{pragueDefenestration\}Prager Fenstersturz\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="index from rs of type place">
+        <x:context mode="text:text">
+            <tei:rs type="place" ref="#rome">Roma</tei:rs>
+        </x:context>
+        <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
+        <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[place\]\{rome\}')"/>
+        <x:expect label="has text" test="matches(., 'Roma')"/>
+        <x:expect label="result"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[place\]\{rome\}Roma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+        />
+    </x:scenario>
+
+    <x:scenario label="multiple index entries from rs of type place">
+        <x:context mode="text:text">
+            <tei:rs type="place" ref="#cologne #hamburg #munich #berlin" xml:space="preserve">in deutschen Städte mit mehr als einer Million Einwohnern</tei:rs>
+        </x:context>
+        <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
+        <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
+        <x:expect label="has index entries"
+            test="matches(., '\\index\[place\]\{cologne\}\\index\[place\]\{hamburg\}\\index\[place\]\{munich\}\\index\[place\]\{berlin\}')"
+        />
+    </x:scenario>
+
+</x:description>
