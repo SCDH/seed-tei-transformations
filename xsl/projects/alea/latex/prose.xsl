@@ -20,7 +20,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
   xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
-  xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
+  xmlns:edmac="http://scdh.wwu.de/transform/edmac#" xmlns:rend="http://scdh.wwu.de/transform/rend#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xmlns:alea="http://scdh.wwu.de/transform/alea#"
@@ -228,7 +228,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="*[@met]">
+      <xsl:template mode="rend:hook-ahead" match="*[@met]">
         <!-- set the verse meter (metrum) before the verse environment starts -->
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>setting verse meter to </xsl:text>
@@ -242,7 +242,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>}%&lb;</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-behind" match="*[@met]">
+      <xsl:template mode="rend:hook-behind" match="*[@met]">
         <xsl:variable name="is-embedded" as="xs:boolean"
           select="some $t in tokenize(ancestor::div[1]/@type) satisfies  $embedded-verse-contexts = $t"/>
         <xsl:if test="not($is-embedded)">
@@ -250,43 +250,43 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         </xsl:if>
       </xsl:template>
 
-      <xsl:template mode="text:hook-before" match="quote[@type eq 'verbatim-holy']">
+      <xsl:template mode="rend:hook-before" match="quote[@type eq 'verbatim-holy']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>opening parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabicornateoparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="quote[@type eq 'verbatim-holy']">
+      <xsl:template mode="rend:hook-after" match="quote[@type eq 'verbatim-holy']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>closing parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabicornatecparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-before" match="quote[@type eq 'verbatim']">
+      <xsl:template mode="rend:hook-before" match="quote[@type eq 'verbatim']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>opening parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabicoparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="quote[@type eq 'verbatim']">
+      <xsl:template mode="rend:hook-after" match="quote[@type eq 'verbatim']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>closing parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabiccparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-before" match="supplied">
+      <xsl:template mode="rend:hook-before" match="supplied">
         <xsl:text>{\normalfont\arabicobracket{}}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="supplied">
+      <xsl:template mode="rend:hook-after" match="supplied">
         <xsl:text>{\normalfont\arabiccbracket{}}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="div[not(head)]">
+      <xsl:template mode="rend:hook-ahead" match="div[not(head)]">
         <xsl:text>&lb;\bigskip</xsl:text>
       </xsl:template>
 
@@ -433,7 +433,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
     <xsl:call-template name="arabic-numbering"/>
-    <xsl:call-template name="text:latex-header-index"/>
+    <xsl:call-template name="rend:latex-header-index"/>
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>

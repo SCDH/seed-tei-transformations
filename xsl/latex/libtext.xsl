@@ -8,8 +8,9 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-  xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
-  xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
+  xmlns:edmac="http://scdh.wwu.de/transform/edmac#" xmlns:rend="http://scdh.wwu.de/transform/rend#"
+  exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0"
+  default-mode="text:text">
 
 
   <!-- corrects how the section level is set from the level of divs a head coccurs in -->
@@ -29,7 +30,8 @@
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/librend.xsl"
     package-version="1.0.0">
-    <xsl:accept component="mode" names="text:*" visibility="public"/>
+    <xsl:accept component="mode" names="text:text" visibility="public"/>
+    <xsl:accept component="mode" names="rend:*" visibility="public"/>
     <xsl:accept component="function" names="*" visibility="public"/>
     <xsl:accept component="template" names="*" visibility="public"/>
 
@@ -60,12 +62,12 @@
 
       <xsl:template match="head">
         <xsl:variable name="level" as="xs:integer" select="text:section-level(.)"/>
-        <xsl:apply-templates mode="text:hook-ahead" select=".">
+        <xsl:apply-templates mode="rend:hook-ahead" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
         <xsl:text>&lb;</xsl:text>
         <xsl:call-template name="edmac:par-start"/>
-        <xsl:apply-templates mode="text:hook-before" select=".">
+        <xsl:apply-templates mode="rend:hook-before" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
         <xsl:text>&lb;\eled</xsl:text>
@@ -81,17 +83,17 @@
           <xsl:with-param name="suffix" select="'-end'"/>
         </xsl:call-template>
         <xsl:text>}</xsl:text>
-        <xsl:apply-templates mode="text:hook-after" select=".">
+        <xsl:apply-templates mode="rend:hook-after" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
         <xsl:call-template name="edmac:par-end"/>
         <xsl:text>&lb;&lb;</xsl:text>
-        <xsl:apply-templates mode="text:hook-behind" select=".">
+        <xsl:apply-templates mode="rend:hook-behind" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="head">
+      <xsl:template mode="rend:hook-ahead" match="head">
         <xsl:param name="level" as="xs:integer" select="0" tunnel="true"/>
         <xsl:choose>
           <xsl:when test="not($edmac:section-workaround)"/>
@@ -104,7 +106,7 @@
         </xsl:choose>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="head">
+      <xsl:template mode="rend:hook-after" match="head">
         <xsl:param name="level" as="xs:integer" select="0" tunnel="true"/>
         <xsl:choose>
           <xsl:when test="not($edmac:section-workaround)"/>
@@ -118,7 +120,7 @@
       </xsl:template>
 
       <xsl:template match="div | div1 | div2 | div3 | div4 | div5 | div6 | div7">
-        <xsl:apply-templates mode="text:hook-ahead" select="."/>
+        <xsl:apply-templates mode="rend:hook-ahead" select="."/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
@@ -126,7 +128,7 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-end'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-behind" select="."/>
+        <xsl:apply-templates mode="rend:hook-behind" select="."/>
       </xsl:template>
 
       <xsl:template match="p">
@@ -143,39 +145,39 @@
       </xsl:template>
 
       <xsl:template match="lg[not(lg)]">
-        <xsl:apply-templates mode="text:hook-ahead" select="."/>
+        <xsl:apply-templates mode="rend:hook-ahead" select="."/>
         <xsl:call-template name="edmac:stanza-start"/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:apply-templates/>
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-end'"/>
         </xsl:call-template>
         <xsl:call-template name="edmac:stanza-end"/>
-        <xsl:apply-templates mode="text:hook-behind" select="."/>
+        <xsl:apply-templates mode="rend:hook-behind" select="."/>
       </xsl:template>
 
       <!-- a single verse not in lg is output as a stanza -->
       <xsl:template match="l[not(ancestor::lg)]">
-        <xsl:apply-templates mode="text:hook-ahead" select="."/>
+        <xsl:apply-templates mode="rend:hook-ahead" select="."/>
         <xsl:call-template name="edmac:stanza-start"/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:variable name="latex" as="text()*">
           <xsl:call-template name="text:verse"/>
         </xsl:variable>
         <xsl:value-of select="edmac:normalize($latex)"/>
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-end'"/>
         </xsl:call-template>
         <xsl:call-template name="edmac:stanza-end"/>
-        <xsl:apply-templates mode="text:hook-behind" select="."/>
+        <xsl:apply-templates mode="rend:hook-behind" select="."/>
       </xsl:template>
 
       <xsl:template match="l[ancestor::lg]">
@@ -260,9 +262,9 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:text>[...]</xsl:text>
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
@@ -272,11 +274,11 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <!--xsl:text>[</xsl:text-->
         <xsl:apply-templates/>
         <!--xsl:text>]</xsl:text-->
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
@@ -286,11 +288,11 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <!--xsl:text>[? </xsl:text-->
         <xsl:apply-templates/>
         <!--xsl:text> ?]</xsl:text-->
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
@@ -300,9 +302,9 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:apply-templates select="corr"/>
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
@@ -312,9 +314,9 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:apply-templates/>
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
@@ -324,9 +326,9 @@
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
-        <xsl:apply-templates mode="text:hook-before" select="."/>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:apply-templates/>
-        <xsl:apply-templates mode="text:hook-after" select="."/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
