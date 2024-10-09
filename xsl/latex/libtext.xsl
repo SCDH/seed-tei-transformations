@@ -29,7 +29,7 @@
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/librend.xsl"
     package-version="1.0.0">
-    <xsl:accept component="mode" names="*" visibility="public"/>
+    <xsl:accept component="mode" names="text:*" visibility="public"/>
     <xsl:accept component="function" names="*" visibility="public"/>
     <xsl:accept component="template" names="*" visibility="public"/>
 
