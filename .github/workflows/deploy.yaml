@@ -45,39 +45,12 @@ jobs:
           tag: ${{ github.ref_name }}
         run: |
           gh release create "$tag" \
+              target/*.jar \
+              target/*.tar.gz \
+              target/*.zip \
               --repo="$GITHUB_REPOSITORY" \
               --title="${GITHUB_REPOSITORY#*/} ${tag}" \
               --generate-notes
-
-      - name: upload SEED package to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/seed-tei-transformations-${{ github.ref_name }}-seed-resources.tar.gz
-          asset_name: seed-tei-transformations-${{ github.ref_name }}-seed-resources.tar.gz
-          asset_content_type: application/gzip
-
-      - name: upload package to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/seed-tei-transformations-${{ github.ref_name }}-package.zip
-          asset_name: seed-tei-transformations-${{ github.ref_name }}-package.zip
-          asset_content_type: application/zip
-
-      - name: upload oXygen plugin to release, it will be downloadable from there, hence the -Drelease.url=... above
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/seed-tei-transformations-${{ github.ref_name }}-oxygen-distribution.jar
-          asset_name: seed-tei-transformations-${{ github.ref_name }}-oxygen-distribution.jar
-          asset_content_type: application/java-archive
 
 
   pages:
