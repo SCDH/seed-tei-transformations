@@ -1,5 +1,10 @@
 # Changes
 
+## 0.14.1
+
+- fixed issues #43 and #44
+- improvements in LaTeX output
+
 ## 0.14.0
 
 - support `@rendition` when using `xsl/html/librend.xsl` (issue #39)
