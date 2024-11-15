@@ -109,10 +109,10 @@ java -jar path-to-saxon.jar -lib:xsl/common/libentry2.xsl -lib:xsl/common/libapp
 
 ### Oxygen
 
-This whole project ist distributed as plugin which can be installed from the following URL:
+This whole project ist distributed as a plugin which can be installed from the following URL:
 
 ```
-https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/seed-tei-transformations/descriptor.xml
+https://scdh.github.io/seed-tei-transformations/descriptor.xml
 ```
 
 There are no transformation scenarios in the distribution, because we
