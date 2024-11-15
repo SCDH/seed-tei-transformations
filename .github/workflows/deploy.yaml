@@ -95,11 +95,6 @@ jobs:
         with:
           name: oxygen-plugin-descriptor
 
-      - name: Download descriptor artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: oxygen-plugin
-
       - name: create directory for github pages
         run: mkdir -p public
 
