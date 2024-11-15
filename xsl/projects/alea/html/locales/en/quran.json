@@ -1,6 +1,7 @@
 {
   "Quran": "Quran",
   "quran-title-surah-delim": ": ",
+  "quran-surahs-delim": "; ",
   "quran-surah-verse-delim": ", ",
   "surah-1": "al-Fātiḥa",
   "surah-2": "al-Baqara",
