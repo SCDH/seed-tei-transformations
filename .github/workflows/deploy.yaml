@@ -57,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*-${{ github.ref_name }}-seed-resources.tar.gz
+          asset_path: target/seed-tei-transformations-${{ github.ref_name }}-seed-resources.tar.gz
           asset_name: seed-tei-transformations-${{ github.ref_name }}-seed-resources.tar.gz
           asset_content_type: application/gzip
 
@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*-${{ github.ref_name }}-package.zip
+          asset_path: target/seed-tei-transformations-${{ github.ref_name }}-package.zip
           asset_name: seed-tei-transformations-${{ github.ref_name }}-package.zip
           asset_content_type: application/zip
 
@@ -77,7 +77,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*-${{ github.ref_name }}-oxygen-distribution.jar
+          asset_path: target/seed-tei-transformations-${{ github.ref_name }}-oxygen-distribution.jar
           asset_name: seed-tei-transformations-${{ github.ref_name }}-oxygen-distribution.jar
           asset_content_type: application/java-archive
 
