@@ -83,10 +83,11 @@ jobs:
 
 
   pages:
+    needs: deploy
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      contents: write
+      packages: read
     steps:
 
       - name: Download descriptor artifact
