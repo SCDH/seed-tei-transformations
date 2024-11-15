@@ -1,5 +1,9 @@
 # Changes
 
+## 0.14.2-8
+
+- fixed deployment workflow on github
+
 ## 0.14.1
 
 - fixed issues #43 and #44
