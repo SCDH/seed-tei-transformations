@@ -130,6 +130,18 @@
             test="(/*/span[1]//text()) => string-join('')"
             select="($tei-text//*[@xml:id eq 'Quran']//text()) => string-join('')"/>
         <x:expect label="two Surahs" test="count(/*/span) ge 6"/>
+        <x:expect label="translation keys" test="/*/span/@data-i18n-key ! string(.)"
+            select="('Quran',
+            'quran-title-surah-delim',
+            'surah-81',
+            'quran-surah-verse-delim',
+            '3',
+            'quran-surahs-delim',
+            'surah-69',
+            'quran-surah-verse-delim',
+            '14')"/>
+        <x:expect label="has one surahs-delimiter"
+            test="count(/*/span[@data-i18n-key eq 'quran-surahs-delim'])" select="1"/>
     </x:scenario>
 
     <x:scenario label="Issue 42 (ALEA framework): 2: span of verses">
@@ -231,7 +243,8 @@
         <x:context select="$hello-tei//id('l3-analogousholy')"/>
         <x:call template="biblio:reference"/>
         <x:expect label="has Cf." test="/span/span[1] => string()" select="'‪Cf.‬'"/>
-        <x:expect label="English is default language of Cf." test="/span/span[1]/@data-i18n-lang => string()" select="'en'"/>
+        <x:expect label="English is default language of Cf."
+            test="/span/span[1]/@data-i18n-lang => string()" select="'en'"/>
         <x:expect label="has trailing dot" test="/span/text()[last()] => string()" select="'.'"/>
     </x:scenario>
 

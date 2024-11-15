@@ -53,7 +53,16 @@ Special references:
 
         <xsl:override>
 
-            <!-- special reference to Quran -->
+            <!-- special reference to Quran
+                <biblScope> encodes the number (title) of the Surah and the verse from it,
+                e.g. 28:32 for Surah 28, Verse 32.
+                The verse is optional.
+                Mutlitpe verses may be separated by comma, like in 28:30,32.
+                Range of verses may be given like so: 28:30-32.
+                There may be multiple biblScope elements. Delimiters between them are
+                dropped and replaced with new ones.
+                Sarah titles and verses are internationalized by i18n.
+                -->
             <xsl:template priority="10" mode="biblio:reference"
                 match="bibl[matches(@corresp, ':Quran$')]">
                 <xsl:message use-when="system-property('debug') eq 'true'">
@@ -102,10 +111,17 @@ Special references:
                                 </xsl:matching-substring>
                             </xsl:analyze-string>
                         </xsl:variable>
+                        <!-- delimiter for multiple Surahs. -->
+                        <xsl:if test="position() > 1">
+                            <span data-i18n-key="quran-surahs-delim" data-i18n-ns="quran"
+                                data-i18n-lang="en">, </span>
+                        </xsl:if>
+                        <!-- the surah (title) is output as a i18n key where the the number is the default -->
                         <span data-i18n-key="surah-{$surah}" data-i18n-ns="quran"
                             data-i18n-lang="en">
                             <xsl:value-of select="$surah"/>
                         </span>
+                        <!-- output the verse(s) -->
                         <xsl:if test="$verse ne ''">
                             <span data-i18n-key="quran-surah-verse-delim" data-i18n-ns="quran"
                                 data-i18n-lang="en">, </span>
