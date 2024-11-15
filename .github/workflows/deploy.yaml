@@ -98,6 +98,9 @@ jobs:
       - name: create directory for github pages
         run: mkdir -p public
 
+      - name: Display structure of downloaded files
+        run: ls -R
+
       - name: copy descriptor file
         run: cp target/descriptor.xml public/
 
