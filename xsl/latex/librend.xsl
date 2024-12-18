@@ -173,11 +173,21 @@
     <xsl:for-each select="(root(.)//rs/@type ! string(), $rend:indices) => distinct-values()">
       <xsl:text>&lb;\makeindex[name=</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>,title={</xsl:text>
+      <xsl:text>,title={\GetTranslation{index-title-</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}]</xsl:text>
+      <xsl:text>}}]</xsl:text>
     </xsl:for-each>
     <xsl:text>&lb;&lb;</xsl:text>
+  </xsl:template>
+
+  <!-- template for printing all indices -->
+  <xsl:template name="rend:print-indices" visibility="public">
+    <xsl:text>&lb;&lb;%% from librend</xsl:text>
+    <xsl:for-each select="(root(.)//rs/@type ! string(), $rend:indices) => distinct-values()">
+      <xsl:text>&lb;\printindex[</xsl:text>
+      <xsl:value-of select="."/>
+      <xsl:text>]</xsl:text>
+    </xsl:for-each>
   </xsl:template>
 
 </xsl:package>
