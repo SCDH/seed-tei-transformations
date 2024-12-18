@@ -132,9 +132,9 @@
     <xsl:for-each select="rend:index-keys(., $index)">
       <xsl:text>\index[</xsl:text>
       <xsl:value-of select="$index"/>
-      <xsl:text>]{</xsl:text>
+      <xsl:text>]{\GetTranslation{</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}</xsl:text>
+      <xsl:text>}}</xsl:text>
     </xsl:for-each>
     <!-- current mode on children -->
     <xsl:apply-templates mode="#current"/>
