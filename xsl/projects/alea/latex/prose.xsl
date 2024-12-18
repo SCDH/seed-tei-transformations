@@ -352,6 +352,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:apply-templates mode="text:text" select="/TEI/text/body"/>
     <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="latex-back"/>
+    <xsl:text>&lb;</xsl:text>
+    <xsl:call-template name="rend:print-indices"/>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
     <xsl:call-template name="latex-footer"/>
   </xsl:template>
