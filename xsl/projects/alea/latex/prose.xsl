@@ -23,7 +23,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" xmlns:rend="http://scdh.wwu.de/transform/rend#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-  xmlns:alea="http://scdh.wwu.de/transform/alea#"
+  xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:index="http://scdh.wwu.de/transform/index#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
@@ -293,6 +293,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     </xsl:override>
   </xsl:use-package>
 
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libindex.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="index:translation-package-filecontents"
+      visibility="final"/>
+  </xsl:use-package>
+
 
   <!-- todo: move to reasonable place -->
   <!-- a template for displaying the meter (metrum) of verse -->
@@ -436,6 +443,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="app:latex-header"/>
     <xsl:call-template name="arabic-numbering"/>
     <xsl:call-template name="rend:latex-header-index"/>
+    <xsl:call-template name="index:translation-package-filecontents"/>
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
