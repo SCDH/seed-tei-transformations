@@ -147,20 +147,36 @@
   </xsl:template>
 
   <!-- likely to be replaced with a more sophisticated function that gets names for keys -->
-  <xsl:function name="rend:index-keys" as="xs:string*" visibility="public">
+  <xsl:function name="rend:index-keys" as="xs:string*" visibility="final">
     <xsl:param name="context" as="element()"/>
     <xsl:param name="index" as="xs:string"/>
-    <xsl:variable name="keys" as="xs:string*">
-      <xsl:choose>
-        <xsl:when test="$context/@key">
-          <xsl:value-of select="$context/@key"/>
-        </xsl:when>
-        <xsl:when test="$context/@ref">
-          <xsl:value-of select="$context/@ref => replace('#', '')"/>
-        </xsl:when>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:sequence select="tokenize($keys)"/>
+    <xsl:choose>
+      <xsl:when test="$context/@key">
+        <xsl:value-of select="rend:index-keys-from-key-attribute($context/@key, $index)"/>
+      </xsl:when>
+      <xsl:when test="$context/@ref">
+        <!-- we remove # because it is reserved in tex -->
+        <xsl:value-of select="($context/@ref => tokenize()) ! replace(., '^#', '')"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>
+          <xsl:text>entity without canonical attribute @ref or @key: </xsl:text>
+          <xsl:value-of select="path($context)"/>
+        </xsl:message>
+        <xsl:text>UNKNOWN</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+  <!-- You will probably need to override this in downstream packages.
+    Since @key's "form will depend entirely on practice within a given project",
+    there is no generic implementation of this function.
+    See https://www.tei-c.org/release/doc/tei-p5-doc/en/html/ref-att.canonical.html
+  -->
+  <xsl:function name="rend:index-keys-from-key-attribute" as="xs:string*" visibility="public">
+    <xsl:param name="key" as="attribute(key)"/>
+    <xsl:param name="index" as="xs:string"/>
+    <xsl:sequence select="tokenize($key)"/>
   </xsl:function>
 
 
