@@ -53,6 +53,7 @@ from entity registries.
       </xsl:choose>
     </xsl:variable>
     <xsl:for-each select="$bibl-scope">
+      <!-- note: the surah titles are in the namespace 'quran' and have the 'surah-' prefix -->
       <xsl:text>\index[surah]{\surahind{\GetTranslation{surah-</xsl:text>
       <xsl:value-of select="surah:number(.)"/>
       <xsl:text>}}{</xsl:text>
@@ -103,9 +104,15 @@ from entity registries.
     </xsl:choose>
   </xsl:function>
 
+
   <xsl:template name="surah:latex-header" visibility="public">
-    <xsl:text>&lb;%% from libsurahidx.xsl</xsl:text>
+    <xsl:text>&lb;%% contributions to the latex header from .../libsurahidx.xsl</xsl:text>
     <xsl:text>&lb;\newcommand{\surahind}[2]{#1-#2}&lb;</xsl:text>
+    <xsl:call-template name="i18n:mk-package">
+      <xsl:with-param name="namespace" select="'quran'"/>
+      <xsl:with-param name="directory" select="resolve-uri('../html/locales/', static-base-uri())"/>
+    </xsl:call-template>
+    <xsl:text>&lb;\usepackage{i18n-quran}</xsl:text>
   </xsl:template>
 
 </xsl:package>
