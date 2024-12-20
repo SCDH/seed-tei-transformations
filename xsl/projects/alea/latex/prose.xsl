@@ -261,6 +261,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>opening parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
+        <xsl:call-template name="surah:index"/>
         <xsl:text>\arabicornateoparen{}</xsl:text>
       </xsl:template>
 
@@ -295,13 +296,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <xsl:template mode="rend:hook-ahead" match="div[not(head)]">
         <xsl:text>&lb;\bigskip</xsl:text>
-      </xsl:template>
-
-
-      <!-- make an index entry for encodings like in Prosa/Sag -->
-      <xsl:template mode="text:text"
-        match="quote[@source eq 'bib:quran' and @type eq 'verbatim-holy']">
-        <xsl:call-template name="surah:index"/>
       </xsl:template>
 
     </xsl:override>
