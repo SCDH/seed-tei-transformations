@@ -24,6 +24,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:index="http://scdh.wwu.de/transform/index#"
+  xmlns:surah="http://scdh.wwu.de/transform/surah#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
@@ -204,6 +205,12 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   </xsl:use-package>
 
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/libsurahidx.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="surah:*" visibility="final"/>
+  </xsl:use-package>
+
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
@@ -288,6 +295,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <xsl:template mode="rend:hook-ahead" match="div[not(head)]">
         <xsl:text>&lb;\bigskip</xsl:text>
+      </xsl:template>
+
+
+      <!-- make an index entry for encodings like in Prosa/Sag -->
+      <xsl:template mode="text:text"
+        match="quote[@source eq 'bib:quran' and @type eq 'verbatim-holy']">
+        <xsl:call-template name="surah:index"/>
       </xsl:template>
 
     </xsl:override>
@@ -444,6 +458,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="arabic-numbering"/>
     <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="index:translation-package-filecontents"/>
+    <xsl:call-template name="surah:latex-header"/>
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
