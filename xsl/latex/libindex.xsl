@@ -117,7 +117,7 @@ from entity registries.
   <xsl:template name="index:translate-entity" visibility="final">
     <xsl:context-item as="element()" use="required"/>
     <xsl:param name="index" as="xs:string"/>
-    <xsl:message>
+    <xsl:message use-when="system-property('debug') eq 'true'">
       <xsl:text>found </xsl:text>
       <xsl:value-of select="$index"/>
       <xsl:text> entity in </xsl:text>
