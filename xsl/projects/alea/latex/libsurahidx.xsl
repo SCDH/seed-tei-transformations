@@ -1,9 +1,4 @@
-<!-- components for latex indices in latex
-
-The generation of \index[type]{key} in text is mainly done in librend.xsl,
-where the value of {key} is the output of a named template.
-This package provides a named template for generation of {key} by taking it
-from entity registries.
+<!-- components for an index of the citations from Quran
 
 -->
 <!DOCTYPE package [
