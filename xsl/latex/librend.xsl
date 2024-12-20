@@ -13,9 +13,13 @@
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
 
+  <!-- names of indices (used by imakeidx), separated by comma -->
+  <xsl:param name="rend:indices-csv" as="xs:string" required="false"
+    select="'person,place,org,event'"/>
+
   <!-- names of indices (used by imakeidx) -->
   <xsl:param name="rend:indices" as="xs:string*" required="false"
-    select="'person', 'place', 'org', 'event'"/>
+    select="tokenize($rend:indices-csv, ',')"/>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
