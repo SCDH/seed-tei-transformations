@@ -123,6 +123,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/tei/extract-recension.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/tei/extract-recension.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/libsurahidx.xsl"
+               version="1.0.0" sourceLocation="xsl/projects/alea/latex/libsurahidx.xsl"/>
      </xsltPackages>
 
 </configuration>
