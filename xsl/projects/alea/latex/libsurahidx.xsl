@@ -35,14 +35,14 @@ from entity registries.
 
   <xsl:template name="surah:index" visibility="final">
     <xsl:context-item as="element()"/>
+    <xsl:param name="cite-key" as="xs:string" select="'bibl:Quran'" required="false"/>
+    <xsl:param name="quote-types" as="xs:string+" select="'verbatim-holy'" required="false"/>
     <xsl:variable name="bibl-scope" as="element(biblScope)*">
       <xsl:choose>
-        <xsl:when test="self::quote[@source eq 'bib:quran']">
-          <xsl:message>Quran gefunden</xsl:message>
-          <!-- encoding like in Prosa/Sag using a quote and a targeted note -->
-          <xsl:variable name="quote-idref" as="xs:string" select="'#' || @xml:id"/>
-          <!-- find the related note and its biblScope -->
-          <xsl:sequence select="following::note[1]/bibl[@corresp eq 'bibl:Quran']/biblScope"/>
+        <xsl:when
+          test="self::quote[@type = $quote-types] and following::note[1]/bibl[@corresp eq $cite-key]/biblScope">
+          <!-- as used by Andreas in Prosa/Sag -->
+          <xsl:sequence select="following::note[1]/bibl[@corresp eq $cite-key]/biblScope"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message>
