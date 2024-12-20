@@ -24,7 +24,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:index="http://scdh.wwu.de/transform/index#"
-  xmlns:surah="http://scdh.wwu.de/transform/surah#"
+  xmlns:surah="http://scdh.wwu.de/transform/surah#" xmlns:poem="http://scdh.wwu.de/transform/poem#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
@@ -211,6 +211,12 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:accept component="template" names="surah:*" visibility="final"/>
   </xsl:use-package>
 
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/libpoemidx.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="poem:*" visibility="final"/>
+  </xsl:use-package>
+
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libtext.xsl"
@@ -243,6 +249,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
           <xsl:text>: </xsl:text>
           <xsl:value-of select="alea:meter(@met)"/>
         </xsl:message>
+        <xsl:call-template name="poem:index"/>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
@@ -453,6 +460,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="index:translation-package-filecontents"/>
     <xsl:call-template name="surah:latex-header"/>
+    <xsl:call-template name="poem:latex-header"/>
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
