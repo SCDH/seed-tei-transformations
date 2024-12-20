@@ -60,9 +60,11 @@
       </xsl:choose>
     </xsl:variable>
     <!-- note: the surah titles are in the namespace 'quran' and have the 'surah-' prefix -->
-    <xsl:text>\index[poem]{\poemind{\GetTranslation{meter-</xsl:text>
+    <xsl:text>\index[poem]{</xsl:text>
+    <xsl:value-of select="poem:sortkey(.)"/>
+    <xsl:text>@\poemind{</xsl:text>
     <xsl:value-of select="map:get($poem, 'verse') => poem:rhyme()"/>
-    <xsl:text>}{</xsl:text>
+    <xsl:text>}{\GetTranslation{meter-</xsl:text>
     <xsl:value-of select="map:get($poem, 'met') => poem:met() => poem:normalize-meter-symbol()"/>
     <xsl:text>}}{</xsl:text>
     <xsl:value-of select="map:get($poem, 'count')"/>
@@ -87,6 +89,24 @@
     <xsl:sequence select="(string-join(($text)) => tokenize())[last()]"/>
   </xsl:function>
 
+  <xsl:function name="poem:sortkey" as="xs:string" visibility="public">
+    <xsl:param name="context" as="element()"/>
+    <xsl:sequence select="count($context/preceding::l) => string() => poem:left-fill('0', 4)"/>
+  </xsl:function>
+
+  <xsl:function name="poem:left-fill" as="xs:string" visibility="final">
+    <xsl:param name="s" as="xs:string"/>
+    <xsl:param name="filling-char" as="xs:string"/>
+    <xsl:param name="size" as="xs:integer"/>
+    <xsl:variable name="filled" as="xs:string*">
+      <xsl:for-each select="0 to $size">
+        <xsl:value-of select="$filling-char"/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="composed" as="xs:string" select="concat(string-join(($filled)), $s)"/>
+    <xsl:variable name="length" as="xs:integer" select="string-length($composed)"/>
+    <xsl:sequence select="substring($composed, $length - $size, $length)"/>
+  </xsl:function>
 
 
   <!-- an entry point which writes the translations as a package into a tex file -->
