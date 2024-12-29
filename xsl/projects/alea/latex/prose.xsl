@@ -456,7 +456,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
-    <xsl:call-template name="arabic-numbering"/>
     <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="index:translation-package-filecontents"/>
     <xsl:call-template name="surah:latex-header"/>
@@ -572,41 +571,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   </xsl:template>
 
   <xsl:template name="latex-back" visibility="public"/>
-
-  <xsl:template name="arabic-numbering">
-    <xsl:text>
-\makeatletter
-\newcommand*{\@arabicnum}[1]{%
-  \ifcase#1%
-    ٠%
-  \or
-    ١%
-  \or
-    ٢%
-  \or
-    ٣%
-  \or
-    ٤%
-  \or
-    ٥%
-  \or
-    ٦%
-  \or
-    ٧%
-  \or
-    ٨%
-  \or
-    ٩%
-  \else
-    \@ctrerr
-  \fi
-}
-\newcommand*{\arabicnum}[1]{%
-  \expandafter\@arabicnum\csname c@#1\endcsname
-}
-\makeatother
-    </xsl:text>
-  </xsl:template>
 
   <xsl:template name="latex-footer">
     <!-- local variables for AUCTeX -->
