@@ -496,7 +496,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{#1} }</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{{\normalfont\arabicobracket{}}#1{\normalfont\arabiccbracket{}}}}</xsl:text>
