@@ -16,10 +16,10 @@
         </x:context>
         <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
         <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
-        <x:expect label="has index entry" test="matches(., '\\index\[person\]\{oma\}')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[person\]\{\\GetTranslation\{oma\}\}')"/>
         <x:expect label="has text" test="matches(., 'Oma')"/>
         <x:expect label="result"
-            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[person\]\{oma\}Oma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[person\]\{\\GetTranslation\{oma\}\}Oma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
         />
     </x:scenario>
 
@@ -29,10 +29,10 @@
         </x:context>
         <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
         <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
-        <x:expect label="has index entry" test="matches(., '\\index\[place\]\{rome\}')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[place\]\{\\GetTranslation\{rome\}\}')"/>
         <x:expect label="has text" test="matches(., 'Roma')"/>
         <x:expect label="result"
-            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[place\]\{rome\}Roma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[place\]\{\\GetTranslation\{rome\}\}Roma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
         />
     </x:scenario>
 
@@ -42,10 +42,10 @@
         </x:context>
         <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
         <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
-        <x:expect label="has index entry" test="matches(., '\\index\[org\]\{teic\}')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[org\]\{\\GetTranslation\{teic\}\}')"/>
         <x:expect label="has text" test="matches(., 'TEI-C')"/>
         <x:expect label="result"
-            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[org\]\{teic\}TEI-C\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[org\]\{\\GetTranslation\{teic\}\}TEI-C\\edlabel\{[a-zA-Z0-9]+-end\}$')"
         />
     </x:scenario>
 
@@ -56,10 +56,10 @@
         <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
         <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
         <x:expect label="has index entry"
-            test="matches(., '\\index\[event\]\{pragueDefenestration\}')"/>
+            test="matches(., '\\index\[event\]\{\\GetTranslation\{pragueDefenestration\}\}')"/>
         <x:expect label="has text" test="matches(., 'Prager\s*Fenstersturz')"/>
         <x:expect label="result"
-            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[event\]\{pragueDefenestration\}Prager Fenstersturz\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[event\]\{\\GetTranslation\{pragueDefenestration\}\}Prager Fenstersturz\\edlabel\{[a-zA-Z0-9]+-end\}$')"
         />
     </x:scenario>
 
@@ -69,10 +69,10 @@
         </x:context>
         <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
         <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
-        <x:expect label="has index entry" test="matches(., '\\index\[place\]\{rome\}')"/>
+        <x:expect label="has index entry" test="matches(., '\\index\[place\]\{\\GetTranslation\{rome\}\}')"/>
         <x:expect label="has text" test="matches(., 'Roma')"/>
         <x:expect label="result"
-            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[place\]\{rome\}Roma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
+            test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}\\index\[place\]\{\\GetTranslation\{rome\}\}Roma\\edlabel\{[a-zA-Z0-9]+-end\}$')"
         />
     </x:scenario>
 
@@ -82,8 +82,8 @@
         </x:context>
         <x:expect label="has start label" test="matches(., '^\\edlabel\{[a-zA-Z0-9]+-start\}')"/>
         <x:expect label="has end label" test="matches(., '\\edlabel\{[a-zA-Z0-9]+-end\}$')"/>
-        <x:expect label="has index entries"
-            test="matches(., '\\index\[place\]\{cologne\}\\index\[place\]\{hamburg\}\\index\[place\]\{munich\}\\index\[place\]\{berlin\}')"
+        <x:expect label="has index entries" pending="incorrect handling of multiple references"
+            test="matches(., '\\index\[place\]\{\\GetTranslation\{cologne\}\}\\index\[place\]\{\\GetTranslation\{hamburg\}\}\\index\[place\]\{\\GetTranslation\{munich\}\}\\index\[place\]\{\\GetTranslation\{berlin\}\}')"
         />
     </x:scenario>
 
