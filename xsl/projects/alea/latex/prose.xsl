@@ -45,10 +45,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- base font size -->
   <xsl:param name="fontsize" as="xs:string" select="'12pt'" required="false"/>
 
-  <!-- scaling factor of the main font -->
-  <xsl:param name="fontscale" as="xs:string" select="'1'" required="false"/>
-
-  <!-- additional font features, must start with a comma, e.g. ,AutoFakeBold=3.5 -->
+  <!-- additional font features, e.g. AutoFakeBold=3.5 -->
   <xsl:param name="fontfeatures" as="xs:string" select="''"/>
 
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
@@ -388,7 +385,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>\documentclass{book}</xsl:text>
     <xsl:text>&lb;\usepackage[fontsize=</xsl:text>
     <xsl:value-of select="$fontsize"/>
-    <xsl:text>]{scrextend}</xsl:text>
+    <xsl:text>]{fontsize}</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <xsl:text>&lb;\usepackage[text={113mm,185mm}]{geometry}</xsl:text>
@@ -439,8 +436,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:for-each select="('rm', 'sf', 'tt')">
       <xsl:text>&lb;\babelfont{</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}[Scale=</xsl:text>
-      <xsl:value-of select="$fontscale"/>
+      <xsl:text>}[</xsl:text>
       <xsl:value-of select="$fontfeatures"/>
       <xsl:text>]{</xsl:text>
       <xsl:value-of select="$font"/>
