@@ -405,6 +405,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="latex-back"/>
     <xsl:text>&lb;</xsl:text>
+    <xsl:text>&lb;\printindex[surah]</xsl:text>
+    <xsl:text>&lb;\printindex[poem]</xsl:text>
     <xsl:call-template name="rend:print-indices"/>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
     <xsl:call-template name="latex-footer"/>
@@ -488,10 +490,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
-    <xsl:call-template name="rend:latex-header-index"/>
+
     <xsl:call-template name="index:translation-package-filecontents"/>
+    <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="surah:latex-header"/>
     <xsl:call-template name="poem:latex-header"/>
+    <xsl:text>&lb;\makeindex[name=surah,title=\GetTranslation{index-title-surah},columns=1]</xsl:text>
+    <xsl:text>&lb;\makeindex[name=poem,title=\GetTranslation{index-title-poem},columns=1]</xsl:text>
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
