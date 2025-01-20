@@ -191,7 +191,7 @@ from entity registries.
   </xsl:function>
 
   <!-- this mode is used to get the index entries from the registry files -->
-  <xsl:mode name="index:languages" on-no-match="shallow-skip"/>
+  <xsl:mode name="index:languages" on-no-match="shallow-skip" visibility="public"/>
 
   <xsl:template match="person" mode="index:languages">
     <xsl:apply-templates select="persName" mode="#current">
