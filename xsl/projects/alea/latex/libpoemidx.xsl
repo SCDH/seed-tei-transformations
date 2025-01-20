@@ -61,6 +61,13 @@
     </xsl:variable>
     <!-- note: the surah titles are in the namespace 'quran' and have the 'surah-' prefix -->
     <xsl:text>\index[poem]{</xsl:text>
+    <xsl:if test="map:get($poem, 'verse') => poem:letter() eq ''">
+      <xsl:message terminate="yes"> NO rhyme letter </xsl:message>
+    </xsl:if>
+    <xsl:value-of select="map:get($poem, 'verse') => poem:letter() => string-to-codepoints()"/>
+    <xsl:text>@</xsl:text>
+    <xsl:value-of select="map:get($poem, 'verse') => poem:letter()"/>
+    <xsl:text>!</xsl:text>
     <xsl:value-of select="poem:sortkey(.)"/>
     <xsl:text>@\poemind{</xsl:text>
     <xsl:value-of select="map:get($poem, 'verse') => poem:rhyme()"/>
@@ -87,6 +94,20 @@
       <xsl:apply-templates mode="seed:lemma-text-nodes" select="$verse"/>
     </xsl:variable>
     <xsl:sequence select="(string-join(($text)) => tokenize())[last()]"/>
+  </xsl:function>
+
+  <xsl:function name="poem:letter" as="xs:string">
+    <xsl:param name="verse" as="element(l)"/>
+    <xsl:choose>
+      <xsl:when test="$verse/@rhyme">
+        <xsl:value-of select="$verse/@rhyme"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- spacing letter with optional diacritics -->
+        <xsl:value-of
+          select="poem:rhyme($verse) => normalize-space() => replace('.*(\P{M}\p{M}*)$', '$1')"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
 
   <xsl:function name="poem:sortkey" as="xs:string" visibility="public">
