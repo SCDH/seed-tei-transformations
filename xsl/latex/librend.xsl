@@ -136,9 +136,9 @@
     <xsl:for-each select="rend:index-keys(., $index)">
       <xsl:text>\index[</xsl:text>
       <xsl:value-of select="$index"/>
-      <xsl:text>]{\GetTranslation{</xsl:text>
+      <xsl:text>]{</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}}</xsl:text>
+      <xsl:text>}</xsl:text>
     </xsl:for-each>
     <!-- current mode on children -->
     <xsl:apply-templates mode="#current"/>
@@ -160,7 +160,7 @@
       </xsl:when>
       <xsl:when test="$context/@ref">
         <!-- we remove # because it is reserved in tex -->
-        <xsl:value-of select="($context/@ref => tokenize()) ! replace(., '^#', '')"/>
+        <xsl:value-of select="rend:index-entries-from-ref-attribute($context/@ref, $index)"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:message>
@@ -172,6 +172,16 @@
     </xsl:choose>
   </xsl:function>
 
+  <!-- you may want to override this if you do not like the \GetTranslation{...} mechanism -->
+  <xsl:function name="rend:index-entries-from-ref-attribute" as="xs:string*" visibility="public">
+    <xsl:param name="ref" as="attribute(ref)"/>
+    <xsl:param name="index" as="xs:string"/>
+    <xsl:for-each select="($ref => tokenize()) ! replace(., '^#', '')">
+      <!-- we have to return a single string per reference! -->
+      <xsl:value-of select="'\GetTranslation{' || normalize-space(.) || '}'"/>
+    </xsl:for-each>
+  </xsl:function>
+
   <!-- You will probably need to override this in downstream packages.
     Since @key's "form will depend entirely on practice within a given project",
     there is no generic implementation of this function.
@@ -180,7 +190,9 @@
   <xsl:function name="rend:index-keys-from-key-attribute" as="xs:string*" visibility="public">
     <xsl:param name="key" as="attribute(key)"/>
     <xsl:param name="index" as="xs:string"/>
-    <xsl:sequence select="tokenize($key)"/>
+    <xsl:for-each select="tokenize($key)">
+      <xsl:value-of select="'\GetTranslation{' || . || '}'"/>
+    </xsl:for-each>
   </xsl:function>
 
 
