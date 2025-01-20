@@ -17,6 +17,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/prose.xsl"
   package-version="1.0" version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
   xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
@@ -25,6 +26,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:index="http://scdh.wwu.de/transform/index#"
   xmlns:surah="http://scdh.wwu.de/transform/surah#" xmlns:poem="http://scdh.wwu.de/transform/poem#"
+  xmlns:ref="http://scdh.wwu.de/transform/ref#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
@@ -69,6 +71,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
     package-version="1.0.0"/>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+    package-version="1.0.0"/>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
+    package-version="0.1.0">
+    <xsl:accept component="function" names="common:left-fill#3" visibility="final"/>
+  </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libi18n.xsl"
@@ -302,6 +314,26 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>&lb;\bigskip</xsl:text>
       </xsl:template>
 
+      <xsl:function name="rend:index-entries-from-ref-attribute" as="xs:string*">
+        <xsl:param name="ref" as="attribute(ref)"/>
+        <xsl:param name="index" as="xs:string"/>
+        <xsl:for-each select="ref:references-from-attribute($ref) ! ref:dereference(., $ref)">
+          <xsl:variable name="entry" as="element()" select="."/>
+          <!-- sort order from register file -->
+          <xsl:variable name="sortkey" as="xs:integer"
+            select="$entry/preceding::*[@xml:id] => count()"/>
+          <xsl:variable name="entry-language-maps" as="map(xs:string, xs:string*)*">
+            <xsl:apply-templates select="$entry" mode="index:languages"/>
+          </xsl:variable>
+          <xsl:variable name="arabic-entry" as="xs:string*"
+            select="map:merge($entry-language-maps) => map:get('ar')"/>
+          <!-- we have to return a single string per entry -->
+          <xsl:value-of
+            select="string-join((common:left-fill($sortkey => string(), '0', 4), '@', string-join($arabic-entry)))"
+          />
+        </xsl:for-each>
+      </xsl:function>
+
     </xsl:override>
   </xsl:use-package>
 
@@ -310,6 +342,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     package-version="1.0.0">
     <xsl:accept component="template" names="index:translation-package-filecontents"
       visibility="final"/>
+    <xsl:accept component="mode" names="index:languages" visibility="public"/>
   </xsl:use-package>
 
 
