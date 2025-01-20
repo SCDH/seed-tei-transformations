@@ -449,8 +449,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\newcommand*{\arabiccbracket}{]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicoparen}{(}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabiccparen}{)}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabicornateoparen}{﴾}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabicornatecparen}{﴿}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicornateoparen}{﴿}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicornatecparen}{﴾}</xsl:text>
 
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
