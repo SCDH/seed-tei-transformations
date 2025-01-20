@@ -511,7 +511,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\def\@verse@isembedded{false} %% always have embedding information</xsl:text>
     <xsl:text>&lb;\newcommand*{\embeddedverse}[1]{\def\@verse@isembedded{#1}}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
-    <xsl:text>&lb;\setlength{\stanzaindentbase}{10pt}</xsl:text>
+    <xsl:text>&lb;\setlength{\stanzaindentbase}{0pt}</xsl:text>
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
     <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
     <xsl:call-template name="verse:latex-header"/>
