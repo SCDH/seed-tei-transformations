@@ -522,8 +522,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax}</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
-    <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{\smallskip}</xsl:text>
-    <xsl:text>&lb;  %\smallskip% skip after stanza</xsl:text>
+    <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{}</xsl:text>
+    <xsl:text>&lb;  %\smallskip% skip after stanza, set to third argument if wanted</xsl:text>
     <xsl:text>&lb;  \let\pb\oldpb%</xsl:text>
     <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
