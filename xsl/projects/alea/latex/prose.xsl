@@ -514,8 +514,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>&lb;\linenumincrement{1}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>&lb;\firstlinenum{1}</xsl:text>
-        <xsl:text>&lb;\linenumincrement{1}</xsl:text>
+        <xsl:text>&lb;%\firstlinenum{1}</xsl:text>
+        <xsl:text>&lb;%\linenumincrement{1}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{</xsl:text>
@@ -539,6 +539,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
     <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
+    <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\foreignlanguage{english}{#1}}}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
@@ -560,7 +561,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="verse:latex-header"/>
     <xsl:text>&lb;\AtEveryStanza{%</xsl:text>
     <xsl:text>&lb;  \let\oldpb\pb%</xsl:text>
-    <xsl:text>&lb;  \let\pb\ledinnernote%</xsl:text>
+    <xsl:text>&lb;  \let\pb\innernoteenglish%</xsl:text>
     <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax}</xsl:text>
