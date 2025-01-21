@@ -174,7 +174,17 @@
 
   <xsl:template name="poem:latex-header" visibility="public">
     <xsl:text>&lb;%% contributions to the latex header from .../libpoemidx.xsl</xsl:text>
-    <xsl:text>&lb;\newcommand{\poemind}[3]{#1 #2 #3}&lb;</xsl:text>
+    <xsl:text>&lb;\makeatletter%</xsl:text>
+    <xsl:text>&lb;\@ifpackageloaded{tabto}{}{\usepackage{tabto}}%</xsl:text>
+    <xsl:text>&lb;\@ifpackageloaded{filecontents}{}{\usepackage{filecontents}}%</xsl:text>
+    <xsl:text>&lb;\makeatother%</xsl:text>
+    <xsl:text>&lb;\begin{filecontents}{poem.ist}</xsl:text>
+    <xsl:text>&lb;delim_0 ": "</xsl:text>
+    <xsl:text>&lb;delim_1 ": "</xsl:text>
+    <xsl:text>&lb;delim_2 "، "</xsl:text>
+    <xsl:text>&lb;\end{filecontents}</xsl:text>
+    <xsl:text>&lb;\makeindex[name=poem,options=-s poem.ist,title=\GetTranslation{index-title-poem},columns=1]</xsl:text>
+    <xsl:text>&lb;\newcommand{\poemind}[3]{#1\tabto*{3cm}#2\tabto*{6cm}#3}&lb;</xsl:text>
     <xsl:call-template name="poem:translation-package-filecontents"/>
   </xsl:template>
 
