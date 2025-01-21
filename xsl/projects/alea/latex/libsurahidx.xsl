@@ -134,7 +134,7 @@
     <xsl:text>&lb;delim_1 ": "</xsl:text>
     <xsl:text>&lb;delim_2 "، "</xsl:text>
     <xsl:text>&lb;\end{filecontents}</xsl:text>
-    <xsl:text>&lb;\newcommand{\surahind}[2]{#1\hspace{1em}#2\hspace{1em}}&lb;</xsl:text>
+    <xsl:text>&lb;\newcommand{\surahind}[2]{#1\hspace{1em}#2}&lb;</xsl:text>
     <xsl:text>&lb;\makeindex[name=surah,options=-s surah.ist,title=\GetTranslation{index-title-surah},columns=1]</xsl:text>
     <xsl:call-template name="i18n:mk-package">
       <xsl:with-param name="namespace" select="'quran'"/>
