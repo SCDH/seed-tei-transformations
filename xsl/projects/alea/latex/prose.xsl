@@ -491,10 +491,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
 
+    <xsl:text>&lb;\begin{filecontents}{alea.ist}</xsl:text>
+    <xsl:text>&lb;delim_0 ": "</xsl:text>
+    <xsl:text>&lb;delim_1 ": "</xsl:text>
+    <xsl:text>&lb;delim_2 "، "</xsl:text>
+    <xsl:text>&lb;\end{filecontents}</xsl:text>
     <xsl:call-template name="index:translation-package-filecontents"/>
     <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="surah:latex-header"/>
     <xsl:call-template name="poem:latex-header"/>
+    <xsl:text>&lb;\indexsetup{othercode=\footnotesize}</xsl:text>
 
 
     <!-- does not give footnotes in para

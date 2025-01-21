@@ -12,7 +12,7 @@ EDITION=$(realpath ~/Projekte/edition-ibn-nubatah)
 
 STYLESHEET=$SEED_DIR/xsl/projects/alea/latex/prose.xsl
 
-PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=\noindent {http://scdh.wwu.de/transform/edmac#}section-workaround=true" #  {http://scdh.wwu.de/transform/rend#}indices-csv=person,place,org,event,surah,poem
+PARAMS="wit-catalog=$EDITION/WitnessCatalogue.xml {http://scdh.wwu.de/transform/edmac#}pstart-opt=\noindent {http://scdh.wwu.de/transform/edmac#}section-workaround=true {http://scdh.wwu.de/transform/rend#}index-styles=alea.ist"
 
 FONTPARAMS="font=ArabicTypesetting fontsize=20pt fontfeatures=AutoFakeBold=1.0"
 
