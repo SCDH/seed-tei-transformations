@@ -12,6 +12,7 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:xd="https://www.oxygenxml.com/ns/doc/xsl" xmlns:poem="http://scdh.wwu.de/transform/poem#"
+  xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:index="http://scdh.wwu.de/transform/index#" xmlns:ref="http://scdh.wwu.de/transform/ref#"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
   exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0"
@@ -31,6 +32,9 @@
     <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="private"/>
   </xsl:use-package>
 
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
+    package-version="0.1.0"/>
 
 
   <xsl:template name="poem:index" visibility="final">
@@ -112,21 +116,7 @@
 
   <xsl:function name="poem:sortkey" as="xs:string" visibility="public">
     <xsl:param name="context" as="element()"/>
-    <xsl:sequence select="count($context/preceding::l) => string() => poem:left-fill('0', 4)"/>
-  </xsl:function>
-
-  <xsl:function name="poem:left-fill" as="xs:string" visibility="final">
-    <xsl:param name="s" as="xs:string"/>
-    <xsl:param name="filling-char" as="xs:string"/>
-    <xsl:param name="size" as="xs:integer"/>
-    <xsl:variable name="filled" as="xs:string*">
-      <xsl:for-each select="0 to $size">
-        <xsl:value-of select="$filling-char"/>
-      </xsl:for-each>
-    </xsl:variable>
-    <xsl:variable name="composed" as="xs:string" select="concat(string-join(($filled)), $s)"/>
-    <xsl:variable name="length" as="xs:integer" select="string-length($composed)"/>
-    <xsl:sequence select="substring($composed, $length - $size, $length)"/>
+    <xsl:sequence select="count($context/preceding::l) => string() => common:left-fill('0', 4)"/>
   </xsl:function>
 
 
