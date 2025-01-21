@@ -21,8 +21,8 @@
   <xsl:param name="rend:indices" as="xs:string*" required="false"
     select="tokenize($rend:indices-csv, ',')"/>
 
-  <!-- options to \makeindex, e.g., ',options=-s myindex.ist' to provide a style -->
-  <xsl:param name="rend:index-options" as="xs:string" select="''" required="false"/>
+  <!-- style file for indexes, passed in as ',options=-s myindex.ist' -->
+  <xsl:param name="rend:index-styles" as="xs:string?" select="()" required="false"/>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
@@ -211,7 +211,10 @@
       <xsl:text>,title={\GetTranslation{index-title-</xsl:text>
       <xsl:value-of select="."/>
       <xsl:text>}}</xsl:text>
-      <xsl:value-of select="$rend:index-options"/>
+      <xsl:if test="$rend:index-styles">
+        <xsl:text>,options=-s </xsl:text>
+        <xsl:value-of select="$rend:index-styles"/>
+      </xsl:if>
       <xsl:text>]</xsl:text>
     </xsl:for-each>
     <xsl:text>&lb;&lb;</xsl:text>
