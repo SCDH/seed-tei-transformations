@@ -495,8 +495,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="surah:latex-header"/>
     <xsl:call-template name="poem:latex-header"/>
-    <xsl:text>&lb;\makeindex[name=surah,title=\GetTranslation{index-title-surah},columns=1]</xsl:text>
-    <xsl:text>&lb;\makeindex[name=poem,title=\GetTranslation{index-title-poem},columns=1]</xsl:text>
+
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
