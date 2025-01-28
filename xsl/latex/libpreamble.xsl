@@ -1,5 +1,11 @@
 <!-- XSLT package with logic for making a LaTeX preamble
 
+target/bin/xslt.sh \
+  -config:saxon.he.xml \
+  -xsl:xsl/projects/alea/latex/preamble.xsl \
+  -it:{http://scdh.wwu.de/transform/preamble#}mainfile \
+  {http://scdh.wwu.de/transform/preamble#}subfiles-csv=Sag1.tex,Sag2.tex
+
 -->
 <!DOCTYPE package [
     <!ENTITY lre "&#x202a;" >
@@ -84,7 +90,7 @@
     <xsl:text>&lb;\begin{document}</xsl:text>
     <xsl:call-template name="preamble:maketitle"/>
     <xsl:for-each select="$preamble:subfiles">
-      <xsl:text>\subfile{</xsl:text>
+      <xsl:text>&lb;\subfile{</xsl:text>
       <xsl:value-of select=". => replace('\.tex$', '')"/>
       <xsl:text>}</xsl:text>
     </xsl:for-each>
