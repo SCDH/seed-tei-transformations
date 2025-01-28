@@ -69,7 +69,18 @@
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libi18n.xsl"
-    package-version="1.0.0"/>
+    package-version="1.0.0">
+    <xsl:override>
+      <xsl:variable name="i18n:default-language" as="xs:string">
+        <xsl:try>
+          <xsl:value-of select="/TEI/@xml:lang"/>
+          <xsl:catch>
+            <xsl:value-of select="'ar'"/>
+          </xsl:catch>
+        </xsl:try>
+      </xsl:variable>
+    </xsl:override>
+  </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libcouplet.xsl"
@@ -80,6 +91,7 @@
     package-version="1.0.0">
     <xsl:accept component="template" names="preamble:header" visibility="final"/>
     <xsl:accept component="template" names="preamble:footer" visibility="final"/>
+    <xsl:accept component="template" names="preamble:mainfile" visibility="final"/>
     <xsl:override>
       <xsl:template name="preamble:preamble">
         <xsl:call-template name="alea:preamble"/>
