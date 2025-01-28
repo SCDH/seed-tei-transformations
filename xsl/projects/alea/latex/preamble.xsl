@@ -11,6 +11,7 @@
   package-version="1.0" version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+  xmlns:preamble="http://scdh.wwu.de/transform/preamble#"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
   xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
@@ -74,14 +75,21 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libcouplet.xsl"
     package-version="1.0.0"/>
 
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libpreamble.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="preamble:header" visibility="final"/>
+    <xsl:accept component="template" names="preamble:footer" visibility="final"/>
+    <xsl:override>
+      <xsl:template name="preamble:preamble">
+        <xsl:call-template name="alea:preamble"/>
+      </xsl:template>
+    </xsl:override>
+  </xsl:use-package>
+
 
 
   <xsl:template name="alea:preamble" visibility="public">
-    <!-- it does not work with koma-script classes
-    <xsl:text>\documentclass{scrbook}</xsl:text>
-    <xsl:text>&lb;\KOMAoption{fontsize}{14pt}</xsl:text>
-    -->
-    <xsl:text>\documentclass{book}</xsl:text>
     <xsl:text>&lb;\usepackage[fontsize=</xsl:text>
     <xsl:value-of select="$fontsize"/>
     <xsl:text>]{fontsize}</xsl:text>
