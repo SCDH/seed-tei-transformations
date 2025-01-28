@@ -443,8 +443,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="latex-back"/>
     <xsl:text>&lb;</xsl:text>
-    <xsl:text>&lb;\printindex[surah]</xsl:text>
-    <xsl:text>&lb;\printindex[poem]</xsl:text>
+    <xsl:call-template name="surah:print-index"/>
+    <xsl:call-template name="poem:print-index"/>
     <xsl:call-template name="rend:print-indices"/>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
     <xsl:call-template name="latex-footer"/>
