@@ -55,7 +55,7 @@ target/bin/xslt.sh \
         </xsl:for-each>
       </xsl:when>
       <!-- when an mainfile is provided, use the subfiles documentclass -->
-      <xsl:when test="$preamble:header">
+      <xsl:when test="$preamble:mainfile">
         <xsl:text>\documentclass[</xsl:text>
         <xsl:value-of select="$preamble:mainfile => replace('\.tex$', '')"/>
         <xsl:text>]{subfiles}</xsl:text>
