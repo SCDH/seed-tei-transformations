@@ -1,3 +1,18 @@
+<!-- An XSLT package with a preamble for ALEA's publication at Ergon Verlag
+
+This derives xsl/latex/libpreamble.xsl and is used similar.
+
+USAGE: create a mainfile
+
+target/bin/xslt.sh \
+  -config:saxon.he.xml \
+  -xsl:xsl/projects/alea/latex/preamble.xsl \
+  -it:{http://scdh.wwu.de/transform/preamble#}mainfile \
+  - xi \
+  -s:/home/clueck/Projekte/edition-ibn-nubatah/Test/Sag1.tei.xml \
+  {http://scdh.wwu.de/transform/preamble#}subfiles-csv=Sag1.tex,Sag2.tex
+
+-->
 <!DOCTYPE package [
     <!ENTITY lre "&#x202a;" >
     <!ENTITY rle "&#x202b;" >
