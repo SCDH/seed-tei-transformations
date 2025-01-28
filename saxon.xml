@@ -129,6 +129,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/libpoemidx.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/latex/libpoemidx.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/preamble.xsl"
+               version="1.0.0" sourceLocation="xsl/projects/alea/latex/preamble.xsl"/>
      </xsltPackages>
 
 </configuration>
