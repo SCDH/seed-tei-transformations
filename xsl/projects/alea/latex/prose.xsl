@@ -190,7 +190,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <!-- correct parens and brackets -->
       <xsl:template mode="app:reading-text" match="text()">
-        <xsl:value-of select="alea:proc-text-node(.)"/>
+        <xsl:call-template name="alea:fix-text"/>
       </xsl:template>
 
     </xsl:override>
@@ -345,6 +345,43 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:accept component="mode" names="index:languages" visibility="public"/>
   </xsl:use-package>
 
+  <!-- we fix  -->
+  <xsl:template name="alea:fix-text">
+    <xsl:context-item as="text()" use="required"/>
+    <xsl:choose>
+      <xsl:when test="i18n:language(.) eq 'ar'">
+        <!-- fix inverted parenthesis -->
+        <xsl:analyze-string select="." regex="[\[\]\(\)]">
+          <xsl:matching-substring>
+            <xsl:choose>
+              <xsl:when test=". eq '('">
+                <xsl:text>\arabicoparen{}</xsl:text>
+              </xsl:when>
+              <xsl:when test=". eq ')'">
+                <xsl:text>\arabiccparen{}</xsl:text>
+              </xsl:when>
+              <xsl:when test=". eq '['">
+                <xsl:text>\arabicobracket{}</xsl:text>
+              </xsl:when>
+              <xsl:when test=". eq ']'">
+                <xsl:text>\arabiccbracket{}</xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:message terminate="yes"> Bad parenthesis match </xsl:message>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:value-of select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- todo: move to reasonable place -->
   <!-- a template for displaying the meter (metrum) of verse -->
@@ -372,7 +409,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:function name="alea:proc-text-node" as="xs:string">
     <xsl:param name="text" as="xs:string"/>
     <xsl:sequence
-      select="$text => replace('\(', '\\arabicoparen{}') => replace('\)', '\\arabiccparen{}')"/>
+      select="$text => replace('\(', '\\arabicoparen{}') => replace('\)', '\\arabiccparen{}') => replace('\[', '\\arabicobracket{}') => replace('\]', '\\arabiccbracket{}') "
+    />
   </xsl:function>
 
 
@@ -465,10 +503,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
     <xsl:text>&lb;%% Note: mapdigits causes the engine to replace western arabic digits by arabic script digits.</xsl:text>
     <xsl:text>&lb;%% To keep western digits in some places, the language must be set to ngerman or english.</xsl:text>
-    <xsl:text>&lb;\babelprovide[import,main,mapdigits,mapfont=direction]{arabic}</xsl:text>
-    <xsl:text>&lb;%\babelprovide[import,main,justification=kashida,transforms=kashida.afterdiacritics.plain,mapdigits,mapfont=direction]{arabic}</xsl:text>
-    <xsl:text>&lb;%\directlua{Babel.arabic.kashida_after_diacritics = true}</xsl:text>
-    <xsl:text>&lb;%\directlua{Babel.arabic.kashida_after_ligature_allowed = false}</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main,justification=kashida,transforms=kashida.afterdiacritics.plain,mapdigits,mapfont=direction]{arabic}</xsl:text>
+    <xsl:text>&lb;\directlua{Babel.arabic.kashida_after_diacritics = true}</xsl:text>
+    <xsl:text>&lb;\directlua{Babel.arabic.kashida_after_ligature_allowed = false}</xsl:text>
     <xsl:for-each select="('rm', 'sf', 'tt')">
       <xsl:text>&lb;\babelfont{</xsl:text>
       <xsl:value-of select="."/>
@@ -480,10 +517,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     </xsl:for-each>
     <xsl:text>&lb;\setRTLmain</xsl:text>
 
-    <xsl:text>&lb;\newcommand*{\arabicobracket}{[}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabiccbracket}{]}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabicoparen}{(}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\arabiccparen}{)}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicobracket}{]}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabiccbracket}{[}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabicoparen}{)}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\arabiccparen}{(}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicornateoparen}{﴿}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabicornatecparen}{﴾}</xsl:text>
 
