@@ -23,6 +23,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" xmlns:rend="http://scdh.wwu.de/transform/rend#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
+  xmlns:preamble="http://scdh.wwu.de/transform/preamble#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
   xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:index="http://scdh.wwu.de/transform/index#"
   xmlns:surah="http://scdh.wwu.de/transform/surah#" xmlns:poem="http://scdh.wwu.de/transform/poem#"
@@ -30,11 +31,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
-
-  <xsl:param name="latex-header-csv" as="xs:string" select="''"/>
-
-  <xsl:param name="latex-header" as="xs:anyURI*"
-    select="tokenize($latex-header-csv, ',\s*') ! xs:anyURI(.)"/>
 
   <xsl:param name="language" as="xs:string" select="/TEI/@xml:lang"/>
 
@@ -49,7 +45,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/preamble.xsl"
-    package-version="1.0.0"/>
+    package-version="1.0.0">
+    <xsl:accept component="template" names="preamble:header" visibility="final"/>
+  </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
@@ -400,16 +398,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:mode on-no-match="shallow-skip"/>
 
   <xsl:template match="/ | TEI">
-    <xsl:choose>
-      <xsl:when test="$latex-header">
-        <xsl:for-each select="$latex-header">
-          <xsl:value-of select="resolve-uri(., static-base-uri()) => unparsed-text()"/>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="alea:preamble"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="preamble:header"/>
+
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
 
     <!--xsl:text>&lb;\pagenumbering{arabicnum}</xsl:text-->
@@ -430,7 +420,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="poem:print-index"/>
     <xsl:call-template name="rend:print-indices"/>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
-    <xsl:call-template name="latex-footer"/>
+    <xsl:call-template name="preamble:footer"/>
   </xsl:template>
 
 
@@ -439,15 +429,5 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   </xsl:template>
 
   <xsl:template name="latex-back" visibility="public"/>
-
-  <xsl:template name="latex-footer">
-    <!-- local variables for AUCTeX -->
-    <xsl:text>&lb;&lb;%%% Local Variables:</xsl:text>
-    <xsl:text>&lb;%%% mode: latex</xsl:text>
-    <xsl:text>&lb;%%% TeX-master: t</xsl:text>
-    <xsl:text>&lb;%%% TeX-engine: luatex</xsl:text>
-    <xsl:text>&lb;%%% TeX-PDF-mode: t</xsl:text>
-    <xsl:text>&lb;%%% End:</xsl:text>
-  </xsl:template>
 
 </xsl:package>
