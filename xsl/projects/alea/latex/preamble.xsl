@@ -305,6 +305,15 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand*{\seedsubsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
 
+    <!-- page headers -->
+    <xsl:text>&lb;\usepackage{fancyhdr}</xsl:text>
+    <xsl:text>&lb;\pagestyle{fancy}</xsl:text>
+    <xsl:text>&lb;\fancyhf{}</xsl:text>
+    <xsl:text>&lb;\fancyhead[CE]{\normalfont\small\rightmark}</xsl:text>
+    <xsl:text>&lb;\fancyhead[CO]{\normalfont\small\leftmark}</xsl:text>
+    <xsl:text>&lb;\fancyhead[LE,RO]{\normalfont\small\thepage}</xsl:text>
+    <xsl:text>&lb;\renewcommand\headrulewidth{0pt}</xsl:text>
+
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
