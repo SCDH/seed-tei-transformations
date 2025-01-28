@@ -17,13 +17,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/prose.xsl"
   package-version="1.0" version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:note="http://scdh.wwu.de/transform/note#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
   xmlns:text="http://scdh.wwu.de/transform/text#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
-  xmlns:edmac="http://scdh.wwu.de/transform/edmac#"
+  xmlns:edmac="http://scdh.wwu.de/transform/edmac#" xmlns:rend="http://scdh.wwu.de/transform/rend#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-  xmlns:alea="http://scdh.wwu.de/transform/alea#"
+  xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:index="http://scdh.wwu.de/transform/index#"
+  xmlns:surah="http://scdh.wwu.de/transform/surah#" xmlns:poem="http://scdh.wwu.de/transform/poem#"
+  xmlns:ref="http://scdh.wwu.de/transform/ref#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0">
 
   <xsl:output method="text" encoding="UTF-8"/>
@@ -44,10 +47,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- base font size -->
   <xsl:param name="fontsize" as="xs:string" select="'12pt'" required="false"/>
 
-  <!-- scaling factor of the main font -->
-  <xsl:param name="fontscale" as="xs:string" select="'1'" required="false"/>
-
-  <!-- additional font features, must start with a comma, e.g. ,AutoFakeBold=3.5 -->
+  <!-- additional font features, e.g. AutoFakeBold=3.5 -->
   <xsl:param name="fontfeatures" as="xs:string" select="''"/>
 
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
@@ -71,6 +71,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
     package-version="1.0.0"/>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+    package-version="1.0.0"/>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
+    package-version="0.1.0">
+    <xsl:accept component="function" names="common:left-fill#3" visibility="final"/>
+  </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libi18n.xsl"
@@ -180,7 +190,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <!-- correct parens and brackets -->
       <xsl:template mode="app:reading-text" match="text()">
-        <xsl:value-of select="alea:proc-text-node(.)"/>
+        <xsl:call-template name="alea:fix-text"/>
       </xsl:template>
 
     </xsl:override>
@@ -202,6 +212,18 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       </xsl:template>
     </xsl:override>
 
+  </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/libsurahidx.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="surah:*" visibility="final"/>
+  </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/latex/libpoemidx.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="poem:*" visibility="final"/>
   </xsl:use-package>
 
 
@@ -228,7 +250,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="*[@met]">
+      <xsl:template mode="rend:hook-ahead" match="*[@met]">
         <!-- set the verse meter (metrum) before the verse environment starts -->
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>setting verse meter to </xsl:text>
@@ -236,13 +258,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
           <xsl:text>: </xsl:text>
           <xsl:value-of select="alea:meter(@met)"/>
         </xsl:message>
+        <xsl:call-template name="poem:index"/>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
         <xsl:text>}%&lb;</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-behind" match="*[@met]">
+      <xsl:template mode="rend:hook-behind" match="*[@met]">
         <xsl:variable name="is-embedded" as="xs:boolean"
           select="some $t in tokenize(ancestor::div[1]/@type) satisfies  $embedded-verse-contexts = $t"/>
         <xsl:if test="not($is-embedded)">
@@ -250,48 +273,114 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         </xsl:if>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="quote[@type eq 'verbatim-holy']">
+      <xsl:template mode="rend:hook-before" match="quote[@type eq 'verbatim-holy']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>opening parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
+        <xsl:call-template name="surah:index"/>
         <xsl:text>\arabicornateoparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="quote[@type eq 'verbatim-holy']">
+      <xsl:template mode="rend:hook-after" match="quote[@type eq 'verbatim-holy']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>closing parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabicornatecparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="quote[@type eq 'verbatim']">
+      <xsl:template mode="rend:hook-before" match="quote[@type eq 'verbatim']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>opening parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabicoparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="quote[@type eq 'verbatim']">
+      <xsl:template mode="rend:hook-after" match="quote[@type eq 'verbatim']">
         <xsl:message use-when="system-property('debug') eq 'true'">
           <xsl:text>closing parenthesis for verbatim citation of holy text</xsl:text>
         </xsl:message>
         <xsl:text>\arabiccparen{}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-before" match="supplied">
+      <xsl:template mode="rend:hook-before" match="supplied">
         <xsl:text>{\normalfont\arabicobracket{}}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-after" match="supplied">
+      <xsl:template mode="rend:hook-after" match="supplied">
         <xsl:text>{\normalfont\arabiccbracket{}}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="text:hook-ahead" match="div[not(head)]">
+      <xsl:template mode="rend:hook-ahead" match="div[not(head)]">
         <xsl:text>&lb;\bigskip</xsl:text>
       </xsl:template>
 
+      <xsl:function name="rend:index-entries-from-ref-attribute" as="xs:string*">
+        <xsl:param name="ref" as="attribute(ref)"/>
+        <xsl:param name="index" as="xs:string"/>
+        <xsl:for-each select="ref:references-from-attribute($ref) ! ref:dereference(., $ref)">
+          <xsl:variable name="entry" as="element()" select="."/>
+          <!-- sort order from register file -->
+          <xsl:variable name="sortkey" as="xs:integer"
+            select="$entry/preceding::*[@xml:id] => count()"/>
+          <xsl:variable name="entry-language-maps" as="map(xs:string, xs:string*)*">
+            <xsl:apply-templates select="$entry" mode="index:languages"/>
+          </xsl:variable>
+          <xsl:variable name="arabic-entry" as="xs:string*"
+            select="map:merge($entry-language-maps) => map:get('ar')"/>
+          <!-- we have to return a single string per entry -->
+          <xsl:value-of
+            select="string-join((common:left-fill($sortkey => string(), '0', 4), '@', string-join($arabic-entry)))"
+          />
+        </xsl:for-each>
+      </xsl:function>
+
     </xsl:override>
   </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libindex.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="index:translation-package-filecontents"
+      visibility="final"/>
+    <xsl:accept component="mode" names="index:languages" visibility="public"/>
+  </xsl:use-package>
+
+  <!-- we fix  -->
+  <xsl:template name="alea:fix-text">
+    <xsl:context-item as="text()" use="required"/>
+    <xsl:choose>
+      <xsl:when test="i18n:language(.) eq 'ar'">
+        <!-- fix inverted parenthesis -->
+        <xsl:analyze-string select="." regex="[\[\]\(\)]">
+          <xsl:matching-substring>
+            <xsl:choose>
+              <xsl:when test=". eq '('">
+                <xsl:text>\arabicoparen{}</xsl:text>
+              </xsl:when>
+              <xsl:when test=". eq ')'">
+                <xsl:text>\arabiccparen{}</xsl:text>
+              </xsl:when>
+              <xsl:when test=". eq '['">
+                <xsl:text>\arabicobracket{}</xsl:text>
+              </xsl:when>
+              <xsl:when test=". eq ']'">
+                <xsl:text>\arabiccbracket{}</xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:message terminate="yes"> Bad parenthesis match </xsl:message>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <xsl:value-of select="."/>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 
   <!-- todo: move to reasonable place -->
@@ -320,7 +409,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <xsl:function name="alea:proc-text-node" as="xs:string">
     <xsl:param name="text" as="xs:string"/>
     <xsl:sequence
-      select="$text => replace('\(', '\\arabicoparen{}') => replace('\)', '\\arabiccparen{}')"/>
+      select="$text => replace('\(', '\\arabicoparen{}') => replace('\)', '\\arabiccparen{}') => replace('\[', '\\arabicobracket{}') => replace('\]', '\\arabiccbracket{}') "
+    />
   </xsl:function>
 
 
@@ -352,6 +442,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:apply-templates mode="text:text" select="/TEI/text/body"/>
     <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="latex-back"/>
+    <xsl:text>&lb;</xsl:text>
+    <xsl:call-template name="surah:print-index"/>
+    <xsl:call-template name="poem:print-index"/>
+    <xsl:call-template name="rend:print-indices"/>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
     <xsl:call-template name="latex-footer"/>
   </xsl:template>
@@ -364,7 +458,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>\documentclass{book}</xsl:text>
     <xsl:text>&lb;\usepackage[fontsize=</xsl:text>
     <xsl:value-of select="$fontsize"/>
-    <xsl:text>]{scrextend}</xsl:text>
+    <xsl:text>]{fontsize}</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <xsl:text>&lb;\usepackage[text={113mm,185mm}]{geometry}</xsl:text>
@@ -407,14 +501,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\fi</xsl:text>
 
     <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
-    <xsl:text>&lb;\babelprovide[import,main,justification=kashida,transforms=kashida.afterdiacritics.plain]{arabic}</xsl:text>
+    <xsl:text>&lb;%% Note: mapdigits causes the engine to replace western arabic digits by arabic script digits.</xsl:text>
+    <xsl:text>&lb;%% To keep western digits in some places, the language must be set to ngerman or english.</xsl:text>
+    <xsl:text>&lb;\babelprovide[import,main,justification=kashida,transforms=kashida.afterdiacritics.plain,mapdigits,mapfont=direction]{arabic}</xsl:text>
     <xsl:text>&lb;\directlua{Babel.arabic.kashida_after_diacritics = true}</xsl:text>
     <xsl:text>&lb;\directlua{Babel.arabic.kashida_after_ligature_allowed = false}</xsl:text>
     <xsl:for-each select="('rm', 'sf', 'tt')">
       <xsl:text>&lb;\babelfont{</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}[Scale=</xsl:text>
-      <xsl:value-of select="$fontscale"/>
+      <xsl:text>}[</xsl:text>
       <xsl:value-of select="$fontfeatures"/>
       <xsl:text>]{</xsl:text>
       <xsl:value-of select="$font"/>
@@ -432,7 +527,18 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="text:latex-header"/>
     <xsl:call-template name="i18n:latex-header"/>
     <xsl:call-template name="app:latex-header"/>
-    <xsl:call-template name="arabic-numbering"/>
+
+    <xsl:text>&lb;\begin{filecontents}{alea.ist}</xsl:text>
+    <xsl:text>&lb;delim_0 ": "</xsl:text>
+    <xsl:text>&lb;delim_1 ": "</xsl:text>
+    <xsl:text>&lb;delim_2 "، "</xsl:text>
+    <xsl:text>&lb;\end{filecontents}</xsl:text>
+    <xsl:call-template name="index:translation-package-filecontents"/>
+    <xsl:call-template name="rend:latex-header-index"/>
+    <xsl:call-template name="surah:latex-header"/>
+    <xsl:call-template name="poem:latex-header"/>
+    <xsl:text>&lb;\indexsetup{othercode=\footnotesize}</xsl:text>
+
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
@@ -445,8 +551,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>&lb;\linenumincrement{1}</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>&lb;\firstlinenum{1}</xsl:text>
-        <xsl:text>&lb;\linenumincrement{1}</xsl:text>
+        <xsl:text>&lb;%\firstlinenum{1}</xsl:text>
+        <xsl:text>&lb;%\linenumincrement{1}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{</xsl:text>
@@ -459,6 +565,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
+    <xsl:text>&lb;\Xlemmaseparator{\arabiccbracket}</xsl:text>
     <xsl:text>&lb;\Xlemmafont{\normalfont}</xsl:text>
     <!--xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
     <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text-->
@@ -468,7 +575,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{#1} }</xsl:text>
+    <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
+    <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\foreignlanguage{english}{#1}}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{{\normalfont\arabicobracket{}}#1{\normalfont\arabiccbracket{}}}}</xsl:text>
@@ -483,19 +592,19 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\def\@verse@isembedded{false} %% always have embedding information</xsl:text>
     <xsl:text>&lb;\newcommand*{\embeddedverse}[1]{\def\@verse@isembedded{#1}}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
-    <xsl:text>&lb;\setlength{\stanzaindentbase}{10pt}</xsl:text>
+    <xsl:text>&lb;\setlength{\stanzaindentbase}{0pt}</xsl:text>
     <xsl:text>&lb;\setstanzaindents{1,1}% for reledmac's stanzas</xsl:text>
     <xsl:text>&lb;\setcounter{stanzaindentsrepetition}{1}</xsl:text>
     <xsl:call-template name="verse:latex-header"/>
     <xsl:text>&lb;\AtEveryStanza{%</xsl:text>
     <xsl:text>&lb;  \let\oldpb\pb%</xsl:text>
-    <xsl:text>&lb;  \let\pb\ledinnernote%</xsl:text>
+    <xsl:text>&lb;  \let\pb\innernoteenglish%</xsl:text>
     <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax}</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
-    <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{\smallskip}</xsl:text>
-    <xsl:text>&lb;  %\smallskip% skip after stanza</xsl:text>
+    <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{}</xsl:text>
+    <xsl:text>&lb;  %\smallskip% skip after stanza, set to third argument if wanted</xsl:text>
     <xsl:text>&lb;  \let\pb\oldpb%</xsl:text>
     <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
@@ -544,41 +653,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   </xsl:template>
 
   <xsl:template name="latex-back" visibility="public"/>
-
-  <xsl:template name="arabic-numbering">
-    <xsl:text>
-\makeatletter
-\newcommand*{\@arabicnum}[1]{%
-  \ifcase#1%
-    ٠%
-  \or
-    ١%
-  \or
-    ٢%
-  \or
-    ٣%
-  \or
-    ٤%
-  \or
-    ٥%
-  \or
-    ٦%
-  \or
-    ٧%
-  \or
-    ٨%
-  \or
-    ٩%
-  \else
-    \@ctrerr
-  \fi
-}
-\newcommand*{\arabicnum}[1]{%
-  \expandafter\@arabicnum\csname c@#1\endcsname
-}
-\makeatother
-    </xsl:text>
-  </xsl:template>
 
   <xsl:template name="latex-footer">
     <!-- local variables for AUCTeX -->

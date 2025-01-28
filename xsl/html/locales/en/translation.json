@@ -31,5 +31,11 @@
     "rdg-annotation-pre": " ",
     "rdg-annotation-post": "",
     "rdg-annotation-sep": ", ",
-    "author-title-sep": ", "
+    "author-title-sep": ", ",
+    "index-title-person": "Persons",
+    "index-title-place": "Places",
+    "index-title-org": "Organisations",
+    "index-title-event": "Events",
+    "index-title-surah": "Citations from Quran",
+    "index-title-poem": "Index of Poems, Rhymes, and Meters"
 }

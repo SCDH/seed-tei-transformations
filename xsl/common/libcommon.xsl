@@ -109,4 +109,18 @@
                     string-join($lemma-text, ' ')"/>
     </xsl:function>
 
+    <xsl:function name="common:left-fill" as="xs:string" visibility="final">
+        <xsl:param name="s" as="xs:string"/>
+        <xsl:param name="filling-char" as="xs:string"/>
+        <xsl:param name="size" as="xs:integer"/>
+        <xsl:variable name="filled" as="xs:string*">
+            <xsl:for-each select="0 to $size">
+                <xsl:value-of select="$filling-char"/>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="composed" as="xs:string" select="concat(string-join(($filled)), $s)"/>
+        <xsl:variable name="length" as="xs:integer" select="string-length($composed)"/>
+        <xsl:sequence select="substring($composed, $length - $size, $length)"/>
+    </xsl:function>
+
 </xsl:package>

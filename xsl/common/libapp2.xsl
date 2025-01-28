@@ -390,11 +390,6 @@ see xsl/projects/alea/preview.xsl
         apply the rules from 'lemma-text-nodes' on them. -->
     <xsl:mode name="app:lemma-text-nodes-dspt" on-no-match="shallow-skip" visibility="public"/>
 
-    <!-- The mode apparatus-reading-dspt is for the entries after the lemma (readings, etc.).
-        It serves as a dispatcher for different types of entries.
-        All templates should leave it again to get the text of the reading etc. -->
-    <xsl:mode name="app:reading" on-no-match="shallow-skip" visibility="public"/>
-
 
     <!-- app -->
 
