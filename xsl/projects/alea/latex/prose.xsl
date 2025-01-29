@@ -177,6 +177,15 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="alea:fix-text"/>
       </xsl:template>
 
+      <!-- quick and dirty hack to get references to manuscripts, TODO: real multilanguage support -->
+      <xsl:template mode="app:reading-text" match="note/seg[@xml:lang]">
+        <xsl:text>\foreignlanguage{</xsl:text>
+        <xsl:value-of select="i18n:babel-language(@xml:lang)"/>
+        <xsl:text>}{</xsl:text>
+        <xsl:apply-templates mode="#current"/>
+        <xsl:text>}</xsl:text>
+      </xsl:template>
+
     </xsl:override>
   </xsl:use-package>
 
