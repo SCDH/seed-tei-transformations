@@ -14,6 +14,11 @@
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.0">
 
+    <!-- A prefix for identifiers may be required for getting unique identifiers and labels
+        when several LaTeX documents are to be merged.
+        If so, the prefix should differ for every tranformed file. -->
+    <xsl:param name="edmac:id-prefix" as="xs:string" select="''" required="false"/>
+
     <!-- reledmac for line numbering -->
 
     <xsl:use-package
@@ -306,7 +311,7 @@
         <xsl:param name="suffix" as="xs:string" select="''" required="false"/>
         <xsl:text>\edlabel{</xsl:text>
         <xsl:value-of
-            select="concat(if ($context/@xml:id) then $context/@xml:id else generate-id($context), $suffix)"/>
+            select="concat($edmac:id-prefix, if ($context/@xml:id) then $context/@xml:id else generate-id($context), $suffix)"/>
         <xsl:text>}</xsl:text>
     </xsl:template>
 
@@ -321,12 +326,16 @@
 
     <xsl:template mode="edmac:edlabel-start"
         match="app[//variantEncoding/@method eq 'parallel-segmentation']">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-start')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end"
         match="app[//variantEncoding/@method eq 'parallel-segmentation']">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-end')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start"
@@ -335,64 +344,82 @@
             <xsl:text>start edlabel </xsl:text>
             <xsl:value-of select="@from"/>
         </xsl:message>
-        <xsl:value-of select="substring(@from, 2)"/>
+        <xsl:value-of select="concat($edmac:id-prefix, substring(@from, 2))"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end"
         match="app[//variantEncoding/@method ne 'parallel-segmentation']">
-        <xsl:value-of select="if (@xml:id) then @xml:id else generate-id()"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id())"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="corr">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-start')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="corr">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-end')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="sic">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-start')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="sic">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-end')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="choice">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-start')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-start')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="choice">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-end')"
+        />
     </xsl:template>
 
 
     <xsl:template mode="edmac:edlabel-start" match="note">
         <xsl:value-of
-            select="concat(if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-start')"
+            select="concat($edmac:id-prefix, if (parent::*/@xml:id) then parent::*/@xml:id else generate-id(parent::*), '-start')"
         />
     </xsl:template>
 
     <!-- contained note: end is always determined by the note itself -->
     <xsl:template mode="edmac:edlabel-end" match="note">
-        <xsl:value-of select="if (@xml:id) then @xml:id else generate-id(.)"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(.))"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="note[@target]">
-        <xsl:value-of select="substring(@target, 2)"/>
+        <xsl:value-of select="concat($edmac:id-prefix, substring(@target, 2))"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="note[@target]">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-end')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="note[@fromTarget]" priority="3">
-        <xsl:value-of select="substring(@fromTarget, 2)"/>
+        <xsl:value-of select="concat($edmac:id-prefix, substring(@fromTarget, 2))"/>
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-end" match="note[@fromTarget]" priority="3">
-        <xsl:value-of select="concat(if (@xml:id) then @xml:id else generate-id(), '-end')"/>
+        <xsl:value-of
+            select="concat($edmac:id-prefix, if (@xml:id) then @xml:id else generate-id(), '-end')"
+        />
     </xsl:template>
 
     <xsl:template mode="edmac:edlabel-start" match="*">
