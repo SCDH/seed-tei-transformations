@@ -6,6 +6,8 @@ INPUT=$1
 
 MAINFILE=$3
 
+PRINT_INDEX=$4
+
 seed="${SEED_TEI_TRANSFORMATIONS:=$(dirname $(realpath $0))/..}"
 
 edition="${EDITION:=$(realpath ~/Projekte/edition-ibn-nubatah)}"
@@ -27,7 +29,7 @@ XSLT_CMD=$seed/target/bin/xslt.sh
 
 set -x
 
-$XSLT_CMD -config:$seed/saxon.he.xml -xsl:$STYLESHEET -xi -s:$INPUT $PARAMS $FONTPARAMS {http://scdh.wwu.de/transform/preamble#}mainfile=$MAINFILE -o:$OUTPUT  2> $XSLT_LOG # && cd $(dirname $OUTPUT) && latexmk -lualatex $OUTPUT
+$XSLT_CMD -config:$seed/saxon.he.xml -xsl:$STYLESHEET -xi -s:$INPUT $PARAMS $FONTPARAMS {http://scdh.wwu.de/transform/preamble#}mainfile=$MAINFILE print-indexes=$PRINT_INDEX -o:$OUTPUT  2> $XSLT_LOG # && cd $(dirname $OUTPUT) && latexmk -lualatex $OUTPUT
 
 #cd $OLDPWD
 

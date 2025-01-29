@@ -40,6 +40,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- types of div in which verses are embedded and thus are printed without extra vertical space -->
   <xsl:param name="embedded-verse-contexts" as="xs:string*" select="('letter', 'bio', 'intro')"/>
 
+  <!-- whether or not to print out the indexes -->
+  <xsl:param name="print-indexes" as="xs:boolean" select="true()"/>
+
 
   <xsl:variable name="current" as="node()*" select="root()"/>
 
@@ -416,9 +419,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;</xsl:text>
     <xsl:call-template name="latex-back"/>
     <xsl:text>&lb;</xsl:text>
-    <xsl:call-template name="surah:print-index"/>
-    <xsl:call-template name="poem:print-index"/>
-    <xsl:call-template name="rend:print-indices"/>
+
+    <xsl:if test="$print-indexes">
+      <xsl:call-template name="surah:print-index"/>
+      <xsl:call-template name="poem:print-index"/>
+      <xsl:call-template name="rend:print-indices"/>
+    </xsl:if>
+
+    <xsl:text>&lb;</xsl:text>
     <xsl:text>&lb;\end{document}&lb;</xsl:text>
     <xsl:call-template name="preamble:footer"/>
   </xsl:template>
