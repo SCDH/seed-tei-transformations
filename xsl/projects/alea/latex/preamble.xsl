@@ -108,9 +108,13 @@ target/bin/xslt.sh \
     <xsl:accept component="template" names="preamble:footer" visibility="final"/>
     <xsl:accept component="template" names="preamble:mainfile" visibility="final"/>
     <xsl:override>
+
       <xsl:template name="preamble:preamble">
         <xsl:call-template name="alea:preamble"/>
       </xsl:template>
+
+      <xsl:template name="preamble:maketitle"/>
+
     </xsl:override>
   </xsl:use-package>
 
