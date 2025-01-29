@@ -8,7 +8,7 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-  xmlns:verse="http://scdh.wwu.de/transform/verse#"
+  xmlns:rend="http://scdh.wwu.de/transform/rend#" xmlns:verse="http://scdh.wwu.de/transform/verse#"
   xmlns:edmac="http://scdh.wwu.de/transform/edmac#" exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
 
@@ -45,14 +45,16 @@
           <xsl:apply-templates mode="text:text"
             select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/preceding::node() except verse:non-lemma-nodes(.)"/>
           <!-- recursively handle nodes, that contain caesura -->
-          <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]" mode="before-caesura"/>
+          <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]"
+            mode="before-caesura"/>
         </xsl:variable>
         <xsl:value-of select="edmac:normalize($first)"/>
         <xsl:text>}{</xsl:text>
         <xsl:variable name="second" as="xs:string*">
           <!-- second hemistich -->
           <!-- recursively handle nodes, that contain caesura -->
-          <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]" mode="after-caesura"/>
+          <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]"
+            mode="after-caesura"/>
           <!-- output nodes that follow caesura -->
           <xsl:apply-templates mode="text:text"
             select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/following::node() except verse:non-lemma-nodes(.)"
@@ -113,34 +115,41 @@
       <xsl:value-of select="local-name()"/>
     </xsl:message>
     <!-- before element hooks -->
+    <xsl:apply-templates mode="rend:hook-ahead" select="."/>
     <xsl:call-template name="edmac:app-start"/>
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-start'"/>
     </xsl:call-template>
-    <!-- output of nodes that preced caesura -->
+    <xsl:apply-templates mode="rend:hook-before" select="."/>
+    <!-- output of nodes that precede caesura -->
     <xsl:apply-templates mode="text:text"
       select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/preceding::node() except verse:non-lemma-nodes(.)"/>
     <!-- recursively handle nodes, that contain caesura -->
-    <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdf | ancestor::note)]]" mode="before-caesura"/>
+    <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdf | ancestor::note)]]"
+      mode="before-caesura"/>
   </xsl:template>
 
   <!-- nodes that contain caesura: recursively output everything following caesura -->
-  <xsl:template match="*[descendant::caesura[not(ancestor::rdf | ancestor::note)]]" mode="after-caesura">
+  <xsl:template match="*[descendant::caesura[not(ancestor::rdf | ancestor::note)]]"
+    mode="after-caesura">
     <xsl:message use-when="system-property('debug') eq 'true'">
       <xsl:text>Entered after-caesura mode: </xsl:text>
       <xsl:value-of select="local-name()"/>
     </xsl:message>
     <!-- recursively handle nodes, that contain caesura -->
-    <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]" mode="after-caesura"/>
+    <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]"
+      mode="after-caesura"/>
     <!-- output nodes that follow caesura -->
     <xsl:apply-templates mode="text:text"
       select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/following::node() except verse:non-lemma-nodes(.)"/>
     <!-- after element hooks -->
+    <xsl:apply-templates mode="rend:hook-after" select="."/>
     <xsl:call-template name="edmac:edlabel">
       <xsl:with-param name="suffix" select="'-end'"/>
     </xsl:call-template>
     <xsl:call-template name="edmac:app-end"/>
     <xsl:call-template name="text:inline-footnotes"/>
+    <xsl:apply-templates mode="rend:hook-behind" select="."/>
   </xsl:template>
 
   <!-- When the caesura is not present in the nested node, then output the node only once and warn the user.  -->
