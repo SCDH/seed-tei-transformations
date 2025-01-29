@@ -294,10 +294,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>{\normalfont\arabiccbracket{}}</xsl:text>
       </xsl:template>
 
-      <xsl:template mode="rend:hook-ahead" match="div[not(head)]">
-        <xsl:text>&lb;\bigskip</xsl:text>
-      </xsl:template>
-
       <xsl:function name="rend:index-entries-from-ref-attribute" as="xs:string*">
         <xsl:param name="ref" as="attribute(ref)"/>
         <xsl:param name="index" as="xs:string"/>
