@@ -29,6 +29,7 @@ This generic XSLT module provides babel translations for translation namespaces 
             <xsl:when test="$language eq 'en'">english</xsl:when>
             <xsl:when test="$language eq 'de'">ngerman</xsl:when>
             <xsl:when test="$language eq 'ar'">arabic</xsl:when>
+            <xsl:when test="$language eq 'fr'">french</xsl:when>
             <xsl:otherwise>english</xsl:otherwise>
         </xsl:choose>
     </xsl:function>
