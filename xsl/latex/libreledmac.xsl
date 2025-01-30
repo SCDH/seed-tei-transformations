@@ -65,12 +65,13 @@
         <xsl:param name="comment" as="xs:string" select="''" required="false"/>
         <xsl:text>&lb;\pend %</xsl:text>
         <xsl:value-of select="$comment"/>
-        <xsl:text>&lb;&lb;&lb;</xsl:text>
+        <xsl:text>&lb;</xsl:text>
     </xsl:template>
 
     <xsl:template name="edmac:stanza-start-macro">
         <xsl:param name="comment" as="xs:string" select="''" required="false"/>
-        <xsl:text>&lb;\stanza\relax %</xsl:text>
+        <!-- we do not add a newline character here! Outer callers must be able to controle new lines -->
+        <xsl:text>\stanza\relax %</xsl:text>
         <xsl:value-of select="$comment"/>
         <xsl:text>&lb;</xsl:text>
     </xsl:template>
