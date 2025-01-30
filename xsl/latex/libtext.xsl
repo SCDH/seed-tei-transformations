@@ -445,28 +445,28 @@
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{chapter}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{chapter}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \@afterheading%</xsl:text>
+    <xsl:text>&lb;  \lednopb\@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{section}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \@afterheading%</xsl:text>
+    <xsl:text>&lb;  \lednopb\@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsubsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsection}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \@afterheading%</xsl:text>
+    <xsl:text>&lb;  \lednopb\@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsubsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsubsubsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsubsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;    \addcontentsline{toc}{subsubsection}{#1}}%</xsl:text>
-    <xsl:text>&lb;  \@afterheading%</xsl:text>
+    <xsl:text>&lb;  \lednopb\@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
   </xsl:template>
