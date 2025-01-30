@@ -243,6 +243,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
 
+      <xsl:template mode="rend:hook-behind" match="p[@ana eq 'tag:inquit']">
+        <xsl:text>\penalty 6000</xsl:text>
+      </xsl:template>
+
       <xsl:template mode="rend:hook-ahead" match="*[@met]">
         <!-- set the verse meter (metrum) before the verse environment starts -->
         <xsl:message use-when="system-property('debug') eq 'true'">
