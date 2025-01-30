@@ -266,7 +266,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;  \let\pb\innernoteenglish%</xsl:text>
     <xsl:text>&lb;  }</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
-    <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax}</xsl:text>
+    <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax\lednopb}</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
     <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{}</xsl:text>
     <xsl:text>&lb;  %\smallskip% skip after stanza, set to third argument if wanted</xsl:text>
