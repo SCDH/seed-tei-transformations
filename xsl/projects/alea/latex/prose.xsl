@@ -255,11 +255,16 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
           <xsl:text>: </xsl:text>
           <xsl:value-of select="alea:meter(@met)"/>
         </xsl:message>
-        <xsl:call-template name="poem:index"/>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
         <xsl:text>}%&lb;</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="rend:hook-before" match="*[@met]">
+        <xsl:text>%&lb;</xsl:text>
+        <xsl:call-template name="poem:index"/>
+        <xsl:text>%&lb;</xsl:text>
       </xsl:template>
 
       <xsl:template mode="rend:hook-behind" match="*[@met]">
