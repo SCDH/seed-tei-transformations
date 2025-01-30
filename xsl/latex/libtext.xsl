@@ -132,15 +132,19 @@
       </xsl:template>
 
       <xsl:template match="p">
+        <xsl:apply-templates mode="rend:hook-ahead" select="."/>
         <xsl:call-template name="edmac:par-start"/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
+        <xsl:apply-templates mode="rend:hook-before" select="."/>
         <xsl:apply-templates/>
+        <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-end'"/>
         </xsl:call-template>
         <xsl:call-template name="edmac:par-end"/>
+        <xsl:apply-templates mode="rend:hook-behind" select="."/>
         <xsl:text>&lb;&lb;&lb;</xsl:text>
       </xsl:template>
 
