@@ -304,14 +304,15 @@ target/bin/xslt.sh \
     <!-- workaround for broken sectioning commands in reledmac -->
     <xsl:call-template name="text:latex-header-workaround36"/>
     <!--xsl:call-template name="text:latex-header-full-seedskips"/-->
+    <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedchapterfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{\penalty -\@highpenalty}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{\penalty -\@medpenalty}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{\penalty -\@lowpenalty}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{\penalty 0}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
 
     <!-- page headers -->
