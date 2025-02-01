@@ -449,13 +449,13 @@
     <xsl:text>&lb;\@ifpackageloaded{ifthen}{}{\usepackage{ifthen}}%</xsl:text>
     <xsl:text>&lb;\@ifpackageloaded{nowidow}{}{\usepackage{nowidow}}%</xsl:text>
     <xsl:text>&lb;% Note: skips around section commands must be outside \pstart...\pend!</xsl:text>
-    <xsl:text>&lb;\newcommand*{\seedchapterbeforeskip}{\vspace{-3.5ex \@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedchapterbeforeskip}{\penalty -\@highpenalty \vspace{-3.5ex \@plus -1ex \@minus -.2ex}}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedchapterafterskip}{\vspace{2.3ex \@plus.2ex}}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\seedsectionbeforeskip}{\vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsectionbeforeskip}{\penalty -\@medpenalty \vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedsectionafterskip}{\vspace{1.5ex \@plus .2ex}}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\seedsubsectionbeforeskip}{\vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsectionbeforeskip}{\penalty -\@lowpenalty \vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedsubsectionafterskip}{\vspace{1.5ex \@plus .2ex}}</xsl:text>
-    <xsl:text>&lb;\newcommand*{\seedsubsubsectionbeforeskip}{\vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\seedsubsubsectionbeforeskip}{\penalty 0 \vspace{-3.25ex\@plus -1ex \@minus -.2ex}}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedsubsubsectionafterskip}{\vspace{1.5ex \@plus .2ex}}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedchapterfont}[1]{\LARGE #1}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedsectionfont}[1]{\Large #1}</xsl:text>
