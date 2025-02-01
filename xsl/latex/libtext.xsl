@@ -19,6 +19,18 @@
   <!-- whether to use a workaround for issues related to sectioning in reledmac, e.g., #976 and #976 -->
   <xsl:param name="edmac:section-workaround" as="xs:boolean" select="false()" required="false"/>
 
+  <!-- value to the optional parameter of \pstart, used in context of head -->
+  <xsl:param name="edmac:section-pstart-opt" as="xs:string?" select="()"/>
+
+  <!--
+    Value to the optional parameter of \pend, used in context of head.
+    The reason why widow and club penalties have to be passed to \pend[...]:
+    penalties at the very end of the paragraph matter, see
+    https://tex.stackexchange.com/questions/353058/setting-clubpenalty-locally
+  -->
+  <xsl:param name="edmac:section-pend-opt" as="xs:string?"
+    select="'\widowpenalty10000\clubpenalty10000 '"/>
+
   <xsl:variable name="text:section-levels" as="xs:string*"
     select="'chapter', 'section', 'subsection', 'subsubsection'" visibility="public"/>
 
@@ -66,11 +78,14 @@
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
         <xsl:text>&lb;</xsl:text>
-        <xsl:call-template name="edmac:par-start"/>
+        <xsl:call-template name="edmac:par-start">
+          <xsl:with-param name="optional" as="xs:string?" select="$edmac:section-pstart-opt"
+            tunnel="true"/>
+        </xsl:call-template>
         <xsl:apply-templates mode="rend:hook-before" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
-        <xsl:text>&lb;\eled</xsl:text>
+        <xsl:text>\eled</xsl:text>
         <xsl:value-of select="$text:section-levels[$level]"/>
         <xsl:text>[</xsl:text>
         <xsl:apply-templates mode="text:text-only"/>
@@ -86,7 +101,10 @@
         <xsl:apply-templates mode="rend:hook-after" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
-        <xsl:call-template name="edmac:par-end"/>
+        <xsl:call-template name="edmac:par-end">
+          <xsl:with-param name="optional" as="xs:string?" select="$edmac:section-pend-opt"
+            tunnel="true"/>
+        </xsl:call-template>
         <xsl:text>&lb;&lb;</xsl:text>
         <xsl:apply-templates mode="rend:hook-behind" select=".">
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
