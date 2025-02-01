@@ -36,6 +36,9 @@
     <!-- optional parameter passed to every \pstart. E.g. '\noindent' -->
     <xsl:param name="edmac:pstart-opt" as="xs:string?" select="()"/>
 
+    <!-- optional parameter passed to every \pend -->
+    <xsl:param name="edmac:pend-opt" as="xs:string?" select="()"/>
+
     <!-- The templates named edmac:*-(start|end)-macro are used to make \pstart
         and \pend etc. homogenously in various places.
         Do not use them directly, but use edmac:(par|stanza)-(start|end) which
@@ -49,10 +52,11 @@
     <xsl:template name="edmac:par-start-macro" visibility="public">
         <xsl:context-item as="element()" use="required"/>
         <xsl:param name="comment" as="xs:string" select="''" required="false"/>
+        <xsl:param name="optional" as="xs:string?" select="()" required="false" tunnel="true"/>
         <xsl:text>&lb;\pstart</xsl:text>
-        <xsl:if test="not(empty(($edmac:pstart-opt, edmac:pstart-bidi-macro(.))))">
+        <xsl:if test="not(empty(($edmac:pstart-opt, $optional, edmac:pstart-bidi-macro(.))))">
             <xsl:text>[</xsl:text>
-            <xsl:value-of select="($edmac:pstart-opt, edmac:pstart-bidi-macro(.)) => string-join()"/>
+            <xsl:value-of select="($edmac:pstart-opt, $optional, edmac:pstart-bidi-macro(.)) => string-join()"/>
             <xsl:text>]</xsl:text>
         </xsl:if>
         <!-- to end macro, instead of {} -->
@@ -63,7 +67,15 @@
 
     <xsl:template name="edmac:par-end-macro">
         <xsl:param name="comment" as="xs:string" select="''" required="false"/>
-        <xsl:text>&lb;\pend %</xsl:text>
+        <xsl:param name="optional" as="xs:string?" select="()" required="false" tunnel="true"/>
+        <xsl:text>&lb;\pend</xsl:text>
+        <xsl:if test="not(empty(($edmac:pend-opt, $optional)))">
+            <xsl:text>[</xsl:text>
+            <xsl:value-of select="($edmac:pend-opt, $optional) => string-join()"/>
+            <xsl:text>]</xsl:text>
+        </xsl:if>
+        <!-- to end macro, instead of {} -->
+        <xsl:text>{}%</xsl:text>
         <xsl:value-of select="$comment"/>
         <xsl:text>&lb;</xsl:text>
     </xsl:template>
