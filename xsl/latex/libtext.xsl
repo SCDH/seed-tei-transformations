@@ -116,9 +116,9 @@
         <xsl:choose>
           <xsl:when test="not($edmac:section-workaround)"/>
           <xsl:when test="parent::*/preceding-sibling::*">
-            <xsl:text>&lb;&lb;\seed</xsl:text>
+            <xsl:text>&lb;\seed</xsl:text>
             <xsl:value-of select="$text:section-levels[$level]"/>
-            <xsl:text>beforeskip&lb;&lb;</xsl:text>
+            <xsl:text>beforeskip&lb;</xsl:text>
           </xsl:when>
           <xsl:otherwise/>
         </xsl:choose>
@@ -129,7 +129,7 @@
         <xsl:choose>
           <xsl:when test="not($edmac:section-workaround)"/>
           <xsl:when test="following-sibling::*[1][self::*[child::*[1][self::head]]]">
-            <xsl:text>&lb;&lb;\seed</xsl:text>
+            <xsl:text>&lb;\seed</xsl:text>
             <xsl:value-of select="$text:section-levels[$level]"/>
             <xsl:text>afterskip&lb;&lb;</xsl:text>
           </xsl:when>
