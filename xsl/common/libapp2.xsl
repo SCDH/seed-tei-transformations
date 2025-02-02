@@ -523,14 +523,22 @@ see xsl/projects/alea/preview.xsl
 
     <!-- Format sigla from @wit. Potentianally you will override this with your own. -->
     <xsl:template name="app:sigla" visibility="public">
-        <xsl:param name="wit" as="node()"/>
-        <xsl:for-each select="tokenize($wit)">
+        <xsl:param name="context" as="node()"/>
+        <xsl:for-each select="tokenize($context/@wit)">
             <xsl:if test="position() gt 1">
                 <xsl:text>, </xsl:text>
             </xsl:if>
             <xsl:value-of select="replace(., '^#', '')"/>
         </xsl:for-each>
     </xsl:template>
+
+    <!-- A predicate, whether to print or not print the sigla;
+        This default implememtation returns constantly true, but you may override it. -->
+    <xsl:function name="app:prints-sigla" as="xs:boolean" visibility="public">
+        <xsl:param name="context" as="node()"/>
+        <xsl:sequence
+            select="exists($context/@wit) or exists($context/@source) or exists($context/wit)"/>
+    </xsl:function>
 
     <!-- prepend or append a replacement for an empty lemma to a reading.
         The nodes of the reading must be passed in as parameter -->

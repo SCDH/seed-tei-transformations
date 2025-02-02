@@ -168,10 +168,10 @@
                 <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
                     <xsl:with-param name="reading" select="node()"/>
                 </xsl:call-template>
-                <xsl:if test="@wit">
+                <xsl:if test="app:prints-sigla(.)">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
                     <xsl:call-template name="app:sigla">
-                        <xsl:with-param name="wit" select="@wit"/>
+                        <xsl:with-param name="context" select="."/>
                     </xsl:call-template>
                     <xsl:text>}</xsl:text>
                 </xsl:if>
@@ -184,10 +184,10 @@
 
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) eq '']">
                 <xsl:text>{\apptranslate{omisit}</xsl:text>
-                <xsl:if test="@wit">
+                <xsl:if test="app:prints-sigla(.)">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
                     <xsl:call-template name="app:sigla">
-                        <xsl:with-param name="wit" select="@wit"/>
+                        <xsl:with-param name="context" select="."/>
                     </xsl:call-template>
                     <xsl:text>}</xsl:text>
                 </xsl:if>
@@ -211,10 +211,10 @@
                 <xsl:text>\appnote{</xsl:text>
                 <xsl:value-of select="i18n:direction-embedding(.)"/>
                 <xsl:apply-templates select="node()" mode="app:reading-text"/>
-                <xsl:if test="@wit">
+                <xsl:if test="app:prints-sigla(.)">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
                     <xsl:call-template name="app:sigla">
-                        <xsl:with-param name="wit" select="@wit"/>
+                        <xsl:with-param name="context" select="."/>
                     </xsl:call-template>
                     <xsl:text>}</xsl:text>
                 </xsl:if>
@@ -247,10 +247,10 @@
             <xsl:template mode="app:reading-dspt" match="choice/sic">
                 <xsl:text>{</xsl:text>
                 <xsl:apply-templates mode="app:reading-text"/>
-                <xsl:if test="@source">
+                <xsl:if test="app:prints-sigla(.)">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>
                     <xsl:call-template name="app:sigla">
-                        <xsl:with-param name="wit" select="@source"/>
+                        <xsl:with-param name="context" select="."/>
                     </xsl:call-template>
                     <xsl:text>}</xsl:text>
                 </xsl:if>
