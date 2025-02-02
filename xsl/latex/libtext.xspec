@@ -175,7 +175,7 @@
         <x:expect label="paragraph with preferred \pstart"
             test="matches(., '^\s*\\pstart\{\}%preferred from tei:anchor&#xa;\\edlabel\{a3\}\\edlabel\{[a-zA-Z0-9_-]+\}Ein')"/>
         <x:expect label="paragraph with regular \pend"
-            test="matches(., 'weiß:\\edlabel\{[a-zA-Z0-9_-]+\}&#xa;\\pend %&#xa;')"/>
+            test="matches(., 'weiß:\\edlabel\{[a-zA-Z0-9_-]+\}&#xa;\\pend\{\}%&#xa;')"/>
         <x:expect label="verse with regular \stanza"
             test="matches(., '\\stanza\\relax %&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}Du')"/>
         <x:expect label="verse with delayed \&amp;"
@@ -203,7 +203,7 @@
         <x:expect label="verse with regular \&amp;"
             test="matches(., 'erden,\\edlabel\{[a-zA-Z0-9_-]+\}\\edlabel\{[a-zA-Z0-9_-]+\}\\&amp;%&#xa;')"/>
         <x:expect label="paragraph with regular \pstart and delayed \pend"
-            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}weiß\s+ein\s+Barock-Gedicht.\\edlabel\{[a-zA-Z0-9_-]+\}&#xa;\s*\\pend %delayed from tei:app&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}weiß\s+ein\s+Barock-Gedicht.\\edlabel\{[a-zA-Z0-9_-]+\}&#xa;\s*\\pend\{\}%delayed from tei:app&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -233,8 +233,7 @@
                 fox</tei:p>
         </x:context>
         <x:expect label="has start label and text from corr"
-            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}brown\\edlabel\{[a-zA-Z0-9]+-end\}')"
-        />
+            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}brown\\edlabel\{[a-zA-Z0-9]+-end\}')"/>
     </x:scenario>
 
     <x:scenario label="gap">
@@ -242,7 +241,7 @@
             <tei:p>The quick brown <tei:gap unit="characters" quatity="2"/>x jumps</tei:p>
         </x:context>
         <x:expect label="has start label and dots"
-            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}\[\.\.\.\]x\s+jumps\\edlabel\{[a-zA-Z0-9_-]+\}\s*\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}\[\.\.\.\]x\s+jumps\\edlabel\{[a-zA-Z0-9_-]+\}\s*\\pend\{\}\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -251,7 +250,7 @@
             <tei:p>The quick brown <tei:supplied>fo</tei:supplied>x jumps</tei:p>
         </x:context>
         <x:expect label="has start label"
-            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}fox\s+jumps\\edlabel\{[a-zA-Z0-9_-]+\}\s*\\pend\s*%&#xa;\s*$')"
+            test="matches(., '\\pstart\{\}%&#xa;\\edlabel\{[a-zA-Z0-9_-]+\}The\s+quick\s+brown\s+\\edlabel\{[a-zA-Z0-9]+-start\}fox\s+jumps\\edlabel\{[a-zA-Z0-9_-]+\}\s*\\pend\{\}\s*%&#xa;\s*$')"
         />
     </x:scenario>
 
@@ -373,24 +372,26 @@
     <x:scenario label="document structure and sectioning">
         <x:context select="$structured-doc"/>
         <x:expect label="Title in \eledchapter"
-            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Title\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Title\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"/>
+            test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Title\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Title\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
         <x:expect label="Chapter 1 in \eledchapter"
             test="matches(., '\\pstart\{\}%\s*\\eledchapter\[Chapter\s1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Chapter\s1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
         <x:expect label="Section 2.1 in \eledsection"
-            test="matches(. , '\\pstart\{\}%\s*\\eledsection\[Section\s2\.1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Section\s2\.1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"
-        />
+            test="matches(. , '\\pstart\{\}%\s*\\eledsection\[Section\s2\.1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Section\s2\.1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
+        <x:expect label="\pend has optional argument as is terminated by group"
+            test="matches(., '\\pend\[[^\]]+\]\{\}%\s')"/>
     </x:scenario>
 
     <x:scenario label="document structure and sectioning with delta of 2">
         <x:param name="text:section-level-delta" select="2"/>
         <x:context select="$structured-doc"/>
         <x:expect label="Title in \eledsubsection"
-            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Title\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Title\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"/>
+            test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Title\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Title\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
         <x:expect label="Chapter 1 in \eledsubsection"
             test="matches(., '\\pstart\{\}%\s*\\eledsubsection\[Chapter\s1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Chapter\s1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
         <x:expect label="Section 2.1 in \eledsubsubsection"
-            test="matches(. , '\\pstart\{\}%\s*\\eledsubsubsection\[Section\s2\.1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Section\s2\.1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend\s*%')"
-        />
+            test="matches(. , '\\pstart\{\}%\s*\\eledsubsubsection\[Section\s2\.1\]\{\\edlabel\{[a-zA-Z0-9_-]+\}Section\s2\.1\\edlabel\{[a-zA-Z0-9_-]+\}\}\s*\\pend')"/>
+        <x:expect label="\pend has optional argument as is terminated by group"
+            test="matches(., '\\pend\[[^\]]+\]\{\}%\s')"/>
     </x:scenario>
 
 </x:description>
