@@ -12,6 +12,7 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:xd="https://www.oxygenxml.com/ns/doc/xsl" xmlns:poem="http://scdh.wwu.de/transform/poem#"
+  xmlns:rend="http://scdh.wwu.de/transform/rend#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:index="http://scdh.wwu.de/transform/index#" xmlns:ref="http://scdh.wwu.de/transform/ref#"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
@@ -24,6 +25,12 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libi18n.xsl"
     package-version="1.0.0">
     <xsl:accept component="function" names="i18n:babel-language#1" visibility="private"/>
+  </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/librend.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="rend:index-options" visibility="private"/>
   </xsl:use-package>
 
   <xsl:use-package
@@ -183,7 +190,9 @@
     <xsl:text>&lb;delim_1 ": "</xsl:text>
     <xsl:text>&lb;delim_2 "، "</xsl:text>
     <xsl:text>&lb;\end{filecontents}</xsl:text>
-    <xsl:text>&lb;\makeindex[name=poem,options=-s poem.ist,title=\GetTranslation{index-title-poem},columns=1]</xsl:text>
+    <xsl:text>&lb;\makeindex[name=poem,options=-s poem.ist,title=\GetTranslation{index-title-poem},columns=1</xsl:text>
+    <xsl:call-template name="rend:index-options"/>
+    <xsl:text>]</xsl:text>
     <xsl:text>&lb;\newcommand{\poemind}[3]{#1\tabto*{3cm}#2\tabto*{6cm}#3}&lb;</xsl:text>
     <xsl:call-template name="poem:translation-package-filecontents"/>
   </xsl:template>

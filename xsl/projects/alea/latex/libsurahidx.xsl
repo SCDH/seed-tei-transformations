@@ -11,6 +11,7 @@
   package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:xd="https://www.oxygenxml.com/ns/doc/xsl" xmlns:surah="http://scdh.wwu.de/transform/surah#"
+  xmlns:rend="http://scdh.wwu.de/transform/rend#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
   xmlns:index="http://scdh.wwu.de/transform/index#" xmlns:ref="http://scdh.wwu.de/transform/ref#"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" exclude-result-prefixes="#all"
@@ -26,6 +27,12 @@
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libi18n.xsl"
     package-version="1.0.0">
     <xsl:accept component="function" names="i18n:babel-language#1" visibility="private"/>
+  </xsl:use-package>
+
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/librend.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="template" names="rend:index-options" visibility="private"/>
   </xsl:use-package>
 
   <xsl:variable name="surah:bibl-scope-re" as="xs:string"
@@ -135,7 +142,9 @@
     <xsl:text>&lb;delim_2 "، "</xsl:text>
     <xsl:text>&lb;\end{filecontents}</xsl:text>
     <xsl:text>&lb;\newcommand{\surahind}[2]{#1\hspace{1em}#2}&lb;</xsl:text>
-    <xsl:text>&lb;\makeindex[name=surah,options=-s surah.ist,title=\GetTranslation{index-title-surah},columns=1]</xsl:text>
+    <xsl:text>&lb;\makeindex[name=surah,options=-s surah.ist,title=\GetTranslation{index-title-surah},columns=1</xsl:text>
+    <xsl:call-template name="rend:index-options"/>
+    <xsl:text>]</xsl:text>
     <xsl:call-template name="i18n:mk-package">
       <xsl:with-param name="namespace" select="'quran'"/>
       <xsl:with-param name="directory" select="resolve-uri('../html/locales/', static-base-uri())"/>
