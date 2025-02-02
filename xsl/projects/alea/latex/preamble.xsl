@@ -309,10 +309,10 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand*{\seedsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{\penalty -\@highpenalty}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{\penalty -\@medpenalty}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{\penalty -\@lowpenalty}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{\penalty 0}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{\penalty-1001}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{\penalty-501}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
 
     <!-- page headers -->
