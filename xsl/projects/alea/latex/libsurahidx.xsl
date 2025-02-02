@@ -155,7 +155,6 @@
   <xsl:template name="surah:print-index" visibility="public">
     <xsl:text>&lb;\indexprologue[\smallskip]{\hspace{1em}اسم السورة\tabto*{6cm}رقم الآية:\hspace{.5em}الصفحة}%</xsl:text>
     <xsl:text>&lb;\printindex[surah]</xsl:text>
-    <xsl:text>&lb;\indexprologue{}% reset prologue for the next printed index&lb;</xsl:text>
   </xsl:template>
 
 </xsl:package>

@@ -200,7 +200,6 @@
   <xsl:template name="poem:print-index" visibility="public">
     <xsl:text>&lb;\indexprologue[\smallskip]{\hspace{1em}القافية\tabto*{3cm}البحر\tabto*{6cm}عدد الأبيات:\hspace{.5em}الصفحة}%</xsl:text>
     <xsl:text>&lb;\printindex[poem]</xsl:text>
-    <xsl:text>&lb;\indexprologue{}% reset prologue for the next printed index&lb;</xsl:text>
   </xsl:template>
 
 </xsl:package>
