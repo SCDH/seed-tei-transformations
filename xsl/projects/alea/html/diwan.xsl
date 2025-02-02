@@ -219,9 +219,9 @@ target/bin/xslt.sh \
 
             <!-- use libwit in apparatus -->
             <xsl:template name="app:sigla">
-                <xsl:param name="wit" as="node()"/>
+                <xsl:param name="context" as="node()"/>
                 <xsl:call-template name="wit:sigla">
-                    <xsl:with-param name="wit" select="$wit"/>
+                    <xsl:with-param name="wit" select="$context/@wit"/>
                 </xsl:call-template>
             </xsl:template>
 
