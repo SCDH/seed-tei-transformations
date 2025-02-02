@@ -202,7 +202,8 @@ target/bin/xslt.sh \
     <xsl:call-template name="rend:latex-header-index"/>
     <xsl:call-template name="surah:latex-header"/>
     <xsl:call-template name="poem:latex-header"/>
-    <xsl:text>&lb;\indexsetup{othercode=\footnotesize}</xsl:text>
+    <xsl:text>&lb;\newcommand{\seedidxlevel}[1]{\large #1}</xsl:text>
+    <xsl:text>&lb;\indexsetup{othercode=\footnotesize,level=\subsection*,firstpagestyle=empty}</xsl:text>
 
 
     <!-- does not give footnotes in para
