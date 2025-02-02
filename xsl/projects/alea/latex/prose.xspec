@@ -102,7 +102,7 @@
     <x:scenario label="assert components">
         <x:context select="$tei-text"/>
         <x:expect label="critical apparatus on app"
-            test="matches(., 'des\s+\\edlabel\{d1.1.a1-start\}Dreiecks%\s+\\edtext\{\\edlabel\{d1.1.a1-end\}\}\{%\s+\\xxref\{d1.1.a1-start\}\{d1.1.a1-end\}\\lemma\{Dreiecks\}\\Afootnote\{\{n-Ecks\\appsep\{rdg-siglum-sep\}\\wit\{\\sigla\{\}\}\}\}\}%')"/>
+            test="matches(., 'des\s+\\edlabel\{d1.1.a1-start\}Dreiecks%\s+\\edtext\{\\edlabel\{d1.1.a1-end\}\}\{%\s+\\xxref\{d1.1.a1-start\}\{d1.1.a1-end\}\\lemma\{Dreiecks\}\\Afootnote\{\{n-Ecks\}\}\}%')"/>
         <x:expect label="critical apparatus on sic"
             test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}Paralellen%\s+\\edtext\{\\edlabel\{[a-zA-Z0-9]+-end\}\}\{%\s+\\xxref\{[a-zA-Z0-9]+-start\}\{[a-zA-Z0-9]+-end\}\\lemma\{Paralellen\}\\Afootnote\{\\apptranslate\{sic\}\}\}%&#xa;\s*\{\}\s*,')"/>
         <x:expect label="editorial note" test="matches(., '\\Bfootnote\{\\appnote\{Genaus!\}\}')"/>

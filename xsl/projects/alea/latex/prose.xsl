@@ -165,12 +165,18 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <!-- use libwit in apparatus -->
       <xsl:template name="app:sigla">
-        <xsl:param name="wit" as="node()"/>
+        <xsl:param name="context" as="node()"/>
         <xsl:call-template name="wit:sigla">
-          <xsl:with-param name="wit" select="$wit"/>
+          <xsl:with-param name="wit" select="$context/@wit"/>
         </xsl:call-template>
       </xsl:template>
 
+      <!-- only print sigla, if there are at least two witnesses -->
+      <xsl:function name="app:prints-sigla" as="xs:boolean">
+        <xsl:param name="context" as="node()"/>
+        <xsl:sequence
+          select="root($context)/TEI/teiHeader/fileDesc/sourceDesc//listWit/witness => count() gt 1"/>
+      </xsl:function>
 
       <!-- correct parens and brackets -->
       <xsl:template mode="app:reading-text" match="text()">
