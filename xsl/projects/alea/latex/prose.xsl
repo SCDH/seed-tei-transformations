@@ -43,6 +43,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
   <!-- whether or not to print out the indexes -->
   <xsl:param name="print-indexes" as="xs:boolean" select="true()"/>
 
+  <!-- pagestyle of first content page (after \maketitle if used) -->
+  <xsl:param name="first-page-style" as="xs:string" select="'empty'"/>
 
   <xsl:variable name="current" as="node()*" select="root()"/>
 
@@ -175,7 +177,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:function name="app:prints-sigla" as="xs:boolean">
         <xsl:param name="context" as="node()"/>
         <xsl:sequence
-          select="root($context)/TEI/teiHeader/fileDesc/sourceDesc//listWit/witness => count() gt 1"/>
+          select="root($context)/TEI/teiHeader/fileDesc/sourceDesc//listWit/witness => count() gt 1"
+        />
       </xsl:function>
 
       <!-- correct parens and brackets -->
@@ -433,7 +436,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;\setlength{\lineskiplimit}{-100pt}</xsl:text>
 
     <xsl:call-template name="latex-front"/>
-    <xsl:text>&lb;&lb;\selectlanguage{arabic}</xsl:text>
+    <xsl:text>&lb;&lb;\selectlanguage{</xsl:text>
+    <xsl:value-of select="i18n:language(/TEI/@xml:lang) => i18n:babel-language()"/>
+    <xsl:text>}</xsl:text>
+
+    <xsl:text>&lb;&lb;\thispagestyle{</xsl:text>
+    <xsl:value-of select="$first-page-style"/>
+    <xsl:text>}</xsl:text>
+
     <xsl:text>&lb;&lb;%% main content</xsl:text>
     <xsl:apply-templates mode="text:text" select="/TEI/text/body"/>
     <xsl:text>&lb;</xsl:text>
