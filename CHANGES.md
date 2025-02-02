@@ -1,5 +1,19 @@
 # Changes
 
+## dev
+
+- function `app:prints-sigla($context as node()) as xs:boolean` that decides if sigla are to be printed
+- changed signature of named template `app:sigla`
+- new package `xsl/latex/libpreamble.xsl`:
+  - named template `preamble:preamble` (abstract) for generating a preamble without document class
+  - named template `preamble:header` for generating a preamble with a
+    document class, with buisness logic for full preamble, or a
+    preamble for subfile for a mainfile/subfiles setup based on LaTeX
+    package `subfiles`
+  - named template `preamble:mainfile` for generating a mainfile in a
+    subfiles/mainfile setup
+- `xsl/projects/alea/latex/prose.xsl` ready for production
+
 ## 0.14.2-8
 
 - fixed deployment workflow on github
