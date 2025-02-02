@@ -24,6 +24,12 @@
   <!-- style file for indexes, passed in as ',options=-s myindex.ist' -->
   <xsl:param name="rend:index-styles" as="xs:string?" select="()" required="false"/>
 
+  <!-- options to \makeindex -->
+  <xsl:param name="rend:index-options" as="xs:string*" select="tokenize($rend:index-options-csv)"/>
+
+  <!-- options to \makeindex, comma separated values -->
+  <xsl:param name="rend:index-options-csv" as="xs:string" select="''"/>
+
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libreledmac.xsl"
     package-version="1.0.0"/>
@@ -198,6 +204,15 @@
     </xsl:for-each>
   </xsl:function>
 
+  <!-- generate options for \makeindex based on $rend:index-options -->
+  <xsl:template name="rend:index-options" visibility="final">
+    <xsl:for-each select="$rend:index-options">
+      <xsl:if test="position() gt 1 or $rend:index-styles">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:value-of select="."/>
+    </xsl:for-each>
+  </xsl:template>
 
   <!-- contributions to the latex prologue -->
   <xsl:template name="rend:latex-header-index" visibility="public">
@@ -215,6 +230,7 @@
         <xsl:text>,options=-s </xsl:text>
         <xsl:value-of select="$rend:index-styles"/>
       </xsl:if>
+      <xsl:call-template name="rend:index-options"/>
       <xsl:text>]</xsl:text>
     </xsl:for-each>
     <xsl:text>&lb;&lb;</xsl:text>

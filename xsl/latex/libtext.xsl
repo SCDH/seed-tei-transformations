@@ -46,6 +46,7 @@
     <xsl:accept component="mode" names="rend:*" visibility="public"/>
     <xsl:accept component="function" names="*" visibility="public"/>
     <xsl:accept component="template" names="*" visibility="public"/>
+    <xsl:accept component="variable" names="*" visibility="public"/>
 
     <xsl:override>
 
