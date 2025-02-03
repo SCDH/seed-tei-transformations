@@ -230,7 +230,10 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\Xarrangement{paragraph}</xsl:text>
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
-    <xsl:text>&lb;\Xsymlinenum{ | }</xsl:text>
+    <xsl:text>&lb;\Xafternumber{.5em plus.4em minus.4em}% default value 0.5em</xsl:text>
+    <xsl:text>&lb;\Xafternote{1em plus.4em minus.9em} % important</xsl:text>
+    <xsl:text>&lb;\Xbhooknote{\linebreak[1]}% important for getting spacing right</xsl:text>
+    <xsl:text>&lb;\Xsymlinenum{|}% not working: {\penalty10000|\linebreak[1]}</xsl:text>
     <xsl:text>&lb;\Xlemmaseparator{\arabiccbracket}</xsl:text>
     <xsl:text>&lb;\Xlemmafont{\normalfont}</xsl:text>
     <!--xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
