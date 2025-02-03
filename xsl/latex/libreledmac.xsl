@@ -56,7 +56,8 @@
         <xsl:text>&lb;\pstart</xsl:text>
         <xsl:if test="not(empty(($edmac:pstart-opt, $optional, edmac:pstart-bidi-macro(.))))">
             <xsl:text>[</xsl:text>
-            <xsl:value-of select="($edmac:pstart-opt, $optional, edmac:pstart-bidi-macro(.)) => string-join()"/>
+            <xsl:value-of
+                select="($edmac:pstart-opt, $optional, edmac:pstart-bidi-macro(.)) => string-join()"/>
             <xsl:text>]</xsl:text>
         </xsl:if>
         <!-- to end macro, instead of {} -->
@@ -499,7 +500,7 @@
     <!--
         A function for normalizing latex output from a block element.
 
-        If stylesheet parameter edmac:normalization is set to 'space' then:
+        If the second parameter mode is set to 'space' then:
 
         Leading space is stripped.
         Trailing space is stripped.
@@ -507,10 +508,11 @@
         Multiple spaces are shrinked to a single space.
         Linebreaks are replaced by ASCII SP, unless ending a comment.
     -->
-    <xsl:function name="edmac:normalize" as="xs:string" visibility="public">
+    <xsl:function name="edmac:normalize" as="xs:string" visibility="final">
         <xsl:param name="latex" as="xs:string*"/>
+        <xsl:param name="mode" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="$edmac:normalization eq 'space'">
+            <xsl:when test="$mode eq 'space'">
                 <!--
                     Since we do not have (negative) lookahead,
                     we cannot use replace() to remove trailing newlines but them in case of keep comments.
@@ -553,6 +555,15 @@
                 <xsl:sequence select="string-join($latex)"/>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:function>
+
+    <!-- A function for normalizing latex output from a block element.
+        This function passes the stylesheet parameter edmac:normalization
+        as the second argument to edmac:normalize#2.
+    -->
+    <xsl:function name="edmac:normalize" as="xs:string" visibility="final">
+        <xsl:param name="latex" as="xs:string*"/>
+        <xsl:sequence select="edmac:normalize($latex, $edmac:normalization)"/>
     </xsl:function>
 
     <xsl:function name="edmac:keep-comment-end" as="xs:string" visibility="private">
