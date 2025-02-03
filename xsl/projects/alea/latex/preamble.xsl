@@ -247,6 +247,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
     <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\foreignlanguage{english}{#1}}}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
+    <xsl:text>&lb;\newcommand*{\pbnomark}[1]{\ledinnernote{\foreignlanguage{english}{#1}}\ignorespaces}</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{{\normalfont\arabicobracket{}}#1{\normalfont\arabiccbracket{}}}}</xsl:text>
@@ -267,8 +268,7 @@ target/bin/xslt.sh \
     <xsl:call-template name="verse:latex-header"/>
     <xsl:text>&lb;\AtEveryStanza{%</xsl:text>
     <xsl:text>&lb;  \let\oldpb\pb%</xsl:text>
-    <xsl:text>&lb;  \let\pb\innernoteenglish%</xsl:text>
-    <xsl:text>&lb;  }</xsl:text>
+    <xsl:text>&lb;  \let\pb\pbnomark}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\AtStartEveryStanza{\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\newverse\relax\lednopb}</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
