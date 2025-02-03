@@ -246,7 +246,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
     <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
     <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\foreignlanguage{english}{#1}}}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\pb}[1]{ {\normalfont |}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{{\normalfont|}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
     <xsl:text>&lb;\newcommand*{\pbnomark}[1]{\ledinnernote{\foreignlanguage{english}{#1}}\ignorespaces}</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
