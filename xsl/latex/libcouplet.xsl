@@ -48,7 +48,7 @@
           <xsl:apply-templates select="*[descendant::caesura[not(ancestor::rdg | ancestor::note)]]"
             mode="before-caesura"/>
         </xsl:variable>
-        <xsl:value-of select="edmac:normalize($first)"/>
+        <xsl:value-of select="edmac:normalize($first, 'space')"/>
         <xsl:text>}{</xsl:text>
         <xsl:variable name="second" as="xs:string*">
           <!-- second hemistich -->
@@ -60,7 +60,7 @@
             select="node() intersect descendant::caesura[not(ancestor::rdg | ancestor::note)]/following::node() except verse:non-lemma-nodes(.)"
           />
         </xsl:variable>
-        <xsl:value-of select="edmac:normalize($second)"/>
+        <xsl:value-of select="edmac:normalize($second, 'space')"/>
         <!-- end label and hook on l -->
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-end'"/>
