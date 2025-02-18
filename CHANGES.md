@@ -1,5 +1,9 @@
 # Changes
 
+## dev
+
+- evaluate `rendition/@scope`
+
 ## 0.15.0
 
 - function `app:prints-sigla($context as node()) as xs:boolean` that decides if sigla are to be printed
