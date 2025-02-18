@@ -168,6 +168,69 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
+
+            <xsl:template match="choice[child::orig and child::reg]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="choice-with-orig-and-reg">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | reg"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="orig[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="orig">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="reg[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="reg">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+
+            <xsl:template match="choice[child::abbr and child::expan]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="choice-with-abbr-and-expan">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | expan"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="abbr[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="abbr">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <xsl:template match="expan[not(parent::choice)]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="expan">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@* | node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+
             <xsl:template match="supplied[not(parent::choice)]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="supplied">
