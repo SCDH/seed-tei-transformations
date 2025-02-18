@@ -20,6 +20,8 @@
                         <rendition xml:id="it" scheme="css">font-style: italics</rendition>
                         <rendition xml:id="sup" scheme="latex">\superscript</rendition>
                         <rendition selector=".sup" scheme="css">vertical-align: super</rendition>
+                        <rendition xml:id="quote-before" scheme="css" scope="before">content:
+                            "»";</rendition>
                     </tagsDecl>
                 </encodingDesc>
             </teiHeader>
@@ -71,8 +73,14 @@
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="no CSS style elements, but from tagsDecl" test="count(/html/head/style)"
             select="1"/>
-        <x:expect label="CSS from tagsDecl"
-            test="/html/head/style ! matches(., '\s*\.it\s\{\sfont-style:\sitalics\s\}\s*\.sup\s\{\svertical-align:\ssuper\s\}\s*')"/>
+        <x:expect label="CSS from tagsDecl makes class from xml:id"
+            test="/html/head/style ! matches(., '\.it\s\{\sfont-style:\sitalics\s\}')"/>
+        <x:expect label="CSS from tagsDecl evaluates @selector"
+            test="/html/head/style ! matches(., '\.sup\s\{\svertical-align:\ssuper\s\}')"/>
+        <x:expect label="CSS from tagsDecl does not have latex scheme"
+            test="/html/head/style ! not(matches(., '\\superscript'))"/>
+        <x:expect label="CSS from tagsDecl evaluates @scope"
+            test="/html/head/style ! matches(., '\.quote-before::before\s+\{\s+content:[^;]+;\s\}')"/>
         <x:expect label="no CSS links"
             test="not(exists(/html/head/link[@rel eq 'stylesheet' and @type eq 'text/css']))"/>
         <x:expect label="no info about CSS not available"

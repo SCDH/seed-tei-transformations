@@ -334,6 +334,7 @@ Note, that the default mode is html:html!
   <xsl:template mode="html:css" match="rendition[@selector]">
     <xsl:text>&#xa;</xsl:text>
     <xsl:value-of select="@selector"/>
+    <xsl:apply-templates mode="html:css" select="@scope"/>
     <xsl:text> { </xsl:text>
     <xsl:value-of select="text()"/>
     <xsl:text> } </xsl:text>
@@ -342,12 +343,18 @@ Note, that the default mode is html:html!
   <xsl:template mode="html:css" match="rendition[@xml:id and not(@selector)]">
     <xsl:text>&#xa;.</xsl:text>
     <xsl:value-of select="@xml:id"/>
+    <xsl:apply-templates mode="html:css" select="@scope"/>
     <xsl:text> { </xsl:text>
     <xsl:value-of select="text()"/>
     <xsl:text> } </xsl:text>
   </xsl:template>
 
   <xsl:template mode="html:css" match="rendition[empty(node())]" priority="10"/>
+
+  <xsl:template mode="html:css" match="@scope">
+    <xsl:text>::</xsl:text>
+    <xsl:value-of select="."/>
+  </xsl:template>
 
 
 </xsl:package>
