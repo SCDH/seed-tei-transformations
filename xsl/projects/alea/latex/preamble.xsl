@@ -335,6 +335,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\fancyhead[CO]{\normalfont\small\leftmark}</xsl:text>
     <xsl:text>&lb;\fancyhead[LE,RO]{\normalfont\small\foreignlanguage{arabic}{\thepage}}</xsl:text>
     <xsl:text>&lb;\renewcommand\headrulewidth{0pt}</xsl:text>
+    <xsl:text>&lb;\fancypagestyle{plain}{\fancyhf{}}% reset page style plain which is issued by \chapter etc.</xsl:text>
 
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
