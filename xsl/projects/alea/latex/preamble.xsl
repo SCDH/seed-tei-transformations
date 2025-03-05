@@ -327,6 +327,14 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
 
+    <!-- set style section titles, non-reledmac -->
+    <xsl:text>&lb;\usepackage{titlesec}</xsl:text>
+    <xsl:text>&lb;\titleformat{\chapter}{\Large\normalfont}{}{0pt}{}{}</xsl:text>
+    <xsl:text>&lb;\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
+    <xsl:text>&lb;\titlespacing*{\section}{0pt}{*2}{*0}</xsl:text>
+    <xsl:text>&lb;\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
+    <xsl:text>&lb;\titlespacing*{\subsection}{0pt}{*2}{*0}</xsl:text>
+
     <!-- page headers -->
     <xsl:text>&lb;\usepackage{fancyhdr}</xsl:text>
     <xsl:text>&lb;\pagestyle{fancy}</xsl:text>
