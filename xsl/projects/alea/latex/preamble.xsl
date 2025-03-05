@@ -133,7 +133,7 @@ target/bin/xslt.sh \
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},hmargin={23mm,23mm},vmargin={19.5mm,21mm},heightrounded=true]{geometry}% top=19.5mm,textheight=\LinesXXV</xsl:text>
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,vmargin={19.5mm,21mm},heightrounded=true]{geometry}% top=19.5mm,textheight=\LinesXXV</xsl:text>
     <xsl:text>&lb;\addtolength{\headsep}{3mm}</xsl:text>
 
     <xsl:if test="$debug-latex">
