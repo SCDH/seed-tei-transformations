@@ -333,7 +333,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\fancyhf{}</xsl:text>
     <xsl:text>&lb;\fancyhead[CE]{\normalfont\small\rightmark}</xsl:text>
     <xsl:text>&lb;\fancyhead[CO]{\normalfont\small\leftmark}</xsl:text>
-    <xsl:text>&lb;\fancyhead[LE,RO]{\normalfont\small\thepage}</xsl:text>
+    <xsl:text>&lb;\fancyhead[LE,RO]{\normalfont\small\foreignlanguage{arabic}{\thepage}}</xsl:text>
     <xsl:text>&lb;\renewcommand\headrulewidth{0pt}</xsl:text>
 
 
