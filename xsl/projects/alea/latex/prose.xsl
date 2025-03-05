@@ -430,8 +430,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <!--xsl:text>&lb;\pagenumbering{arabicnum}</xsl:text-->
 
-    <!-- Durchschuss -->
-    <xsl:text>&lb;\setlength{\baselineskip}{26pt}</xsl:text>
+    <!-- Durchschuss: fontsize 19->26pt, 20->28pt -->
+    <xsl:text>&lb;\setlength{\baselineskip}{28pt}</xsl:text>
     <!-- negative lineskiplimit fixes the baselineskip (no glue) -->
     <xsl:text>&lb;\setlength{\lineskiplimit}{-100pt}</xsl:text>
 
