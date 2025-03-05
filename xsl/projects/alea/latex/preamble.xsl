@@ -125,12 +125,20 @@ target/bin/xslt.sh \
     <xsl:value-of select="$fontsize"/>
     <xsl:text>]{fontsize}</xsl:text>
 
-    <!-- typearea of the books in the ALEA series -->
-    <xsl:text>&lb;\usepackage[text={113mm,185mm}]{geometry}</xsl:text>
+    <xsl:text>&lb;%\usepackage{calc}</xsl:text>
+    <xsl:text>&lb;\setlength{\baselineskip}{26pt}% does not work here. Put this to inside document environment!</xsl:text>
+    <xsl:text>&lb;%\newlength{\LinesXXV}% height of 25 lines</xsl:text>
+    <xsl:text>&lb;%\setlength{\LinesXXV}{\topsep}</xsl:text>
+    <xsl:text>&lb;%\addtolength{\LinesXXV}{24\baselineskip}</xsl:text>
 
+    <!-- typearea of the books in the ALEA series -->
+    <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},hmargin={23mm,23mm},vmargin={19.5mm,21mm},heightrounded=true]{geometry}% top=19.5mm,textheight=\LinesXXV</xsl:text>
+    <xsl:text>&lb;\addtolength{\headsep}{3mm}</xsl:text>
 
     <xsl:if test="$debug-latex">
-      <xsl:text>&lb;\usepackage{showframe}</xsl:text>
+      <xsl:text>&lb;\usepackage{fgruler}</xsl:text>
+      <xsl:text>&lb;%\usepackage{showframe}</xsl:text>
     </xsl:if>
 
     <!-- input encoding -->
