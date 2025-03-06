@@ -44,6 +44,9 @@ target/bin/xslt.sh \
   <!-- the options to the documentclass -->
   <xsl:param name="preamble:class-options" as="xs:string?" select="()"/>
 
+  <!-- whether a table of contents is to be generated -->
+  <xsl:param name="preamble:toc" as="xs:boolean" select="false()" required="false"/>
+
 
   <!-- make preamble based on whether external header files or a mainfile is provided -->
   <xsl:template name="preamble:header" visibility="final">
@@ -89,6 +92,9 @@ target/bin/xslt.sh \
 
     <xsl:text>&lb;\begin{document}</xsl:text>
     <xsl:call-template name="preamble:maketitle"/>
+    <xsl:if test="$preamble:toc">
+      <xsl:text>&lb;&lb;\tableofcontents%&lb;&lb;</xsl:text>
+    </xsl:if>
     <xsl:for-each select="$preamble:subfiles">
       <xsl:text>&lb;\subfile{</xsl:text>
       <xsl:value-of select=". => replace('\.tex$', '')"/>
