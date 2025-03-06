@@ -150,7 +150,8 @@
         <xsl:apply-templates mode="rend:hook-behind" select="."/>
       </xsl:template>
 
-      <xsl:template match="(div | div1 | div2 | div3 | div4 | div5 | div6 | div7)/text()[normalize-space() eq '']"/>
+      <xsl:template
+        match="(div | div1 | div2 | div3 | div4 | div5 | div6 | div7)/text()[normalize-space() eq '']"/>
 
       <xsl:template match="p">
         <xsl:apply-templates mode="rend:hook-ahead" select="."/>
