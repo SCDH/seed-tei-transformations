@@ -335,6 +335,9 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
     <xsl:text>&lb;\titlespacing*{\subsection}{0pt}{*2}{*0}</xsl:text>
 
+    <!-- to which level section titles go into the table of contents -->
+    <xsl:text>&lb;&lb;\setcounter{secnumdepth}{0}% chapters only</xsl:text>
+
     <!-- page headers -->
     <xsl:text>&lb;\usepackage{fancyhdr}</xsl:text>
     <xsl:text>&lb;\pagestyle{fancy}</xsl:text>
