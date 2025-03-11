@@ -523,8 +523,8 @@
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsubsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsubsubsectionfont{#2}%</xsl:text>
-    <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;  \ifnum 3>\value{tocdepth}\relax\else%</xsl:text>
+    <xsl:text>&lb;    \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsubsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsubsection}{#1}}%</xsl:text>
     <xsl:text>&lb;  \fi%</xsl:text>
