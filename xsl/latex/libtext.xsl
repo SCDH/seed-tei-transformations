@@ -475,6 +475,7 @@
   <xsl:template name="text:latex-header-workaround36" visibility="public">
     <xsl:text>&lb;\makeatletter%</xsl:text>
     <xsl:text>&lb;\@ifpackageloaded{ifthen}{}{\usepackage{ifthen}}%</xsl:text>
+    <xsl:text>&lb;\@ifpackageloaded{suffix}{}{\usepackage{suffix}}%</xsl:text>
     <xsl:text>&lb;\@ifpackageloaded{nowidow}{}{\usepackage{nowidow}}%</xsl:text>
     <xsl:text>&lb;% Note: skips around section commands must be outside \pstart...\pend!</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedchapterbeforeskip}{\penalty -\@highpenalty \vspace{-3.5ex \@plus -1ex \@minus -.2ex}}</xsl:text>
@@ -490,7 +491,10 @@
     <xsl:text>&lb;\newcommand*{\seedsubsectionfont}[1]{\large #1}</xsl:text>
     <xsl:text>&lb;\newcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;%% redefining reledmac's sectioning commands to workaround issue #36</xsl:text>
-    <xsl:text>&lb;\renewcommand{\eledchapter}[2][]{%</xsl:text>
+    <xsl:text>&lb;%% redefinition of macros changed with \WithSuffix\... is complicated, see</xsl:text>
+    <xsl:text>&lb;%% https://tex.stackexchange.com/questions/59879/suffix-package-cannot-redefine-a-suffixed-macro</xsl:text>
+    <xsl:text>&lb;\expandafter\renewcommand\expandafter</xsl:text>
+    <xsl:text>&lb;{\csname\NoSuffixName\eledchapter\endcsname}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedchapterfont{#2}%</xsl:text>
     <!-- evaluate tocdepth: TODO: test if chapter is defined and adjust level value -->
     <xsl:text>&lb;  \ifnum 0>\value{tocdepth}\relax\else%</xsl:text>
@@ -498,6 +502,11 @@
     <xsl:text>&lb;      \addcontentsline{toc}{chapter}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{chapter}{#1}}%</xsl:text>
     <xsl:text>lb;   \fi%</xsl:text>
+    <xsl:text>&lb;  \penalty 10000%</xsl:text>
+    <xsl:text>&lb;  \@afterheading%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+    <xsl:text>&lb;\WithSuffix\renewcommand\eledchapter*[2][]{%</xsl:text>
+    <xsl:text>&lb;  \seedchapterfont{#2}%</xsl:text>
     <xsl:text>&lb;  \penalty 10000%</xsl:text>
     <xsl:text>&lb;  \@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
