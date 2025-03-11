@@ -88,9 +88,30 @@
         </xsl:apply-templates>
         <xsl:text>\eled</xsl:text>
         <xsl:value-of select="$text:section-levels[$level]"/>
-        <xsl:text>[</xsl:text>
-        <xsl:apply-templates mode="text:text-only"/>
-        <xsl:text>]{</xsl:text>
+        <xsl:choose>
+          <!-- if <head> has a pi-child <?latex-starred-section?>, then make a starred section -->
+          <xsl:when test="processing-instruction('latex-starred-section')">*</xsl:when>
+          <!-- if <head> has a pi-child <?latex-opt ...?>, then make an optional argument from it -->
+          <xsl:when test="processing-instruction('latex-opt')">
+            <xsl:text>[</xsl:text>
+            <xsl:value-of select="processing-instruction('latex-opt')"/>
+            <xsl:text>]</xsl:text>
+          </xsl:when>
+          <!-- if there is an alternative head, then the toc entry and column mark are made from it. -->
+          <xsl:when test="following-sibling::head[@type eq 'alt']">
+            <xsl:text>[</xsl:text>
+            <xsl:apply-templates mode="text:text-only"
+              select="following-sibling::head[@type eq 'alt']/node()"/>
+            <xsl:text>]</xsl:text>
+          </xsl:when>
+          <!-- per default, a text-only representation of the head's contents are written to the toc. -->
+          <xsl:otherwise>
+            <xsl:text>[</xsl:text>
+            <xsl:apply-templates mode="text:text-only"/>
+            <xsl:text>]</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>{</xsl:text>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
@@ -111,6 +132,9 @@
           <xsl:with-param name="level" as="xs:integer" select="$level" tunnel="true"/>
         </xsl:apply-templates>
       </xsl:template>
+
+      <!-- <head type="alt"> is NOT rendered, but used as alternative section head, see above! -->
+      <xsl:template match="head[@type eq 'alt']"/>
 
       <xsl:template mode="rend:hook-ahead" match="head">
         <xsl:param name="level" as="xs:integer" select="0" tunnel="true"/>
