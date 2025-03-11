@@ -468,8 +468,8 @@
     <xsl:text>&lb;%% redefining reledmac's sectioning commands to workaround issue #36</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledchapter}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedchapterfont{#2}%</xsl:text>
-    <!-- evaluate secnumdepth: TODO: test if chapter is defined and adjust level value -->
-    <xsl:text>&lb;  \ifnum 0>\value{secnumdepth}\relax\else%</xsl:text>
+    <!-- evaluate tocdepth: TODO: test if chapter is defined and adjust level value -->
+    <xsl:text>&lb;  \ifnum 0>\value{tocdepth}\relax\else%</xsl:text>
     <xsl:text>&lb;    \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{chapter}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{chapter}{#1}}%</xsl:text>
@@ -479,7 +479,7 @@
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsectionfont{#2}%</xsl:text>
-    <xsl:text>&lb;  \ifnum 1>\value{secnumdepth}\relax\else%</xsl:text>
+    <xsl:text>&lb;  \ifnum 1>\value{tocdepth}\relax\else%</xsl:text>
     <xsl:text>&lb;    \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{section}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{section}{#1}}%</xsl:text>
@@ -489,7 +489,7 @@
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsubsectionfont{#2}%</xsl:text>
-    <xsl:text>&lb;  \ifnum 2>\value{secnumdepth}\relax\else%</xsl:text>
+    <xsl:text>&lb;  \ifnum 2>\value{tocdepth}\relax\else%</xsl:text>
     <xsl:text>&lb;    \ifthenelse{\equal{#1}{}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsection}{#1}}%</xsl:text>
@@ -500,7 +500,7 @@
     <xsl:text>&lb;\renewcommand{\eledsubsubsection}[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedsubsubsectionfont{#2}%</xsl:text>
     <xsl:text>&lb;  \ifthenelse{\equal{#1}{}}{%</xsl:text>
-    <xsl:text>&lb;  \ifnum 3>\value{secnumdepth}\relax\else%</xsl:text>
+    <xsl:text>&lb;  \ifnum 3>\value{tocdepth}\relax\else%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsubsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsubsection}{#1}}%</xsl:text>
     <xsl:text>&lb;  \fi%</xsl:text>
