@@ -351,6 +351,10 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand{\sectionmark}[1]{}</xsl:text>
     <xsl:text>&lb;\fancypagestyle{plain}{\fancyhf{}}% reset page style plain which is issued by \chapter etc.</xsl:text>
 
+    <xsl:text>&lb;% let \cleardoublepage amke empty pages</xsl:text>
+    <xsl:text>&lb;\let\origcleardoublepage\cleardoublepage</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\cleardoublepage}{\clearpage</xsl:text>
+    <xsl:text>&lb;  {\thispagestyle{empty}\origcleardoublepage}}</xsl:text>
 
     <xsl:text>&lb;\setlength{\emergencystretch}{3em}</xsl:text>
   </xsl:template>
