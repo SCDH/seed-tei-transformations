@@ -451,6 +451,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;</xsl:text>
 
     <xsl:if test="$print-indexes">
+      <xsl:text>&lb;\cleardoublepage</xsl:text>
+      <xsl:text>&lb;\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}</xsl:text>
+      <xsl:text>&lb;\addcontentsline{toc}{chapter}{Register}</xsl:text>
       <xsl:call-template name="surah:print-index"/>
       <xsl:call-template name="poem:print-index"/>
       <xsl:call-template name="rend:print-indices"/>
