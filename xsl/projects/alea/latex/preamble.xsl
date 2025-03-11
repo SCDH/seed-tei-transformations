@@ -339,6 +339,11 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
     <xsl:text>&lb;\titlespacing*{\subsection}{0pt}{*2}{*0}</xsl:text>
 
+    <!-- using titlesec means, that titletoc is to be used instead of tocloft -->
+    <xsl:text>&lb;\usepackage{titletoc}</xsl:text>
+    <xsl:text>&lb;\titlecontents{chapter}[0pt]{}{}{}{\titlerule*[1pc]{.}\contentspage}</xsl:text>
+    <xsl:text>&lb;\titlecontents{section}[15pt]{}{}{}{\titlerule*[1pc]{.}\contentspage}</xsl:text>
+
     <!-- page headers -->
     <xsl:text>&lb;\usepackage{fancyhdr}</xsl:text>
     <xsl:text>&lb;\pagestyle{fancy}</xsl:text>
