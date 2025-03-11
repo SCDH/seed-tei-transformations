@@ -251,7 +251,11 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\Xbhookgroup{\textdir TRT}</xsl:text>
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
-    <xsl:text>&lb;\setcounter{secnumdepth}{0}</xsl:text>
+
+    <!-- to which level section titles go into the table of contents -->
+    <xsl:text>&lb;&lb;\setcounter{secnumdepth}{-1}% chapters only</xsl:text>
+    <xsl:text>&lb;\setcounter{tocdepth}{0}% toc entries only to chapter level</xsl:text>
+
     <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
     <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\foreignlanguage{english}{#1}}}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\pb}[1]{{\normalfont|}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
@@ -334,9 +338,6 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\titlespacing*{\section}{0pt}{*2}{*0}</xsl:text>
     <xsl:text>&lb;\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
     <xsl:text>&lb;\titlespacing*{\subsection}{0pt}{*2}{*0}</xsl:text>
-
-    <!-- to which level section titles go into the table of contents -->
-    <xsl:text>&lb;&lb;\setcounter{secnumdepth}{0}% chapters only</xsl:text>
 
     <!-- page headers -->
     <xsl:text>&lb;\usepackage{fancyhdr}</xsl:text>
