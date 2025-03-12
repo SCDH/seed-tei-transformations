@@ -125,20 +125,43 @@ target/bin/xslt.sh \
     <xsl:value-of select="$fontsize"/>
     <xsl:text>]{fontsize}</xsl:text>
 
+    <xsl:text>&lb;%% calculate the height of a arabic letters from very high examples</xsl:text>
+    <xsl:text>&lb;\AtBeginDocument{</xsl:text>
+    <xsl:text>&lb;  \newlength{\ArabicCharHeight}</xsl:text>
+    <xsl:text>&lb;  \settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ}}% height from lam + wasla + shadda</xsl:text>
+    <xsl:text>&lb;  \setlength{\topskip}{\ArabicCharHeight}</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+
     <xsl:text>&lb;%\usepackage{calc}</xsl:text>
-    <xsl:text>&lb;\setlength{\baselineskip}{26pt}% does not work here. Put this to inside document environment!</xsl:text>
-    <xsl:text>&lb;%\newlength{\LinesXXV}% height of 25 lines</xsl:text>
-    <xsl:text>&lb;%\setlength{\LinesXXV}{\topsep}</xsl:text>
-    <xsl:text>&lb;%\addtolength{\LinesXXV}{24\baselineskip}</xsl:text>
+    <xsl:text>&lb;%% setting \baeslineskip does not work here. Put this to inside document environment!</xsl:text>
+    <xsl:text>&lb;%\addtolength{\topskip}{4pt}</xsl:text>
+    <xsl:text>&lb;\newlength{\ergonlineskip}% baselineskip in normalfont text</xsl:text>
+    <xsl:text>&lb;\setlength{\ergonlineskip}{26pt}%</xsl:text>
+    <xsl:text>&lb;\setlength{\baselineskip}{\ergonlineskip}</xsl:text>
+    <xsl:text>&lb;\newlength{\LinesXXV}% height of 25 lines</xsl:text>
+    <xsl:text>&lb;\setlength{\LinesXXV}{\topsep}%</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesXXV}{21\ergonlineskip}</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesXXV}{-5mm}</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,vmargin={19.5mm,21mm},heightrounded=true]{geometry}% top=19.5mm,textheight=\LinesXXV</xsl:text>
-    <xsl:text>&lb;\addtolength{\headsep}{3mm}</xsl:text>
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=19.5mm,textheight=\LinesXXV]{geometry}% top=19.5mm,textheight=\LinesXXV</xsl:text>
+    <xsl:text>&lb;%\addtolength{\headsep}{3mm}</xsl:text>
+
+    <xsl:if test="$debug-latex">
+      <!-- draw the baseline for the first line -->
+      <xsl:text>&lb;\usepackage[placement=top]{background}</xsl:text>
+      <xsl:text>&lb;\SetBgScale{1}</xsl:text>
+      <xsl:text>&lb;\SetBgAngle{0}</xsl:text>
+      <xsl:text>&lb;\SetBgColor{red}</xsl:text>
+      <xsl:text>&lb;\SetBgContents{\rule{\paperwidth}{.4pt}}</xsl:text>
+      <xsl:text>&lb;\SetBgHshift{\textwidth}</xsl:text>
+      <xsl:text>&lb;\SetBgVshift{-19.5mm+.4pt-\topskip}% top parameter from geometry, line thickness, topskip to get baseline of first line</xsl:text>
+    </xsl:if>
 
     <xsl:if test="$debug-latex">
       <xsl:text>&lb;\usepackage{fgruler}</xsl:text>
-      <xsl:text>&lb;%\usepackage{showframe}</xsl:text>
+      <xsl:text>&lb;\usepackage{showframe}</xsl:text>
     </xsl:if>
 
     <!-- input encoding -->
