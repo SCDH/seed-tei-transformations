@@ -52,8 +52,11 @@ target/bin/xslt.sh \
   <!-- the baselineskip -->
   <xsl:param name="baselineskip" as="xs:string" select="'28pt'"/>
 
-  <!-- the count of lines on a page -->
+  <!-- the count of lines on a page minus one -->
   <xsl:param name="lines" as="xs:integer" select="21"/>
+
+  <!-- correction of textheight after evaluating  \topskip+$lines*\baselineskip -->
+  <xsl:param name="textheight-correction" as="xs:string" select="'-5mm'"/>
 
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
   <xsl:param name="tatweel-times" as="xs:integer" select="8" required="false"/>
@@ -156,7 +159,9 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
     <xsl:value-of select="$lines"/>
     <xsl:text>\aleabaselineskip}% N-1 lines</xsl:text>
-    <xsl:text>&lb;\addtolength{\LinesN}{-5mm}% TODO: Why is this required? font bug?</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
+    <xsl:value-of select="$textheight-correction"/>
+    <xsl:text>}% TODO: Why is this required? font bug?</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
