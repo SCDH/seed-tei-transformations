@@ -49,6 +49,12 @@ target/bin/xslt.sh \
   <!-- additional font features, e.g. AutoFakeBold=3.5 -->
   <xsl:param name="fontfeatures" as="xs:string" select="''"/>
 
+  <!-- the baselineskip -->
+  <xsl:param name="baselineskip" as="xs:string" select="'28pt'"/>
+
+  <!-- the count of lines on a page -->
+  <xsl:param name="lines" as="xs:integer" select="21"/>
+
   <!-- width of the verses' caesura in times of the tatweel (tatwir) elongation character -->
   <xsl:param name="tatweel-times" as="xs:integer" select="8" required="false"/>
 
@@ -125,27 +131,36 @@ target/bin/xslt.sh \
     <xsl:value-of select="$fontsize"/>
     <xsl:text>]{fontsize}</xsl:text>
 
-    <xsl:text>&lb;%% calculate the height of a arabic letters from very high examples</xsl:text>
-    <xsl:text>&lb;\AtBeginDocument{</xsl:text>
-    <xsl:text>&lb;  \newlength{\ArabicCharHeight}</xsl:text>
-    <xsl:text>&lb;  \settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ}}% height from lam + wasla + shadda</xsl:text>
-    <xsl:text>&lb;  \setlength{\topskip}{\ArabicCharHeight}</xsl:text>
+    <xsl:text>&lb;\newlength{\aleabaselineskip}</xsl:text>
+    <xsl:text>&lb;\setlength{\aleabaselineskip}{</xsl:text>
+    <xsl:value-of select="$baselineskip"/>
+    <xsl:text>}</xsl:text>
+
+    <xsl:text>&lb;%% baselineskip must be set in the document environment, not in preamble</xsl:text>
+    <xsl:text>&lb;\AtBeginDocument{%</xsl:text>
+    <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
+    <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
 
+    <xsl:text>&lb;%% calculate the height of a arabic letters from very high examples</xsl:text>
+    <xsl:text>&lb;\AtBeginDocument{%</xsl:text>
+    <xsl:text>&lb;  \newlength{\ArabicCharHeight}%</xsl:text>
+    <xsl:text>&lb;  \settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ}}% height from lam + wasla + shadda</xsl:text>
+    <xsl:text>&lb;  \setlength{\topskip}{\ArabicCharHeight}%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+
+    <xsl:text>&lb;%% calculate textheight so that it is an integral multiple of line heights</xsl:text>
     <xsl:text>&lb;%\usepackage{calc}</xsl:text>
-    <xsl:text>&lb;%% setting \baeslineskip does not work here. Put this to inside document environment!</xsl:text>
-    <xsl:text>&lb;%\addtolength{\topskip}{4pt}</xsl:text>
-    <xsl:text>&lb;\newlength{\ergonlineskip}% baselineskip in normalfont text</xsl:text>
-    <xsl:text>&lb;\setlength{\ergonlineskip}{26pt}%</xsl:text>
-    <xsl:text>&lb;\setlength{\baselineskip}{\ergonlineskip}</xsl:text>
-    <xsl:text>&lb;\newlength{\LinesXXV}% height of 25 lines</xsl:text>
-    <xsl:text>&lb;\setlength{\LinesXXV}{\topsep}%</xsl:text>
-    <xsl:text>&lb;\addtolength{\LinesXXV}{21\ergonlineskip}</xsl:text>
-    <xsl:text>&lb;\addtolength{\LinesXXV}{-5mm}</xsl:text>
+    <xsl:text>&lb;\newlength{\LinesN}% height of 25 lines</xsl:text>
+    <xsl:text>&lb;\setlength{\LinesN}{\topskip}%</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
+    <xsl:value-of select="$lines"/>
+    <xsl:text>\aleabaselineskip}% N-1 lines</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesN}{-5mm}% TODO: Why is this required? font bug?</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=19.5mm,textheight=\LinesXXV]{geometry}% top=19.5mm,textheight=\LinesXXV</xsl:text>
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=19.5mm,textheight=\LinesN]{geometry}% top=19.5mm,textheight=\LinesN</xsl:text>
     <xsl:text>&lb;%\addtolength{\headsep}{3mm}</xsl:text>
 
     <xsl:if test="$debug-latex">
