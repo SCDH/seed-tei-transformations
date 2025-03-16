@@ -219,6 +219,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;%% geometry for non-editorial parts of the book, e.g., preface, registers, etc.</xsl:text>
     <xsl:text>&lb;\newcommand{\nonmarginlayout}{%</xsl:text>
     <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=24.5mm,bottom=21mm}%</xsl:text>
+    <xsl:text>&lb;  \fancyfootoffset{0pt}% recalculate \headwidth</xsl:text>
     <xsl:text>&lb;}</xsl:text>
 
     <xsl:if test="$debug-latex and false()">
