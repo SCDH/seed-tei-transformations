@@ -134,56 +134,6 @@ target/bin/xslt.sh \
     <xsl:value-of select="$fontsize"/>
     <xsl:text>]{fontsize}</xsl:text>
 
-    <xsl:text>&lb;\newlength{\aleabaselineskip}</xsl:text>
-    <xsl:text>&lb;\setlength{\aleabaselineskip}{</xsl:text>
-    <xsl:value-of select="$baselineskip"/>
-    <xsl:text>}</xsl:text>
-
-    <xsl:text>&lb;%% baselineskip must be set in the document environment, not in preamble</xsl:text>
-    <xsl:text>&lb;\AtBeginDocument{%</xsl:text>
-    <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
-    <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
-    <xsl:text>&lb;}</xsl:text>
-
-    <xsl:text>&lb;%% calculate the height of a arabic letters from very high examples</xsl:text>
-    <xsl:text>&lb;\AtBeginDocument{%</xsl:text>
-    <xsl:text>&lb;  \newlength{\ArabicCharHeight}%</xsl:text>
-    <xsl:text>&lb;  \settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ}}% height from lam + wasla + shadda</xsl:text>
-    <xsl:text>&lb;  \setlength{\topskip}{\ArabicCharHeight}%</xsl:text>
-    <xsl:text>&lb;}</xsl:text>
-
-    <xsl:text>&lb;%% calculate textheight so that it is an integral multiple of line heights</xsl:text>
-    <xsl:text>&lb;%\usepackage{calc}</xsl:text>
-    <xsl:text>&lb;\newlength{\LinesN}% height of 25 lines</xsl:text>
-    <xsl:text>&lb;\setlength{\LinesN}{\topskip}%</xsl:text>
-    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
-    <xsl:value-of select="$lines"/>
-    <xsl:text>\aleabaselineskip}% N-1 lines</xsl:text>
-    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
-    <xsl:value-of select="$textheight-correction"/>
-    <xsl:text>}% TODO: Why is this required? font bug?</xsl:text>
-
-    <!-- typearea of the books in the ALEA series -->
-    <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=19.5mm,textheight=\LinesN]{geometry}% top=19.5mm,textheight=\LinesN</xsl:text>
-    <xsl:text>&lb;%\addtolength{\headsep}{3mm}</xsl:text>
-
-    <xsl:if test="$debug-latex">
-      <!-- draw the baseline for the first line -->
-      <xsl:text>&lb;\usepackage[placement=top]{background}</xsl:text>
-      <xsl:text>&lb;\SetBgScale{1}</xsl:text>
-      <xsl:text>&lb;\SetBgAngle{0}</xsl:text>
-      <xsl:text>&lb;\SetBgColor{red}</xsl:text>
-      <xsl:text>&lb;\SetBgContents{\rule{\paperwidth}{.4pt}}</xsl:text>
-      <xsl:text>&lb;\SetBgHshift{\textwidth}</xsl:text>
-      <xsl:text>&lb;\SetBgVshift{-19.5mm+.4pt-\topskip}% top parameter from geometry, line thickness, topskip to get baseline of first line</xsl:text>
-    </xsl:if>
-
-    <xsl:if test="$debug-latex">
-      <xsl:text>&lb;\usepackage{fgruler}</xsl:text>
-      <xsl:text>&lb;\usepackage{showframe}</xsl:text>
-    </xsl:if>
-
     <!-- input encoding -->
     <xsl:text>&lb;\usepackage{ifluatex}</xsl:text>
     <xsl:text>&lb;\ifluatex</xsl:text>
@@ -232,6 +182,78 @@ target/bin/xslt.sh \
       <xsl:text>}</xsl:text>
     </xsl:for-each>
     <xsl:text>&lb;\setRTLmain</xsl:text>
+
+    <xsl:text>&lb;\newlength{\aleabaselineskip}</xsl:text>
+    <xsl:text>&lb;\setlength{\aleabaselineskip}{</xsl:text>
+    <xsl:value-of select="$baselineskip"/>
+    <xsl:text>}</xsl:text>
+
+    <xsl:text>&lb;%% baselineskip must be set in the document environment, not in preamble</xsl:text>
+    <xsl:text>&lb;\AtBeginDocument{%</xsl:text>
+    <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
+    <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+
+    <xsl:text>&lb;%% calculate the height of a arabic letters from very high examples</xsl:text>
+    <xsl:text>&lb;\newlength{\ArabicCharHeight}%</xsl:text>
+    <xsl:text>&lb;\settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ أُصول}}% height from lam + wasla + shadda etc.</xsl:text>
+    <xsl:text>&lb;\setlength{\topskip}{\ArabicCharHeight}%</xsl:text>
+    <!-- TODO: should we set up \strut or \strutbox from that? -->
+
+    <xsl:text>&lb;%% calculate textheight so that it is an integral multiple of line heights</xsl:text>
+    <xsl:text>&lb;%\usepackage{calc}</xsl:text>
+    <xsl:text>&lb;\newlength{\LinesN}% height of 25 lines</xsl:text>
+    <xsl:text>&lb;\setlength{\LinesN}{\topskip}%</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
+    <xsl:value-of select="$lines"/>
+    <xsl:text>\aleabaselineskip}% N-1 lines</xsl:text>
+    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
+    <xsl:value-of select="$textheight-correction"/>
+    <xsl:text>}% TODO: Why is this required? font bug?</xsl:text>
+
+    <!-- typearea of the books in the ALEA series -->
+    <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=24.5mm,bottom=21mm]{geometry}% textheight=\LinesN</xsl:text>
+    <xsl:text>&lb;%\addtolength{\headsep}{1mm}% this would have to be substracted from top</xsl:text>
+
+    <xsl:text>&lb;%% geometry for non-editorial parts of the book, e.g., preface, registers, etc.</xsl:text>
+    <xsl:text>&lb;\newcommand{\nonmarginlayout}{%</xsl:text>
+    <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=24.5mm,bottom=21mm}%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+
+    <xsl:if test="$debug-latex and false()">
+      <!-- draw the baseline for the first line -->
+      <xsl:text>&lb;\usepackage[placement=top]{background}</xsl:text>
+      <xsl:text>&lb;\SetBgScale{1}</xsl:text>
+      <xsl:text>&lb;\SetBgAngle{0}</xsl:text>
+      <xsl:text>&lb;\SetBgColor{red}</xsl:text>
+      <xsl:text>&lb;\SetBgContents{\rule{\paperwidth}{.4pt}}</xsl:text>
+      <xsl:text>&lb;\SetBgHshift{\textwidth}</xsl:text>
+      <xsl:text>&lb;\SetBgVshift{-19.5mm+.4pt-\topskip}% top parameter from geometry, line thickness, topskip to get baseline of first line</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="$debug-latex">
+      <xsl:text>&lb;%% draw a red line at every baseline</xsl:text>
+      <xsl:text>&lb;\usepackage{atbegshi,picture,xcolor}</xsl:text>
+      <xsl:text>&lb;\AtBeginShipout{%</xsl:text>
+      <xsl:text>&lb;  \AtBeginShipoutUpperLeft{%</xsl:text>
+      <xsl:text>&lb;    {\color{red}%</xsl:text>
+      <xsl:text>&lb;      \put(\dimexpr -1in-\oddsidemargin,%</xsl:text>
+      <xsl:text>&lb;      -\dimexpr 1in+\topmargin+\headheight+\headsep+\topskip)%</xsl:text>
+      <xsl:text>&lb;      {%</xsl:text>
+      <xsl:text>&lb;        \vtop to\dimexpr\vsize+\aleabaselineskip{%</xsl:text>
+      <xsl:text>&lb;          \hrule%</xsl:text>
+      <xsl:text>&lb;          \leaders\vbox to\aleabaselineskip{\hrule width2\paperwidth\vfill}\vfill%</xsl:text>
+      <xsl:text>&lb;        }%</xsl:text>
+      <xsl:text>&lb;      }%</xsl:text>
+      <xsl:text>&lb;    }}%</xsl:text>
+      <xsl:text>&lb;}</xsl:text>
+    </xsl:if>
+
+    <xsl:if test="$debug-latex">
+      <xsl:text>&lb;\usepackage{fgruler}</xsl:text>
+      <xsl:text>&lb;\usepackage{showframe}</xsl:text>
+    </xsl:if>
 
     <xsl:text>&lb;\newcommand*{\arabicobracket}{]}</xsl:text>
     <xsl:text>&lb;\newcommand*{\arabiccbracket}{[}</xsl:text>
