@@ -427,6 +427,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="preamble:header"/>
 
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
+    <xsl:text>&lb;\restoregeometry% restore geometry defined in preamble</xsl:text>
 
     <!--xsl:text>&lb;\pagenumbering{arabicnum}</xsl:text-->
 
@@ -446,7 +447,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>&lb;</xsl:text>
 
     <xsl:if test="$print-indexes">
-      <xsl:text>&lb;\cleardoublepage</xsl:text>
+      <xsl:text>&lb;\cleardoublepage%</xsl:text>
+      <xsl:text>&lb;\nonmarginlayout%</xsl:text>
       <xsl:text>&lb;\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}</xsl:text>
       <xsl:text>&lb;\addcontentsline{toc}{chapter}{الفهارس}</xsl:text>
       <xsl:call-template name="surah:print-index"/>
