@@ -194,10 +194,13 @@ target/bin/xslt.sh \
     <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
 
-    <xsl:text>&lb;%% calculate the height of a arabic letters from very high examples</xsl:text>
+    <xsl:text>&lb;%% calculate the height and depth of a arabic letters from extreme examples</xsl:text>
     <xsl:text>&lb;\newlength{\ArabicCharHeight}%</xsl:text>
     <xsl:text>&lb;\settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ أُصول}}% height from lam + wasla + shadda etc.</xsl:text>
     <xsl:text>&lb;\setlength{\topskip}{\ArabicCharHeight}%</xsl:text>
+    <xsl:text>&lb;\newlength{\ArabicCharDepth}</xsl:text>
+    <xsl:text>&lb;\settodepth{\ArabicCharDepth}{\hbox{والإطْلاعِ فليطّلِعْ بالتصفُّح }}% depth from </xsl:text>
+    <xsl:text>&lb;\setlength{\maxdepth}{\ArabicCharDepth}% 9pt would also work, but 8pt isn't enough</xsl:text>
     <!-- TODO: should we set up \strut or \strutbox from that? -->
 
     <xsl:text>&lb;%% calculate textheight so that it is an integral multiple of line heights</xsl:text>
@@ -207,18 +210,18 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
     <xsl:value-of select="$lines"/>
     <xsl:text>\aleabaselineskip}% N-1 lines</xsl:text>
-    <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
+    <xsl:text>&lb;%\addtolength{\LinesN}{</xsl:text>
     <xsl:value-of select="$textheight-correction"/>
     <xsl:text>}% TODO: Why is this required? font bug?</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=24.5mm,bottom=21mm]{geometry}% textheight=\LinesN</xsl:text>
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=24.5mm,textheight=\LinesN]{geometry}% % bottom=21mm</xsl:text>
     <xsl:text>&lb;%\addtolength{\headsep}{1mm}% this would have to be substracted from top</xsl:text>
 
     <xsl:text>&lb;%% geometry for non-editorial parts of the book, e.g., preface, registers, etc.</xsl:text>
     <xsl:text>&lb;\newcommand{\nonmarginlayout}{%</xsl:text>
-    <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=24.5mm,bottom=21mm}%</xsl:text>
+    <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=24.5mm,textheight=\LinesN}% bottom=21mm</xsl:text>
     <xsl:text>&lb;  \fancyfootoffset{0pt}% recalculate \headwidth</xsl:text>
     <xsl:text>&lb;}</xsl:text>
 
