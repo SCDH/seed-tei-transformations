@@ -196,7 +196,7 @@ target/bin/xslt.sh \
 
     <xsl:text>&lb;%% calculate the height and depth of a arabic letters from extreme examples</xsl:text>
     <xsl:text>&lb;\newlength{\ArabicCharHeight}%</xsl:text>
-    <xsl:text>&lb;\settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ أُصول}}% height from lam + wasla + shadda etc.</xsl:text>
+    <xsl:text>&lb;\settoheight{\ArabicCharHeight}{\hbox{تَحلَّتْ يُخْلِ أُصول المُتمكِّن}}% height from lam + wasla + shadda etc.</xsl:text>
     <xsl:text>&lb;\setlength{\topskip}{\ArabicCharHeight}%</xsl:text>
     <xsl:text>&lb;\newlength{\ArabicCharDepth}</xsl:text>
     <xsl:text>&lb;\settodepth{\ArabicCharDepth}{\hbox{والإطْلاعِ فليطّلِعْ بالتصفُّح }}% depth from </xsl:text>
