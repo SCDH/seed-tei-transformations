@@ -427,14 +427,19 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:call-template name="preamble:header"/>
 
     <xsl:text>&lb;&lb;\begin{document}&lb;</xsl:text>
-    <xsl:text>&lb;\restoregeometry% restore geometry defined in preamble</xsl:text>
-
-    <!--xsl:text>&lb;\pagenumbering{arabicnum}</xsl:text-->
 
     <xsl:call-template name="latex-front"/>
     <xsl:text>&lb;&lb;\selectlanguage{</xsl:text>
     <xsl:value-of select="i18n:language(/TEI/@xml:lang) => i18n:babel-language()"/>
     <xsl:text>}</xsl:text>
+
+    <xsl:text>&lb;\notinsubfile{</xsl:text>
+    <xsl:text>&lb;  \newpage</xsl:text>
+    <xsl:text>&lb;  \cleardoublepage</xsl:text>
+    <xsl:text>&lb;  \restoregeometry% restore geometry defined in preamble</xsl:text>
+    <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
+    <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
 
     <xsl:text>&lb;&lb;\thispagestyle{</xsl:text>
     <xsl:value-of select="$first-page-style"/>
