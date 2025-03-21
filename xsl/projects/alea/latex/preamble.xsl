@@ -210,19 +210,18 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\addtolength{\LinesN}{</xsl:text>
     <xsl:value-of select="$lines"/>
     <xsl:text>\aleabaselineskip}% N-1 lines</xsl:text>
-    <xsl:text>&lb;%\addtolength{\LinesN}{</xsl:text>
-    <xsl:value-of select="$textheight-correction"/>
-    <xsl:text>}% TODO: Why is this required? font bug?</xsl:text>
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=24.5mm,textheight=\LinesN]{geometry}% % bottom=21mm</xsl:text>
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN]{geometry}% % bottom=21mm</xsl:text>
     <xsl:text>&lb;%\addtolength{\headsep}{1mm}% this would have to be substracted from top</xsl:text>
 
     <xsl:text>&lb;%% geometry for non-editorial parts of the book, e.g., preface, registers, etc.</xsl:text>
     <xsl:text>&lb;\newcommand{\nonmarginlayout}{%</xsl:text>
-    <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=24.5mm,textheight=\LinesN}% bottom=21mm</xsl:text>
+    <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN}% bottom=21mm</xsl:text>
     <xsl:text>&lb;  \fancyfootoffset{0pt}% recalculate \headwidth</xsl:text>
+    <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
+    <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
 
     <xsl:if test="$debug-latex and false()">
@@ -424,6 +423,16 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}</xsl:text>
     <xsl:text>&lb;\renewcommand{\sectionmark}[1]{}</xsl:text>
     <xsl:text>&lb;\fancypagestyle{plain}{\fancyhf{}}% reset page style plain which is issued by \chapter etc.</xsl:text>
+
+    <xsl:if test="$debug-latex">
+      <xsl:text>&lb;\fancyfoot[CO,CE]{%</xsl:text>
+      <xsl:text>&lb;  \foreignlanguage{english}{%</xsl:text>
+      <xsl:text>&lb;    baselineskip: \the\aleabaselineskip\ %</xsl:text>
+      <xsl:text>&lb;    topskip: \the\topskip\ %</xsl:text>
+      <xsl:text>&lb;    maxdepth: \the\maxdepth\ %</xsl:text>
+      <xsl:text>&lb;}}</xsl:text>
+    </xsl:if>
+
 
     <xsl:text>&lb;% let \cleardoublepage amke empty pages</xsl:text>
     <xsl:text>&lb;\let\origcleardoublepage\cleardoublepage</xsl:text>
