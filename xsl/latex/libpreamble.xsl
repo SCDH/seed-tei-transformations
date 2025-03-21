@@ -90,7 +90,15 @@ target/bin/xslt.sh \
 
     <xsl:text>&lb;\usepackage{subfiles}</xsl:text>
 
+    <xsl:text>&lb;%% See https://en.wikibooks.org/wiki/LaTeX/Modular_Documents#Subfiles</xsl:text>
+    <xsl:text>&lb;\newcommand{\onlyinsubfile}[1]{#1}</xsl:text>
+    <xsl:text>&lb;\newcommand{\notinsubfile}[1]{}</xsl:text>
+
     <xsl:text>&lb;\begin{document}</xsl:text>
+
+    <xsl:text>&lb;\renewcommand{\onlyinsubfile}[1]{}</xsl:text>
+    <xsl:text>&lb;\renewcommand{\notinsubfile}[1]{#1}</xsl:text>
+
     <xsl:call-template name="preamble:maketitle"/>
     <xsl:if test="$preamble:toc">
       <xsl:text>&lb;&lb;\tableofcontents%&lb;&lb;</xsl:text>
