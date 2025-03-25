@@ -193,6 +193,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
     <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
+    <xsl:text>&lb;\setlength{\baselineskip}{\aleabaselineskip}</xsl:text>
 
     <xsl:text>&lb;%% calculate the height and depth of a arabic letters from extreme examples</xsl:text>
     <xsl:text>&lb;\newlength{\ArabicCharHeight}%</xsl:text>
