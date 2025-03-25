@@ -47,6 +47,9 @@ target/bin/xslt.sh \
   <!-- whether a table of contents is to be generated -->
   <xsl:param name="preamble:toc" as="xs:boolean" select="false()" required="false"/>
 
+  <!-- start page -->
+  <xsl:param name="preamble:start-page" as="xs:integer?" select="()" required="false"/>
+
 
   <!-- make preamble based on whether external header files or a mainfile is provided -->
   <xsl:template name="preamble:header" visibility="final">
@@ -95,6 +98,12 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\newcommand{\notinsubfile}[1]{}</xsl:text>
 
     <xsl:text>&lb;\begin{document}</xsl:text>
+
+    <xsl:if test="$preamble:start-page">
+      <xsl:text>&lb;\setcounter{page}{</xsl:text>
+      <xsl:value-of select="$preamble:start-page"/>
+      <xsl:text>}</xsl:text>
+    </xsl:if>
 
     <xsl:text>&lb;\renewcommand{\onlyinsubfile}[1]{}</xsl:text>
     <xsl:text>&lb;\renewcommand{\notinsubfile}[1]{#1}</xsl:text>
