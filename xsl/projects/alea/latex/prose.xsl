@@ -434,11 +434,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
     <xsl:text>}</xsl:text>
 
     <xsl:text>&lb;\notinsubfile{</xsl:text>
-    <xsl:text>&lb;  \newpage</xsl:text>
     <xsl:text>&lb;  \cleardoublepage</xsl:text>
-    <xsl:text>&lb;  \restoregeometry% restore geometry defined in preamble</xsl:text>
-    <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
-    <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
 
     <xsl:text>&lb;&lb;\thispagestyle{</xsl:text>
@@ -453,7 +449,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
     <xsl:if test="$print-indexes">
       <xsl:text>&lb;\cleardoublepage%</xsl:text>
-      <xsl:text>&lb;\nonmarginlayout%</xsl:text>
       <xsl:text>&lb;\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}</xsl:text>
       <xsl:text>&lb;\addcontentsline{toc}{chapter}{الفهارس}</xsl:text>
       <xsl:call-template name="surah:print-index"/>
