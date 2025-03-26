@@ -214,12 +214,12 @@ target/bin/xslt.sh \
 
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
-    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=23mm,textwidth=113mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN]{geometry}% % bottom=21mm</xsl:text>
+    <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=28mm,textwidth=114mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN]{geometry}% % bottom=21mm</xsl:text>
     <xsl:text>&lb;%\addtolength{\headsep}{1mm}% this would have to be substracted from top</xsl:text>
 
     <xsl:text>&lb;%% geometry for non-editorial parts of the book, e.g., preface, registers, etc.</xsl:text>
     <xsl:text>&lb;\newcommand{\nonmarginlayout}{%</xsl:text>
-    <xsl:text>&lb;  \newgeometry{inner=23mm,outer=23mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN}% bottom=21mm</xsl:text>
+    <xsl:text>&lb;  \newgeometry{inner=28mm,outer=28mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN}% bottom=21mm</xsl:text>
     <xsl:text>&lb;  \fancyfootoffset{0pt}% recalculate \headwidth</xsl:text>
     <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
     <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
