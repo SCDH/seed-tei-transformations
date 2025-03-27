@@ -343,13 +343,14 @@ target/bin/xslt.sh \
     <xsl:text>&lb;  \let\oldpb\pb%</xsl:text>
     <xsl:text>&lb;  \let\pb\pbnomark}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
-    <xsl:text>&lb;\AtStartEveryStanza{\penalty-1001\setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\protect\newverse\relax\lednopb}</xsl:text>
+    <xsl:text>&lb;\AtStartEveryStanza{%</xsl:text>
+    <xsl:text>&lb;  \setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\protect\newverse\relax\lednopb%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
     <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{}</xsl:text>
     <xsl:text>&lb;  %\smallskip% skip after stanza, set to third argument if wanted</xsl:text>
     <xsl:text>&lb;  \let\pb\oldpb%</xsl:text>
-    <xsl:text>&lb;  \penalty-1001%</xsl:text>
-    <xsl:text>&lb;  }</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
     <xsl:text>&lb;\usepackage{calc}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
