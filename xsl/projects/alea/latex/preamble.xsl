@@ -401,8 +401,9 @@ target/bin/xslt.sh \
     <!-- set style section titles, non-reledmac -->
     <xsl:text>&lb;\usepackage{titlesec}</xsl:text>
     <xsl:text>&lb;\titleformat{\chapter}{\Large\normalfont}{}{0pt}{}{}</xsl:text>
+    <xsl:text>&lb;\titlespacing*{\chapter}{0pt}{0pt}{0pt}</xsl:text>
     <xsl:text>&lb;\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
-    <xsl:text>&lb;\titlespacing*{\section}{0pt}{*2}{*0}</xsl:text>
+    <xsl:text>&lb;\titlespacing*{\section}{0pt}{*2}{0pt}</xsl:text>
     <xsl:text>&lb;\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}{}</xsl:text>
     <xsl:text>&lb;\titlespacing*{\subsection}{0pt}{*2}{*0}</xsl:text>
 
