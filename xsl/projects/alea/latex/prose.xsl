@@ -264,6 +264,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
           <xsl:text>: </xsl:text>
           <xsl:value-of select="alea:meter(@met)"/>
         </xsl:message>
+        <xsl:text>&lb;\penalty-501</xsl:text>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
@@ -279,6 +280,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
       <xsl:template mode="rend:hook-behind" match="*[@met]">
         <xsl:variable name="is-embedded" as="xs:boolean"
           select="some $t in tokenize(ancestor::div[1]/@type) satisfies  $embedded-verse-contexts = $t"/>
+        <xsl:text>&lb;\penalty-501</xsl:text>
         <xsl:if test="not($is-embedded)">
           <xsl:text>&lb;\poemafterskip&lb;</xsl:text>
         </xsl:if>
