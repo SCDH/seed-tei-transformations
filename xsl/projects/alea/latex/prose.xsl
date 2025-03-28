@@ -299,6 +299,23 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>
         <xsl:text>}%&lb;</xsl:text>
+        <!-- Set stanza penalties.
+          Each verse needs its own stanza penalty which is accessed with \sza@\the\versenumber@!
+        -->
+        <xsl:text>&lb;\setstanzapenalties{1,10000</xsl:text>
+        <xsl:choose>
+          <xsl:when test="self::l">
+            <xsl:text>,0</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each
+              select="1 to count(descendant-or-self::l[not(ancestor::note | ancestor::app)]) - 1">
+              <xsl:text>,10100</xsl:text>
+            </xsl:for-each>
+            <xsl:text>,13000</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>}</xsl:text>
       </xsl:template>
 
       <xsl:template mode="rend:hook-before" match="*[@met]">
