@@ -216,7 +216,6 @@ target/bin/xslt.sh \
     <!-- typearea of the books in the ALEA series -->
     <!-- top margin: 22.5mm, but reduced by 3mm which are added to headsep -->
     <xsl:text>&lb;\usepackage[papersize={170mm,240mm},inner=28mm,textwidth=114mm,top=\dimexpr(29mm-\ArabicCharHeight),headheight=8mm,headsep=2mm,textheight=\LinesN]{geometry}% % bottom=21mm</xsl:text>
-    <xsl:text>&lb;%\addtolength{\headsep}{1mm}% this would have to be substracted from top</xsl:text>
 
     <xsl:if test="$debug-latex and false()">
       <!-- draw the baseline for the first line -->
