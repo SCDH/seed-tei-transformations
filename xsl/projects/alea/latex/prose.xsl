@@ -187,6 +187,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:value-of select="."/>
       </xsl:template>
 
+      <xsl:template mode="app:reading-text" match="gap" priority="2">
+        <xsl:text>[...]</xsl:text>
+      </xsl:template>
+
       <!-- quick and dirty hack to get references to manuscripts, TODO: real multilanguage support -->
       <xsl:template mode="app:reading-text" match="seg[@xml:lang]">
         <xsl:text>\foreignlanguage{</xsl:text>
