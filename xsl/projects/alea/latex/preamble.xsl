@@ -326,9 +326,9 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\setcounter{tocdepth}{0}% toc entries only to chapter level</xsl:text>
 
     <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
-    <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\foreignlanguage{english}{#1}}}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\pb}[1]{{\normalfont|}\ledinnernote{\foreignlanguage{english}{#1}} }</xsl:text>
-    <xsl:text>&lb;\newcommand*{\pbnomark}[1]{\ledinnernote{\foreignlanguage{english}{#1}}\ignorespaces}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\scriptsize\foreignlanguage{english}{#1}}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{{\normalfont|}\ledinnernote{\scriptsize\foreignlanguage{english}{#1}} }</xsl:text>
+    <xsl:text>&lb;\newcommand*{\pbnomark}[1]{\ledinnernote{\scriptsize\foreignlanguage{english}{#1}}\ignorespaces}</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{{\normalfont\arabicobracket{}}#1{\normalfont\arabiccbracket{}}}}</xsl:text>
