@@ -294,7 +294,6 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{</xsl:text>
     <xsl:value-of select="$footfudgefiddle"/>
     <xsl:text>}</xsl:text>
-    <xsl:text>&lb;%\Xmaxhnotes{.33\textheight}</xsl:text>
     <xsl:text>&lb;\lineation{page}</xsl:text>
     <xsl:text>&lb;\linenummargin{outer}</xsl:text>
     <xsl:text>&lb;\fnpos{critical-familiar}</xsl:text>
@@ -315,6 +314,11 @@ target/bin/xslt.sh \
     <xsl:text>&lb;%% setting for rtl</xsl:text>
     <xsl:text>&lb;\Xbhookgroup{\textdir TRT}</xsl:text>
     <xsl:text>&lb;\setcounter{ballast}{100}</xsl:text>
+
+    <xsl:text>&lb;\AtBeginDocument{% reledmac parameters to be set after the preamble in the document</xsl:text>
+    <xsl:text>&lb;  %\Xmaxhnotes{\textheight - \topskip}</xsl:text>
+    <xsl:text>&lb;  %\setstanzapenalties{1,10000,10100}</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
 
