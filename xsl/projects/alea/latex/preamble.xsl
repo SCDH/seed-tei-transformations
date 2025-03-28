@@ -192,6 +192,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\AtBeginDocument{%</xsl:text>
     <xsl:text>&lb;  \setlength{\baselineskip}{\aleabaselineskip}%</xsl:text>
     <xsl:text>&lb;  \setlength{\lineskiplimit}{-100pt}%</xsl:text>
+    <xsl:text>&lb;  \setlength{\boxmaxdepth}{\ArabicCharDepth}</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\setlength{\baselineskip}{\aleabaselineskip}</xsl:text>
 
@@ -293,23 +294,27 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand{\footfudgefiddle}{</xsl:text>
     <xsl:value-of select="$footfudgefiddle"/>
     <xsl:text>}</xsl:text>
+    <xsl:text>&lb;%\Xmaxhnotes{.33\textheight}</xsl:text>
     <xsl:text>&lb;\lineation{page}</xsl:text>
     <xsl:text>&lb;\linenummargin{outer}</xsl:text>
     <xsl:text>&lb;\fnpos{critical-familiar}</xsl:text>
     <xsl:text>&lb;\Xarrangement[A]{paragraph}</xsl:text>
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
     <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
+    <xsl:text>&lb;\Xbeforenotes{1.2em plus .6em minus .5em}</xsl:text>
     <xsl:text>&lb;\Xafternumber{.5em plus.4em minus.4em}% default value 0.5em</xsl:text>
     <xsl:text>&lb;\Xafternote{1em plus.4em minus.9em} % important</xsl:text>
     <xsl:text>&lb;\Xbhooknote{\linebreak[1]}% important for getting spacing right</xsl:text>
     <xsl:text>&lb;\Xsymlinenum{|}% not working: {\penalty10000|\linebreak[1]}</xsl:text>
-    <xsl:text>&lb;\Xlemmaseparator{\arabiccbracket}</xsl:text>
+    <xsl:text>&lb;\Xlemmaseparator[A]{\arabiccbracket}</xsl:text>
+    <xsl:text>&lb;\Xlemmaseparator[B]{\arabicobracket}</xsl:text>
     <xsl:text>&lb;\Xlemmafont{\normalfont}</xsl:text>
     <!--xsl:text>&lb;\Xwraplemma{\RL}</xsl:text>
-    <xsl:text>&lb;\Xwrapcontent{\RL}</xsl:text-->
+    <xsl:text>&lb;\Xwrapcontent{\foreignlanguage{arabic}}</xsl:text-->
     <xsl:text>&lb;\setlength{\parindent}{0pt}</xsl:text>
     <xsl:text>&lb;%% setting for rtl</xsl:text>
     <xsl:text>&lb;\Xbhookgroup{\textdir TRT}</xsl:text>
+    <xsl:text>&lb;\setcounter{ballast}{100}</xsl:text>
 
     <xsl:text>&lb;\pagestyle{plain}</xsl:text>
 
