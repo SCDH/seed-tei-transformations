@@ -183,7 +183,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
 
       <!-- correct parens and brackets -->
       <xsl:template mode="app:reading-text" match="text()">
-        <xsl:call-template name="alea:fix-text"/>
+        <!--xsl:call-template name="alea:fix-text"/-->
+        <xsl:value-of select="."/>
       </xsl:template>
 
       <!-- quick and dirty hack to get references to manuscripts, TODO: real multilanguage support -->
