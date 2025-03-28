@@ -299,7 +299,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\fnpos{critical-familiar}</xsl:text>
     <xsl:text>&lb;\Xarrangement[A]{paragraph}</xsl:text>
     <xsl:text>&lb;\Xnonbreakableafternumber</xsl:text>
-    <xsl:text>&lb;\Xnumberonlyfirstinline</xsl:text>
+    <xsl:text>&lb;\Xnumberonlyfirstinline[A]</xsl:text>
     <xsl:text>&lb;\Xbeforenotes{1.2em plus .6em minus .5em}</xsl:text>
     <xsl:text>&lb;\Xafternumber{.5em plus.4em minus.4em}% default value 0.5em</xsl:text>
     <xsl:text>&lb;\Xafternote{1em plus.4em minus.9em} % important</xsl:text>
