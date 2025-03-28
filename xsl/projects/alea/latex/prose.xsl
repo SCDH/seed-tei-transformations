@@ -248,6 +248,29 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         </xsl:call-template>
       </xsl:template>
 
+      <xsl:template mode="text:text" match="processing-instruction('latex-newpage')">
+        <xsl:text>&lb;\newpage</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="text:text" match="processing-instruction('latex-nopb')">
+        <xsl:text>&lb;\lednopb</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="rend:hook-ahead" match="head">
+        <xsl:text>&lb;\penalty-3000</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="rend:hook-behind" match="head">
+        <xsl:text>&lb;\penalty10000</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="text:text" match="div | div1 | div2 | div3 | div4 | div5 | div6 | div7">
+        <xsl:apply-templates mode="rend:hook-ahead" select="."/>
+        <xsl:apply-templates mode="#current"/>
+        <xsl:apply-templates mode="rend:hook-behind" select="."/>
+      </xsl:template>
+
+
       <xsl:template name="text:verse">
         <xsl:call-template name="verse:verse"/>
       </xsl:template>
@@ -264,7 +287,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
           <xsl:text>: </xsl:text>
           <xsl:value-of select="alea:meter(@met)"/>
         </xsl:message>
-        <xsl:text>&lb;\penalty-501</xsl:text>
+        <xsl:if test="not(preceding-sibling::*[1][self::head] or empty(preceding-sibling::*))">
+          <xsl:text>&lb;\penalty-501</xsl:text>
+        </xsl:if>
         <xsl:text>&lb;\versemeter</xsl:text>
         <xsl:text>{</xsl:text>
         <xsl:value-of select="alea:meter(@met)"/>

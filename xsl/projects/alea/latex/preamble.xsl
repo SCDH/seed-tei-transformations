@@ -388,13 +388,13 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\renewcommand*{\seedsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsectionfont}[1]{\bfseries #1}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionfont}[1]{\bfseries #1}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedchapterbeforeskip}{\penalty-1001}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedchapterbeforeskip}{}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedchapterafterskip}{}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsectionbeforeskip}{\penalty-1001}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsectionbeforeskip}{}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsectionafterskip}{}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{\penalty-1001}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{\penalty-1001}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
 

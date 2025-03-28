@@ -502,12 +502,10 @@
     <xsl:text>&lb;      \addcontentsline{toc}{chapter}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{chapter}{#1}}%</xsl:text>
     <xsl:text>lb;   \fi%</xsl:text>
-    <xsl:text>&lb;  \penalty 10000%</xsl:text>
     <xsl:text>&lb;  \@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\WithSuffix\renewcommand\eledchapter*[2][]{%</xsl:text>
     <xsl:text>&lb;  \seedchapterfont{#2}%</xsl:text>
-    <xsl:text>&lb;  \penalty 10000%</xsl:text>
     <xsl:text>&lb;  \@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsection}[2][]{%</xsl:text>
@@ -517,7 +515,6 @@
     <xsl:text>&lb;      \addcontentsline{toc}{section}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{section}{#1}}%</xsl:text>
     <xsl:text>&lb;  \fi%</xsl:text>
-    <xsl:text>&lb;  \penalty 10000%</xsl:text>
     <xsl:text>&lb;  \@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsection}[2][]{%</xsl:text>
@@ -527,7 +524,6 @@
     <xsl:text>&lb;      \addcontentsline{toc}{subsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsection}{#1}}%</xsl:text>
     <xsl:text>&lb;  \fi%</xsl:text>
-    <xsl:text>&lb;  \penalty 10000%</xsl:text>
     <xsl:text>&lb;  \@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\renewcommand{\eledsubsubsection}[2][]{%</xsl:text>
@@ -537,21 +533,22 @@
     <xsl:text>&lb;      \addcontentsline{toc}{subsubsection}{#2}}{%</xsl:text>
     <xsl:text>&lb;      \addcontentsline{toc}{subsubsection}{#1}}%</xsl:text>
     <xsl:text>&lb;  \fi%</xsl:text>
-    <xsl:text>&lb;  \penalty 10000%</xsl:text>
     <xsl:text>&lb;  \@afterheading%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\makeatother</xsl:text>
   </xsl:template>
 
   <xsl:template name="text:latex-header-full-seedskips" visibility="public">
+    <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedchapterbeforeskip}{\bigskip}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedchapterafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedchapterafterskip}{\vspace{\z@skip}}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsectionbeforeskip}{\bigskip}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsectionafterskip}{\vspace{\z@skip}}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsectionbeforeskip}{\bigskip}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsectionafterskip}{\vspace{\z@skip}}</xsl:text>
     <xsl:text>&lb;\renewcommand*{\seedsubsubsectionbeforeskip}{\bigskip}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\seedsubsubsectionafterskip}{vspace{\z@skip}}</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
   </xsl:template>
 
 </xsl:package>
