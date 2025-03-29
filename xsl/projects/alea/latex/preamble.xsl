@@ -352,7 +352,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;  \let\pb\pbnomark}</xsl:text>
     <xsl:text>&lb;\makeatletter</xsl:text>
     <xsl:text>&lb;\AtStartEveryStanza{%</xsl:text>
-    <xsl:text>&lb;  \setRL\relax{}\arabicobracket\@verse@meter\arabiccbracket\protect\newverse\relax\lednopb%</xsl:text>
+    <xsl:text>&lb;  \setRL\arabicobracket\@verse@meter\arabiccbracket\protect\newverse%</xsl:text>
     <xsl:text>&lb;}</xsl:text>
     <xsl:text>&lb;\AtEveryStopStanza{%</xsl:text>
     <xsl:text>&lb;  %\ifthenelse{\equal{true}{\@verse@isembedded}}{}{}</xsl:text>
