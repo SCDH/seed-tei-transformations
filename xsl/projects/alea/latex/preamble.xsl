@@ -166,7 +166,7 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\usepackage{bidi}</xsl:text>
     <xsl:text>&lb;\fi</xsl:text>
 
-    <xsl:text>&lb;\usepackage[ngerman,english,bidi=basic]{babel}</xsl:text>
+    <xsl:text>&lb;\usepackage[french,ngerman,english,bidi=basic]{babel}</xsl:text>
     <xsl:text>&lb;%% Note: mapdigits causes the engine to replace western arabic digits by arabic script digits.</xsl:text>
     <xsl:text>&lb;%% To keep western digits in some places, the language must be set to ngerman or english.</xsl:text>
     <xsl:text>&lb;\babelprovide[import,main,justification=kashida,transforms=kashida.afterdiacritics.plain,mapdigits,mapfont=direction]{arabic}</xsl:text>
@@ -184,7 +184,7 @@ target/bin/xslt.sh \
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
     </xsl:for-each>
-    <xsl:text>&lb;\babelfont[english,ngerman]{rm}{Minion 3}</xsl:text>
+    <xsl:text>&lb;\babelfont[french,english,ngerman]{rm}{Minion 3}</xsl:text>
     <xsl:text>&lb;\setRTLmain</xsl:text>
 
     <xsl:text>&lb;\newlength{\aleabaselineskip}</xsl:text>
