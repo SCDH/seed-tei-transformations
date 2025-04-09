@@ -47,7 +47,7 @@ target/bin/xslt.sh \
   <xsl:param name="fontsize" as="xs:string" select="'12pt'" required="false"/>
 
   <!-- additional font features, e.g. AutoFakeBold=3.5 -->
-  <xsl:param name="fontfeatures" as="xs:string" select="''"/>
+  <xsl:param name="fontfeatures" as="xs:string?" select="()"/>
 
   <!-- the baselineskip -->
   <xsl:param name="baselineskip" as="xs:string" select="'28pt'"/>
@@ -175,12 +175,16 @@ target/bin/xslt.sh \
     <xsl:for-each select="('rm', 'sf', 'tt')">
       <xsl:text>&lb;\babelfont{</xsl:text>
       <xsl:value-of select="."/>
-      <xsl:text>}[</xsl:text>
-      <xsl:value-of select="$fontfeatures"/>
+      <xsl:text>}[Language=Default</xsl:text>
+      <xsl:if test="$fontfeatures">
+        <xsl:text>,</xsl:text>
+        <xsl:value-of select="$fontfeatures"/>
+      </xsl:if>
       <xsl:text>]{</xsl:text>
       <xsl:value-of select="$font"/>
       <xsl:text>}</xsl:text>
     </xsl:for-each>
+    <xsl:text>&lb;\babelfont[english,ngerman]{rm}{Minion 3}</xsl:text>
     <xsl:text>&lb;\setRTLmain</xsl:text>
 
     <xsl:text>&lb;\newlength{\aleabaselineskip}</xsl:text>
@@ -326,9 +330,11 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\setcounter{tocdepth}{0}% toc entries only to chapter level</xsl:text>
 
     <xsl:text>&lb;%% Note: \foreignlanguage{english}{...} is used to get western digits for folio numbers.</xsl:text>
-    <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\scriptsize\foreignlanguage{english}{#1}}}</xsl:text>
-    <xsl:text>&lb;\renewcommand*{\pb}[1]{{\normalfont|}\ledinnernote{\scriptsize\foreignlanguage{english}{#1}} }</xsl:text>
-    <xsl:text>&lb;\newcommand*{\pbnomark}[1]{\ledinnernote{\scriptsize\foreignlanguage{english}{#1}}\ignorespaces}</xsl:text>
+    <xsl:text>&lb;\newcommand*{\innernoteenglish}[1]{\ledinnernote{\changefontsize{9pt}\foreignlanguage{english}{#1}}}</xsl:text>
+    <xsl:text>&lb;\renewcommand*{\pb}[1]{{\normalfont|}\ledinnernote{\changefontsize{9pt}\foreignlanguage{english}{#1}} }</xsl:text>
+    <xsl:text>&lb;\newcommand*{\pbnomark}[1]{\ledinnernote{\changefontsize{9pt}\foreignlanguage{english}{#1}}\ignorespaces}</xsl:text>
+
+    <xsl:text>&lb;\newcommand*{\romanfootnotesize}{\tinyr}% defined in fontsize package</xsl:text>
 
     <xsl:text>&lb;&lb;%% overrides</xsl:text>
     <xsl:text>&lb;\renewcommand*{\milestone}[2]{\RL{{\normalfont\arabicobracket{}}#1{\normalfont\arabiccbracket{}}}}</xsl:text>
