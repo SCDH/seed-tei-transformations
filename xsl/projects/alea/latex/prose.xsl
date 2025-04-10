@@ -261,6 +261,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/projects/alea/latex/prose.xsl -
         <xsl:text>&lb;\lednopb</xsl:text>
       </xsl:template>
 
+      <xsl:template mode="text:text" match="processing-instruction('obracket')">
+        <xsl:text>\arabicobracket{}</xsl:text>
+      </xsl:template>
+
+      <xsl:template mode="text:text" match="processing-instruction('cbracket')">
+        <xsl:text>\arabiccbracket{}</xsl:text>
+      </xsl:template>
+
       <xsl:template mode="rend:hook-ahead" match="head">
         <xsl:text>&lb;\penalty-3000</xsl:text>
       </xsl:template>
