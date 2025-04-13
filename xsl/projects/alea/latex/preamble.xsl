@@ -278,6 +278,21 @@ target/bin/xslt.sh \
     <xsl:text>&lb;\newcommand{\seedidxlevel}[1]{\large #1}</xsl:text>
     <xsl:text>&lb;\indexsetup{othercode=\footnotesize,level=\section*,toclevel=section,firstpagestyle=empty}</xsl:text>
 
+    <xsl:text>&lb;%% fix penalties in index with subitems, see</xsl:text>
+    <xsl:text>&lb;%% https://tex.stackexchange.com/questions/575684/formatting-a-two-column-index-with-subitems</xsl:text>
+    <xsl:text>&lb;\makeatletter</xsl:text>
+    <xsl:text>&lb;\let\ori@idxitem\@idxitem</xsl:text>
+    <xsl:text>&lb;\def\@idxitem{\clear@penalties\ori@idxitem}</xsl:text>
+    <xsl:text>&lb;\def\clear@penalties{\subitem@count=3 }</xsl:text>
+    <xsl:text>&lb;\newcount\subitem@count</xsl:text>
+    <xsl:text>&lb;\def\subitem{%</xsl:text>
+    <xsl:text>&lb;  \advance\subitem@count -1</xsl:text>
+    <xsl:text>&lb;  \par</xsl:text>
+    <xsl:text>&lb;  \ifnum\subitem@count>0 \penalty10000 \fi</xsl:text>
+    <xsl:text>&lb;  \ori@idxitem\hspace*{1em}%</xsl:text>
+    <xsl:text>&lb;}</xsl:text>
+    <xsl:text>&lb;\makeatother</xsl:text>
+
 
     <!-- does not give footnotes in para
     <xsl:text>&lb;\let\Footnote\undefined</xsl:text>
