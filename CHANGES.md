@@ -1,10 +1,15 @@
 # Changes
 
+## 0.15.2
+
+- improvements to LaTeX for ALEA:
+  - fix #53
+  - XSLT used to generate the final PDF published as ALEA 12 (*Sag al-Mutawwaq*)
+
 ## 0.15.1
 
 - evaluate `rendition/@scope`
-- improvements to LaTeX for ALEA:
-  - XSLT used to generate the final PDF published as ALEA 12 (*Sag al-Mutawwaq*)
+- improvements to LaTeX for ALEA
 
 ## 0.15.0
 
