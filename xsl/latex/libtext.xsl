@@ -347,31 +347,20 @@
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
 
-      <xsl:template match="choice[child::sic and child::corr]">
+      <!-- order matters: the first child goes into the main text -->
+      <xsl:template match="choice">
         <xsl:call-template name="edmac:app-start"/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
         </xsl:call-template>
         <xsl:apply-templates mode="rend:hook-before" select="."/>
-        <xsl:apply-templates select="corr"/>
+        <xsl:apply-templates select="*[1]"/>
         <xsl:apply-templates mode="rend:hook-after" select="."/>
         <xsl:call-template name="text:inline-footnotes"/>
         <xsl:call-template name="edmac:app-end"/>
       </xsl:template>
 
-      <xsl:template match="sic[not(parent::choice)]">
-        <xsl:call-template name="edmac:app-start"/>
-        <xsl:call-template name="edmac:edlabel">
-          <xsl:with-param name="suffix" select="'-start'"/>
-        </xsl:call-template>
-        <xsl:apply-templates mode="rend:hook-before" select="."/>
-        <xsl:apply-templates/>
-        <xsl:apply-templates mode="rend:hook-after" select="."/>
-        <xsl:call-template name="text:inline-footnotes"/>
-        <xsl:call-template name="edmac:app-end"/>
-      </xsl:template>
-
-      <xsl:template match="corr[not(parent::choice)]">
+      <xsl:template match="sic | corr | orig | reg | abbr | expan | seg">
         <xsl:call-template name="edmac:app-start"/>
         <xsl:call-template name="edmac:edlabel">
           <xsl:with-param name="suffix" select="'-start'"/>
@@ -438,16 +427,9 @@
     <xsl:apply-templates mode="text:text-only" select="lem"/>
   </xsl:template>
 
-  <xsl:template mode="text:text-only" match="choice[sic and corr]">
-    <xsl:apply-templates mode="text:text-only" select="corr"/>
-  </xsl:template>
-
-  <xsl:template mode="text:text-only" match="choice[abbr and expan]">
-    <xsl:apply-templates mode="text:text-only" select="expan"/>
-  </xsl:template>
-
-  <xsl:template mode="text:text-only" match="choice[seg]">
-    <xsl:apply-templates mode="text:text-only" select="seg[1]"/>
+  <!-- order matters: only first child is evaluated -->
+  <xsl:template mode="text:text-only" match="choice">
+    <xsl:apply-templates mode="text:text-only" select="*[1]"/>
   </xsl:template>
 
   <xsl:template mode="text:text-only" match="note"/>

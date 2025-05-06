@@ -226,14 +226,26 @@
         />
     </x:scenario>
 
-    <x:scenario label="choice with corr and sic">
+    <x:scenario label="choice with sic first and corr second: sic in main text">
         <x:context mode="text:text">
             <tei:p>The quick
                     <tei:choice><tei:sic>braun</tei:sic><tei:corr>brown</tei:corr></tei:choice>
                 fox</tei:p>
         </x:context>
-        <x:expect label="has start label and text from corr"
-            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}brown\\edlabel\{[a-zA-Z0-9]+-end\}')"/>
+        <x:expect
+            label="has start label and text from corr. end-label would come from inline-footnote"
+            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}braun\s')"/>
+    </x:scenario>
+
+    <x:scenario label="choice with corr first and sic second: corr in main text">
+        <x:context mode="text:text">
+            <tei:p>The quick
+                    <tei:choice><tei:corr>brown</tei:corr><tei:sic>braun</tei:sic></tei:choice>
+                fox</tei:p>
+        </x:context>
+        <x:expect
+            label="has start label and text from corr. end-label would come from inline footnote"
+            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}brown\s')"/>
     </x:scenario>
 
     <x:scenario label="gap">
