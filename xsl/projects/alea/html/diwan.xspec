@@ -66,5 +66,85 @@
         />
     </x:scenario>
 
+    <x:scenario label="handling of choice: Order does NOT matter!">
+        <x:context>
+            <t:TEI xml:lang="de">
+                <t:text>
+                    <t:body>
+                        <t:lg>
+                            <t:l>
+                                <t:choice>
+                                    <t:corr>corrected</t:corr>
+                                    <t:sic>seen in manuscript</t:sic>
+                                </t:choice>
+                                <t:caesura/>
+                            </t:l>
+                            <t:l>
+                                <t:choice>
+                                    <t:sic>seen in manuscript</t:sic>
+                                    <t:corr>emendation</t:corr>
+                                </t:choice>
+                                <t:caesura/>
+                            </t:l>
+                        </t:lg>
+                    </t:body>
+                </t:text>
+            </t:TEI>
+        </x:context>
+        <x:expect label="main text has text of corr at first position: 'corrected'"
+            test="(//section[@class = 'content']//text()) => string-join() => matches('corrected')"/>
+        <x:expect label="main text has text of corr at second position: 'emendation'"
+            test="(//section[@class = 'content']//text()) => string-join() => matches('emendation')"/>
+        <x:expect label="main text does not have text from sic, no matter of order"
+            test="(//section[@class = 'content']//text()) => string-join() => matches('seen') => not()"/>
+        <x:expect label="apparatus of first choice: lemma is 'corrected'"
+            test="//span[@class = 'apparatus-line-entries'][1]//span[@class = 'apparatus-lemma'] ! string()"
+            select="'corrected'"/>
+        <x:expect label="apparatus of first choice: reading is 'seen in manuscript'"
+            test="//span[@class = 'apparatus-line-entries'][1]//span[@class = 'reading']/span[@class = 'reading'] ! string()"
+            select="'seen in manuscript'"/>
+        <x:expect label="apparatus of second choice: lemma is 'emendation'"
+            test="//span[@class = 'apparatus-line-entries'][2]//span[@class = 'apparatus-lemma'] ! string()"
+            select="'emendation'"/>
+        <x:expect label="apparatus of second choice: reading is 'seen in manuscript'"
+            test="//span[@class = 'apparatus-line-entries'][2]//span[@class = 'reading']/span[@class = 'reading'] ! string()"
+            select="'seen in manuscript'"/>
+    </x:scenario>
+
+    <x:scenario label="handling of corr and sic not wrapped in choice">
+        <x:context>
+            <t:TEI xml:lang="de">
+                <t:text>
+                    <t:body>
+                        <t:lg>
+                            <t:l>
+                                <t:corr>corrected</t:corr>
+                                <t:caesura/>
+                            </t:l>
+                            <t:l>
+                                <t:sic>seen in manuscript</t:sic>
+                                <t:caesura/>
+                            </t:l>
+                        </t:lg>
+                    </t:body>
+                </t:text>
+            </t:TEI>
+        </x:context>
+        <x:expect label="main text has text of corr at first position: 'corrected'"
+            test="(//section[@class = 'content']//text()) => string-join() => matches('corrected')"/>
+        <x:expect label="main text has text of sic at second position: 'seen in manuscript'"
+            test="(//section[@class = 'content']//text()) => string-join() => matches('seen in manuscript')"/>
+        <x:expect label="apparatus of first choice: lemma is 'corrected'"
+            test="//span[@class = 'apparatus-line-entries'][1]//span[@class = 'apparatus-lemma'] ! string()"
+            select="'corrected'"/>
+        <x:expect label="apparatus of first choice: no reading"
+            test="not(exists(//span[@class = 'apparatus-line-entries'][1]//span[@class = 'reading']/span[@class = 'reading']))"/>
+        <x:expect label="apparatus of second choice: lemma is 'seen in manuscript'"
+            test="//span[@class = 'apparatus-line-entries'][2]//span[@class = 'apparatus-lemma'] ! string()"
+            select="'seen in manuscript'"/>
+        <x:expect label="apparatus of second choice: no reading"
+            test="not(exists(//span[@class = 'apparatus-line-entries'][2]//span[@class = 'reading']/span[@class = 'reading']))"
+        />
+    </x:scenario>
 
 </x:description>
