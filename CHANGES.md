@@ -1,5 +1,14 @@
 # Changes
 
+## dev
+
+### Possibly breaking changes
+- order in `<choice>` matters now:
+  - first child goes into the main text (lemma), no matter if the
+    choice gives `corr`/`sic` alternatives, or `abbr`/`expan`, or
+    `orig`/`reg` or multiple `seg` elements
+  - apparatus entries accordingly
+
 ## 0.15.2
 
 - improvements to LaTeX for ALEA:
