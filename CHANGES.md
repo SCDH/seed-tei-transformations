@@ -1,5 +1,11 @@
 # Changes
 
+## 0.16.0
+
+- added ALEA-specific package for handling information and work
+  identifiers of Diwan
+- improved `xsl/projects/alea/tei/extract-recension.xsl`
+
 ## 0.15.2
 
 - improvements to LaTeX for ALEA:
