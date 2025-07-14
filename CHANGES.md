@@ -1,5 +1,9 @@
 # Changes
 
+## 0.16.1
+
+- fixed `xsl/projects/alea/tei/extract-recension.xsl`
+
 ## 0.16.0
 
 - added ALEA-specific package for handling information and work
