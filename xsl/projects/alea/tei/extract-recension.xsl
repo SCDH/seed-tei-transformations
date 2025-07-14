@@ -100,26 +100,29 @@ We define a default mode in order to make stylesheet composition simpler.
     <xsl:template name="recension:separate-docs" visibility="final">
         <xsl:context-item as="document-node()" use="required"/>
         <xsl:variable name="source-document" select="."/>
-        <xsl:for-each select="$source-document//teiHeader//sourceDesc//listWit/@xml:id">
-            <xsl:variable name="recension" select="."/>
-            <xsl:variable name="fun" as="function (document-node(), xs:string) as xs:anyURI"
-                select="function-lookup(xs:QName($recension:filename-function), 2)"/>
-            <xsl:variable name="recension-output" select="$fun($source-document, $recension)"/>
-            <xsl:message use-when="system-property('debug') eq 'true'">
-                <xsl:text>Extracting recension </xsl:text>
-                <xsl:value-of select="."/>
-                <xsl:text> to </xsl:text>
-                <xsl:value-of select="$recension-output"/>
-                <xsl:text> determined by '</xsl:text>
-                <xsl:value-of select="$recension:filename-function"/>
-                <xsl:text>#2'</xsl:text>
-            </xsl:message>
-            <xsl:result-document href="{$recension-output}">
-                <xsl:apply-templates mode="recension:single" select="$source-document">
-                    <xsl:with-param name="recension" select="$recension" tunnel="true"/>
-                </xsl:apply-templates>
-            </xsl:result-document>
-        </xsl:for-each>
+        <!-- only extract recensions, if the source does not encode a single recension -->
+        <xsl:if test="not(matches(/TEI/@xml:id, '^[A-Z]'))">
+            <xsl:for-each select="$source-document//teiHeader//sourceDesc//listWit/@xml:id">
+                <xsl:variable name="recension" select="."/>
+                <xsl:variable name="fun" as="function (document-node(), xs:string) as xs:anyURI"
+                    select="function-lookup(xs:QName($recension:filename-function), 2)"/>
+                <xsl:variable name="recension-output" select="$fun($source-document, $recension)"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>Extracting recension </xsl:text>
+                    <xsl:value-of select="."/>
+                    <xsl:text> to </xsl:text>
+                    <xsl:value-of select="$recension-output"/>
+                    <xsl:text> determined by '</xsl:text>
+                    <xsl:value-of select="$recension:filename-function"/>
+                    <xsl:text>#2'</xsl:text>
+                </xsl:message>
+                <xsl:result-document href="{$recension-output}">
+                    <xsl:apply-templates mode="recension:single" select="$source-document">
+                        <xsl:with-param name="recension" select="$recension" tunnel="true"/>
+                    </xsl:apply-templates>
+                </xsl:result-document>
+            </xsl:for-each>
+        </xsl:if>
         <!-- copy the source to the default output -->
         <xsl:copy-of select="."/>
     </xsl:template>
