@@ -157,3 +157,24 @@ span.caesura {
         page-break-after: avoid !important;
     }
 }
+
+
+/* synopsis */
+
+table.synopsis div.couplet-container {
+    grid-template-columns: 0em auto auto;
+}
+table.synopsis td {
+    padding: 0 1em;
+    border-left: 1px solid black;
+}
+table.synopsis td:last-child {
+    border-left: none;
+}
+table.synopsis tr {
+    margin: 0;
+    padding: 0;
+}
+table.synopsis .variation {
+    background-color: var(--variation-bg-color, orange);
+}
