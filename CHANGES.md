@@ -1,5 +1,10 @@
 # Changes
 
+## 0.17.0
+
+- adds `xsl/projects/alea/html/synopsis.xsl` for generating a synopsis
+  for the recension encoded in ALEA's multiple recension documents
+
 ## 0.16.1
 
 - fixed `xsl/projects/alea/tei/extract-recension.xsl`

@@ -66,6 +66,7 @@ td.text-col1 {
 div.couplet-container {
     display: inline-grid;
     grid-template-columns: var(--line-count-width, 3em) auto auto;
+    white-space: nowrap;
 }
 div.couplet-container > div.text-col1-2 {
     grid-column: 2/-1;
@@ -155,4 +156,25 @@ span.caesura {
         page-break-before: avoid !important;
         page-break-after: avoid !important;
     }
+}
+
+
+/* synopsis */
+
+table.synopsis div.couplet-container {
+    grid-template-columns: 0em auto auto;
+}
+table.synopsis td {
+    padding: 0 1em;
+    border-left: 1px solid black;
+}
+table.synopsis td:last-child {
+    border-left: none;
+}
+table.synopsis tr {
+    margin: 0;
+    padding: 0;
+}
+table.synopsis .variation {
+    background-color: var(--variation-bg-color, orange);
 }
