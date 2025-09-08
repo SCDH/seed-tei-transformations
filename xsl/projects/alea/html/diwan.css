@@ -143,14 +143,6 @@ span.caesura {
     font-style: italic;
 }
 
-@font-face {
-    font-family: "Arabic Typesetting";
-    src: url("../../../arabt100.ttf");
-}
-@font-face {
-    font-family: "Amiri Regular";
-    src: url("../../../resources/css/Amiri-Regular.ttf");
-}
 
 /* styles for print output */
 @media print {
