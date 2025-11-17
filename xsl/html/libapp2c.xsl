@@ -226,6 +226,9 @@
                         </xsl:call-template>
                         <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                         <xsl:text> </xsl:text>
+                        <xsl:call-template name="app:lemma-annotation">
+                            <xsl:with-param name="entry" select="$entries[1] => map:get('entry')"/>
+                        </xsl:call-template>
                     </xsl:if>
                     <xsl:for-each select="$entries">
                         <xsl:apply-templates mode="app:reading-dspt" select="map:get(., 'entry')">
@@ -266,6 +269,17 @@
                 </span>
             </xsl:template>
 
+            <xsl:template name="app:lemma-annotation" visibility="private">
+                <xsl:param name="entry" as="element()"/>
+                <xsl:variable name="annotations" as="element()*">
+                    <xsl:apply-templates mode="app:lemma-annotation" select="$entry"/>
+                </xsl:variable>
+                <xsl:for-each select="$annotations">
+                    <xsl:sequence select="."/>
+                    <span class="lemma-annotation-separator" data-i18n-key="lemma-annotation-sep"
+                        >,&#x20;</span>
+                </xsl:for-each>
+            </xsl:template>
 
 
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) ne '']">
@@ -545,6 +559,13 @@
             <!-- make reading annotation for a nested <space> -->
             <xsl:template mode="app:reading-annotation" match="space">
                 <span class="static-text" data-i18n-key="space">&lre;space&pdf;</span>
+            </xsl:template>
+
+
+            <!-- lemma annotations -->
+
+            <xsl:template mode="app:lemma-annotation" match="app[lem/sic]">
+                <span class="static-text lemma-annotation" data-i18n-key="sic-annotation">&lre;sic&pdf;</span>
             </xsl:template>
 
         </xsl:override>

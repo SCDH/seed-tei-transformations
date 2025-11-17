@@ -680,4 +680,16 @@ see xsl/projects/alea/preview.xsl
     </xsl:template>
 
 
+    <!-- The mode app:lemma-annotation is for adding (automatically generated) notes to the lemma of
+        an apparatus entry. This is similar to reading annotations, but the annotations refer to the
+        lemma. Therefore, it is usually added right after the square bracket.
+    -->
+    <xsl:mode name="app:lemma-annotation" on-no-match="deep-skip" visibility="public"/>
+
+    <!-- A named template that serces as encapsulation for generating lemma annotations.
+    -->
+    <xsl:template name="app:lemma-annotation" visibility="abstract">
+        <xsl:param name="entry" as="element()"/>
+    </xsl:template>
+
 </xsl:package>
