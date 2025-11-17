@@ -67,4 +67,60 @@
         />
     </x:scenario>
 
+    <x:scenario label="regression against issue #56: rendition of underlined by ul">
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader/>
+                <text>
+                    <body>
+                        <p>Hello <hi rend="ul">World</hi>!</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has underlined text" test="exists(//u)"/>
+    </x:scenario>
+
+    <x:scenario label="regression against issue #56: rendition of underlined">
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader/>
+                <text>
+                    <body>
+                        <p>Hello <hi rend="underline">World</hi>!</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has underlined text" test="exists(//u)"/>
+    </x:scenario>
+
+    <x:scenario label="regression against issue #56: rendition of italic">
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader/>
+                <text>
+                    <body>
+                        <p>Hello <hi rend="italic">World</hi>!</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has italic text" test="exists(//i)"/>
+    </x:scenario>
+
+    <x:scenario label="regression against issue #56: rendition of bold">
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader/>
+                <text>
+                    <body>
+                        <p>Hello <hi rend="bold">World</hi>!</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has bold text" test="exists(//b)"/>
+    </x:scenario>
+
 </x:description>
