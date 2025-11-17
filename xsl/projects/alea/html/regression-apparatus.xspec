@@ -535,12 +535,11 @@
             test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
             select="1"/>
         <x:expect label="has sic annotation"
-            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text() => string-join() => matches('\s*sic\s*')"/>
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'lemma-annotation']//text() => string-join() => matches('\s*sic\s*')"/>
         <x:expect label="has space annotation"
             test="//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text() => string-join() => matches('\s*variant\s*')"/>
         <x:expect label="has i18n key 'sic'"
             test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'sic'])"/>
-        <x:expect label="result"/>
     </x:scenario>
 
 </x:description>

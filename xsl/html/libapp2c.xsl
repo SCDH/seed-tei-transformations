@@ -561,6 +561,13 @@
                 <span class="static-text" data-i18n-key="space">&lre;space&pdf;</span>
             </xsl:template>
 
+
+            <!-- lemma annotations -->
+
+            <xsl:template mode="app:lemma-annotation" match="app[lem/sic]">
+                <span class="static-text lemma-annotation" data-i18n-key="sic-annotation">&lre;sic&pdf;</span>
+            </xsl:template>
+
         </xsl:override>
     </xsl:use-package>
 
