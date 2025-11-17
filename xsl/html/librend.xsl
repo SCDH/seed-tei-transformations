@@ -37,7 +37,7 @@ in the base text, the apparatus and in the editorial notes. -->
         </i>
     </xsl:template>
 
-    <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend eq 'underline']">
+    <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend = ('underline', 'ul')]">
         <u>
             <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
