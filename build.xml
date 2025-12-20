@@ -19,6 +19,7 @@
 
     <!-- default rule: run all tests -->
     <target name="test">
+        <antcall target="test-xsl-common-libcommon.xsl"/>
         <antcall target="test-xsl-common-libapp2.xsl"/>
         <antcall target="test-xsl-common-libwit.xsl"/>
         <antcall target="test-xsl-common-libref.xsl"/>
@@ -53,6 +54,12 @@
     <target name="test-xsl-common-libapp2.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libapp2.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-common-libcommon.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libcommon.xspec"/>
         </antcall>
     </target>
 
