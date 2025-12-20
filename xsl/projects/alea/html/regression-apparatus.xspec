@@ -591,6 +591,8 @@
             test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'variant widh gleurm'])"/>
         <x:expect label="has i18n key 'unclear'"
             test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'unclear'])"/>
+        <x:expect label="has i18n key 'rdg-annotation-text-sep'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'rdg-annotation-text-sep'])"/>
     </x:scenario>
 
 
