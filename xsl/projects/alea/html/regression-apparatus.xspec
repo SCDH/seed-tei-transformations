@@ -542,4 +542,58 @@
             test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'sic'])"/>
     </x:scenario>
 
+    <x:scenario label="regression issue #55">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context>
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar" xml:id="test"
+                xml:base="https://example.com/test.xml">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                        <sourceDesc>
+                            <listWit>
+                                <witness xml:id="A">A</witness>
+                            </listWit>
+                        </sourceDesc>
+                    </fileDesc>
+                    <encodingDesc>
+                        <variantEncoding method="parallel-segmentation" location="internal"/>
+                    </encodingDesc>
+                </teiHeader>
+                <text xml:id="the-text">
+                    <body>
+                        <p>
+                            <app xml:id="issue55-1">
+                                <lem>lemma</lem>
+                                <rdg wit="#A">variant <unclear>widh</unclear> gleurm</rdg>
+                            </app>
+                        </p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="edited text: lemma only"
+            test="//section[@class eq 'content']/p => string-join()" select="'? lemma'"/>
+        <x:expect label="one apparatus entry"
+            test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
+            select="1"/>
+        <x:expect label="has unclear annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*unclear\s*')"/>
+        <x:expect label="'widh' in reading annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*widh\s*')"/>
+        <x:expect label="'variant' not in reading annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*variant\s*') => not()"/>
+        <x:expect label="'gleurm' not in reading annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*gleurm\s*') => not()"/>
+        <x:expect label="whole variant as text node"
+            test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'variant widh gleurm'])"/>
+        <x:expect label="has i18n key 'unclear'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'unclear'])"/>
+        <x:expect label="has i18n key 'rdg-annotation-text-sep'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'rdg-annotation-text-sep'])"/>
+    </x:scenario>
+
+
 </x:description>

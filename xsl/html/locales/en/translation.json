@@ -32,6 +32,7 @@
     "rdg-annotation-pre": " ",
     "rdg-annotation-post": "",
     "rdg-annotation-sep": ", ",
+    "rdg-annotation-text-sep": ", ",
     "lemma-annotation-sep": ", ",
     "author-title-sep": ", ",
     "index-title-person": "Persons",
