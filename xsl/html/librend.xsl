@@ -16,7 +16,8 @@ in the base text, the apparatus and in the editorial notes. -->
     <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
 
 
-    <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]" priority="0.6">
+    <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]"
+        priority="0.6">
         <span>
             <xsl:call-template name="text:class-attribute"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
@@ -37,7 +38,8 @@ in the base text, the apparatus and in the editorial notes. -->
         </i>
     </xsl:template>
 
-    <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend = ('underline', 'ul')]">
+    <xsl:template mode="text:text app:reading-text note:editorial"
+        match="hi[@rend = ('underline', 'ul')]">
         <u>
             <xsl:call-template name="text:class-attribute-opt"/>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
