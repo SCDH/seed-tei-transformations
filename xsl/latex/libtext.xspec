@@ -233,9 +233,8 @@
                 fox</tei:p>
         </x:context>
         <x:expect
-            label="has start label and text from sic, end label would rather come from footnote template"
-            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}braun(\s+fox|\\edlabel\{[a-zA-Z0-9]+-end\})')"
-        />
+            label="has start label and text from corr. end-label would come from inline-footnote"
+            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}braun\s')"/>
     </x:scenario>
 
     <x:scenario label="choice with corr first and sic second: corr in main text">
@@ -245,9 +244,8 @@
                 fox</tei:p>
         </x:context>
         <x:expect
-            label="has start label and text from corr, end label would rather come from footnote template"
-            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}brown(\s+fox|\\edlabel\{[a-zA-Z0-9]+-end\})')"
-        />
+            label="has start label and text from corr. end-label would come from inline footnote"
+            test="matches(., '\\edlabel\{[a-zA-Z0-9]+-start\}brown\s')"/>
     </x:scenario>
 
     <x:scenario label="gap">
