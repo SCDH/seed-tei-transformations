@@ -123,4 +123,12 @@
         <xsl:sequence select="substring($composed, $length - $size, $length)"/>
     </xsl:function>
 
+    <!-- predicate for testing if the context node has siblings that contribute text -->
+    <xsl:function name="common:has-text-siblings" as="xs:boolean" visibility="final">
+        <xsl:param name="context" as="element()"/>
+        <xsl:sequence
+            select="($context/parent::*/node() except $context) ! normalize-space(.) => string-join() ne ''"
+        />
+    </xsl:function>
+
 </xsl:package>

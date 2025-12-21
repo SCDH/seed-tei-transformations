@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:diwan="http://scdh.wwu.de/transform/diwan#" stylesheet="diwan.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+
+    <x:scenario label="parse code">
+        <x:call function="diwan:parse-code">
+            <x:param name="code" as="xs:string">Adhal1</x:param>
+        </x:call>
+        <x:expect label="recension" test="map:get(., 'recension')" select="'Asl'"/>
+        <x:expect label="rhyme" test="map:get(., 'rhyme')" select="'dhal'"/>
+        <x:expect label="number" test="map:get(., 'number')" select="'1'"/>
+        <x:expect label="secondary" test="map:get(., 'secondary')" select="''"/>
+    </x:scenario>
+
+</x:description>

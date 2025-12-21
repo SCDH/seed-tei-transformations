@@ -143,6 +143,13 @@ target/bin/xslt.sh \
     </xsl:use-package>
 
     <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
+        package-version="0.1.0">
+        <xsl:accept component="function" names="common:has-text-siblings#1" visibility="final"/>
+        <xsl:accept component="function" names="common:line-number#1" visibility="hidden"/>
+    </xsl:use-package>
+
+    <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
         package-version="1.0.0">
 
@@ -255,9 +262,18 @@ target/bin/xslt.sh \
                 <xsl:sequence select="min($sortkeys)"/>
             </xsl:function>
 
-            <xsl:template mode="app:reading-annotation" match="unclear[not(@reason)]">
-                <span class="static-text" data-i18n-key="unclear">
-                    <xsl:text>unclear</xsl:text>
+            <xsl:template mode="app:reading-annotation"
+                match="unclear[not(@reason)][not(common:has-text-siblings(.))]">
+                <span class="static-text" data-i18n-key="unclear">unclear</span>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-annotation"
+                match="unclear[not(@reason)][common:has-text-siblings(.)]">
+                <span xml:space="preserve">
+                <span class="static-text" data-i18n-key="unclear">&lre;unclear&pdf;</span><span class="static-text" data-i18n-key="rdg-annotation-text-sep">:</span>
+                </span>
+                <span class="reading-annotation-text">
+                    <xsl:apply-templates mode="app:reading-text"/>
                 </span>
             </xsl:template>
 

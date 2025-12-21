@@ -9,6 +9,25 @@
     `orig`/`reg` or multiple `seg` elements
   - apparatus entries accordingly
 
+## 0.17.1
+
+- fixes issues #55, #56, #57, #59
+
+## 0.17.0
+
+- adds `xsl/projects/alea/html/synopsis.xsl` for generating a synopsis
+  for the recension encoded in ALEA's multiple recension documents
+
+## 0.16.1
+
+- fixed `xsl/projects/alea/tei/extract-recension.xsl`
+
+## 0.16.0
+
+- added ALEA-specific package for handling information and work
+  identifiers of Diwan
+- improved `xsl/projects/alea/tei/extract-recension.xsl`
+
 ## 0.15.2
 
 - improvements to LaTeX for ALEA:

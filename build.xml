@@ -19,6 +19,7 @@
 
     <!-- default rule: run all tests -->
     <target name="test">
+        <antcall target="test-xsl-common-libcommon.xsl"/>
         <antcall target="test-xsl-common-libapp2.xsl"/>
         <antcall target="test-xsl-common-libwit.xsl"/>
         <antcall target="test-xsl-common-libref.xsl"/>
@@ -44,6 +45,7 @@
         <antcall target="test-xsl-projects-alea-html-diwan-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-html-regression-apparatus.xsl"/>
         <antcall target="test-xsl-projects-alea-html-regression-biblio.xsl"/>
+        <antcall target="test-xsl-projects-alea-common-diwan.xsl"/>
         <antcall target="test-xsl-projects-alea-tei-extract-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
         <antcall target="test-xsl-html-libhtml.xsl"/>
@@ -52,6 +54,12 @@
     <target name="test-xsl-common-libapp2.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libapp2.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-common-libcommon.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libcommon.xspec"/>
         </antcall>
     </target>
 
@@ -207,6 +215,12 @@
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml"
                 location="${basedir}/xsl/projects/alea/html/regression-biblio.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-projects-alea-common-diwan.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/projects/alea/common/diwan.xspec"/>
         </antcall>
     </target>
 
