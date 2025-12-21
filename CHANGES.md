@@ -1,5 +1,9 @@
 # Changes
 
+## 0.17.1
+
+- fixes issues #55, #56, #57, #59
+
 ## 0.17.0
 
 - adds `xsl/projects/alea/html/synopsis.xsl` for generating a synopsis
