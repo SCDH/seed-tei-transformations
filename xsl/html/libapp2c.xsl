@@ -481,8 +481,8 @@
 
             <xsl:template mode="app:reading-dspt" match="space">
                 <span class="reading space">
-                    <!-- TODO: latin -->
-                    <span class="static-text" data-i18n-key="space">&lre;space&pdf;</span>
+                    <!-- space as well as gap is a kind of lacuna -->
+                    <span class="static-text" data-i18n-key="space">&lre;lac.&pdf;</span>
                     <!-- TODO: evaluate all dimension attributes -->
                     <xsl:if test="@quantity and @unit">
                         <span class="apparatus-sep" data-i18n-key="reason-quantity-sep">, </span>
@@ -558,7 +558,7 @@
 
             <!-- make reading annotation for a nested <space> -->
             <xsl:template mode="app:reading-annotation" match="space">
-                <span class="static-text" data-i18n-key="space">&lre;space&pdf;</span>
+                <span class="static-text" data-i18n-key="space">&lre;lac.&pdf;</span>
             </xsl:template>
 
 

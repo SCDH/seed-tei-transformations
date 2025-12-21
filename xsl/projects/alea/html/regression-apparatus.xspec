@@ -166,7 +166,7 @@
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="reading annotation 'space' present in apparatus entry"
-            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'space')"/>
+            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'lac')"/>
         <x:expect label="reading annotation is translated"
             test="some $att in //@data-i18n-key satisfies $att eq 'space'"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
@@ -182,7 +182,7 @@
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="static text 'space' present in apparatus entry"
-            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'space')"/>
+            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'lac')"/>
         <x:expect label="'space' is translated"
             test="some $att in //@data-i18n-key satisfies $att eq 'space'"/>
         <x:expect label="result (reading only)" test="//*[matches(@class, 'reading')]">
@@ -592,7 +592,8 @@
         <x:expect label="has i18n key 'unclear'"
             test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'unclear'])"/>
         <x:expect label="has i18n key 'rdg-annotation-text-sep'"
-            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'rdg-annotation-text-sep'])"/>
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'rdg-annotation-text-sep'])"
+        />
     </x:scenario>
 
 
