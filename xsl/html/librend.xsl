@@ -60,13 +60,52 @@ in the base text, the apparatus and in the editorial notes. -->
         </span>
     </xsl:template>
 
+    <!-- space left by scribe (lacuna) -->
+    <xsl:template mode="text:text app:reading-text" match="space">
+        <span class="static-text space">[...]</span>
+    </xsl:template>
+
+    <!-- space left by scribe with quantity annotation -->
+    <xsl:template mode="app:reading-text" match="space[@quantity]">
+        <xsl:try>
+            <xsl:variable name="quantity" as="xs:integer" select="xs:integer(@quantity)"/>
+            <xsl:choose>
+                <xsl:when test="$quantity gt 3">
+                    <span class="static-text space">[...</span>
+                    <span class="quantity-annotation" style="vertical-align: super">
+                        <xsl:value-of select="@quantity || ' ' || @unit"/>
+                    </span>
+                    <xsl:for-each select="4 to min(($quantity, 10))">
+                        <xsl:text>.</xsl:text>
+                    </xsl:for-each>
+                    <span class="static-text space">]</span>
+                </xsl:when>
+                <xsl:otherwise>
+                    <span class="static-text space">[..</span>
+                    <span class="quantity-annotation" style="vertical-align: super">
+                        <xsl:value-of select="@quantity || ' ' || @unit"/>
+                    </span>
+                    <span class="static-text space">.]</span>
+                </xsl:otherwise>
+            </xsl:choose>
+            <xsl:catch>
+                <span class="static-text space">[..</span>
+                <span class="quantity-annotation" style="vertical-align: super">
+                    <xsl:value-of select="@quantity || ' ' || @unit"/>
+                </span>
+                <span class="static-text space">.]</span>
+            </xsl:catch>
+        </xsl:try>
+    </xsl:template>
+
     <!-- drop attributes for which there is not special rule -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
 
     <xsl:template name="text:class-attribute" visibility="public">
         <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
         <xsl:attribute name="class"
-            select="(name(), $additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"/>
+            select="(name(), $additional, @type, tokenize(@rendition) ! substring(., 2)) => string-join(' ')"
+        />
     </xsl:template>
 
     <xsl:template name="text:class-attribute-opt" visibility="public">
