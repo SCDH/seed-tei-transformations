@@ -240,8 +240,8 @@
         <x:expect label="has seg's span" test="exists(//span[matches(@class, 'seg')])"/>
         <x:expect label="has only one seg's span" test="count(//span[matches(@class, 'seg')])"
             select="1"/>
-        <x:expect label="has 'first' text" test="//text() => string-join() => matches('second')"/>
-        <x:expect label="has no 'second' text"
+        <x:expect label="has 'second' text" test="//text() => string-join() => matches('second')"/>
+        <x:expect label="has no 'first' text"
             test="//text() => string-join() => matches('first') => not()"/>
         <x:expect label="has no 'third' text"
             test="//text() => string-join() => matches('third') => not()"/>
