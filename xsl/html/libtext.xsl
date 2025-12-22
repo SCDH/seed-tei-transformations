@@ -20,10 +20,13 @@ Note, that there is a default mode in this package.
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:source="http://scdh.wwu.de/transform/source#" exclude-result-prefixes="#all"
+    xmlns:source="http://scdh.wwu.de/transform/source#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
+
+    <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -113,7 +116,7 @@ Note, that there is a default mode in this package.
             </xsl:template>
 
             <!-- The first element is presented in the text. So order matters! -->
-            <xsl:template match="choice">
+            <xsl:template match="choice" use-when="$compat:first-child">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="choice">
                     <xsl:call-template name="text:class-attribute"/>
