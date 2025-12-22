@@ -201,4 +201,57 @@
         </x:expect>
     </x:scenario>
 
+
+    <x:scenario label="lemma text nodes on choice with corr first and then sic">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:corr>corrected</t:corr>
+                                <t:sic>seen in the manuscript</t:sic>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
+        <x:expect label="has 'seen ...' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">seen in the manuscript</x:expect>
+        <x:expect label="has 'corr' annotation"
+            test="exists(//span[tokenize(@class) = 'static-text'][matches(., 'corr')])"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with corr after sic">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:sic>seen in the manuscript</t:sic>
+                                <t:corr>corrected</t:corr>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
+        <x:expect label="has 'seen ...' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">seen in the manuscript</x:expect>
+        <x:expect label="has 'corr' annotation"
+            test="exists(//span[tokenize(@class) = 'static-text'][matches(., 'corr')])"/>
+    </x:scenario>
+
+
+
 </x:description>

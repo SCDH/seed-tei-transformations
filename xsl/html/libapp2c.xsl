@@ -381,7 +381,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="corr">
-                <span class="static-text" data-i18n-key="conieci">&lre;coniec.&pdf;</span>
+                <span class="static-text" data-i18n-key="conieci">&lre;corr.&pdf;</span>
             </xsl:template>
 
 
@@ -407,11 +407,9 @@
                 </xsl:if>
             </xsl:template>
 
-            <xsl:template mode="app:reading-dspt" match="choice[corr and sic]">
+            <xsl:template mode="app:reading-dspt" match="choice[corr and sic]"
+                use-when="not($compat:first-child)">
                 <span class="reading">
-                    <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
-                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
-                        >;</span>
                     <xsl:apply-templates select="sic" mode="app:reading-dspt"/>
                 </span>
                 <xsl:if test="position() ne last()">
@@ -572,6 +570,11 @@
             <xsl:template mode="app:lemma-annotation" match="app[lem/sic]">
                 <span class="static-text lemma-annotation" data-i18n-key="sic-annotation"
                     >&lre;sic&pdf;</span>
+            </xsl:template>
+
+            <xsl:template mode="app:lemma-annotation" match="choice[corr and sic]">
+                <span class="static-text lemma-annotation" data-i18n-key="corr-annotation"
+                    >&lre;corr.&pdf;</span>
             </xsl:template>
 
         </xsl:override>
