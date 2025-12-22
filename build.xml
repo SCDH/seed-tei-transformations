@@ -9,6 +9,8 @@
 
     <property name="xspec.project.dir" location="../../xspec"/>
 
+    <property name="xspec.html.report.theme" value="classic"/>
+
     <include file="${xspec.project.dir}/build.xml"/>
 
     <echo>basedir: ${basedir}</echo>
