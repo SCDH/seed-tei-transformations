@@ -7,7 +7,7 @@
     xmlns:test="http://scdh.wwu.de/transform/test#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="diwan.xsl" run-as="external">
 
-    <x:variable name="x:saxon-config" href="../../../../saxon.he.xml"/>
+    <x:variable name="x:saxon-config" href="../../../../saxon.he.html.xml"/>
 
     <x:variable name="doc">
         <t:TEI xml:lang="ar">
@@ -166,7 +166,7 @@
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="reading annotation 'space' present in apparatus entry"
-            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'space')"/>
+            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'lac')"/>
         <x:expect label="reading annotation is translated"
             test="some $att in //@data-i18n-key satisfies $att eq 'space'"/>
         <x:expect label="result (reading only)" test="//*[@class eq 'reading']">
@@ -182,7 +182,7 @@
         <x:call template="test:single-app-entry"/>
         <x:expect label="number of entries" test="count(//*[@class eq 'apparatus-line'])" select="1"/>
         <x:expect label="static text 'space' present in apparatus entry"
-            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'space')"/>
+            test="some $txt in //*[@data-i18n-key]/text() satisfies matches($txt, 'lac')"/>
         <x:expect label="'space' is translated"
             test="some $att in //@data-i18n-key satisfies $att eq 'space'"/>
         <x:expect label="result (reading only)" test="//*[matches(@class, 'reading')]">
@@ -454,6 +454,244 @@
             select="'رﺑ'"/>
         <x:expect label="order of readings: 3: PS" test="(//*[@class eq 'siglum'])[4] ! string()"
             select="'PS'"/>
+    </x:scenario>
+
+    <x:scenario label="regression issue #59">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context>
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar" xml:id="test"
+                xml:base="https://example.com/test.xml">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                        <sourceDesc>
+                            <listWit>
+                                <witness xml:id="A">A</witness>
+                            </listWit>
+                        </sourceDesc>
+                    </fileDesc>
+                    <encodingDesc>
+                        <variantEncoding method="parallel-segmentation" location="internal"/>
+                    </encodingDesc>
+                </teiHeader>
+                <text xml:id="the-text">
+                    <body>
+                        <p>
+                            <app xml:id="issue59-1">
+                                <lem>world</lem>
+                                <rdg wit="#A"><space/></rdg>
+                            </app>
+                        </p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="one apparatus entry"
+            test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
+            select="1"/>
+        <x:expect label="has space annotation"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading-annotation']//text() => string-join() => matches('\s*lac\s*')"/>
+        <x:expect label="has i18n key 'space'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'space'])"/>
+    </x:scenario>
+
+    <x:scenario label="regression issue #59, with text in rdg">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context>
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar" xml:id="test"
+                xml:base="https://example.com/test.xml">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                        <sourceDesc>
+                            <listWit>
+                                <witness xml:id="A">A</witness>
+                            </listWit>
+                        </sourceDesc>
+                    </fileDesc>
+                    <encodingDesc>
+                        <variantEncoding method="parallel-segmentation" location="internal"/>
+                    </encodingDesc>
+                </teiHeader>
+                <text xml:id="the-text">
+                    <body>
+                        <p>
+                            <app xml:id="issue59-1">
+                                <lem>world</lem>
+                                <rdg wit="#A">wor<space/>d</rdg>
+                            </app>
+                        </p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="one apparatus entry"
+            test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
+            select="1"/>
+        <x:expect label="has space annotation"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading-annotation']//text() => string-join() => matches('\s*lac\s*')"/>
+        <x:expect label="has i18n key 'space'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'space'])"/>
+        <x:expect label="has text before space element"
+            test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'wor'])"/>
+        <x:expect label="has text after space element"
+            test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'd'])"/>
+        <x:expect label="has space sign in wor[...]d"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text() => string-join() => matches('wor\[[-_\.]*\]d')"
+        />
+    </x:scenario>
+
+    <x:scenario label="regression issue #59, with text in rdg and quantity annotation">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context>
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar" xml:id="test"
+                xml:base="https://example.com/test.xml">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                        <sourceDesc>
+                            <listWit>
+                                <witness xml:id="A">A</witness>
+                            </listWit>
+                        </sourceDesc>
+                    </fileDesc>
+                    <encodingDesc>
+                        <variantEncoding method="parallel-segmentation" location="internal"/>
+                    </encodingDesc>
+                </teiHeader>
+                <text xml:id="the-text">
+                    <body>
+                        <p>
+                            <app xml:id="issue59-1">
+                                <lem>world</lem>
+                                <rdg wit="#A">wor<space quantity="4" unit="character"/>d</rdg>
+                            </app>
+                        </p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="one apparatus entry"
+            test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
+            select="1"/>
+        <x:expect label="has space annotation"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading-annotation']//text() => string-join() => matches('\s*lac\s*')"/>
+        <x:expect label="has i18n key 'space'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'space'])"/>
+        <x:expect label="has text before space element"
+            test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'wor'])"/>
+        <x:expect label="has text after space element"
+            test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'd'])"/>
+        <x:expect label="has quantity 'wor[...4'"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text() => string-join() => matches('wor\[[-_\.]+4')"/>
+        <x:expect label="has unit 'characters.]d'"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text() => string-join() => matches('characters?[-_\.]\]d')"
+        />
+    </x:scenario>
+
+    <x:scenario label="regression issue #57">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context>
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar" xml:id="test"
+                xml:base="https://example.com/test.xml">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                        <sourceDesc>
+                            <listWit>
+                                <witness xml:id="A">A</witness>
+                            </listWit>
+                        </sourceDesc>
+                    </fileDesc>
+                    <encodingDesc>
+                        <variantEncoding method="parallel-segmentation" location="internal"/>
+                    </encodingDesc>
+                </teiHeader>
+                <text xml:id="the-text">
+                    <body>
+                        <p>
+                            <app xml:id="issue59-1">
+                                <lem><sic>lemma</sic></lem>
+                                <rdg wit="#A">variant</rdg>
+                            </app>
+                        </p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="edited text: lemma only"
+            test="//section[@class eq 'content']/p => string-join()" select="'? lemma'"/>
+        <x:expect label="one apparatus entry"
+            test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
+            select="1"/>
+        <x:expect label="has sic annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'lemma-annotation']//text() => string-join() => matches('\s*sic\s*')"/>
+        <x:expect label="has space annotation"
+            test="//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text() => string-join() => matches('\s*variant\s*')"/>
+        <x:expect label="has i18n key 'sic'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'sic'])"/>
+    </x:scenario>
+
+    <x:scenario label="regression issue #55">
+        <x:param name="wit-catalog" select="'../../../../test/samples/witnesses.xml'"/>
+        <x:context>
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar" xml:id="test"
+                xml:base="https://example.com/test.xml">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                        <sourceDesc>
+                            <listWit>
+                                <witness xml:id="A">A</witness>
+                            </listWit>
+                        </sourceDesc>
+                    </fileDesc>
+                    <encodingDesc>
+                        <variantEncoding method="parallel-segmentation" location="internal"/>
+                    </encodingDesc>
+                </teiHeader>
+                <text xml:id="the-text">
+                    <body>
+                        <p>
+                            <app xml:id="issue55-1">
+                                <lem>lemma</lem>
+                                <rdg wit="#A">variant <unclear>widh</unclear> gleurm</rdg>
+                            </app>
+                        </p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="edited text: lemma only"
+            test="//section[@class eq 'content']/p => string-join()" select="'? lemma'"/>
+        <x:expect label="one apparatus entry"
+            test="//div[@class eq 'apparatus-container']/*[not(matches(@class, 'line-number'))] => count()"
+            select="1"/>
+        <x:expect label="has unclear annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*unclear\s*')"/>
+        <x:expect label="'widh' in reading annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*widh\s*')"/>
+        <x:expect label="'variant' not in reading annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*variant\s*') => not()"/>
+        <x:expect label="'gleurm' not in reading annotation"
+            test="//div[@class eq 'apparatus-container']//span[tokenize(@class) = 'reading-annotation']//text() => string-join() => matches('\s*gleurm\s*') => not()"/>
+        <x:expect label="whole variant as text node"
+            test="exists(//div[@class eq 'apparatus-container']//span[@class eq 'reading']//text()[. eq 'variant widh gleurm'])"/>
+        <x:expect label="has i18n key 'unclear'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'unclear'])"/>
+        <x:expect label="has i18n key 'rdg-annotation-text-sep'"
+            test="exists(//div[@class eq 'apparatus-container']//*[@data-i18n-key eq 'rdg-annotation-text-sep'])"
+        />
     </x:scenario>
 
 

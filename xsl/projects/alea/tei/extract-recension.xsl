@@ -22,7 +22,9 @@ We define a default mode in order to make stylesheet composition simpler.
 <xsl:package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/tei/extract-recension.xsl"
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.tei-c.org/ns/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map" xmlns="http://www.tei-c.org/ns/1.0"
+    xmlns:diwan="http://scdh.wwu.de/transform/diwan#"
     xmlns:recension="http://scdh.wwu.de/transform/recension#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.1"
     default-mode="recension:extract">
@@ -30,6 +32,18 @@ We define a default mode in order to make stylesheet composition simpler.
     <xsl:mode name="recension:extract" on-no-match="fail" visibility="final"/>
 
     <xsl:param name="source" as="xs:string" required="true"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/common/diwan.xsl"
+        package-version="1.0.0"/>
+
+    <!-- A function to make the filename of an extracted recension -->
+    <xsl:param name="recension:filename-function" as="xs:string"
+        select="'recension:recension-suffix'"/>
+
+    <!-- The output base folder for xsl:result-document etc. -->
+    <xsl:param name="recension:dist" as="xs:string" select="'/'"/>
+
 
     <xsl:variable name="recension:work-id-xpath" as="xs:string" visibility="public">
         <xsl:text>(/*/@xml:id, //idno[@type eq 'canonical-id'], //idno[@type eq 'work-identifier'], tokenize(tokenize(base-uri(/), '/')[last()], '\.')[1])[1]</xsl:text>
@@ -86,17 +100,51 @@ We define a default mode in order to make stylesheet composition simpler.
     <xsl:template name="recension:separate-docs" visibility="final">
         <xsl:context-item as="document-node()" use="required"/>
         <xsl:variable name="source-document" select="."/>
-        <xsl:for-each select="$source-document//teiHeader//sourceDesc//listWit/@xml:id">
-            <xsl:variable name="recension" select="."/>
-            <xsl:variable name="recension-output"
-                select="concat(base-uri($source-document), '.', $recension, '.xml')"/>
-            <xsl:result-document href="{$recension-output}">
-                <xsl:apply-templates mode="recension:single" select="$source-document">
-                    <xsl:with-param name="recension" select="$recension" tunnel="true"/>
-                </xsl:apply-templates>
-            </xsl:result-document>
-        </xsl:for-each>
+        <!-- only extract recensions, if the source does not encode a single recension -->
+        <xsl:if test="not(matches(/TEI/@xml:id, '^[A-Z]'))">
+            <xsl:for-each select="$source-document//teiHeader//sourceDesc//listWit/@xml:id">
+                <xsl:variable name="recension" select="."/>
+                <xsl:variable name="fun" as="function (document-node(), xs:string) as xs:anyURI"
+                    select="function-lookup(xs:QName($recension:filename-function), 2)"/>
+                <xsl:variable name="recension-output" select="$fun($source-document, $recension)"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>Extracting recension </xsl:text>
+                    <xsl:value-of select="."/>
+                    <xsl:text> to </xsl:text>
+                    <xsl:value-of select="$recension-output"/>
+                    <xsl:text> determined by '</xsl:text>
+                    <xsl:value-of select="$recension:filename-function"/>
+                    <xsl:text>#2'</xsl:text>
+                </xsl:message>
+                <xsl:result-document href="{$recension-output}">
+                    <xsl:apply-templates mode="recension:single" select="$source-document">
+                        <xsl:with-param name="recension" select="$recension" tunnel="true"/>
+                    </xsl:apply-templates>
+                </xsl:result-document>
+            </xsl:for-each>
+        </xsl:if>
+        <!-- copy the source to the default output -->
+        <xsl:copy-of select="."/>
     </xsl:template>
+
+    <xsl:function name="recension:recension-suffix" as="xs:anyURI">
+        <xsl:param name="source-document" as="document-node()"/>
+        <xsl:param name="recension" as="xs:string"/>
+        <xsl:sequence
+            select="concat(base-uri($source-document), '.', $recension, '.xml') => xs:anyURI()"/>
+    </xsl:function>
+
+    <xsl:function name="recension:systematic-name" as="xs:anyURI">
+        <xsl:param name="source-document" as="document-node()"/>
+        <xsl:param name="recension" as="xs:string"/>
+        <xsl:variable name="code" as="map(xs:string, xs:string)"
+            select="diwan:parse-code($source-document/TEI/@xml:id)"/>
+        <xsl:variable name="systematic-path" as="xs:string" select="'Diwan/'
+            || map:get($code, 'rhyme') || '/' 
+            || map:get($code, 'rhyme') || map:get($code, 'number') || '/' 
+            || replace($recension, '[a-z]', '') || map:get($code, 'rhyme') || map:get($code, 'number') || '.tei.xml'"/>
+        <xsl:sequence select="resolve-uri($systematic-path, $recension:dist)"/>
+    </xsl:function>
 
     <xsl:template name="recension:tei-corpus" visibility="final">
         <xsl:context-item as="document-node(element(TEI))" use="required"/>

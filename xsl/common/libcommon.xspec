@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Unit tests (regression tests) for libref.xsl -->
+
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
+  xmlns:common="http://scdh.wwu.de/transform/common#" stylesheet="libcommon.xsl" run-as="external">
+
+  <x:variable name="x:saxon-config">
+    <configuration xmlns="http://saxon.sf.net/ns/configuration">
+      <xsltPackages>
+        <package
+          name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+          package-version="1.0.0" sourceLocation="libref.xsl"/>
+      </xsltPackages>
+    </configuration>
+  </x:variable>
+
+  <x:scenario label="common:has-text-sibling with text siblings">
+    <x:context>
+      <tei:ab>
+        <tei:ab>Hi</tei:ab>
+        <tei:unclear>there</tei:unclear>
+        <tei:punctuation>!</tei:punctuation>
+      </tei:ab>
+    </x:context>
+    <x:call function="common:has-text-siblings">
+      <x:param name="context" select="$x:context/tei:unclear"/>
+    </x:call>
+    <x:expect label="true" select="true()"/>
+  </x:scenario>
+
+  <x:scenario label="common:has-text-sibling with no text siblings">
+    <x:context>
+      <tei:ab>
+        <tei:unclear>there</tei:unclear>
+        <tei:lb/>
+      </tei:ab>
+    </x:context>
+    <x:call function="common:has-text-siblings">
+      <x:param name="context" select="$x:context/tei:unclear"/>
+    </x:call>
+    <x:expect label="true" select="false()"/>
+  </x:scenario>
+
+
+</x:description>
