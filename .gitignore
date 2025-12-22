@@ -19,6 +19,8 @@ auto
 /saxon.*.xml
 /test.html
 /log.txt
+.settings
+.project
 
 # xspec reports
 *-report.html
