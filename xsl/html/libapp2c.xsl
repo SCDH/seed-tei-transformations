@@ -16,8 +16,12 @@
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
+
+    <!-- with false (default), there are some specific templates for alternative text in choice -->
+    <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
     <xsl:param name="app:popup-anchor" as="xs:string" select="'?'" required="false"/>
 
@@ -565,7 +569,8 @@
             <!-- lemma annotations -->
 
             <xsl:template mode="app:lemma-annotation" match="app[lem/sic]">
-                <span class="static-text lemma-annotation" data-i18n-key="sic-annotation">&lre;sic&pdf;</span>
+                <span class="static-text lemma-annotation" data-i18n-key="sic-annotation"
+                    >&lre;sic&pdf;</span>
             </xsl:template>
 
         </xsl:override>

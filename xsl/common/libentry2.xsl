@@ -56,12 +56,23 @@ see xsl/projects/alea/preview.xsl
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
+
+    <!-- with false (default), there are some specific templates for alternative text in choice -->
+    <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
         package-version="1.0.0"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="wit:witness" visibility="private"/>
+    </xsl:use-package>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
@@ -346,7 +357,32 @@ see xsl/projects/alea/preview.xsl
 
     <!-- things that do not go into the base text -->
     <xsl:template mode="seed:lemma-text-nodes"
-        match="rdg | choice[corr]/sic | choice[reg]/orig | span | interp | index | note | witDetail"/>
+        match="rdg | span | interp | index | note | witDetail"/>
+
+    <xsl:template mode="seed:lemma-text-nodes" use-when="not($compat:first-child)" priority="10"
+        match="choice[corr and sic]">
+        <xsl:apply-templates mode="#current" select="corr/node()"/>
+    </xsl:template>
+
+    <xsl:template mode="seed:lemma-text-nodes" use-when="not($compat:first-child)" priority="10"
+        match="choice[orig and reg]">
+        <xsl:apply-templates mode="#current" select="reg/node()"/>
+    </xsl:template>
+
+    <xsl:template mode="seed:lemma-text-nodes" use-when="not($compat:first-child)" priority="10"
+        match="choice[abbr and expan]">
+        <xsl:apply-templates mode="#current" select="expand/node()"/>
+    </xsl:template>
+
+    <!-- Simple encoding of variation using seg nested in choice -->
+    <xsl:template mode="seed:lemma-text-nodes"
+        match="choice[seg and exists($wit:witness) and (seg/@source ! tokenize(.) ! replace(., '^#', '')) = $wit:witness]">
+        <xsl:apply-templates mode="#current"
+            select="seg[(tokenize(@source) ! replace(., '^#', '')) = $wit:witness]/node()"/>
+    </xsl:template>
+
+    <!-- things that do not go into the base text -->
+    <xsl:template mode="seed:lemma-text-nodes" match="choice/*[position() gt 1]"/>
 
     <xsl:template mode="seed:lemma-text-nodes"
         match="lem[matches(seed:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
