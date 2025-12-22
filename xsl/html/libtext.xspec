@@ -206,7 +206,7 @@
             test="//text() => string-join() => matches('seen') => not()"/>
     </x:scenario>
 
-    <x:scenario label="text:text on choice multiple segments" pending="needs a stylesheet parameter">
+    <x:scenario label="text:text on choice multiple segments">
         <x:context mode="text:text">
             <t:choice>
                 <t:seg source="#A">first</t:seg>

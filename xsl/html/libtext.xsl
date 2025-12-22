@@ -115,7 +115,7 @@ Note, that there is a default mode in this package.
             </xsl:template>
 
             <!-- The first element is presented in the text. So order matters! -->
-            <xsl:template match="choice" use-when="$compat:first-child">
+            <xsl:template match="choice">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="choice">
                     <xsl:call-template name="text:class-attribute"/>
@@ -126,6 +126,7 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
+            <!-- more specific templates for choice if $compat:first-child is false -->
             <!-- the text contains the corrected passage (emendatio) -->
             <xsl:template match="choice[sic and corr]" use-when="not($compat:first-child)">
                 <xsl:apply-templates mode="text:hook-before" select="corr"/>
@@ -140,7 +141,7 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
-            <!-- the text contains the corrected passage (emendatio) -->
+            <!-- the text contains the regularized passage -->
             <xsl:template match="choice[orig and reg]" use-when="not($compat:first-child)">
                 <xsl:apply-templates mode="text:hook-before" select="reg"/>
                 <span class="reg">
@@ -154,7 +155,7 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
-            <!-- the text contains the corrected passage (emendatio) -->
+            <!-- the text contains the expanded word -->
             <xsl:template match="choice[abbr and expan]" use-when="not($compat:first-child)">
                 <xsl:apply-templates mode="text:hook-before" select="expan"/>
                 <span class="expan">
@@ -167,6 +168,7 @@ Note, that there is a default mode in this package.
                 <xsl:apply-templates mode="text:hook-after" select="expan"/>
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
+
 
             <xsl:template match="gap">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
