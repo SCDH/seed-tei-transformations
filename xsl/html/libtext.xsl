@@ -126,6 +126,48 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
+            <!-- the text contains the corrected passage (emendatio) -->
+            <xsl:template match="choice[sic and corr]" use-when="not($compat:first-child)">
+                <xsl:apply-templates mode="text:hook-before" select="corr"/>
+                <span class="corr">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="corr"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, corr/@*"/>
+                    <xsl:apply-templates select="corr/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="corr"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- the text contains the corrected passage (emendatio) -->
+            <xsl:template match="choice[orig and reg]" use-when="not($compat:first-child)">
+                <xsl:apply-templates mode="text:hook-before" select="reg"/>
+                <span class="reg">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="reg"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, reg/@*"/>
+                    <xsl:apply-templates select="reg/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="reg"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- the text contains the corrected passage (emendatio) -->
+            <xsl:template match="choice[abbr and expan]" use-when="not($compat:first-child)">
+                <xsl:apply-templates mode="text:hook-before" select="expan"/>
+                <span class="expan">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="expan"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, expan/@*"/>
+                    <xsl:apply-templates select="expan/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="expan"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
             <xsl:template match="gap">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <!-- use hook instead? -->

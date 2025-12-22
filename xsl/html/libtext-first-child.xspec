@@ -5,7 +5,7 @@
     xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="libtext.xsl" run-as="external">
 
-    <x:param name="compat:first-child" select="false()" static="true"/>
+    <x:param name="compat:first-child" select="true()" static="true"/>
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -123,6 +123,7 @@
                 <t:sic>seen in the manuscript</t:sic>
             </t:choice>
         </x:context>
+        <x:expect label="has choice's span" test="exists(//span[matches(@class, 'choice')])"/>
         <x:expect label="has corr's span" test="exists(//span[matches(@class, 'corr')])"/>
         <x:expect label="has no sic's span" test="not(exists(//span[matches(@class, 'sic')]))"/>
         <x:expect label="has 'corrected' text"
@@ -138,12 +139,12 @@
                 <t:corr>corrected</t:corr>
             </t:choice>
         </x:context>
-        <x:expect label="has corr's span" test="exists(//span[matches(@class, 'corr')])"/>
-        <x:expect label="has no sic's span" test="not(exists(//span[matches(@class, 'sic')]))"/>
-        <x:expect label="has 'corrected' text"
-            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has choice's span" test="exists(//span[matches(@class, 'choice')])"/>
+        <x:expect label="has sic's span" test="exists(//span[matches(@class, 'sic')])"/>
+        <x:expect label="has no corr's span" test="not(exists(//span[matches(@class, 'corr')]))"/>
+        <x:expect label="has 'corrected' text" test="//text() => string-join() => matches('seen')"/>
         <x:expect label="has no 'corrected' text"
-            test="//text() => string-join() => matches('seen') => not()"/>
+            test="//text() => string-join() => matches('corrected') => not()"/>
     </x:scenario>
 
     <x:scenario label="text:text on choice with reg first and then orig">
@@ -153,6 +154,7 @@
                 <t:orig>seen in the manuscript</t:orig>
             </t:choice>
         </x:context>
+        <x:expect label="has choice's span" test="exists(//span[matches(@class, 'choice')])"/>
         <x:expect label="has reg's span" test="exists(//span[matches(@class, 'reg')])"/>
         <x:expect label="has no orig's span" test="not(exists(//span[matches(@class, 'orig')]))"/>
         <x:expect label="has 'regected' text"
@@ -168,12 +170,12 @@
                 <t:reg>regularized</t:reg>
             </t:choice>
         </x:context>
-        <x:expect label="has reg's span" test="exists(//span[matches(@class, 'reg')])"/>
-        <x:expect label="has no orig's span" test="not(exists(//span[matches(@class, 'orig')]))"/>
-        <x:expect label="has 'regected' text"
-            test="//text() => string-join() => matches('regularized')"/>
-        <x:expect label="has no 'regected' text"
-            test="//text() => string-join() => matches('seen') => not()"/>
+        <x:expect label="has choice's span" test="exists(//span[matches(@class, 'choice')])"/>
+        <x:expect label="has orig's span" test="exists(//span[matches(@class, 'orig')])"/>
+        <x:expect label="has no reg's span" test="not(exists(//span[matches(@class, 'reg')]))"/>
+        <x:expect label="has 'regected' text" test="//text() => string-join() => matches('seen')"/>
+        <x:expect label="has no 'regularized' text"
+            test="//text() => string-join() => matches('regularized') => not()"/>
     </x:scenario>
 
     <x:scenario label="text:text on choice with expan first and then abbr">
@@ -183,6 +185,7 @@
                 <t:abbr>seen in the manuscript</t:abbr>
             </t:choice>
         </x:context>
+        <x:expect label="has choice's span" test="exists(//span[matches(@class, 'choice')])"/>
         <x:expect label="has expan's span" test="exists(//span[matches(@class, 'expan')])"/>
         <x:expect label="has no abbr's span" test="not(exists(//span[matches(@class, 'abbr')]))"/>
         <x:expect label="has 'expanded' text"
@@ -198,15 +201,15 @@
                 <t:expan>expanded</t:expan>
             </t:choice>
         </x:context>
-        <x:expect label="has expan's span" test="exists(//span[matches(@class, 'expan')])"/>
-        <x:expect label="has no abbr's span" test="not(exists(//span[matches(@class, 'abbr')]))"/>
-        <x:expect label="has 'expanded' text"
-            test="//text() => string-join() => matches('expanded')"/>
-        <x:expect label="has no 'expanected' text"
-            test="//text() => string-join() => matches('seen') => not()"/>
+        <x:expect label="has choice's span" test="exists(//span[matches(@class, 'choice')])"/>
+        <x:expect label="has abbr's span" test="exists(//span[matches(@class, 'abbr')])"/>
+        <x:expect label="has no expan's span" test="not(exists(//span[matches(@class, 'expan')]))"/>
+        <x:expect label="has 'expanded' text" test="//text() => string-join() => matches('seen')"/>
+        <x:expect label="has no 'expanded' text"
+            test="//text() => string-join() => matches('expanded') => not()"/>
     </x:scenario>
 
-    <x:scenario label="text:text on choice multiple segments" pending="needs a stylesheet parameter">
+    <x:scenario label="text:text on choice multiple segments">
         <x:context mode="text:text">
             <t:choice>
                 <t:seg source="#A">first</t:seg>
