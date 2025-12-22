@@ -56,9 +56,12 @@ see xsl/projects/alea/preview.xsl
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:app="http://scdh.wwu.de/transform/app#" xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
     xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
+
+    <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
@@ -74,6 +77,13 @@ see xsl/projects/alea/preview.xsl
         <xsl:accept component="function" names="seed:mk-entry-map#4" visibility="final"/>
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
+        <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="wit:witness" visibility="private"/>
     </xsl:use-package>
 
     <xsl:expose component="mode" names="*" visibility="public"/>
@@ -598,16 +608,31 @@ see xsl/projects/alea/preview.xsl
 
     <!-- choice -->
 
-    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice[corr and sic]">
+    <xsl:template mode="app:lemma-text-nodes-dspt" use-when="not($compat:first-child)" priority="20"
+        match="choice[sic and corr]">
         <xsl:apply-templates mode="seed:lemma-text-nodes" select="corr"/>
     </xsl:template>
 
-    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice[unclear]">
-        <xsl:apply-templates mode="seed:lemma-text-nodes" select="unclear[1]"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" use-when="not($compat:first-child)" priority="12"
+        match="choice[orig and reg]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="reg"/>
     </xsl:template>
 
-    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice[orig and reg]">
-        <xsl:apply-templates mode="seed:lemma-text-nodes" select="reg"/>
+    <xsl:template mode="app:lemma-text-nodes-dspt" use-when="not($compat:first-child)" priority="10"
+        match="choice[abbr and expan]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="expan"/>
+    </xsl:template>
+
+    <!-- Simple encoding of variation using seg nested in choice -->
+    <xsl:template mode="app:lemma-text-nodes-dspt"
+        match="choice[seg and exists($wit:witness) and (seg/@source ! tokenize(.) ! replace(., '^#', '')) = $wit:witness]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes"
+            select="seg[(tokenize(@source) ! replace(., '^#', '')) = $wit:witness]/node()"/>
+    </xsl:template>
+
+    <!-- first child of parallel text -->
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="choice">
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="*[1]"/>
     </xsl:template>
 
 
