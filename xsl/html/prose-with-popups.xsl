@@ -6,9 +6,10 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:map="http://www.w3.org/2005/xpath-functions/map"
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
   xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:app="http://scdh.wwu.de/transform/app#"
-  xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:prose="http://scdh.wwu.de/transform/prose#"
-  exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0"
-  default-mode="prose">
+  xmlns:seed="http://scdh.wwu.de/transform/seed#"
+  xmlns:compat="http://scdh.wwu.de/transform/compat#"
+  xmlns:prose="http://scdh.wwu.de/transform/prose#" exclude-result-prefixes="#all"
+  xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="prose">
 
   <xsl:output method="html" encoding="UTF-8"/>
 
@@ -30,6 +31,7 @@
     package-version="1.0.0">
     <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
       visibility="public"/>
+    <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
     <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
     <xsl:accept component="mode" names="*" visibility="public"/>
     <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="hidden"/>
@@ -38,6 +40,7 @@
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libapp2.xsl"
     package-version="1.0.0">
+    <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
     <xsl:accept component="*" names="*" visibility="public"/>
     <xsl:accept component="variable" names="app:popup-css" visibility="final"/>
     <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
@@ -74,7 +77,8 @@
         <xsl:apply-templates mode="text:text"/>
       </xsl:template>
 
-      <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css" visibility="public"/>
+      <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css"
+        visibility="public"/>
 
     </xsl:override>
   </xsl:use-package>

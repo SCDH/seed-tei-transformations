@@ -15,8 +15,9 @@
     xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-    xmlns:obt="http://scdh.wwu.de/oxbytei" exclude-result-prefixes="#all"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:obt="http://scdh.wwu.de/oxbytei"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0" default-mode="preview">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
@@ -95,6 +96,7 @@
         <xsl:accept component="function" names="seed:note-based-apparatus-nodes-map#2"
             visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
+        <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
     </xsl:use-package>
 
     <xsl:variable name="apparatus-entries" as="map(xs:string, map(*))"
@@ -108,6 +110,7 @@
 
         <xsl:accept component="template" names="app:footnote-marks" visibility="public"/>
         <xsl:accept component="template" names="app:note-based-apparatus" visibility="public"/>
+        <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
 
         <xsl:override>
             <xsl:variable name="app:entries-xpath-internal-parallel-segmentation" as="xs:string">
