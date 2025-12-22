@@ -28,6 +28,8 @@ Note, that there is a default mode in this package.
 
     <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
+    <xsl:param name="text:witness" as="xs:string?" select="()"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
@@ -121,6 +123,20 @@ Note, that there is a default mode in this package.
                     <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@*"/>
                     <xsl:apply-templates select="*[1]"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- Simple encoding of variation using seg nested in choice -->
+            <xsl:template
+                match="choice[seg and exists($text:witness) and (seg/@source ! tokenize(.) ! replace(., '^#', '')) = $text:witness]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="choice">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@*"/>
+                    <xsl:apply-templates
+                        select="*[(tokenize(@source) ! replace(., '^#', '')) = $text:witness]"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
                 <xsl:call-template name="text:inline-marks"/>

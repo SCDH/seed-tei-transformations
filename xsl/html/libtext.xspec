@@ -227,4 +227,26 @@
             select="'#A'"/>
     </x:scenario>
 
+    <x:scenario label="text:text on choice multiple segments with witness stylesheet parameter">
+        <x:param name="text:witness" select="'B'"/>
+        <x:context mode="text:text">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has choice's seg" test="exists(//span[matches(@class, 'choice')])"/>
+        <x:expect label="has seg's span" test="exists(//span[matches(@class, 'seg')])"/>
+        <x:expect label="has only one seg's span" test="count(//span[matches(@class, 'seg')])"
+            select="1"/>
+        <x:expect label="has 'first' text" test="//text() => string-join() => matches('second')"/>
+        <x:expect label="has no 'second' text"
+            test="//text() => string-join() => matches('first') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+        <x:expect label="has source attribute" test="//span/@data-tei-source ! string(.)"
+            select="'#B'"/>
+    </x:scenario>
+
 </x:description>
