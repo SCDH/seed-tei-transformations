@@ -191,6 +191,20 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
+            <!-- a scribal correction with deletion and addition -->
+            <xsl:template match="subst[del and add]">
+                <xsl:apply-templates mode="text:hook-before" select="add"/>
+                <span class="add subst">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="add"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, add/@*"/>
+                    <xsl:apply-templates select="add/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="add"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
 
             <xsl:template match="gap">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
@@ -219,7 +233,8 @@ Note, that there is a default mode in this package.
             </xsl:template>
 
             <!-- various (inline) elements that may need an inline mark -->
-            <xsl:template match="sic | corr | orig | reg | abbr | expan | seg | quote | q">
+            <xsl:template
+                match="sic | corr | orig | reg | abbr | expan | seg | quote | q | del | add">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="{name(.)}">
                     <xsl:call-template name="text:class-attribute"/>

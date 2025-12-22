@@ -250,4 +250,21 @@
             select="'#B'"/>
     </x:scenario>
 
+    <!-- test for issue #64 -->
+    <x:scenario label="text:text on subst with del and add">
+        <x:context mode="text:text">
+            <t:subst>
+                <t:del>deleted</t:del>
+                <t:add place="above">added</t:add>
+            </t:subst>
+        </x:context>
+        <x:expect label="has add's span" test="exists(//span[matches(@class, 'add')])"/>
+        <x:expect label="has no del's span" test="not(exists(//span[matches(@class, 'del')]))"/>
+        <x:expect label="has 'added' text" test="//text() => string-join() => matches('added')"/>
+        <x:expect label="has no 'deleted' text"
+            test="//text() => string-join() => matches('deleted') => not()"/>
+        <x:expect label="has no place information"
+            test="//text() => string-join() => matches('above') => not()"/>
+    </x:scenario>
+
 </x:description>
