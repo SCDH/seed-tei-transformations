@@ -27,6 +27,7 @@
         <antcall target="test-xsl-common-libsource.xsl"/>
         <antcall target="test-xsl-json-witnesses.xsl"/>
         <antcall target="test-xsl-html-libtext.xsl"/>
+        <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-librend.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
         <antcall target="test-xsl-html-source-xml.xsl"/>
@@ -96,6 +97,12 @@
     <target name="test-xsl-html-libtext.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/libtext.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-text.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/text.xspec"/>
         </antcall>
     </target>
 

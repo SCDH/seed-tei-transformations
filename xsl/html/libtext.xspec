@@ -110,15 +110,6 @@
     </x:scenario>
 
 
-    <x:scenario label="text:hook-after: [sic!] after sic element">
-        <x:param name="apparatus-entries"
-            select="map {'d1.1.a1': map {'entry-id': 'd1.1.a1', 'number': 5, 'after': false()} }"/>
-        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p2']" mode="text:text"/>
-        <x:expect label="result has a footnote" test="normalize-space()"
-            select="'Vorausgesetzt werden die Sätze über Wechselwinkel und Gegenwinkel an Paralellen [sic!], die durch eine dritte Gerade geschnitten werden.'"
-        />
-    </x:scenario>
-
     <x:scenario label="text:text on span">
         <x:context select="$tei-text//t:div[@xml:id eq 'd3']" mode="text:text"/>
         <x:expect label="result contains the word 'wieder', without inner-word spacing"
