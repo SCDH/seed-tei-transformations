@@ -14,7 +14,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:seed="http://scdh.wwu.de/transform/seed#"
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:compat="http://scdh.wwu.de/transform/compat#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
@@ -34,6 +34,12 @@
         <xsl:accept component="function"
             names="i18n:language#1 i18n:language-direction#1 i18n:language-align#1 i18n:direction-embedding#1"
             visibility="private"/>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="wit:witness" visibility="private"/>
     </xsl:use-package>
 
     <xsl:use-package
@@ -390,15 +396,18 @@
             </xsl:template>
 
 
-            <xsl:template mode="app:reading-dspt" match="choice/sic">
+            <xsl:template mode="app:reading-dspt" match="choice/sic"
+                use-when="not($compat:first-child)">
                 <span class="reading">
                     <xsl:apply-templates mode="app:reading-text"/>
                     <xsl:if test="app:prints-sigla(.)">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
-                        <xsl:call-template name="app:sigla">
-                            <xsl:with-param name="context" select="."/>
-                        </xsl:call-template>
+                        <span class="siglum">
+                            <xsl:call-template name="app:sigla">
+                                <xsl:with-param name="context" select="."/>
+                            </xsl:call-template>
+                        </span>
                     </xsl:if>
                 </span>
                 <xsl:if test="position() ne last()">
@@ -412,6 +421,81 @@
                 <span class="reading">
                     <xsl:apply-templates select="sic" mode="app:reading-dspt"/>
                 </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-dspt" match="choice[orig and reg]"
+                use-when="not($compat:first-child)">
+                <span class="reading">
+                    <xsl:apply-templates mode="app:reading-text" select="orig"/>
+                </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-dspt" match="choice[abbr and expan]"
+                use-when="not($compat:first-child)">
+                <span class="reading">
+                    <xsl:apply-templates mode="app:reading-text" select="abbr"/>
+                </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <!-- choice with nested seg as basic variant encoding -->
+            <xsl:template mode="app:reading-dspt" match="choice[seg and exists($wit:witness)]">
+                <xsl:for-each
+                    select="seg[not((@source ! tokenize(.) ! replace(., '^#', '')) = $wit:witness)]">
+                    <span class="reading">
+                        <xsl:apply-templates mode="app:reading-text" select="."/>
+                        <xsl:if test="app:prints-sigla(.)">
+                            <span class="apparatus-sep" style="padding-left: 3px"
+                                data-i18n-key="rdg-siglum-sep">:</span>
+                            <span class="siglum">
+                                <xsl:call-template name="app:sigla">
+                                    <xsl:with-param name="context" select="."/>
+                                </xsl:call-template>
+                            </span>
+                        </xsl:if>
+                    </span>
+                    <xsl:if test="position() ne last()">
+                        <span class="apparatus-sep" style="padding-left: 4px"
+                            data-i18n-key="rdgs-sep">;&sp;</span>
+                    </xsl:if>
+                </xsl:for-each>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <!-- general choice handling (unspecified default): every child but the first is a reading -->
+            <xsl:template mode="app:reading-dspt" match="choice">
+                <xsl:for-each select="*[position() gt 1]">
+                    <span class="reading">
+                        <xsl:apply-templates mode="app:reading-text" select="."/>
+                        <xsl:if test="app:prints-sigla(.)">
+                            <span class="apparatus-sep" style="padding-left: 3px"
+                                data-i18n-key="rdg-siglum-sep">:</span>
+                            <span class="siglum">
+                                <xsl:call-template name="app:sigla">
+                                    <xsl:with-param name="context" select="."/>
+                                </xsl:call-template>
+                            </span>
+                        </xsl:if>
+                    </span>
+                    <xsl:if test="position() ne last()">
+                        <span class="apparatus-sep" style="padding-left: 4px"
+                            data-i18n-key="rdgs-sep">;&sp;</span>
+                    </xsl:if>
+                </xsl:for-each>
                 <xsl:if test="position() ne last()">
                     <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
                         >;&sp;</span>

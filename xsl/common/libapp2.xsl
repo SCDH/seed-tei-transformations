@@ -111,6 +111,9 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+            <xsl:text>| descendant::choice[orig and reg]</xsl:text>
+            <xsl:text>| descendant::choice[abbr and expan]</xsl:text>
+            <xsl:text>| descendant::choice[seg]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
@@ -128,6 +131,9 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+            <xsl:text>| descendant::choice[orig and reg]</xsl:text>
+            <xsl:text>| descendant::choice[abbr and expan]</xsl:text>
+            <xsl:text>| descendant::choice[seg]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
@@ -145,6 +151,9 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+            <xsl:text>| descendant::choice[orig and reg]</xsl:text>
+            <xsl:text>| descendant::choice[abbr and expan]</xsl:text>
+            <xsl:text>| descendant::choice[seg]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
@@ -162,6 +171,9 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+            <xsl:text>| descendant::choice[orig and reg]</xsl:text>
+            <xsl:text>| descendant::choice[abbr and expan]</xsl:text>
+            <xsl:text>| descendant::choice[seg]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
@@ -177,6 +189,9 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>descendant::corr[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::sic[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[sic and corr]</xsl:text>
+            <xsl:text>| descendant::choice[orig and reg]</xsl:text>
+            <xsl:text>| descendant::choice[abbr and expan]</xsl:text>
+            <xsl:text>| descendant::choice[seg]</xsl:text>
             <xsl:text>| descendant::unclear[not(parent::choice)]</xsl:text>
             <xsl:text>| descendant::choice[unclear]</xsl:text>
             <xsl:text>| descendant::gap</xsl:text>
@@ -535,7 +550,7 @@ see xsl/projects/alea/preview.xsl
     <!-- Format sigla from @wit. Potentianally you will override this with your own. -->
     <xsl:template name="app:sigla" visibility="public">
         <xsl:param name="context" as="node()"/>
-        <xsl:for-each select="tokenize($context/@wit)">
+        <xsl:for-each select="($context/@wit, $context/@source) ! tokenize(.)">
             <xsl:if test="position() gt 1">
                 <xsl:text>, </xsl:text>
             </xsl:if>
