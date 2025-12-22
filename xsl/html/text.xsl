@@ -29,8 +29,6 @@ since no paragraphs etc. are in the output. See prose.xsl etc. instead.
         <xsl:text> [sic!]</xsl:text>
       </xsl:template>
 
-      <xsl:variable name="i18n:default-language" as="xs:string" select="(/*/@xml:lang, 'en')[1]"/>
-
     </xsl:override>
   </xsl:use-package>
 

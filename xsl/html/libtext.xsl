@@ -31,7 +31,6 @@ Note, that there is a default mode in this package.
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
-        <xsl:accept component="variable" names="i18n:default-language" visibility="public"/>
         <xsl:accept component="function" names="i18n:language#1" visibility="private"/>
         <xsl:accept component="function" names="i18n:language-direction#1" visibility="private"/>
         <xsl:accept component="function" names="i18n:language-code-to-direction#1"

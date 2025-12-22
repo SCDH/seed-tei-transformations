@@ -13,9 +13,6 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/aleabiblio.xsl"
         package-version="1.0.0">
         <xsl:accept component="template" names="biblio:*" visibility="final"/>
-        <xsl:override>
-            <xsl:variable name="i18n:default-language" as="xs:string" select="'en'"/>
-        </xsl:override>
     </xsl:use-package>
 
 

@@ -36,9 +36,7 @@ USAGE:
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
-        package-version="0.1.0">
-        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
-    </xsl:use-package>
+        package-version="0.1.0"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"

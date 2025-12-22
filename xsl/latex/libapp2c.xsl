@@ -26,7 +26,6 @@
         <xsl:accept component="function"
             names="i18n:language#1 i18n:language-direction#1 i18n:language-align#1 i18n:direction-embedding#1"
             visibility="private"/>
-        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
     </xsl:use-package>
 
     <xsl:use-package

@@ -19,7 +19,6 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
         package-version="1.0.0">
 
-        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
         <xsl:accept component="template" names="text:*" visibility="public"/>
         <xsl:accept component="mode" names="*" visibility="public"/>
         <xsl:accept component="template" names="text:inline-marks" visibility="public"/>
