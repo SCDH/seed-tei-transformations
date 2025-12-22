@@ -2,7 +2,8 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="libtext.xsl" run-as="external">
 
     <x:param name="compat:first-child" select="false()" static="true"/>
@@ -228,7 +229,7 @@
     </x:scenario>
 
     <x:scenario label="text:text on choice multiple segments with witness stylesheet parameter">
-        <x:param name="text:witness" select="'B'"/>
+        <x:param name="wit:witness" select="'B'"/>
         <x:context mode="text:text">
             <t:choice>
                 <t:seg source="#A">first</t:seg>

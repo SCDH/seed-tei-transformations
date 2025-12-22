@@ -21,14 +21,14 @@ Note, that there is a default mode in this package.
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:source="http://scdh.wwu.de/transform/source#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:compat="http://scdh.wwu.de/transform/compat#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
+    <!-- with false (default), there are some specific templates for alternative text in choice -->
     <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
-
-    <xsl:param name="text:witness" as="xs:string?" select="()"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -42,6 +42,12 @@ Note, that there is a default mode in this package.
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libsource.xsl"
         package-version="1.0.0"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="wit:witness" visibility="private"/>
+    </xsl:use-package>
 
     <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
     <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
@@ -130,13 +136,13 @@ Note, that there is a default mode in this package.
 
             <!-- Simple encoding of variation using seg nested in choice -->
             <xsl:template
-                match="choice[seg and exists($text:witness) and (seg/@source ! tokenize(.) ! replace(., '^#', '')) = $text:witness]">
+                match="choice[seg and exists($wit:witness) and (seg/@source ! tokenize(.) ! replace(., '^#', '')) = $wit:witness]">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="choice">
                     <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@*"/>
                     <xsl:apply-templates
-                        select="*[(tokenize(@source) ! replace(., '^#', '')) = $text:witness]"/>
+                        select="*[(tokenize(@source) ! replace(., '^#', '')) = $wit:witness]"/>
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
                 <xsl:call-template name="text:inline-marks"/>
