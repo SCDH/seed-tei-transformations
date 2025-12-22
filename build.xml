@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." name="test" default="test">
 
-    <property name="xspec.version" value="2.2.4"/>
+    <property name="xspec.version" value="3.3.2"/>
 
     <property name="xspec.project.dir" value="target/dependency/xspec-${xspec.version}"/>
 
