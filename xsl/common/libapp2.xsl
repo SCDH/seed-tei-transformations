@@ -61,6 +61,7 @@ see xsl/projects/alea/preview.xsl
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
 
+    <!-- with false (default), there are some specific templates for alternative text in choice -->
     <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
     <xsl:use-package
