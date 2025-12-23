@@ -119,6 +119,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
+            <xsl:text>| descendant::subst[del and add]</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -139,6 +140,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
+            <xsl:text>| descendant::subst[del and add]</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -159,6 +161,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
+            <xsl:text>| descendant::subst[del and add]</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -179,6 +182,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::gap[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
+            <xsl:text>| descendant::subst[del and add]</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -197,6 +201,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::gap</xsl:text>
             <xsl:text>| descendant::space</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
+            <xsl:text>| descendant::subst[del and add]</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -652,6 +657,13 @@ see xsl/projects/alea/preview.xsl
     </xsl:template>
 
 
+    <!-- subst -->
+
+    <xsl:template mode="app:lemma-text-nodes-dspt" match="subst[del and add]">
+        <xsl:apply-templates mode="seed:lemma-text-nodes" select="add"/>
+    </xsl:template>
+
+
     <!-- unclear -->
 
     <xsl:template mode="app:lemma-text-nodes-dspt" match="unclear[not(parent::choice)]">
@@ -716,7 +728,8 @@ see xsl/projects/alea/preview.xsl
         with a separator. If the parameter $separator is true(), then the result will have a leading separator.
     -->
     <xsl:template name="app:reading-annotation" visibility="abstract">
-        <xsl:context-item as="element()" use="required"/>
+        <xsl:context-item as="element()" use="optional"/>
+        <xsl:param name="context" as="element()" select="."/>
         <xsl:param name="separator" as="xs:boolean" select="false()"/>
     </xsl:template>
 

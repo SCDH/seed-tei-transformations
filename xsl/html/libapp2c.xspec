@@ -3,8 +3,8 @@
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:t="http://www.tei-c.org/ns/1.0"
-    stylesheet="libapp2c.xsl" run-as="external">
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="libapp2c.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -349,6 +349,40 @@
         <x:expect label="has 'first' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">first</x:expect>
         <x:expect label="has 'second' reading" test="//span[@class eq 'reading'][1]/text()" xml:space="preserve">second</x:expect>
         <x:expect label="has 'third' reading" test="//span[@class eq 'reading'][2]/text()" xml:space="preserve">third</x:expect>
+    </x:scenario>
+
+
+    <x:scenario label="apparatus entry for subst with del and add">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:subst>
+                                <t:add place="above">corrected</t:add>
+                                <t:del>delevit</t:del>
+                            </t:subst>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
+        <x:expect label="has 'delevit' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">delevit</x:expect>
+        <x:expect label="has 'add.' lemma annotation"
+            test="exists(//span[tokenize(@class) = 'lemma-annotation'][matches(., 'add\.')])"/>
+        <x:expect label="has 'above' lemma annotation"
+            test="exists(//span[tokenize(@class) = 'lemma-annotation'][matches(., 'above')])"/>
+        <x:expect label="has 1 lemma annotation, since add. above is merged to one"
+            test="count(//span[tokenize(@class) = 'lemma-annotation'])" select="1"/>
+        <x:expect label="has 'a.c.' reading annotation"
+            test="exists(//span[tokenize(@class) = 'reading-annotation'][matches(., 'a\.c\.')])"/>
+        <x:expect label="has 1 reading annotation"
+            test="count(//span[tokenize(@class) = 'reading-annotation'])" select="1"/>
     </x:scenario>
 
 </x:description>

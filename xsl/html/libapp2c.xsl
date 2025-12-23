@@ -517,6 +517,21 @@
             </xsl:template>
 
 
+            <xsl:template mode="app:reading-dspt" match="subst[del and add]">
+                <span class="reading">
+                    <xsl:apply-templates select="del" mode="app:reading-dspt"/>
+                </span>
+                <xsl:call-template name="app:reading-annotation">
+                    <xsl:with-param name="context" select="del"/>
+                    <xsl:with-param name="separator" select="true()"/>
+                </xsl:call-template>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+
             <xsl:template mode="app:reading-dspt" match="unclear[not(parent::choice)]">
                 <span class="reading unclear">
                     <xsl:choose>
@@ -619,11 +634,17 @@
 
 
             <xsl:template name="app:reading-annotation">
-                <xsl:context-item as="element()" use="required"/>
+                <xsl:context-item as="element()" use="optional"/>
+                <xsl:param name="context" as="element()" select="."/>
                 <xsl:param name="separator" as="xs:boolean" select="false()"/>
                 <xsl:variable name="annotations" as="element()*">
                     <span class="reading-annotation">
-                        <xsl:apply-templates mode="app:reading-annotation"/>
+                        <!--
+                            Applying on both, context and children may easy break things.
+                            Maybe we need a flag to controle this.
+                        -->
+                        <xsl:apply-templates mode="app:reading-annotation"
+                            select="$context, $context/node()"/>
                     </span>
                 </xsl:variable>
                 <!-- we have to filter out the spans with no content -->
@@ -648,6 +669,11 @@
                 <span class="static-text" data-i18n-key="space">&lre;lac.&pdf;</span>
             </xsl:template>
 
+            <!-- make reading annotation for a nested <del> -->
+            <xsl:template mode="app:reading-annotation" match="del">
+                <span class="static-text" data-i18n-key="space">&lre;a.c.&pdf;</span>
+            </xsl:template>
+
 
             <!-- lemma annotations -->
 
@@ -659,6 +685,21 @@
             <xsl:template mode="app:lemma-annotation" match="choice[corr and sic]">
                 <span class="static-text lemma-annotation" data-i18n-key="corr-annotation"
                     >&lre;corr.&pdf;</span>
+            </xsl:template>
+
+            <!-- make reading annotation for a nested <add> -->
+            <xsl:template mode="app:lemma-annotation" match="subst[add and del]">
+                <span class="lemma-annotation">
+                    <span class="static-text" data-i18n-key="space">&lre;add.&pdf;</span>
+                    <xsl:if test="add/@place">
+                        <xsl:text>&#x20;</xsl:text>
+                        <span class="static-text" data-i18n-key="{add/@place}">
+                            <xsl:text>&lre;</xsl:text>
+                            <xsl:value-of select="add/@place"/>
+                            <xsl:text>&pdf;</xsl:text>
+                        </span>
+                    </xsl:if>
+                </span>
             </xsl:template>
 
         </xsl:override>

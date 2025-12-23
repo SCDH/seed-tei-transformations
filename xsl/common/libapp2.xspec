@@ -159,5 +159,18 @@
     </x:scenario>
 
 
+    <x:scenario label="lemma text nodes on subst with del and add">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:subst>
+                <t:add>corrected</t:add>
+                <t:del>strike</t:del>
+            </t:subst>
+        </x:context>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'strike' text"
+            test="//text() => string-join() => matches('strike') => not()"/>
+    </x:scenario>
+
 
 </x:description>
