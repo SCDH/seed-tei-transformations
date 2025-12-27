@@ -53,7 +53,7 @@ Note, that there is a default mode in this package.
     <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
 
     <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
         package-version="1.0.0">
         <xsl:accept component="mode" names="text:text" visibility="public"/>
         <xsl:accept component="template" names="text:*" visibility="public"/>

@@ -8,10 +8,8 @@ http://www.saxonica.com/documentation/index/configuration-file.html
 <configuration edition="HE" xmlns="http://saxon.sf.net/ns/configuration">
 
      <xsltPackages>
-          <!-- replace the .../common/librend.xsl package with your rendering package by providing an other sourceLocation -->
           <package
-               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
-               base="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
                version="1.0.0" sourceLocation="xsl/html/librend.xsl" priority="1"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
