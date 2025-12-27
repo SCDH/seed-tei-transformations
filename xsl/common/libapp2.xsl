@@ -580,7 +580,7 @@ see xsl/projects/alea/preview.xsl
             select="map:get($apparatus-entry-map, 'lemma-text-nodes') => seed:shorten-lemma()"/>
         <xsl:choose>
             <xsl:when test="$full-lemma ne ''">
-                <xsl:apply-templates mode="app:reading-text" select="$reading"/>
+                <xsl:sequence select="$reading"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="lemma-replacement"
@@ -589,16 +589,16 @@ see xsl/projects/alea/preview.xsl
                     <xsl:when test="map:get($lemma-replacement, 'position') eq 'preceding'">
                         <xsl:value-of select="map:get($lemma-replacement, 'text')"/>
                         <xsl:text> </xsl:text>
-                        <xsl:apply-templates mode="app:reading-text" select="$reading"/>
+                        <xsl:sequence select="$reading"/>
                     </xsl:when>
                     <xsl:when test="map:get($lemma-replacement, 'position') eq 'following'">
-                        <xsl:apply-templates mode="app:reading-text" select="$reading"/>
+                        <xsl:sequence select="$reading"/>
                         <xsl:text> </xsl:text>
                         <xsl:value-of select="map:get($lemma-replacement, 'text')"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <!-- in this case we still printed 'empty' in the lemma -->
-                        <xsl:apply-templates mode="app:reading-text" select="$reading"/>
+                        <xsl:sequence select="$reading"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>

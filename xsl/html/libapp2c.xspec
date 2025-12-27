@@ -4,7 +4,10 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="libapp2c.xsl" run-as="external">
+    xmlns:test="http://scdh.wwu.de/transform/test#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="libapp2c.xsl" run-as="external">
+
+    <x:helper stylesheet="../../test/helper.xsl"/>
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -18,6 +21,9 @@
                 </fileDesc>
                 <encodingDesc>
                     <!--variantEncoding method="parallel-segmentation" location="internal"/-->
+                    <tagsDecl>
+                        <rendition xml:id="it" scheme="ccs">font-style: italics</rendition>
+                    </tagsDecl>
                 </encodingDesc>
             </teiHeader>
             <text xml:id="the-text">
@@ -35,7 +41,7 @@
                             <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
                                 objektive Realität im Satz über die Summe der Innenwinkel des <app
                                     xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"><hi
-                                            rendition="it">n</hi>-Ecks</rdg></app>.</p>
+                                            rendition="#it">n</hi>-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
                                 eine dritte Gerade geschnitten werden.</p>
@@ -107,9 +113,9 @@
                         <span class="apparatus-lemma">Dreiecks</span>
                         <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                         <x:text> </x:text>
-                        <span class="reading">n-Ecks<span class="apparatus-sep"
-                                style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
-                            >:</span>N</span>
+                        <span class="..."><span class="hi it">n</span>-Ecks<span
+                                class="apparatus-sep" style="padding-left: 3px"
+                                data-i18n-key="rdg-siglum-sep">:</span>N</span>
                     </span>
                 </div>
                 <div class="apparatus-line">
@@ -140,9 +146,9 @@
                         <a name="app-d1.1.a1" href="#d1.1.a1">1</a>
                     </span>
                     <span class="apparatus-entry">
-                        <span class="reading">n-Ecks<span class="apparatus-sep"
-                                style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
-                            >:</span>N</span>
+                        <span class="..."><span class="hi it">n</span>-Ecks<span
+                                class="apparatus-sep" style="padding-left: 3px"
+                                data-i18n-key="rdg-siglum-sep">:</span>N</span>
                     </span>
                 </div>
                 <div class="apparatus-line">
@@ -192,9 +198,9 @@
                             <span class="apparatus-lemma">Dreiecks</span>
                             <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                             <x:text> </x:text>
-                            <span class="reading">n-Ecks<span class="apparatus-sep"
-                                    style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
-                                    >:</span>N</span>
+                            <span class="..."><span class="hi it">n</span>-Ecks<span
+                                    class="apparatus-sep" style="padding-left: 3px"
+                                    data-i18n-key="rdg-siglum-sep">:</span>N</span>
                         </span>
                     </span>
                 </div>
@@ -223,7 +229,7 @@
             <x:param name="app-context" select="$x:context"/>
         </x:call>
         <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
-        <x:expect label="has 'seen ...' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">seen in the manuscript</x:expect>
+        <x:expect label="has 'seen ...' reading" test="test:reading(.)/text()" xml:space="preserve">seen in the manuscript</x:expect>
         <x:expect label="has 'corr' annotation"
             test="exists(//span[tokenize(@class) = 'static-text'][matches(., 'corr')])"/>
     </x:scenario>
@@ -248,7 +254,7 @@
             <x:param name="app-context" select="$x:context"/>
         </x:call>
         <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
-        <x:expect label="has 'seen ...' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">seen in the manuscript</x:expect>
+        <x:expect label="has 'seen ...' reading" test="test:reading(.)/text()" xml:space="preserve">seen in the manuscript</x:expect>
         <x:expect label="has 'corr' annotation"
             test="exists(//span[tokenize(@class) = 'static-text'][matches(., 'corr')])"/>
     </x:scenario>
@@ -273,7 +279,7 @@
             <x:param name="app-context" select="$x:context"/>
         </x:call>
         <x:expect label="has 'specialised' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">specialised</x:expect>
-        <x:expect label="has 'specialized' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">specialized</x:expect>
+        <x:expect label="has 'specialized' reading" test="test:reading(.)/text()" xml:space="preserve">specialized</x:expect>
     </x:scenario>
 
     <x:scenario label="lemma text nodes on choice with abbr first and then expan">
@@ -296,7 +302,7 @@
             <x:param name="app-context" select="$x:context"/>
         </x:call>
         <x:expect label="has 'lacuna' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">lacuna</x:expect>
-        <x:expect label="has 'lac.' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">lac.</x:expect>
+        <x:expect label="has 'lac.' reading" test="test:reading(.)/text()" xml:space="preserve">lac.</x:expect>
     </x:scenario>
 
     <x:scenario label="lemma text nodes on choice with segments and selecting one by wit:witness">
@@ -320,9 +326,10 @@
         <x:call template="app:line-based-apparatus-for-context">
             <x:param name="app-context" select="$x:context"/>
         </x:call>
-        <x:expect label="has 'second' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">second</x:expect>
-        <x:expect label="has 'first' reading" test="//span[@class eq 'reading'][1]/text()" xml:space="preserve">first</x:expect>
-        <x:expect label="has 'third' reading" test="//span[@class eq 'reading'][2]/text()" xml:space="preserve">third</x:expect>
+        <x:expect label="has 'second' lemma"
+            test="//span[@class eq 'apparatus-lemma'] => matches('second')"/>
+        <x:expect label="has 'first' reading" test="test:reading(.)[1] => matches('first')"/>
+        <x:expect label="has 'third' reading" test="test:reading(.)[2] => matches('third')"/>
     </x:scenario>
 
     <x:scenario
@@ -346,9 +353,10 @@
         <x:call template="app:line-based-apparatus-for-context">
             <x:param name="app-context" select="$x:context"/>
         </x:call>
-        <x:expect label="has 'first' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">first</x:expect>
-        <x:expect label="has 'second' reading" test="//span[@class eq 'reading'][1]/text()" xml:space="preserve">second</x:expect>
-        <x:expect label="has 'third' reading" test="//span[@class eq 'reading'][2]/text()" xml:space="preserve">third</x:expect>
+        <x:expect label="has 'first' lemma"
+            test="//span[@class eq 'apparatus-lemma'] => matches('first')"/>
+        <x:expect label="has 'second' reading" test="test:reading(.)[1] => matches('second')"/>
+        <x:expect label="has 'third' reading" test="test:reading(.)[2] => matches('third')"/>
     </x:scenario>
 
 
@@ -372,7 +380,7 @@
             <x:param name="app-context" select="$x:context"/>
         </x:call>
         <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
-        <x:expect label="has 'delevit' reading" test="//span[@class eq 'reading']/text()" xml:space="preserve">delevit</x:expect>
+        <x:expect label="has 'delevit' reading" test="test:reading(.)/text()" xml:space="preserve">delevit</x:expect>
         <x:expect label="has 'add.' lemma annotation"
             test="exists(//span[tokenize(@class) = 'lemma-annotation'][matches(., 'add\.')])"/>
         <x:expect label="has 'above' lemma annotation"
@@ -383,6 +391,71 @@
             test="exists(//span[tokenize(@class) = 'reading-annotation'][matches(., 'a\.c\.')])"/>
         <x:expect label="has 1 reading annotation"
             test="count(//span[tokenize(@class) = 'reading-annotation'])" select="1"/>
+    </x:scenario>
+
+
+    <x:scenario label="render works in apparatus: seg-based">
+        <x:param name="wit:witness" select="'B'"/>
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                        <tagsDecl>
+                            <rendition xml:id="it" scheme="ccs">font-style: italics</rendition>
+                        </tagsDecl>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:seg source="#A">first</t:seg>
+                                <t:seg source="#B">second</t:seg>
+                                <t:seg source="#C" rendition="#it">third</t:seg>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="readings have render span wrapper"
+            test="exists(test:reading(.)/span[tokenize(@class) = 'seg'])"/>
+        <x:expect label="rendition is evaluated"
+            test="exists(test:reading(.)/span[tokenize(@class) = 'it'])"/>
+    </x:scenario>
+
+    <x:scenario label="render works in apparatus: app-based">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                        <tagsDecl>
+                            <rendition xml:id="it" scheme="ccs">font-style: italics</rendition>
+                        </tagsDecl>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:app>
+                                <t:lem wit="#A">first</t:lem>
+                                <t:rdg wit="#B">second</t:rdg>
+                                <t:rdg wit="#C" rendition="#it">third <t:hi rend="bold"
+                                    >thing</t:hi></t:rdg>
+                            </t:app>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="rendition is evaluated for children of rdg"
+            test="exists(test:reading(.)/b)"/>
+        <x:expect label="'thing' is wrapped in b" test="//test:reading(.)/b/text()">
+            <x:text>thing</x:text>
+        </x:expect>
+        <x:expect
+            label="rendition is not put directly on reading, because it is a container. If such a feature is required, we the reading text should be further wrapped."
+            test="exists(test:reading(.)/self::span[tokenize(@class) = 'it']) => not()"/>
     </x:scenario>
 
 </x:description>

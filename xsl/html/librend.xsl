@@ -111,7 +111,7 @@ in the base text, the apparatus and in the editorial notes. -->
                 <xsl:param name="context" as="element()" select="." required="false"/>
                 <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
                 <xsl:attribute name="class"
-                    select="($context/name(), $additional, $context/@type, tokenize($context/@rendition) ! substring(., 2)) => string-join(' ')"
+                    select="($context/local-name(), $additional, $context/@type, tokenize($context/@rendition) ! substring(., 2)) => string-join(' ')"
                 />
             </xsl:template>
 
