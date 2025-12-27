@@ -42,6 +42,11 @@
         <xsl:accept component="variable" names="wit:witness" visibility="private"/>
     </xsl:use-package>
 
+    <!-- using html/librend assures, that we have support for @rendition for html output -->
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
+        package-version="1.0.0"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libapp2.xsl"
         package-version="1.0.0">
