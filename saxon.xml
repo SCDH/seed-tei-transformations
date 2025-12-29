@@ -9,7 +9,8 @@ http://www.saxonica.com/documentation/index/configuration-file.html
 
      <xsltPackages>
           <package
-               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
+               base="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
                version="1.0.0" sourceLocation="xsl/html/librend.xsl" priority="1"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"

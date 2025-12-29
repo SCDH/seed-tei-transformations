@@ -40,8 +40,8 @@
                             <head>Des ersten Hauptstücks erster Teil</head>
                             <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
                                 objektive Realität im Satz über die Summe der Innenwinkel des <app
-                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"><hi
-                                            rendition="#it">n</hi>-Ecks</rdg></app>.</p>
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
                                 eine dritte Gerade geschnitten werden.</p>
@@ -113,9 +113,9 @@
                         <span class="apparatus-lemma">Dreiecks</span>
                         <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                         <x:text> </x:text>
-                        <span class="..."><span class="hi it">n</span>-Ecks<span
-                                class="apparatus-sep" style="padding-left: 3px"
-                                data-i18n-key="rdg-siglum-sep">:</span>N</span>
+                        <span class="...">n-Ecks<span class="apparatus-sep"
+                                style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
+                            >:</span>N</span>
                     </span>
                 </div>
                 <div class="apparatus-line">
@@ -146,9 +146,9 @@
                         <a name="app-d1.1.a1" href="#d1.1.a1">1</a>
                     </span>
                     <span class="apparatus-entry">
-                        <span class="..."><span class="hi it">n</span>-Ecks<span
-                                class="apparatus-sep" style="padding-left: 3px"
-                                data-i18n-key="rdg-siglum-sep">:</span>N</span>
+                        <span class="...">n-Ecks<span class="apparatus-sep"
+                                style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
+                            >:</span>N</span>
                     </span>
                 </div>
                 <div class="apparatus-line">
@@ -198,9 +198,9 @@
                             <span class="apparatus-lemma">Dreiecks</span>
                             <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                             <x:text> </x:text>
-                            <span class="..."><span class="hi it">n</span>-Ecks<span
-                                    class="apparatus-sep" style="padding-left: 3px"
-                                    data-i18n-key="rdg-siglum-sep">:</span>N</span>
+                            <span class="...">n-Ecks<span class="apparatus-sep"
+                                    style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
+                                    >:</span>N</span>
                         </span>
                     </span>
                 </div>

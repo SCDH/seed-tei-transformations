@@ -5,7 +5,7 @@
     xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="text.xsl" run-as="external">
 
-    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
 
     <x:variable name="tei-text">
         <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
