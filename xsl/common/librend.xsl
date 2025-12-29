@@ -16,21 +16,26 @@ package system would allow this and even its adaption in a branch of the package
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" exclude-result-prefixes="#all"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
 
-  <xsl:mode name="text:text" on-no-match="text-only-copy" visibility="public"/>
-  <xsl:mode name="app:reading-text" on-no-match="text-only-copy" visibility="public"/>
-  <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend-base.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="mode" names="*" visibility="public"/>
+    <xsl:accept component="template" names="*" visibility="public"/>
+    <xsl:override>
 
-  <xsl:template name="text:class-attribute" visibility="public">
-    <xsl:param name="context" as="element()" select="." required="false"/>
-    <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
-  </xsl:template>
+      <!-- just a dumb implementation that does no output -->
+      <xsl:template name="text:class-attribute" visibility="public">
+        <xsl:param name="context" as="element()" select="." required="false"/>
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+      </xsl:template>
 
-  <xsl:template name="text:class-attribute-opt" visibility="public">
-    <xsl:param name="context" as="element()" select="." required="false"/>
-    <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
-  </xsl:template>
+      <!-- just a dumb implementation that does no output -->
+      <xsl:template name="text:class-attribute-opt" visibility="public">
+        <xsl:param name="context" as="element()" select="." required="false"/>
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+      </xsl:template>
 
-  <!-- drop attributes for which there is not special rule -->
-  <xsl:template mode="text:text app:reading-text note:editorial" match="@*"/>
+    </xsl:override>
+  </xsl:use-package>
 
 </xsl:package>

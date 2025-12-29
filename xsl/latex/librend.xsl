@@ -35,7 +35,7 @@
     package-version="1.0.0"/>
 
   <xsl:use-package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend-base.xsl"
     package-version="1.0.0">
     <xsl:accept component="mode" names="*" visibility="public"/>
 
