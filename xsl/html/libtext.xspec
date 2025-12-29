@@ -100,7 +100,11 @@
 
     <x:scenario label="mode text:text on d2">
         <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
-        <x:expect label="result">BeimStyx!Drüber</x:expect>
+        <x:expect label="text" test="//text()">
+            <x:text>Beim</x:text>
+            <x:text>Styx!</x:text>
+            <x:text>Drüber</x:text>
+        </x:expect>
     </x:scenario>
 
     <x:scenario label="mode text:text on apparatus">

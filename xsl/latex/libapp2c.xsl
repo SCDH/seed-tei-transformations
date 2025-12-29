@@ -165,7 +165,9 @@
                 <xsl:text>{</xsl:text>
                 <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
                 <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
-                    <xsl:with-param name="reading" select="node()"/>
+                    <xsl:with-param name="reading">
+                        <xsl:apply-templates mode="app:reading-text" select="node()"/>
+                    </xsl:with-param>
                 </xsl:call-template>
                 <xsl:if test="app:prints-sigla(.)">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>

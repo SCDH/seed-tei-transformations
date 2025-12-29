@@ -21,7 +21,7 @@ Note, that there is a default mode in this package.
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:source="http://scdh.wwu.de/transform/source#"
-    xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:compat="http://scdh.wwu.de/transform/compat#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
@@ -57,6 +57,7 @@ Note, that there is a default mode in this package.
         package-version="1.0.0">
         <xsl:accept component="mode" names="text:text" visibility="public"/>
         <xsl:accept component="template" names="text:*" visibility="public"/>
+        <xsl:accept component="mode" names="app:reading-text" visibility="hidden"/>
         <xsl:override default-mode="text:text">
             <!-- text:hook-before and text:hook-after are modes that offer hooks for
                 inserting project-specific things before and after an element -->

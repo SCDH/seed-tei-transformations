@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- replacement of common/librend.xsl for basic text formatting in HTML output
 
+NOTE: This MUST be a replacement of common/librend.xsl, not a deriving package!
+The reason is the constraints on the package hierarchy, which does not allow to
+merge modes from deriving packages.
+
+common/libapp2 and html/librend add to the same mode 
+
+
 This is to be imported once into your main stylesheet if you want basic formatting
 in the base text, the apparatus and in the editorial notes. -->
 <xsl:package
@@ -14,7 +21,6 @@ in the base text, the apparatus and in the editorial notes. -->
     <xsl:mode name="text:text" on-no-match="text-only-copy" visibility="public"/>
     <xsl:mode name="app:reading-text" on-no-match="text-only-copy" visibility="public"/>
     <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
-
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]"
         priority="0.6">
@@ -107,7 +113,7 @@ in the base text, the apparatus and in the editorial notes. -->
         <xsl:param name="context" as="element()" select="." required="false"/>
         <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
         <xsl:attribute name="class"
-            select="($context/name(), $additional, $context/@type, tokenize($context/@rendition) ! substring(., 2)) => string-join(' ')"
+            select="($context/local-name(), $additional, $context/@type, tokenize($context/@rendition) ! substring(., 2)) => string-join(' ')"
         />
     </xsl:template>
 
@@ -120,5 +126,6 @@ in the base text, the apparatus and in the editorial notes. -->
             />
         </xsl:if>
     </xsl:template>
+
 
 </xsl:package>

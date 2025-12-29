@@ -16,6 +16,7 @@
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:compat="http://scdh.wwu.de/transform/compat#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
@@ -296,8 +297,11 @@
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) ne '']">
                 <span class="reading">
                     <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
+                    <!-- if evaluation of rdg/@rendition is required, then the rdg text should go into an extra span -->
                     <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
-                        <xsl:with-param name="reading" select="node()"/>
+                        <xsl:with-param name="reading">
+                            <xsl:apply-templates mode="app:reading-text" select="node()"/>
+                        </xsl:with-param>
                     </xsl:call-template>
                     <!-- handle nested gap etc. -->
                     <xsl:call-template name="app:reading-annotation">

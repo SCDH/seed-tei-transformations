@@ -5,7 +5,7 @@
     xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="text.xsl" run-as="external">
 
-    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
 
     <x:variable name="tei-text">
         <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
@@ -15,6 +15,11 @@
                         <title>Test</title>
                     </titleStmt>
                 </fileDesc>
+                <encodingDesc>
+                    <tagsDecl>
+                        <rendition xml:id="it" scheme="ccs">font-style: italics</rendition>
+                    </tagsDecl>
+                </encodingDesc>
             </teiHeader>
             <text xml:id="the-text">
                 <front>
@@ -28,10 +33,10 @@
                         <head>Erstes Hauptstück</head>
                         <div xml:id="d1.1">
                             <head>Des ersten Hauptstücks erster Teil</head>
-                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
-                                objektive Realität im Satz über die Summe der Innenwinkel des <app
-                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
-                                    >n-Ecks</rdg></app>.</p>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile <hi rendition="#it">a
+                                    priori</hi> beweisen objektive Realität im Satz über die Summe
+                                der Innenwinkel des <app xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg
+                                        wit="#N">n-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
                                 eine dritte Gerade geschnitten werden.</p>
@@ -67,5 +72,14 @@
         />
     </x:scenario>
 
+    <x:scenario label="rendition of hi">
+        <x:context select="$tei-text/id('d1.1.p1')" mode="text:text"/>
+        <x:expect label="has a hi with class 'it'" test="exists(//*:span[matches(@class, 'it')])"/>
+        <x:expect label="has exactly one hi with class 'it'"
+            test="count(//*:span[matches(@class, 'it')])" select="1"/>
+        <x:expect label="has span with class it around 'a priori'"
+            test="some $hi in //*:span[matches(@class, 'it')] ! string(.) satisfies matches($hi, 'a\s+priori')"
+        />
+    </x:scenario>
 
 </x:description>
