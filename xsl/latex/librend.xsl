@@ -99,6 +99,18 @@
         </xsl:call-template>
       </xsl:template>
 
+      <!-- just a dumb implementation that produces no output -->
+      <xsl:template name="text:class-attribute" visibility="public">
+        <xsl:param name="context" as="element()" select="." required="false"/>
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+      </xsl:template>
+
+      <!-- just a dumb implementation that produces no output -->
+      <xsl:template name="text:class-attribute-opt" visibility="public">
+        <xsl:param name="context" as="element()" select="." required="false"/>
+        <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
+      </xsl:template>
+
     </xsl:override>
   </xsl:use-package>
 

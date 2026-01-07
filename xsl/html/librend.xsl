@@ -21,7 +21,8 @@ in the base text, the apparatus and in the editorial notes. -->
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend-base.xsl"
         package-version="1.0.0">
-        <xsl:accept component="*" names="*" visibility="public"/>
+        <xsl:accept component="mode" names="*" visibility="public"/>
+        <xsl:accept component="template" names="text:*" visibility="public"/>
         <xsl:override>
 
             <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]"

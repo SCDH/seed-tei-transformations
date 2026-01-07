@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- a package that defines modes for text reproduction where formatting is needed
+<!-- a package based on common/librend-base
 
-This package base package provides modes for all text reproductive modes.
-These modes are empty. Replace this package with one with your project-specific and output-specific
+Replace this package with one with your project-specific and output-specific
 rules for formatting the text.
-
-TODO: Consider and decide! Should we declare only one mode, instead of multiple modes. The XSLT
-package system would allow this and even its adaption in a branch of the package hierarchy.
 -->
 <xsl:package
   name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
@@ -20,16 +16,16 @@ package system would allow this and even its adaption in a branch of the package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend-base.xsl"
     package-version="1.0.0">
     <xsl:accept component="mode" names="*" visibility="public"/>
-    <xsl:accept component="template" names="*" visibility="public"/>
+    <xsl:accept component="template" names="text:*" visibility="public"/>
     <xsl:override>
 
-      <!-- just a dumb implementation that does no output -->
+      <!-- just a dumb implementation that produces no output -->
       <xsl:template name="text:class-attribute" visibility="public">
         <xsl:param name="context" as="element()" select="." required="false"/>
         <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
       </xsl:template>
 
-      <!-- just a dumb implementation that does no output -->
+      <!-- just a dumb implementation that produces no output -->
       <xsl:template name="text:class-attribute-opt" visibility="public">
         <xsl:param name="context" as="element()" select="." required="false"/>
         <xsl:param name="additional" as="xs:string*" select="()" required="false"/>
