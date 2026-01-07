@@ -14,13 +14,14 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                base="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
-               version="1.0.0" sourceLocation="xsl/html/librend.xsl" priority="1"/>
+               version="1.0.0" sourceLocation="xsl/html/librend.xsl" priority="2"/>
+          <package
+               base="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/librend.xsl"
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
+               version="1.0.0" sourceLocation="xsl/latex/librend.xsl" priority="1"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl"
                version="1.0.0" sourceLocation="xsl/common/librend.xsl" priority="10"/>
-          <package
-               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/librend.xsl"
-               version="1.0.0" sourceLocation="xsl/latex/librend.xsl"/>
 
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
@@ -76,9 +77,6 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libnote2.xsl"
                version="1.0.0" sourceLocation="xsl/latex/libnote2.xsl"/>
-          <package
-               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/librend.xsl"
-               version="1.0.0" sourceLocation="xsl/html/librend.xsl"/>
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
                version="1.0.0" sourceLocation="xsl/html/libtext.xsl"/>
