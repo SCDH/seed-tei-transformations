@@ -24,6 +24,7 @@
         <antcall target="test-xsl-common-libcommon.xsl"/>
         <antcall target="test-xsl-common-libapp2.xsl"/>
         <antcall target="test-xsl-common-libapp2-first-child.xsl"/>
+        <antcall target="test-xsl-common-libkeys.xsl"/>
         <antcall target="test-xsl-common-libwit.xsl"/>
         <antcall target="test-xsl-common-libref.xsl"/>
         <antcall target="test-xsl-common-libentry2.xsl"/>
@@ -71,6 +72,12 @@
     <target name="test-xsl-common-libcommon.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libcommon.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-common-libkeys.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libkeys.xspec"/>
         </antcall>
     </target>
 
