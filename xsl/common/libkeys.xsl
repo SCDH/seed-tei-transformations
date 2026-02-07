@@ -31,7 +31,7 @@ USAGE:
 
     -->
     <xsl:key name="first-alternant" match="//*[@type eq 'alternative']"
-        use="keys:is-first-alternative(.)"/>
+        use="keys:is-first-alternative(.) => string()"/>
 
     <xsl:function name="keys:is-first-alternative" as="xs:boolean" visibility="final">
         <xsl:param name="context" as="element()"/>
