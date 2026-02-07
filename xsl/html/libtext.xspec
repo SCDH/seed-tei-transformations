@@ -273,9 +273,9 @@
 
     <x:scenario label="text:text on exclusive alternants, see issue #66">
         <x:context mode="text:text">
-            <t:ab>first <seg xml:id="op1" type="alternative">text</seg>
-                <add xml:id="op2" type="alternative" place="above">addition</add>
-                <alt target="#op1 #op2" mode="excl"/> last</t:ab>
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
         </x:context>
         <x:expect label="has 'first' in text" test="matches(., 'first')"/>
         <x:expect label="has 'text' in text" test="matches(., 'text')"/>

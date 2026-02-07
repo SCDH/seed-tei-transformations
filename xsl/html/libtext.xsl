@@ -30,6 +30,9 @@ Note, that there is a default mode in this package.
     <!-- with false (default), there are some specific templates for alternative text in choice -->
     <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
+    <!-- keys cannot be importet via use-package -->
+    <xsl:import href="../common/libkeys.xsl"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
@@ -255,6 +258,31 @@ Note, that there is a default mode in this package.
                 </span>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
                 <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- keep first alternant in document order -->
+            <xsl:template match="key('first-alternant', 'true')">
+                <xsl:message>
+                    <xsl:text>first alternative text in </xsl:text>
+                    <xsl:value-of select="name(.)"/>
+                    <xsl:text> with ID </xsl:text>
+                    <xsl:value-of select="@xml:id"/>
+                    <xsl:text> alternants: </xsl:text>
+                    <xsl:value-of select="key('alt-excl', @xml:id)/@target"/>
+                </xsl:message>
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <!-- drop subsequent alternants in document order -->
+            <xsl:template match="key('first-alternant', 'false')">
+                <xsl:message>
+                    <xsl:text>dropping subsequent alternative text in </xsl:text>
+                    <xsl:value-of select="name(.)"/>
+                    <xsl:text> with ID </xsl:text>
+                    <xsl:value-of select="@xml:id"/>
+                    <xsl:text> alternants: </xsl:text>
+                    <xsl:value-of select="key('alt-excl', @xml:id)/@target"/>
+                </xsl:message>
             </xsl:template>
 
 
