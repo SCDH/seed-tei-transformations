@@ -64,6 +64,8 @@ see xsl/projects/alea/preview.xsl
     <!-- with false (default), there are some specific templates for alternative text in choice -->
     <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
+    <xsl:import href="libkeys.xsl"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
         package-version="1.0.0"/>
@@ -120,6 +122,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
+            <xsl:text>| key('first-alternant', 'true')</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -141,6 +144,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
+            <xsl:text>| key('first-alternant', 'true')</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -162,6 +166,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
+            <xsl:text>| key('first-alternant', 'true')</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -183,6 +188,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
+            <xsl:text>| key('first-alternant', 'true')</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -202,6 +208,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
+            <xsl:text>| key('first-alternant', 'true')</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 

@@ -173,4 +173,20 @@
     </x:scenario>
 
 
+    <x:scenario label="lemma text nodes on alternants" pending="no strategy yet">
+        <x:context>
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+        </x:context>
+        <x:call function="app:apparatus-entries">
+            <x:param name="context" select="$x:context"/>
+            <x:param name="app-entries-xpath" select="$x:context/key('first-alternant', 'true')"/>
+            <x:param name="type" select="1"/>
+        </x:call>
+        <x:expect label="has 'text' text" test="//text() => string-join() => matches('text')"/>
+        <x:expect label="has 'text' text" test="//text() => string-join() => matches('addition')"/>
+    </x:scenario>
+
+
 </x:description>
