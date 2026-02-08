@@ -281,6 +281,26 @@
         <x:expect label="has 'text' in text" test="matches(., 'text')"/>
         <x:expect label="has 'last' in text" test="matches(., 'last')"/>
         <x:expect label="no 'addition' in text'" test="matches(., 'addition') => not()"/>
+        <x:expect label="'text' in span" test="exists(//span)"/>
+        <x:expect label="only one span" test="count(//span)" select="1"/>
+        <x:expect label="span has id from xml:id" test="//span/@id ! string(.)" select="'op1'"/>
+        <x:expect label="span has text content 'text'" test="//span/text()">text</x:expect>
+    </x:scenario>
+
+    <x:scenario label="text:text on exclusive block alternants, see issue #66">
+        <x:context mode="text:text">
+            <t:div>
+                <t:p xml:id="op1" type="alternative">text</t:p>
+                <t:p xml:id="op2" type="alternative" place="margin">addition</t:p>
+                <t:alt target="#op1 #op2" mode="excl"/>
+            </t:div>
+        </x:context>
+        <x:expect label="has 'text' in text" test="matches(., 'text')"/>
+        <x:expect label="no 'addition' in text'" test="matches(., 'addition') => not()"/>
+        <x:expect label="'text' in p" test="exists(//p)"/>
+        <x:expect label="only one p" test="count(//p)" select="1"/>
+        <x:expect label="p has id from xml:id" test="//p/@id ! string(.)" select="'op1'"/>
+        <x:expect label="p has text content 'text'" test="//p/text()">text</x:expect>
     </x:scenario>
 
 </x:description>

@@ -20,6 +20,7 @@ Note, that there is a default mode in this package.
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:source="http://scdh.wwu.de/transform/source#"
     xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:app="http://scdh.wwu.de/transform/app#"
     xmlns:compat="http://scdh.wwu.de/transform/compat#" exclude-result-prefixes="#all"
@@ -50,6 +51,12 @@ Note, that there is a default mode in this package.
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
         package-version="1.0.0">
         <xsl:accept component="variable" names="wit:witness" visibility="private"/>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
+        package-version="0.1.0">
+        <xsl:accept component="function" names="common:is-block#1" visibility="private"/>
     </xsl:use-package>
 
     <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
@@ -262,7 +269,7 @@ Note, that there is a default mode in this package.
 
             <!-- keep first alternant in document order -->
             <xsl:template match="key('first-alternant', 'true')">
-                <xsl:message>
+                <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>first alternative text in </xsl:text>
                     <xsl:value-of select="name(.)"/>
                     <xsl:text> with ID </xsl:text>
@@ -270,12 +277,42 @@ Note, that there is a default mode in this package.
                     <xsl:text> alternants: </xsl:text>
                     <xsl:value-of select="key('alt-excl', @xml:id)/@target"/>
                 </xsl:message>
-                <xsl:apply-templates/>
+                <xsl:choose>
+                    <xsl:when test="local-name(.) = ('p', 'ab')">
+                        <p>
+                            <xsl:call-template name="text:class-attribute"/>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:apply-templates mode="text:hook-before" select="."/>
+                            <xsl:apply-templates select="node()"/>
+                            <xsl:apply-templates mode="text:hook-after" select="."/>
+                            <xsl:call-template name="text:inline-marks"/>
+                        </p>
+                    </xsl:when>
+                    <xsl:when test="common:is-block(.)">
+                        <div>
+                            <xsl:call-template name="text:class-attribute"/>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:apply-templates mode="text:hook-before" select="."/>
+                            <xsl:apply-templates select="node()"/>
+                            <xsl:apply-templates mode="text:hook-after" select="."/>
+                            <xsl:call-template name="text:inline-marks"/>
+                        </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates mode="text:hook-before" select="."/>
+                        <span>
+                            <xsl:call-template name="text:class-attribute"/>
+                            <xsl:apply-templates select="@* | node()"/>
+                        </span>
+                        <xsl:apply-templates mode="text:hook-after" select="."/>
+                        <xsl:call-template name="text:inline-marks"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:template>
 
             <!-- drop subsequent alternants in document order -->
             <xsl:template match="key('first-alternant', 'false')">
-                <xsl:message>
+                <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>dropping subsequent alternative text in </xsl:text>
                     <xsl:value-of select="name(.)"/>
                     <xsl:text> with ID </xsl:text>
