@@ -1,9 +1,15 @@
 # Changes
 
-## dev
+## 0.18.0
 
-### Possibly breaking changes
-- order in `<choice>` matters now:
+- support alternants encoded by `<alt mode="excl" target="..."/>` (see
+  issue #66)
+- support pair of `<add>` and `<del>` enclosed in `<subst>` (see issue #64)
+- support several encodings of alternatives in `<choice>` (see issue #54)
+  - `<abbr>` and `<expan>`
+  - `<orig>` and `<reg>`
+  - `<seg>` with `@wit` as lightweight critical apparatus
+- **possibly breaking changes**: order in `<choice>` matters now:
   - first child goes into the main text (lemma), no matter if the
     choice gives `corr`/`sic` alternatives, or `abbr`/`expan`, or
     `orig`/`reg` or multiple `seg` elements
