@@ -33,7 +33,7 @@ USAGE:
     <xsl:key name="first-alternant" match="//*[@type eq 'alternative']"
         use="keys:is-first-alternative(.) => string()"/>
 
-    <xsl:function name="keys:is-first-alternative" as="xs:boolean" visibility="final">
+    <xsl:function name="keys:is-first-alternative" as="xs:boolean" visibility="private">
         <xsl:param name="context" as="element()"/>
         <xsl:variable name="id" as="xs:string" select="$context/@xml:id => string()"/>
         <xsl:variable name="alternants-at-context" as="xs:string*"
