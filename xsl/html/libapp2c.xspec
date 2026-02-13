@@ -393,4 +393,31 @@
             test="count(//span[tokenize(@class) = 'reading-annotation'])" select="1"/>
     </x:scenario>
 
+
+    <x:scenario label="alternants from alt in mode excl">
+        <x:context>
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body>
+                        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+                    </t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'text' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">text</x:expect>
+        <x:expect label="has 'addition' reading" test="test:reading(.)/text()" xml:space="preserve">addition</x:expect>
+        <x:expect label="has 'a.c.' reading annotation"
+            test="exists(//span[tokenize(@class) = 'reading-annotation'][matches(., 'above')])"/>
+        <x:expect label="has 1 reading annotation"
+            test="count(//span[tokenize(@class) = 'reading-annotation'])" select="1"/>
+    </x:scenario>
+
 </x:description>

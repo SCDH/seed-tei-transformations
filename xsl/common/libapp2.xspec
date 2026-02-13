@@ -51,6 +51,11 @@
                             </l>
                         </lg>
                     </div>
+                    <div xml:id="alt1">
+                        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+                    </div>
                 </body>
                 <back>
                     <note xml:id="note1" type="editiorial" target="#sic1">Parallelen Geraden.</note>
@@ -172,5 +177,32 @@
             test="//text() => string-join() => matches('strike') => not()"/>
     </x:scenario>
 
+    <x:scenario
+        label="lemma text nodes for alternants with alt in mode excl, regression for issue #66">
+        <x:context mode="app:lemma-text-nodes-dspt" select="//t:alt">
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+        </x:context>
+        <x:expect label="result">
+            <x:text>text</x:text>
+        </x:expect>
+        <x:expect label="does not contain 'addition'" test="matches(., 'addition') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="entry for alternants with alt in mode excl, regression for issue #66">
+        <x:call function="app:apparatus-entries">
+            <x:param name="context" select="$tei-text"/>
+            <x:param name="app-entries-xpath" select="'//alt'"/>
+            <x:param name="type" select="1"/>
+        </x:call>
+        <x:variable name="lemma-nodes" select="($tei-text//id('alt1')//tei:seg/text())"/>
+        <x:expect label="count of lemma text nodes" test="map:get(., 'lemma-text-nodes') => count()"
+            as="xs:integer" select="1"/>
+        <x:expect label="lemma text nodes" test="map:get(., 'lemma-text-nodes')"
+            select="$lemma-nodes"/>
+        <x:expect label="lemma grouping IDs" test="map:get(., 'lemma-grouping-ids')"
+            select="$lemma-nodes ! generate-id(.) => string-join('-')"/>
+    </x:scenario>
 
 </x:description>

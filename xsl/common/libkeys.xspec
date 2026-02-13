@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:keys="http://scdh.wwu.de/transform/keys#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions" stylesheet="libkeys.xsl">
+
+    <!-- We can test a private function as long as we do not run the test externally! -->
+
+    <x:variable name="ctx">
+        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+    </x:variable>
+
+    <x:scenario label="keys:is-first-alternative true">
+        <x:call function="keys:is-first-alternative">
+            <x:param select="$ctx//t:seg"/>
+        </x:call>
+        <x:expect label="result" as="xs:boolean" select="true()"/>
+    </x:scenario>
+
+    <x:scenario label="keys:is-first-alternative false">
+        <x:call function="keys:is-first-alternative">
+            <x:param select="$ctx//t:add"/>
+        </x:call>
+        <x:expect label="result" as="xs:boolean" select="false()"/>
+    </x:scenario>
+
+</x:description>

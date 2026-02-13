@@ -60,6 +60,8 @@ see xsl/projects/alea/preview.xsl
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
 
+    <xsl:import href="libkeys.xsl"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
         package-version="1.0.0"/>
@@ -355,6 +357,9 @@ see xsl/projects/alea/preview.xsl
     <xsl:template mode="seed:lemma-text-nodes" match="space">
         <xsl:text>—</xsl:text>
     </xsl:template>
+
+    <!-- drop subsequent alternants -->
+    <xsl:template mode="seed:lemma-text-nodes" match="key('first-alternant', 'false')"/>
 
 
 </xsl:package>

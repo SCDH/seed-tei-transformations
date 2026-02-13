@@ -34,6 +34,16 @@
         <x:expect label="count of text nodes" test="$x:result => count()" select="3"/>
     </x:scenario>
 
+    <x:scenario label="mode seed:lemma-text-nodes on alternants, related to #66">
+        <x:context mode="seed:lemma-text-nodes">
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+        </x:context>
+        <x:expect label="contains first alternant" test="matches(., 'text')"/>
+        <x:expect label="does not contain second alternant" test="matches(., 'addition') => not()"/>
+    </x:scenario>
+
     <x:scenario label="seed:mk-entry-map() on app">
         <x:context select="$tei-with-app"/>
         <x:call function="seed:mk-entry-map">

@@ -29,6 +29,8 @@
     <!-- whether or not to have the "lemma]" in apparatus entries -->
     <xsl:param name="app:lemma" as="xs:boolean" select="true()" required="false"/>
 
+    <xsl:import href="../common/libkeys.xsl"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
@@ -175,8 +177,9 @@
                 See seed:note-based-apparatus-nodes-map#2 for making a required map. -->
             <xsl:template name="app:footnote-marks" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                    select="if ($context/@xml:id) then $context/@xml:id else generate-id($context)"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
                     <sup class="apparatus-footnote-mark footnote-mark">
@@ -193,8 +196,9 @@
                 app:popup-css. -->
             <xsl:template name="app:inline-alternatives" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
-                <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
+                <xsl:param name="element-id" as="xs:string" required="false"
+                    select="if ($context/@xml:id) then string($context/@xml:id) else generate-id($context)"/>
                 <xsl:variable name="popup-id" select="concat($element-id, '-popup')"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" as="map(*)" select="map:get($entries, $element-id)"/>
@@ -617,6 +621,29 @@
                 </xsl:if>
             </xsl:template>
 
+            <xsl:template mode="app:reading-dspt" match="alt[@mode eq 'excl']">
+                <!-- get alternants in order, drop first -->
+                <xsl:variable name="root" as="node()" select="root(.)"/>
+                <xsl:for-each
+                    select="(key('alternants', 'alternative') intersect tokenize(@target) ! substring(., 2) ! id(., $root))[position() gt 1]">
+                    <span class="reading alternant">
+                        <span class="static-text" data-i18n-key="alternant">&lre;alt.&pdf;</span>
+                        <xsl:apply-templates mode="app:reading-text" select="."/>
+                    </span>
+                    <xsl:call-template name="app:reading-annotation">
+                        <xsl:with-param name="separator" select="true()"/>
+                    </xsl:call-template>
+                    <xsl:if test="position() ne last()">
+                        <span class="apparatus-sep" style="padding-left: 4px"
+                            data-i18n-key="rdgs-sep">;&sp;</span>
+                    </xsl:if>
+                </xsl:for-each>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;</span>
+                </xsl:if>
+            </xsl:template>
+
             <xsl:template mode="app:reading-dspt" match="note[not(parent::app)]">
                 <span class="note-text" lang="{i18n:language(.)}"
                     style="direction:{i18n:language-direction(.)}; text-align:{i18n:language-align(.)};">
@@ -665,6 +692,13 @@
             <xsl:template mode="app:reading-annotation" match="*[@reason]">
                 <span class="static-text" data-i18n-key="{string(@reason)}">
                     <xsl:value-of select="@reason"/>
+                </span>
+            </xsl:template>
+
+            <!-- make reading annotation for placed things -->
+            <xsl:template mode="app:reading-annotation" match="*[@place]">
+                <span class="static-text" data-i18n-key="{string(@place)}">
+                    <xsl:value-of select="@place"/>
                 </span>
             </xsl:template>
 
