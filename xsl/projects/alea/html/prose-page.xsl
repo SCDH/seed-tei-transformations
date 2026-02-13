@@ -282,12 +282,15 @@
         <xsl:override>
 
             <xsl:template name="text:inline-marks">
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <xsl:call-template name="app:footnote-marks">
                     <xsl:with-param name="entries"
                         select="map:merge($apparatus-entries, $editorial-notes)"/>
+                    <xsl:with-param name="context" select="$context"/>
                 </xsl:call-template>
                 <xsl:call-template name="app:footnote-marks">
                     <xsl:with-param name="entries" select="map:merge($editorial-notes)"/>
+                    <xsl:with-param name="context" select="$context"/>
                 </xsl:call-template>
             </xsl:template>
 

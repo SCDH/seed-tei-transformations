@@ -285,7 +285,10 @@ Note, that there is a default mode in this package.
                             <xsl:apply-templates mode="text:hook-before" select="."/>
                             <xsl:apply-templates select="node()"/>
                             <xsl:apply-templates mode="text:hook-after" select="."/>
-                            <xsl:call-template name="text:inline-marks"/>
+                            <xsl:call-template name="text:inline-marks">
+                                <xsl:with-param name="context" as="element()"
+                                    select="key('alt-excl', @xml:id)"/>
+                            </xsl:call-template>
                         </p>
                     </xsl:when>
                     <xsl:when test="common:is-block(.)">
@@ -295,7 +298,10 @@ Note, that there is a default mode in this package.
                             <xsl:apply-templates mode="text:hook-before" select="."/>
                             <xsl:apply-templates select="node()"/>
                             <xsl:apply-templates mode="text:hook-after" select="."/>
-                            <xsl:call-template name="text:inline-marks"/>
+                            <xsl:call-template name="text:inline-marks">
+                                <xsl:with-param name="context" as="element()"
+                                    select="key('alt-excl', @xml:id)"/>
+                            </xsl:call-template>
                         </div>
                     </xsl:when>
                     <xsl:otherwise>
@@ -305,7 +311,10 @@ Note, that there is a default mode in this package.
                             <xsl:apply-templates select="@* | node()"/>
                         </span>
                         <xsl:apply-templates mode="text:hook-after" select="."/>
-                        <xsl:call-template name="text:inline-marks"/>
+                        <xsl:call-template name="text:inline-marks">
+                            <xsl:with-param name="context" as="element()"
+                                select="key('alt-excl', @xml:id)"/>
+                        </xsl:call-template>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:template>
@@ -369,7 +378,9 @@ Note, that there is a default mode in this package.
     </xsl:template>
 
     <!-- you probably want to override this for adding footnote marks etc. to the text -->
-    <xsl:template name="text:inline-marks" visibility="public"/>
+    <xsl:template name="text:inline-marks" visibility="public">
+        <xsl:param name="context" as="element()" required="false" select="."/>
+    </xsl:template>
 
 
 </xsl:package>

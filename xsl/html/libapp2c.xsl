@@ -175,8 +175,9 @@
                 See seed:note-based-apparatus-nodes-map#2 for making a required map. -->
             <xsl:template name="app:footnote-marks" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                    select="if ($context/@xml:id) then $context/@xml:id else generate-id($context)"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
                     <sup class="apparatus-footnote-mark footnote-mark">
@@ -193,8 +194,9 @@
                 app:popup-css. -->
             <xsl:template name="app:inline-alternatives" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
-                <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
+                <xsl:param name="element-id" as="xs:string" required="false"
+                    select="if ($context/@xml:id) then string($context/@xml:id) else generate-id($context)"/>
                 <xsl:variable name="popup-id" select="concat($element-id, '-popup')"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" as="map(*)" select="map:get($entries, $element-id)"/>

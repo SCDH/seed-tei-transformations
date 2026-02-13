@@ -63,14 +63,16 @@
             <!-- generate inline alternatives. Hook this to text:inline-marks -->
             <xsl:template name="app:inline-alternatives" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <!-- not doing anything here -->
             </xsl:template>
 
             <!-- generate footnotes for the context element. Hook this to text:inline-marks -->
             <xsl:template name="app:footnote-marks" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                    select="if ($context/@xml:id) then $context/@xml:id else generate-id($context)"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
                     <!-- get the apparatus entries for this context -->

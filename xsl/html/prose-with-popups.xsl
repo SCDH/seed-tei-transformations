@@ -56,8 +56,10 @@
 
     <xsl:override>
       <xsl:template name="text:inline-marks">
+        <xsl:param name="context" as="element()" required="false" select="."/>
         <xsl:call-template name="app:inline-alternatives">
           <xsl:with-param name="entries" select="map:merge($prose:apparatus-entries)"/>
+          <xsl:with-param name="context" select="$context"/>
         </xsl:call-template>
       </xsl:template>
     </xsl:override>
