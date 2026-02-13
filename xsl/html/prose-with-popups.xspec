@@ -46,6 +46,11 @@
                             </l>
                         </lg>
                     </div>
+                    <div xml:id="alt1">
+                        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+                    </div>
                 </body>
             </text>
         </TEI>
@@ -94,7 +99,6 @@
         </x:expect>
     </x:scenario>
 
-
     <x:scenario label="full html">
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="result">
@@ -103,6 +107,12 @@
                 <body>...</body>
             </html>
         </x:expect>
+    </x:scenario>
+
+    <x:scenario label="alternants have apparatus entry; regression for issue #66">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="apparatus entry exists"
+            test="exists(//*[@id eq 'alt1']//*[@class eq 'apparatus-entry'])"/>
     </x:scenario>
 
 </x:description>
