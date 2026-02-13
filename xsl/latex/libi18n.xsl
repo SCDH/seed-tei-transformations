@@ -18,7 +18,7 @@ This generic XSLT module provides babel translations for translation namespaces 
 
         <xsl:accept visibility="public" component="function" names="i18n:*"/>
         <xsl:accept visibility="public" component="template" names="i18n:*"/>
-        <xsl:accept visibility="abstract" component="variable" names="i18n:default-language"/>
+        <xsl:accept visibility="public" component="variable" names="i18n:default-language"/>
 
     </xsl:use-package>
 

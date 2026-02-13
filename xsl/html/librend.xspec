@@ -2,9 +2,9 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="text.xsl" run-as="external">
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="librend.xsl" run-as="external">
 
-    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
     <x:variable name="tei-text">
         <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
@@ -50,8 +50,8 @@
     <x:scenario label="rendition of hi">
         <x:context select="$tei-text/id('d1.1.p1')" mode="text:text"/>
         <x:expect label="has a hi with class 'it'" test="exists(//*:span[matches(@class, 'it')])"/>
-        <x:expect label="has exactly one hi with class 'it'"
-            test="count(//*:span[matches(@class, 'it')])" select="1"/>
+        <x:expect label="has at least hi with class 'it'. Can be more since apparatus entries are still included"
+            test="count(//*:span[matches(@class, 'it')]) ge 1"/>
         <x:expect label="has span with class it around 'a priori'"
             test="some $hi in //*:span[matches(@class, 'it')] ! string(.) satisfies matches($hi, 'a\s+priori')"
         />

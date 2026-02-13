@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map" xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:seed="http://scdh.wwu.de/transform/seed#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="libentry2.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
@@ -31,6 +32,16 @@
         <x:expect label="text nodes" test="$x:result => string-join('') => normalize-space()"
             select="'This is a'"/>
         <x:expect label="count of text nodes" test="$x:result => count()" select="3"/>
+    </x:scenario>
+
+    <x:scenario label="mode seed:lemma-text-nodes on alternants, related to #66">
+        <x:context mode="seed:lemma-text-nodes">
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+        </x:context>
+        <x:expect label="contains first alternant" test="matches(., 'text')"/>
+        <x:expect label="does not contain second alternant" test="matches(., 'addition') => not()"/>
     </x:scenario>
 
     <x:scenario label="seed:mk-entry-map() on app">
@@ -145,5 +156,6 @@
             test="(map:get($x:result, 'a1') => map:get('entries'))[2] => map:get('entry-id')"
             select="'a3'"/>
     </x:scenario>
+
 
 </x:description>

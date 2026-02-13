@@ -26,7 +26,6 @@
         <xsl:accept component="function"
             names="i18n:language#1 i18n:language-direction#1 i18n:language-align#1 i18n:direction-embedding#1"
             visibility="private"/>
-        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
     </xsl:use-package>
 
     <xsl:use-package
@@ -64,14 +63,16 @@
             <!-- generate inline alternatives. Hook this to text:inline-marks -->
             <xsl:template name="app:inline-alternatives" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <!-- not doing anything here -->
             </xsl:template>
 
             <!-- generate footnotes for the context element. Hook this to text:inline-marks -->
             <xsl:template name="app:footnote-marks" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                    select="if ($context/@xml:id) then $context/@xml:id else generate-id($context)"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
                     <!-- get the apparatus entries for this context -->
@@ -166,7 +167,9 @@
                 <xsl:text>{</xsl:text>
                 <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
                 <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
-                    <xsl:with-param name="reading" select="node()"/>
+                    <xsl:with-param name="reading">
+                        <xsl:apply-templates mode="app:reading-text" select="node()"/>
+                    </xsl:with-param>
                 </xsl:call-template>
                 <xsl:if test="app:prints-sigla(.)">
                     <xsl:text>\appsep{rdg-siglum-sep}\wit{</xsl:text>

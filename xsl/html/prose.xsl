@@ -13,15 +13,6 @@
   <!-- whether to use the HTML template from libhtml and make a full HTML file -->
   <xsl:param name="use-libhtml" as="xs:boolean" select="false()"/>
 
-  <xsl:param name="default-language" as="xs:string" select="'en'"/>
-
-  <xsl:use-package
-    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
-    package-version="0.1.0">
-    <xsl:override>
-      <xsl:variable name="i18n:default-language" as="xs:string" select="$default-language"/>
-    </xsl:override>
-  </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"

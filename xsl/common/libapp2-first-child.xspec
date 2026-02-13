@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- we are using ../html/libapp2c.xsl as stylesheet because libapp2.xsl has abstract components -->
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="../html/libapp2c.xsl" run-as="external">
+
+    <!-- takes no affect as we call ../html/libapp2c.xsl -->
+    <x:param name="compat:first-child" select="true()" static="true"/>
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+   <x:pending label="takes no affect as we call ../html/libapp2c.xsl and cannot set static variable">
+
+
+
+    <x:scenario label="lemma text nodes on choice with corr first and then sic">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:corr>corrected</t:corr>
+                <t:sic>seen in the manuscript</t:sic>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'seen' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with sic first and then corr">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:sic>seen in the manuscript</t:sic>
+                <t:corr>corrected</t:corr>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'seen' text" test="//text() => string-join() => matches('seen')"/>
+        <x:expect label="has no 'seen' text"
+            test="//text() => string-join() => matches('corrected') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with segments">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'first' text" test="//text() => string-join() => matches('first')"/>
+        <x:expect label="has no 'second' text"
+            test="//text() => string-join() => matches('second') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with segments">
+        <x:param name="wit:witness" select="'B'"/>
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'second' text" test="//text() => string-join() => matches('second')"/>
+        <x:expect label="has no 'first' text"
+            test="//text() => string-join() => matches('first') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+    </x:scenario>
+
+   </x:pending>
+
+</x:description>

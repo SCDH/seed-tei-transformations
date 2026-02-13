@@ -11,6 +11,14 @@
     <!-- Whether to use line (block-element) counting, or verse (typed) counting. -->
     <xsl:param name="typed-line-numbering" as="xs:boolean" select="true()"/>
 
+    <!-- local names of block elements, separated by comma -->
+    <xsl:param name="common:block-elements-csv" as="xs:string"
+        select="'p,ab,l,lg,div,div1,div2,div3,div4,div5,div6,div7'"/>
+
+    <!-- sequence of local names of block elements -->
+    <xsl:param name="common:block-elements" as="xs:string*"
+        select="tokenize($common:block-elements-csv, ',') ! normalize-space(.)"/>
+
     <!-- returns the line or verse number, depending on the value of $typed-line-numbering -->
     <xsl:function name="common:line-number" as="xs:string">
         <xsl:param name="el" as="node()"/>
@@ -129,6 +137,12 @@
         <xsl:sequence
             select="($context/parent::*/node() except $context) ! normalize-space(.) => string-join() ne ''"
         />
+    </xsl:function>
+
+    <!-- predivate for testing if the context node is a block element -->
+    <xsl:function name="common:is-block" as="xs:boolean" visibility="final">
+        <xsl:param name="context" as="element()"/>
+        <xsl:sequence select="local-name($context) = $common:block-elements"/>
     </xsl:function>
 
 </xsl:package>

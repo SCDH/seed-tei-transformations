@@ -14,15 +14,22 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:seed="http://scdh.wwu.de/transform/seed#"
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
+
+    <!-- with false (default), there are some specific templates for alternative text in choice -->
+    <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
     <xsl:param name="app:popup-anchor" as="xs:string" select="'?'" required="false"/>
 
     <!-- whether or not to have the "lemma]" in apparatus entries -->
     <xsl:param name="app:lemma" as="xs:boolean" select="true()" required="false"/>
+
+    <xsl:import href="../common/libkeys.xsl"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -30,6 +37,12 @@
         <xsl:accept component="function"
             names="i18n:language#1 i18n:language-direction#1 i18n:language-align#1 i18n:direction-embedding#1"
             visibility="private"/>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="wit:witness" visibility="private"/>
     </xsl:use-package>
 
     <xsl:use-package
@@ -42,6 +55,7 @@
         <xsl:accept component="function" names="app:*" visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="public"/>
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
+        <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
 
         <xsl:override>
 
@@ -163,8 +177,9 @@
                 See seed:note-based-apparatus-nodes-map#2 for making a required map. -->
             <xsl:template name="app:footnote-marks" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
                 <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                    select="if ($context/@xml:id) then $context/@xml:id else generate-id($context)"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" select="map:get($entries, $element-id)"/>
                     <sup class="apparatus-footnote-mark footnote-mark">
@@ -181,8 +196,9 @@
                 app:popup-css. -->
             <xsl:template name="app:inline-alternatives" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>
-                <xsl:variable name="element-id"
-                    select="if (@xml:id) then @xml:id else generate-id()"/>
+                <xsl:param name="context" as="element()" required="false" select="."/>
+                <xsl:param name="element-id" as="xs:string" required="false"
+                    select="if ($context/@xml:id) then string($context/@xml:id) else generate-id($context)"/>
                 <xsl:variable name="popup-id" select="concat($element-id, '-popup')"/>
                 <xsl:if test="map:contains($entries, $element-id)">
                     <xsl:variable name="entry" as="map(*)" select="map:get($entries, $element-id)"/>
@@ -285,8 +301,11 @@
             <xsl:template mode="app:reading-dspt" match="rdg[normalize-space(.) ne '']">
                 <span class="reading">
                     <!-- we have to evaluate the entry: if the lemma is empty, we need to prepend or append the empty replacement -->
+                    <!-- if evaluation of rdg/@rendition is required, then the rdg text should go into an extra span -->
                     <xsl:call-template name="app:apparatus-xpend-if-lemma-empty">
-                        <xsl:with-param name="reading" select="node()"/>
+                        <xsl:with-param name="reading">
+                            <xsl:apply-templates mode="app:reading-text" select="node()"/>
+                        </xsl:with-param>
                     </xsl:call-template>
                     <!-- handle nested gap etc. -->
                     <xsl:call-template name="app:reading-annotation">
@@ -376,7 +395,7 @@
 
 
             <xsl:template mode="app:reading-dspt" match="corr">
-                <span class="static-text" data-i18n-key="conieci">&lre;coniec.&pdf;</span>
+                <span class="static-text" data-i18n-key="conieci">&lre;corr.&pdf;</span>
             </xsl:template>
 
 
@@ -385,15 +404,18 @@
             </xsl:template>
 
 
-            <xsl:template mode="app:reading-dspt" match="choice/sic">
+            <xsl:template mode="app:reading-dspt" match="choice/sic"
+                use-when="not($compat:first-child)">
                 <span class="reading">
                     <xsl:apply-templates mode="app:reading-text"/>
                     <xsl:if test="app:prints-sigla(.)">
                         <span class="apparatus-sep" style="padding-left: 3px"
                             data-i18n-key="rdg-siglum-sep">:</span>
-                        <xsl:call-template name="app:sigla">
-                            <xsl:with-param name="context" select="."/>
-                        </xsl:call-template>
+                        <span class="siglum">
+                            <xsl:call-template name="app:sigla">
+                                <xsl:with-param name="context" select="."/>
+                            </xsl:call-template>
+                        </span>
                     </xsl:if>
                 </span>
                 <xsl:if test="position() ne last()">
@@ -402,13 +424,86 @@
                 </xsl:if>
             </xsl:template>
 
-            <xsl:template mode="app:reading-dspt" match="choice[corr and sic]">
+            <xsl:template mode="app:reading-dspt" match="choice[corr and sic]"
+                use-when="not($compat:first-child)">
                 <span class="reading">
-                    <xsl:apply-templates select="corr" mode="app:reading-dspt"/>
-                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
-                        >;</span>
                     <xsl:apply-templates select="sic" mode="app:reading-dspt"/>
                 </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-dspt" match="choice[orig and reg]"
+                use-when="not($compat:first-child)">
+                <span class="reading">
+                    <xsl:apply-templates mode="app:reading-text" select="orig"/>
+                </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <xsl:template mode="app:reading-dspt" match="choice[abbr and expan]"
+                use-when="not($compat:first-child)">
+                <span class="reading">
+                    <xsl:apply-templates mode="app:reading-text" select="abbr"/>
+                </span>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <!-- choice with nested seg as basic variant encoding -->
+            <xsl:template mode="app:reading-dspt" match="choice[seg and exists($wit:witness)]">
+                <xsl:for-each
+                    select="seg[not((@source ! tokenize(.) ! replace(., '^#', '')) = $wit:witness)]">
+                    <span class="reading">
+                        <xsl:apply-templates mode="app:reading-text" select="."/>
+                        <xsl:if test="app:prints-sigla(.)">
+                            <span class="apparatus-sep" style="padding-left: 3px"
+                                data-i18n-key="rdg-siglum-sep">:</span>
+                            <span class="siglum">
+                                <xsl:call-template name="app:sigla">
+                                    <xsl:with-param name="context" select="."/>
+                                </xsl:call-template>
+                            </span>
+                        </xsl:if>
+                    </span>
+                    <xsl:if test="position() ne last()">
+                        <span class="apparatus-sep" style="padding-left: 4px"
+                            data-i18n-key="rdgs-sep">;&sp;</span>
+                    </xsl:if>
+                </xsl:for-each>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
+                </xsl:if>
+            </xsl:template>
+
+            <!-- general choice handling (unspecified default): every child but the first is a reading -->
+            <xsl:template mode="app:reading-dspt" match="choice">
+                <xsl:for-each select="*[position() gt 1]">
+                    <span class="reading">
+                        <xsl:apply-templates mode="app:reading-text" select="."/>
+                        <xsl:if test="app:prints-sigla(.)">
+                            <span class="apparatus-sep" style="padding-left: 3px"
+                                data-i18n-key="rdg-siglum-sep">:</span>
+                            <span class="siglum">
+                                <xsl:call-template name="app:sigla">
+                                    <xsl:with-param name="context" select="."/>
+                                </xsl:call-template>
+                            </span>
+                        </xsl:if>
+                    </span>
+                    <xsl:if test="position() ne last()">
+                        <span class="apparatus-sep" style="padding-left: 4px"
+                            data-i18n-key="rdgs-sep">;&sp;</span>
+                    </xsl:if>
+                </xsl:for-each>
                 <xsl:if test="position() ne last()">
                     <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
                         >;&sp;</span>
@@ -426,6 +521,21 @@
                 <xsl:if test="position() ne last()">
                     <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
                         >;</span>
+                </xsl:if>
+            </xsl:template>
+
+
+            <xsl:template mode="app:reading-dspt" match="subst[del and add]">
+                <span class="reading">
+                    <xsl:apply-templates select="del" mode="app:reading-dspt"/>
+                </span>
+                <xsl:call-template name="app:reading-annotation">
+                    <xsl:with-param name="context" select="del"/>
+                    <xsl:with-param name="separator" select="true()"/>
+                </xsl:call-template>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;&sp;</span>
                 </xsl:if>
             </xsl:template>
 
@@ -511,6 +621,29 @@
                 </xsl:if>
             </xsl:template>
 
+            <xsl:template mode="app:reading-dspt" match="alt[@mode eq 'excl']">
+                <!-- get alternants in order, drop first -->
+                <xsl:variable name="root" as="node()" select="root(.)"/>
+                <xsl:for-each
+                    select="(key('alternants', 'alternative') intersect tokenize(@target) ! substring(., 2) ! id(., $root))[position() gt 1]">
+                    <span class="reading alternant">
+                        <span class="static-text" data-i18n-key="alternant">&lre;alt.&pdf;</span>
+                        <xsl:apply-templates mode="app:reading-text" select="."/>
+                    </span>
+                    <xsl:call-template name="app:reading-annotation">
+                        <xsl:with-param name="separator" select="true()"/>
+                    </xsl:call-template>
+                    <xsl:if test="position() ne last()">
+                        <span class="apparatus-sep" style="padding-left: 4px"
+                            data-i18n-key="rdgs-sep">;&sp;</span>
+                    </xsl:if>
+                </xsl:for-each>
+                <xsl:if test="position() ne last()">
+                    <span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep"
+                        >;</span>
+                </xsl:if>
+            </xsl:template>
+
             <xsl:template mode="app:reading-dspt" match="note[not(parent::app)]">
                 <span class="note-text" lang="{i18n:language(.)}"
                     style="direction:{i18n:language-direction(.)}; text-align:{i18n:language-align(.)};">
@@ -532,11 +665,17 @@
 
 
             <xsl:template name="app:reading-annotation">
-                <xsl:context-item as="element()" use="required"/>
+                <xsl:context-item as="element()" use="optional"/>
+                <xsl:param name="context" as="element()" select="."/>
                 <xsl:param name="separator" as="xs:boolean" select="false()"/>
                 <xsl:variable name="annotations" as="element()*">
                     <span class="reading-annotation">
-                        <xsl:apply-templates mode="app:reading-annotation"/>
+                        <!--
+                            Applying on both, context and children may easy break things.
+                            Maybe we need a flag to controle this.
+                        -->
+                        <xsl:apply-templates mode="app:reading-annotation"
+                            select="$context, $context/node()"/>
                     </span>
                 </xsl:variable>
                 <!-- we have to filter out the spans with no content -->
@@ -556,16 +695,49 @@
                 </span>
             </xsl:template>
 
+            <!-- make reading annotation for placed things -->
+            <xsl:template mode="app:reading-annotation" match="*[@place]">
+                <span class="static-text" data-i18n-key="{string(@place)}">
+                    <xsl:value-of select="@place"/>
+                </span>
+            </xsl:template>
+
             <!-- make reading annotation for a nested <space> -->
             <xsl:template mode="app:reading-annotation" match="space">
                 <span class="static-text" data-i18n-key="space">&lre;lac.&pdf;</span>
+            </xsl:template>
+
+            <!-- make reading annotation for a nested <del> -->
+            <xsl:template mode="app:reading-annotation" match="del">
+                <span class="static-text" data-i18n-key="space">&lre;a.c.&pdf;</span>
             </xsl:template>
 
 
             <!-- lemma annotations -->
 
             <xsl:template mode="app:lemma-annotation" match="app[lem/sic]">
-                <span class="static-text lemma-annotation" data-i18n-key="sic-annotation">&lre;sic&pdf;</span>
+                <span class="static-text lemma-annotation" data-i18n-key="sic-annotation"
+                    >&lre;sic&pdf;</span>
+            </xsl:template>
+
+            <xsl:template mode="app:lemma-annotation" match="choice[corr and sic]">
+                <span class="static-text lemma-annotation" data-i18n-key="corr-annotation"
+                    >&lre;corr.&pdf;</span>
+            </xsl:template>
+
+            <!-- make reading annotation for a nested <add> -->
+            <xsl:template mode="app:lemma-annotation" match="subst[add and del]">
+                <span class="lemma-annotation">
+                    <span class="static-text" data-i18n-key="space">&lre;add.&pdf;</span>
+                    <xsl:if test="add/@place">
+                        <xsl:text>&#x20;</xsl:text>
+                        <span class="static-text" data-i18n-key="{add/@place}">
+                            <xsl:text>&lre;</xsl:text>
+                            <xsl:value-of select="add/@place"/>
+                            <xsl:text>&pdf;</xsl:text>
+                        </span>
+                    </xsl:if>
+                </span>
             </xsl:template>
 
         </xsl:override>

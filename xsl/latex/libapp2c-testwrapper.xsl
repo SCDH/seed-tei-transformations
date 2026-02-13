@@ -13,9 +13,6 @@
     package-version="1.0.0">
     <xsl:accept component="function" names="app:*" visibility="public"/>
     <xsl:accept component="template" names="app:*" visibility="public"/>
-    <xsl:override>
-      <xsl:variable name="i18n:default-language" as="xs:string" select="'en'"/>
-    </xsl:override>
   </xsl:use-package>
 
 </xsl:package>

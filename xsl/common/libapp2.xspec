@@ -4,7 +4,12 @@
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="../html/libapp2c.xsl" run-as="external">
+    xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="../html/libapp2c.xsl" run-as="external">
+
+    <!-- takes no effect, as we do not call tested library directly! -->
+    <x:param name="compat:first-child" select="false()" static="true"/>
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -45,6 +50,11 @@
                                 <note target="#anote3">Endpunkte.</note>
                             </l>
                         </lg>
+                    </div>
+                    <div xml:id="alt1">
+                        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
                     </div>
                 </body>
                 <back>
@@ -89,6 +99,106 @@
         </x:call>
         <x:variable name="lemma-nodes"
             select="$tei-text//id('d2')/tei:lg/tei:l/tei:w[2]/text(), $tei-text//id('d2')/tei:lg/tei:l/tei:pc/text(), $tei-text//id('d2')/tei:lg/tei:l/tei:w[3]/text()"/>
+        <x:expect label="lemma text nodes" test="map:get(., 'lemma-text-nodes')"
+            select="$lemma-nodes"/>
+        <x:expect label="lemma grouping IDs" test="map:get(., 'lemma-grouping-ids')"
+            select="$lemma-nodes ! generate-id(.) => string-join('-')"/>
+    </x:scenario>
+
+
+    <x:scenario label="lemma text nodes on choice with corr first and then sic">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:corr>corrected</t:corr>
+                <t:sic>seen in the manuscript</t:sic>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'seen' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with sic first and then corr">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:sic>seen in the manuscript</t:sic>
+                <t:corr>corrected</t:corr>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'seen' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with segments">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'first' text" test="//text() => string-join() => matches('first')"/>
+        <x:expect label="has no 'second' text"
+            test="//text() => string-join() => matches('second') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with segments">
+        <x:param name="wit:witness" select="'B'"/>
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has 'second' text" test="//text() => string-join() => matches('second')"/>
+        <x:expect label="has no 'first' text"
+            test="//text() => string-join() => matches('first') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+    </x:scenario>
+
+
+    <x:scenario label="lemma text nodes on subst with del and add">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:subst>
+                <t:add>corrected</t:add>
+                <t:del>strike</t:del>
+            </t:subst>
+        </x:context>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'strike' text"
+            test="//text() => string-join() => matches('strike') => not()"/>
+    </x:scenario>
+
+    <x:scenario
+        label="lemma text nodes for alternants with alt in mode excl, regression for issue #66">
+        <x:context mode="app:lemma-text-nodes-dspt" select="//t:alt">
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+        </x:context>
+        <x:expect label="result">
+            <x:text>text</x:text>
+        </x:expect>
+        <x:expect label="does not contain 'addition'" test="matches(., 'addition') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="entry for alternants with alt in mode excl, regression for issue #66">
+        <x:call function="app:apparatus-entries">
+            <x:param name="context" select="$tei-text"/>
+            <x:param name="app-entries-xpath" select="'//alt'"/>
+            <x:param name="type" select="1"/>
+        </x:call>
+        <x:variable name="lemma-nodes" select="($tei-text//id('alt1')//tei:seg/text())"/>
+        <x:expect label="count of lemma text nodes" test="map:get(., 'lemma-text-nodes') => count()"
+            as="xs:integer" select="1"/>
         <x:expect label="lemma text nodes" test="map:get(., 'lemma-text-nodes')"
             select="$lemma-nodes"/>
         <x:expect label="lemma grouping IDs" test="map:get(., 'lemma-grouping-ids')"

@@ -42,7 +42,7 @@
         <saxon.version>12.5</saxon.version>
         <xmlresolver.version>4.5.1</xmlresolver.version>
         <xerces.version>2.12.2</xerces.version>
-        <xspec.version>2.2.4</xspec.version>
+        <xspec.version>3.3.2</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
         <seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>

@@ -23,6 +23,12 @@
     <xsl:expose component="variable" names="wit:*" visibility="public"/>
     <xsl:expose component="variable" names="wit:witnesses" visibility="abstract"/>
 
+    <!-- Determins which witness's text is present in the main text.
+        This can be used to alter the default output in text and apparatus.
+        The default is the empty sequence, which MUST not alter the outputs.
+    -->
+    <xsl:param name="wit:witness" as="xs:string?" select="()"/>
+
     <!-- OVERRIDE! -->
     <xsl:variable name="wit:witnesses" as="element()*" visibility="abstract"/>
 

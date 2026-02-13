@@ -20,15 +20,23 @@ Note, that there is a default mode in this package.
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:source="http://scdh.wwu.de/transform/source#" exclude-result-prefixes="#all"
+    xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:source="http://scdh.wwu.de/transform/source#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:app="http://scdh.wwu.de/transform/app#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
+    <!-- with false (default), there are some specific templates for alternative text in choice -->
+    <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
+
+    <!-- keys cannot be importet via use-package -->
+    <xsl:import href="../common/libkeys.xsl"/>
+
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
         package-version="0.1.0">
-        <xsl:accept component="variable" names="i18n:default-language" visibility="abstract"/>
         <xsl:accept component="function" names="i18n:language#1" visibility="private"/>
         <xsl:accept component="function" names="i18n:language-direction#1" visibility="private"/>
         <xsl:accept component="function" names="i18n:language-code-to-direction#1"
@@ -39,6 +47,18 @@ Note, that there is a default mode in this package.
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libsource.xsl"
         package-version="1.0.0"/>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libwit.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="variable" names="wit:witness" visibility="private"/>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libcommon.xsl"
+        package-version="0.1.0">
+        <xsl:accept component="function" names="common:is-block#1" visibility="private"/>
+    </xsl:use-package>
+
     <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
     <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
 
@@ -47,6 +67,7 @@ Note, that there is a default mode in this package.
         package-version="1.0.0">
         <xsl:accept component="mode" names="text:text" visibility="public"/>
         <xsl:accept component="template" names="text:*" visibility="public"/>
+        <xsl:accept component="mode" names="app:reading-text" visibility="hidden"/>
         <xsl:override default-mode="text:text">
             <!-- text:hook-before and text:hook-after are modes that offer hooks for
                 inserting project-specific things before and after an element -->
@@ -112,6 +133,90 @@ Note, that there is a default mode in this package.
                 <!--xsl:text>[!!!]</xsl:text-->
             </xsl:template>
 
+            <!-- The first element is presented in the text. So order matters! -->
+            <xsl:template match="choice">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="choice">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@*"/>
+                    <xsl:apply-templates select="*[1]"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- Simple encoding of variation using seg nested in choice -->
+            <xsl:template
+                match="choice[seg and exists($wit:witness) and (seg/@source ! tokenize(.) ! replace(., '^#', '')) = $wit:witness]">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <span class="choice">
+                    <xsl:call-template name="text:class-attribute"/>
+                    <xsl:apply-templates select="@*"/>
+                    <xsl:apply-templates
+                        select="*[(tokenize(@source) ! replace(., '^#', '')) = $wit:witness]"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- more specific templates for choice if $compat:first-child is false -->
+            <!-- the text contains the corrected passage (emendatio) -->
+            <xsl:template match="choice[sic and corr]" use-when="not($compat:first-child)">
+                <xsl:apply-templates mode="text:hook-before" select="corr"/>
+                <span class="corr">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="corr"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, corr/@*"/>
+                    <xsl:apply-templates select="corr/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="corr"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- the text contains the regularized passage -->
+            <xsl:template match="choice[orig and reg]" use-when="not($compat:first-child)">
+                <xsl:apply-templates mode="text:hook-before" select="reg"/>
+                <span class="reg">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="reg"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, reg/@*"/>
+                    <xsl:apply-templates select="reg/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="reg"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- the text contains the expanded word -->
+            <xsl:template match="choice[abbr and expan]" use-when="not($compat:first-child)">
+                <xsl:apply-templates mode="text:hook-before" select="expan"/>
+                <span class="expan">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="expan"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, expan/@*"/>
+                    <xsl:apply-templates select="expan/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="expan"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+            <!-- a scribal correction with deletion and addition -->
+            <xsl:template match="subst[del and add]">
+                <xsl:apply-templates mode="text:hook-before" select="add"/>
+                <span class="add subst">
+                    <xsl:call-template name="text:class-attribute">
+                        <xsl:with-param name="context" select="add"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="@*, add/@*"/>
+                    <xsl:apply-templates select="add/node()"/>
+                </span>
+                <xsl:apply-templates mode="text:hook-after" select="add"/>
+                <xsl:call-template name="text:inline-marks"/>
+            </xsl:template>
+
+
             <xsl:template match="gap">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <!-- use hook instead? -->
@@ -138,19 +243,11 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
-            <xsl:template match="choice[child::sic and child::corr]">
+            <!-- various (inline) elements that may need an inline mark -->
+            <xsl:template
+                match="sic | corr | orig | reg | abbr | expan | seg | quote | q | del | add">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="choice-with-sic-and-corr">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | corr"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-            <xsl:template match="sic[not(parent::choice)]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="sic">
+                <span class="{name(.)}">
                     <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@* | node()"/>
                 </span>
@@ -158,77 +255,6 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
-            <xsl:template match="corr[not(parent::choice)]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="corr">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-
-            <xsl:template match="choice[child::orig and child::reg]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="choice-with-orig-and-reg">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | reg"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-            <xsl:template match="orig[not(parent::choice)]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="orig">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-            <xsl:template match="reg[not(parent::choice)]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="reg">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-
-            <xsl:template match="choice[child::abbr and child::expan]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="choice-with-abbr-and-expan">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | expan"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-            <xsl:template match="abbr[not(parent::choice)]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="abbr">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
-
-            <xsl:template match="expan[not(parent::choice)]">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="expan">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
-            </xsl:template>
 
 
             <xsl:template match="supplied[not(parent::choice)]">
@@ -241,17 +267,69 @@ Note, that there is a default mode in this package.
                 <xsl:call-template name="text:inline-marks"/>
             </xsl:template>
 
-            <!-- support for quotes, which may need a footnote about the source -->
-            <xsl:template match="quote | q">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span>
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-                <xsl:call-template name="text:inline-marks"/>
+            <!-- keep first alternant in document order -->
+            <xsl:template match="key('first-alternant', 'true')">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>first alternative text in </xsl:text>
+                    <xsl:value-of select="name(.)"/>
+                    <xsl:text> with ID </xsl:text>
+                    <xsl:value-of select="@xml:id"/>
+                    <xsl:text> alternants: </xsl:text>
+                    <xsl:value-of select="key('alt-excl', @xml:id)/@target"/>
+                </xsl:message>
+                <xsl:choose>
+                    <xsl:when test="local-name(.) = ('p', 'ab')">
+                        <p>
+                            <xsl:call-template name="text:class-attribute"/>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:apply-templates mode="text:hook-before" select="."/>
+                            <xsl:apply-templates select="node()"/>
+                            <xsl:apply-templates mode="text:hook-after" select="."/>
+                            <xsl:call-template name="text:inline-marks">
+                                <xsl:with-param name="context" as="element()"
+                                    select="key('alt-excl', @xml:id)"/>
+                            </xsl:call-template>
+                        </p>
+                    </xsl:when>
+                    <xsl:when test="common:is-block(.)">
+                        <div>
+                            <xsl:call-template name="text:class-attribute"/>
+                            <xsl:apply-templates select="@*"/>
+                            <xsl:apply-templates mode="text:hook-before" select="."/>
+                            <xsl:apply-templates select="node()"/>
+                            <xsl:apply-templates mode="text:hook-after" select="."/>
+                            <xsl:call-template name="text:inline-marks">
+                                <xsl:with-param name="context" as="element()"
+                                    select="key('alt-excl', @xml:id)"/>
+                            </xsl:call-template>
+                        </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:apply-templates mode="text:hook-before" select="."/>
+                        <span>
+                            <xsl:call-template name="text:class-attribute"/>
+                            <xsl:apply-templates select="@* | node()"/>
+                        </span>
+                        <xsl:apply-templates mode="text:hook-after" select="."/>
+                        <xsl:call-template name="text:inline-marks">
+                            <xsl:with-param name="context" as="element()"
+                                select="key('alt-excl', @xml:id)"/>
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:template>
 
+            <!-- drop subsequent alternants in document order -->
+            <xsl:template match="key('first-alternant', 'false')">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>dropping subsequent alternative text in </xsl:text>
+                    <xsl:value-of select="name(.)"/>
+                    <xsl:text> with ID </xsl:text>
+                    <xsl:value-of select="@xml:id"/>
+                    <xsl:text> alternants: </xsl:text>
+                    <xsl:value-of select="key('alt-excl', @xml:id)/@target"/>
+                </xsl:message>
+            </xsl:template>
 
 
             <xsl:template match="@xml:id">
@@ -271,6 +349,11 @@ Note, that there is a default mode in this package.
             <xsl:template match="@type">
                 <xsl:attribute name="data-tei-type" select="."/>
             </xsl:template>
+
+            <xsl:template match="@source">
+                <xsl:attribute name="data-tei-source" select="."/>
+            </xsl:template>
+
         </xsl:override>
     </xsl:use-package>
 
@@ -295,7 +378,9 @@ Note, that there is a default mode in this package.
     </xsl:template>
 
     <!-- you probably want to override this for adding footnote marks etc. to the text -->
-    <xsl:template name="text:inline-marks" visibility="public"/>
+    <xsl:template name="text:inline-marks" visibility="public">
+        <xsl:param name="context" as="element()" required="false" select="."/>
+    </xsl:template>
 
 
 </xsl:package>

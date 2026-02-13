@@ -35,7 +35,7 @@ See i18next documentation for more info: https://www.i18next.com
 
     <xsl:expose visibility="public" component="function" names="i18n:*"/>
     <xsl:expose visibility="public" component="template" names="i18n:*"/>
-    <xsl:expose visibility="abstract" component="variable" names="i18n:default-language"/>
+    <xsl:expose visibility="public" component="variable" names="i18n:default-language"/>
 
     <!-- If true, this an extra space is added on the end of an ltr-to-rtl changeover. -->
     <xsl:param name="i18n:ltr-to-rtl-extra-space" as="xs:boolean" select="true()" required="no"/>
@@ -59,7 +59,14 @@ See i18next documentation for more info: https://www.i18next.com
 
 
     <!-- a sensible value is e.g. /TEI/@xml:lang -->
-    <xsl:variable name="i18n:default-language" as="xs:string" visibility="abstract"/>
+    <xsl:variable name="i18n:default-language" as="xs:string" visibility="public">
+        <xsl:try>
+            <xsl:sequence select="(/*/@xml:lang, 'en')[1]"/>
+            <xsl:catch>
+                <xsl:sequence select="'en'"/>
+            </xsl:catch>
+        </xsl:try>
+    </xsl:variable>
 
 
 

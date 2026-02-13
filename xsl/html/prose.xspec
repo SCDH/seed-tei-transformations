@@ -5,7 +5,7 @@
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="prose.xsl" run-as="external">
 
-    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
 
     <x:variable name="tei-text">
         <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
@@ -55,10 +55,10 @@
     <x:scenario label="mode text:text on front">
         <x:context select="$tei-text//t:front" mode="text:text"/>
         <x:expect label="result">
-            <div>
-                <section>
-                    <h1>Vorrede</h1>
-                    <p>Der hochwohlgebohrenen Prinzessin Z.</p>
+            <div class="...">
+                <section class="...">
+                    <h1 class="...">Vorrede</h1>
+                    <p class="...">Der hochwohlgebohrenen Prinzessin Z.</p>
                 </section>
             </div>
         </x:expect>
@@ -67,9 +67,14 @@
     <x:scenario label="mode text:text on d2">
         <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
         <x:expect label="result">
-            <section id="d2" data-tei-n="2">
-                <div>
-                    <div>BeimStyx!Drüber</div>
+            <section class="..." id="d2" data-tei-n="2">
+                <div class="...">
+                    <div class="...">
+                        <span class="..." data-tei-n="...">Beim</span>
+                        <span class="..." data-tei-n="...">Styx</span>
+                        <span class="...">!</span>
+                        <span class="..." data-tei-n="...">Drüber</span>
+                    </div>
                 </div>
             </section>
         </x:expect>
@@ -78,11 +83,12 @@
     <x:scenario label="mode text:text on apparatus">
         <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
         <x:expect label="result">
-            <p data-tei-n="1" id="d1.1.p1">...</p>
+            <p class="..." data-tei-n="1" id="d1.1.p1">...</p>
         </x:expect>
     </x:scenario>
 
-    <x:scenario label="mode prose on apparatus" pending="test not working">
+    <x:scenario label="mode prose on apparatus"
+        pending="test not working, because template matches document node">
         <x:context select="$tei-text//t:front" mode="prose"/>
         <x:expect label="result">
             <div>

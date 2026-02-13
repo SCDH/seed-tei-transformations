@@ -56,8 +56,11 @@ see xsl/projects/alea/preview.xsl
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:seed="http://scdh.wwu.de/transform/seed#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
+
+    <xsl:import href="libkeys.xsl"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
@@ -346,7 +349,7 @@ see xsl/projects/alea/preview.xsl
 
     <!-- things that do not go into the base text -->
     <xsl:template mode="seed:lemma-text-nodes"
-        match="rdg | choice[corr]/sic | choice[reg]/orig | span | interp | index | note | witDetail"/>
+        match="rdg | span | interp | index | note | witDetail"/>
 
     <xsl:template mode="seed:lemma-text-nodes"
         match="lem[matches(seed:variant-encoding(.), '^(in|ex)ternal-double-end-point')]"/>
@@ -354,6 +357,9 @@ see xsl/projects/alea/preview.xsl
     <xsl:template mode="seed:lemma-text-nodes" match="space">
         <xsl:text>—</xsl:text>
     </xsl:template>
+
+    <!-- drop subsequent alternants -->
+    <xsl:template mode="seed:lemma-text-nodes" match="key('first-alternant', 'false')"/>
 
 
 </xsl:package>

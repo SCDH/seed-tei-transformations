@@ -31,6 +31,7 @@ target/bin/xslt.sh \
     xmlns:meta="http://scdh.wwu.de/transform/meta#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:html="http://scdh.wwu.de/transform/html#"
     xmlns:biblio="http://scdh.wwu.de/transform/biblio#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
     xmlns:alea="http://scdh.wwu.de/transform/alea#" xmlns:ref="http://scdh.wwu.de/transform/ref#"
     xmlns:test="http://scdh.wwu.de/transform/test#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="preview">
@@ -140,6 +141,7 @@ target/bin/xslt.sh \
             visibility="public"/>
         <xsl:accept component="function" names="seed:shorten-lemma#1" visibility="hidden"/>
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="hidden"/>
+        <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
     </xsl:use-package>
 
     <xsl:use-package
@@ -156,6 +158,7 @@ target/bin/xslt.sh \
         <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
         <xsl:accept component="function" names="app:apparatus-entries#1" visibility="public"/>
         <xsl:accept component="function" names="app:apparatus-entries#3" visibility="public"/>
+        <xsl:accept component="variable" names="compat:*" visibility="hidden"/>
 
         <xsl:override>
 

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
+    xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="libtext.xsl" run-as="external">
+
+    <x:param name="compat:first-child" select="false()" static="true"/>
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <front>
+                    <div>
+                        <head>Vorrede</head>
+                        <p>Der hochwohlgebohrenen Prinzessin Z.</p>
+                    </div>
+                </front>
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
+                                objektive Realität im Satz über die Summe der Innenwinkel des <app
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.</p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
+                                eine dritte Gerade geschnitten werden.</p>
+                        </div>
+                    </div>
+                    <div xml:id="d2" n="2">
+                        <lg>
+                            <l>
+                                <w n="1">Beim</w>
+                                <w n="2">Styx</w><pc>!</pc>
+                                <w n="3">Drüber</w>
+                            </l>
+                        </lg>
+                    </div>
+                    <div xml:id="d3" n="3">
+                        <p xml:id="d3.1">So geht denn nun auch <anchor xml:id="d3.1.a1"/>wie<span
+                                from="#d3.1.a1">
+                                <note>Huch, was ist denn das?</note>
+                            </span>der ein Issue zu Ende.</p>
+                    </div>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+
+    <x:scenario label="mode text:text on whole sample, testing language attributes">
+        <x:context select="$tei-text" mode="text:text"/>
+        <x:expect label="result with language and direction information">
+            <div class="text" xml:lang="de" lang="de" dir="ltr" id="the-text">...</div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on arabic sample">
+        <x:context mode="text:text">
+            <text xmlns="http://www.tei-c.org/ns/1.0" xml:id="tei-ar" xml:lang="ar">
+                <body/>
+            </text>
+        </x:context>
+        <x:expect label="result with language and direction information">
+            <div class="text" xml:lang="ar" lang="ar" dir="rtl" id="tei-ar">...</div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on sample without language information">
+        <x:context mode="text:text">
+            <text xmlns="http://www.tei-c.org/ns/1.0" xml:id="unknown-lang">
+                <body/>
+            </text>
+        </x:context>
+        <x:expect label="result with language and direction information">
+            <div class="text" xml:lang="en" lang="en" dir="ltr" id="unknown-lang">...</div>
+        </x:expect>
+    </x:scenario>
+
+
+    <x:scenario label="mode text:text on front">
+        <x:context select="$tei-text//t:front" mode="text:text"/>
+        <x:expect label="result">
+            <div>VorredeDer hochwohlgebohrenen Prinzessin Z.</div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on d2">
+        <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
+        <x:expect label="text" test="//text()">
+            <x:text>Beim</x:text>
+            <x:text>Styx!</x:text>
+            <x:text>Drüber</x:text>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on apparatus">
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
+        <x:expect label="result" test="normalize-space()"
+            select="'Synthetische Urteile a priori beweisen objektive Realität im Satz über die Summe der Innenwinkel des Dreiecks.'"
+        />
+    </x:scenario>
+
+
+    <x:scenario label="text:text on span">
+        <x:context select="$tei-text//t:div[@xml:id eq 'd3']" mode="text:text"/>
+        <x:expect label="result contains the word 'wieder', without inner-word spacing"
+            test="normalize-space() => matches('wieder')"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice with corr first and then sic">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:corr>corrected</t:corr>
+                <t:sic>seen in the manuscript</t:sic>
+            </t:choice>
+        </x:context>
+        <x:expect label="has corr's span" test="exists(//span[matches(@class, 'corr')])"/>
+        <x:expect label="has no sic's span" test="not(exists(//span[matches(@class, 'sic')]))"/>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'corrected' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice with sic first and then corr">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:sic>seen in the manuscript</t:sic>
+                <t:corr>corrected</t:corr>
+            </t:choice>
+        </x:context>
+        <x:expect label="has corr's span" test="exists(//span[matches(@class, 'corr')])"/>
+        <x:expect label="has no sic's span" test="not(exists(//span[matches(@class, 'sic')]))"/>
+        <x:expect label="has 'corrected' text"
+            test="//text() => string-join() => matches('corrected')"/>
+        <x:expect label="has no 'corrected' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice with reg first and then orig">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:reg>regularized</t:reg>
+                <t:orig>seen in the manuscript</t:orig>
+            </t:choice>
+        </x:context>
+        <x:expect label="has reg's span" test="exists(//span[matches(@class, 'reg')])"/>
+        <x:expect label="has no orig's span" test="not(exists(//span[matches(@class, 'orig')]))"/>
+        <x:expect label="has 'regected' text"
+            test="//text() => string-join() => matches('regularized')"/>
+        <x:expect label="has no 'regected' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice with orig first and then reg">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:orig>seen in the manuscript</t:orig>
+                <t:reg>regularized</t:reg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has reg's span" test="exists(//span[matches(@class, 'reg')])"/>
+        <x:expect label="has no orig's span" test="not(exists(//span[matches(@class, 'orig')]))"/>
+        <x:expect label="has 'regected' text"
+            test="//text() => string-join() => matches('regularized')"/>
+        <x:expect label="has no 'regected' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice with expan first and then abbr">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:expan>expanded</t:expan>
+                <t:abbr>seen in the manuscript</t:abbr>
+            </t:choice>
+        </x:context>
+        <x:expect label="has expan's span" test="exists(//span[matches(@class, 'expan')])"/>
+        <x:expect label="has no abbr's span" test="not(exists(//span[matches(@class, 'abbr')]))"/>
+        <x:expect label="has 'expanded' text"
+            test="//text() => string-join() => matches('expanded')"/>
+        <x:expect label="has no 'expanected' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice with abbr first and then expan">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:abbr>seen in the manuscript</t:abbr>
+                <t:expan>expanded</t:expan>
+            </t:choice>
+        </x:context>
+        <x:expect label="has expan's span" test="exists(//span[matches(@class, 'expan')])"/>
+        <x:expect label="has no abbr's span" test="not(exists(//span[matches(@class, 'abbr')]))"/>
+        <x:expect label="has 'expanded' text"
+            test="//text() => string-join() => matches('expanded')"/>
+        <x:expect label="has no 'expanected' text"
+            test="//text() => string-join() => matches('seen') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice multiple segments">
+        <x:context mode="text:text">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has choice's seg" test="exists(//span[matches(@class, 'choice')])"/>
+        <x:expect label="has seg's span" test="exists(//span[matches(@class, 'seg')])"/>
+        <x:expect label="has only one seg's span" test="count(//span[matches(@class, 'seg')])"
+            select="1"/>
+        <x:expect label="has 'first' text" test="//text() => string-join() => matches('first')"/>
+        <x:expect label="has no 'second' text"
+            test="//text() => string-join() => matches('second') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+        <x:expect label="has source attribute" test="//span/@data-tei-source ! string(.)"
+            select="'#A'"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on choice multiple segments with witness stylesheet parameter">
+        <x:param name="wit:witness" select="'B'"/>
+        <x:context mode="text:text">
+            <t:choice>
+                <t:seg source="#A">first</t:seg>
+                <t:seg source="#B">second</t:seg>
+                <t:seg source="#C">third</t:seg>
+            </t:choice>
+        </x:context>
+        <x:expect label="has choice's seg" test="exists(//span[matches(@class, 'choice')])"/>
+        <x:expect label="has seg's span" test="exists(//span[matches(@class, 'seg')])"/>
+        <x:expect label="has only one seg's span" test="count(//span[matches(@class, 'seg')])"
+            select="1"/>
+        <x:expect label="has 'second' text" test="//text() => string-join() => matches('second')"/>
+        <x:expect label="has no 'first' text"
+            test="//text() => string-join() => matches('first') => not()"/>
+        <x:expect label="has no 'third' text"
+            test="//text() => string-join() => matches('third') => not()"/>
+        <x:expect label="has source attribute" test="//span/@data-tei-source ! string(.)"
+            select="'#B'"/>
+    </x:scenario>
+
+    <!-- test for issue #64 -->
+    <x:scenario label="text:text on subst with del and add">
+        <x:context mode="text:text">
+            <t:subst>
+                <t:del>deleted</t:del>
+                <t:add place="above">added</t:add>
+            </t:subst>
+        </x:context>
+        <x:expect label="has add's span" test="exists(//span[matches(@class, 'add')])"/>
+        <x:expect label="has no del's span" test="not(exists(//span[matches(@class, 'del')]))"/>
+        <x:expect label="has 'added' text" test="//text() => string-join() => matches('added')"/>
+        <x:expect label="has no 'deleted' text"
+            test="//text() => string-join() => matches('deleted') => not()"/>
+        <x:expect label="has no place information"
+            test="//text() => string-join() => matches('above') => not()"/>
+    </x:scenario>
+
+    <x:scenario label="text:text on exclusive alternants, see issue #66">
+        <x:context mode="text:text">
+            <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+        </x:context>
+        <x:expect label="has 'first' in text" test="matches(., 'first')"/>
+        <x:expect label="has 'text' in text" test="matches(., 'text')"/>
+        <x:expect label="has 'last' in text" test="matches(., 'last')"/>
+        <x:expect label="no 'addition' in text'" test="matches(., 'addition') => not()"/>
+        <x:expect label="'text' in span" test="exists(//span)"/>
+        <x:expect label="only one span" test="count(//span)" select="1"/>
+        <x:expect label="span has id from xml:id" test="//span/@id ! string(.)" select="'op1'"/>
+        <x:expect label="span has text content 'text'" test="//span/text()">text</x:expect>
+    </x:scenario>
+
+    <x:scenario label="text:text on exclusive block alternants, see issue #66">
+        <x:context mode="text:text">
+            <t:div>
+                <t:p xml:id="op1" type="alternative">text</t:p>
+                <t:p xml:id="op2" type="alternative" place="margin">addition</t:p>
+                <t:alt target="#op1 #op2" mode="excl"/>
+            </t:div>
+        </x:context>
+        <x:expect label="has 'text' in text" test="matches(., 'text')"/>
+        <x:expect label="no 'addition' in text'" test="matches(., 'addition') => not()"/>
+        <x:expect label="'text' in p" test="exists(//p)"/>
+        <x:expect label="only one p" test="count(//p)" select="1"/>
+        <x:expect label="p has id from xml:id" test="//p/@id ! string(.)" select="'op1'"/>
+        <x:expect label="p has text content 'text'" test="//p/text()">text</x:expect>
+    </x:scenario>
+
+</x:description>

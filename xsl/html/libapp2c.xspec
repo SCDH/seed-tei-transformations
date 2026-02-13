@@ -3,7 +3,11 @@
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="libapp2c.xsl" run-as="external">
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
+    xmlns:test="http://scdh.wwu.de/transform/test#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="libapp2c.xsl" run-as="external">
+
+    <x:helper stylesheet="../../test/helper.xsl"/>
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -17,6 +21,9 @@
                 </fileDesc>
                 <encodingDesc>
                     <!--variantEncoding method="parallel-segmentation" location="internal"/-->
+                    <tagsDecl>
+                        <rendition xml:id="it" scheme="ccs">font-style: italics</rendition>
+                    </tagsDecl>
                 </encodingDesc>
             </teiHeader>
             <text xml:id="the-text">
@@ -33,8 +40,8 @@
                             <head>Des ersten Hauptstücks erster Teil</head>
                             <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
                                 objektive Realität im Satz über die Summe der Innenwinkel des <app
-                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"><hi
-                                            rendition="it">n</hi>-Ecks</rdg></app>.</p>
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.</p>
                             <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
                                 Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
                                 eine dritte Gerade geschnitten werden.</p>
@@ -106,7 +113,7 @@
                         <span class="apparatus-lemma">Dreiecks</span>
                         <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                         <x:text> </x:text>
-                        <span class="reading">n-Ecks<span class="apparatus-sep"
+                        <span class="...">n-Ecks<span class="apparatus-sep"
                                 style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
                             >:</span>N</span>
                     </span>
@@ -139,7 +146,7 @@
                         <a name="app-d1.1.a1" href="#d1.1.a1">1</a>
                     </span>
                     <span class="apparatus-entry">
-                        <span class="reading">n-Ecks<span class="apparatus-sep"
+                        <span class="...">n-Ecks<span class="apparatus-sep"
                                 style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
                             >:</span>N</span>
                     </span>
@@ -191,7 +198,7 @@
                             <span class="apparatus-lemma">Dreiecks</span>
                             <span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span>
                             <x:text> </x:text>
-                            <span class="reading">n-Ecks<span class="apparatus-sep"
+                            <span class="...">n-Ecks<span class="apparatus-sep"
                                     style="padding-left: 3px" data-i18n-key="rdg-siglum-sep"
                                     >:</span>N</span>
                         </span>
@@ -199,6 +206,218 @@
                 </div>
             </div>
         </x:expect>
+    </x:scenario>
+
+
+    <x:scenario label="lemma text nodes on choice with corr first and then sic">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:corr>corrected</t:corr>
+                                <t:sic>seen in the manuscript</t:sic>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
+        <x:expect label="has 'seen ...' reading" test="test:reading(.)/text()" xml:space="preserve">seen in the manuscript</x:expect>
+        <x:expect label="has 'corr' annotation"
+            test="exists(//span[tokenize(@class) = 'static-text'][matches(., 'corr')])"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with corr after sic">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:sic>seen in the manuscript</t:sic>
+                                <t:corr>corrected</t:corr>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
+        <x:expect label="has 'seen ...' reading" test="test:reading(.)/text()" xml:space="preserve">seen in the manuscript</x:expect>
+        <x:expect label="has 'corr' annotation"
+            test="exists(//span[tokenize(@class) = 'static-text'][matches(., 'corr')])"/>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with orig first and then reg">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:orig>specialized</t:orig>
+                                <t:reg>specialised</t:reg>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'specialised' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">specialised</x:expect>
+        <x:expect label="has 'specialized' reading" test="test:reading(.)/text()" xml:space="preserve">specialized</x:expect>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with abbr first and then expan">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:abbr>lac.</t:abbr>
+                                <t:expan>lacuna</t:expan>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'lacuna' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">lacuna</x:expect>
+        <x:expect label="has 'lac.' reading" test="test:reading(.)/text()" xml:space="preserve">lac.</x:expect>
+    </x:scenario>
+
+    <x:scenario label="lemma text nodes on choice with segments and selecting one by wit:witness">
+        <x:param name="wit:witness" select="'B'"/>
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:seg source="#A">first</t:seg>
+                                <t:seg source="#B">second</t:seg>
+                                <t:seg source="#C">third</t:seg>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'second' lemma"
+            test="//span[@class eq 'apparatus-lemma'] => matches('second')"/>
+        <x:expect label="has 'first' reading" test="test:reading(.)[1] => matches('first')"/>
+        <x:expect label="has 'third' reading" test="test:reading(.)[2] => matches('third')"/>
+    </x:scenario>
+
+    <x:scenario
+        label="lemma text nodes on choice with multiple segments, not selecting one explicitely">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:choice>
+                                <t:seg source="#A">first</t:seg>
+                                <t:seg source="#B">second</t:seg>
+                                <t:seg source="#C">third</t:seg>
+                            </t:choice>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'first' lemma"
+            test="//span[@class eq 'apparatus-lemma'] => matches('first')"/>
+        <x:expect label="has 'second' reading" test="test:reading(.)[1] => matches('second')"/>
+        <x:expect label="has 'third' reading" test="test:reading(.)[2] => matches('third')"/>
+    </x:scenario>
+
+
+    <x:scenario label="apparatus entry for subst with del and add">
+        <x:context mode="app:lemma-text-nodes-dspt">
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body><t:p>
+                            <t:subst>
+                                <t:add place="above">corrected</t:add>
+                                <t:del>delevit</t:del>
+                            </t:subst>
+                        </t:p></t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'corrected' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">corrected</x:expect>
+        <x:expect label="has 'delevit' reading" test="test:reading(.)/text()" xml:space="preserve">delevit</x:expect>
+        <x:expect label="has 'add.' lemma annotation"
+            test="exists(//span[tokenize(@class) = 'lemma-annotation'][matches(., 'add\.')])"/>
+        <x:expect label="has 'above' lemma annotation"
+            test="exists(//span[tokenize(@class) = 'lemma-annotation'][matches(., 'above')])"/>
+        <x:expect label="has 1 lemma annotation, since add. above is merged to one"
+            test="count(//span[tokenize(@class) = 'lemma-annotation'])" select="1"/>
+        <x:expect label="has 'a.c.' reading annotation"
+            test="exists(//span[tokenize(@class) = 'reading-annotation'][matches(., 'a\.c\.')])"/>
+        <x:expect label="has 1 reading annotation"
+            test="count(//span[tokenize(@class) = 'reading-annotation'])" select="1"/>
+    </x:scenario>
+
+
+    <x:scenario label="alternants from alt in mode excl">
+        <x:context>
+            <t:TEI>
+                <t:teiHeader>
+                    <t:encodingDesc>
+                        <t:variantEncoding method="parallel-segmentation" location="internal"/>
+                    </t:encodingDesc>
+                </t:teiHeader>
+                <t:text><t:body>
+                        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
+                            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
+                            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
+                    </t:body></t:text>
+            </t:TEI>
+        </x:context>
+        <x:call template="app:line-based-apparatus-for-context">
+            <x:param name="app-context" select="$x:context"/>
+        </x:call>
+        <x:expect label="has 'text' lemma" test="//span[@class eq 'apparatus-lemma']/text()" xml:space="preserve">text</x:expect>
+        <x:expect label="has 'addition' reading" test="test:reading(.)/text()" xml:space="preserve">addition</x:expect>
+        <x:expect label="has 'a.c.' reading annotation"
+            test="exists(//span[tokenize(@class) = 'reading-annotation'][matches(., 'above')])"/>
+        <x:expect label="has 1 reading annotation"
+            test="count(//span[tokenize(@class) = 'reading-annotation'])" select="1"/>
     </x:scenario>
 
 </x:description>
