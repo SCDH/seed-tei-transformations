@@ -340,11 +340,13 @@ see xsl/projects/alea/preview.xsl
     <!-- generate inline footnote marks. Hook this to text:inline-marks -->
     <xsl:template name="app:footnote-marks" visibility="abstract">
         <xsl:param name="entries" as="map(xs:string, map(*))"/>
+        <xsl:param name="context" as="element()" required="false" select="."/>
     </xsl:template>
 
     <!-- generate inline alternatives. Hook this to text:inline-marks -->
     <xsl:template name="app:inline-alternatives" visibility="abstract">
         <xsl:param name="entries" as="map(xs:string, map(*))"/>
+        <xsl:param name="context" as="element()" required="false" select="."/>
     </xsl:template>
 
 
