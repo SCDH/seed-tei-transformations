@@ -122,7 +122,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
-            <xsl:text>| descendant::add[@mode eq 'excl']</xsl:text>
+            <xsl:text>| descendant::alt[@mode eq 'excl']</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -144,7 +144,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
-            <xsl:text>| descendant::add[@mode eq 'excl']</xsl:text>
+            <xsl:text>| descendant::alt[@mode eq 'excl']</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -166,7 +166,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
-            <xsl:text>| descendant::add[@mode eq 'excl']</xsl:text>
+            <xsl:text>| descendant::alt[@mode eq 'excl']</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -188,7 +188,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space[not(parent::rdg)]</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
-            <xsl:text>| descendant::add[@mode eq 'excl']</xsl:text>
+            <xsl:text>| descendant::alt[@mode eq 'excl']</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
@@ -208,7 +208,7 @@ see xsl/projects/alea/preview.xsl
             <xsl:text>| descendant::space</xsl:text>
             <xsl:text>| descendant::supplied</xsl:text>
             <xsl:text>| descendant::subst[del and add]</xsl:text>
-            <xsl:text>| descendant::add[@mode eq 'excl']</xsl:text>
+            <xsl:text>| descendant::alt[@mode eq 'excl']</xsl:text>
         </xsl:value-of>
     </xsl:variable>
 
