@@ -19,63 +19,6 @@
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="prose:linebreaks-hyphen" as="xs:string" select="'-'" required="false"/>
 
-    <!-- keep track of text nodes that have to be manipulated because of in-word lb -->
-    <xsl:key name="text-before-in-word-lb" match="//text()">
-        <xsl:variable name="this" as="text()" select="."/>
-        <xsl:variable name="lb" as="element()?" select="following::lb[1][@break eq 'no']"/>
-        <xsl:choose>
-            <xsl:when test="$lb">
-                <xsl:variable name="text-between" as="node()*"
-                    select="$this/following::text() intersect $lb/preceding::text()"/>
-                <xsl:message use-when="system-property('debug') eq 'true'">
-                    <xsl:text>before text: </xsl:text>
-                    <xsl:value-of select="generate-id(.)"/>
-                    <xsl:text> lb: </xsl:text>
-                    <xsl:value-of select="generate-id($lb)"/>
-                    <xsl:text> count of inter text nodes: </xsl:text>
-                    <xsl:value-of select="count($text-between)"/>
-                    <xsl:text> key value: </xsl:text>
-                    <xsl:value-of select="normalize-space(string-join($text-between)) eq ''"/>
-                    <xsl:text> content: "</xsl:text>
-                    <xsl:value-of select="."/>
-                    <xsl:text>"</xsl:text>
-                </xsl:message>
-                <xsl:value-of select="normalize-space(string-join($text-between)) eq ''"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="'elefant'"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:key>
-
-    <xsl:key name="text-after-in-word-lb" match="//text()">
-        <xsl:variable name="this" as="text()" select="."/>
-        <xsl:variable name="lb" as="element()?" select="preceding::lb[1][@break eq 'no']"/>
-        <xsl:choose>
-            <xsl:when test="$lb">
-                <xsl:variable name="text-between" as="node()*"
-                    select="$lb/following::text() intersect $this/preceding::text()"/>
-                <xsl:message use-when="system-property('debug') eq 'true'">
-                    <xsl:text>after text: </xsl:text>
-                    <xsl:value-of select="generate-id(.)"/>
-                    <xsl:text> lb: </xsl:text>
-                    <xsl:value-of select="generate-id($lb)"/>
-                    <xsl:text> count of inter text nodes: </xsl:text>
-                    <xsl:value-of select="count($text-between)"/>
-                    <xsl:text> key value: </xsl:text>
-                    <xsl:value-of select="normalize-space(string-join($text-between)) eq ''"/>
-                    <xsl:text> content: "</xsl:text>
-                    <xsl:value-of select="."/>
-                    <xsl:text>"</xsl:text>
-                </xsl:message>
-                <xsl:value-of select="normalize-space(string-join($text-between)) eq ''"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:sequence select="'elefant'"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:key>
-
     <!--
         A key for distinguishing text nodes in 'before', 'after' and 'both-ends' delimitation
         by in-word <lb>.
