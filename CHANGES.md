@@ -9,11 +9,21 @@
   - `<abbr>` and `<expan>`
   - `<orig>` and `<reg>`
   - `<seg>` with `@wit` as lightweight critical apparatus
-- **possibly breaking changes**: order in `<choice>` matters now:
+- **possibly breaking change**: order in `<choice>` matters now:
   - first child goes into the main text (lemma), no matter if the
     choice gives `corr`/`sic` alternatives, or `abbr`/`expan`, or
     `orig`/`reg` or multiple `seg` elements
   - apparatus entries accordingly
+- allows switching between diplomatic representation and reading
+  representation by setting `prose:linebreaks` (see issue #71)
+  - whitespace around in-word `<lb break="no">` is removed in reading
+    representation
+  - hyphenation for in-word `<lb break="no">` is inserted in
+    diplomatic representation
+- **possible breaking change**: line numbering is now based in `@n`
+  (see issue #70)
+  - former line numbering was considered project-specific and has been
+    moved to `xsl/projects/alea/common/libalea.xsl`
 
 ## 0.17.1
 
