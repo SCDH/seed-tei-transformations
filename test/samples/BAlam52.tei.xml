@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?><TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="ar">
+   <teiHeader xml:space="default">
+      <fileDesc>
+         <titleStmt xml:lang="en">
+            <title>
+               <idno type="local-work-id">BAlam52</idno>
+            </title>
+            <respStmt n="transcribed">
+               <resp>edited and commented by</resp>
+               <persName sameAs="#nefeli">Nefeli Papoutsakis</persName>
+            </respStmt>
+            <respStmt n="checked">
+               <resp>double-checked by</resp>
+               <persName sameAs="#thomas">Thomas Bauer</persName>
+            </respStmt>
+         </titleStmt>
+         <include xmlns="http://www.w3.org/2001/XInclude" xpointer="editionStmt" href="../../../common.xml"/>
+         <include xmlns="http://www.w3.org/2001/XInclude" xpointer="publicationStmt" href="../../../common.xml"/>
+         <sourceDesc>
+            <listWit xml:id="BA">
+               <witness xml:id="SF" n="135v"/>
+               <witness xml:id="S" n="154v"/>
+               <witness xml:id="QH" n="167r"/>
+            </listWit>
+         </sourceDesc>
+      </fileDesc>
+      <include xmlns="http://www.w3.org/2001/XInclude" xpointer="profileDesc" href="../../../common.xml"/>
+      <include xmlns="http://www.w3.org/2001/XInclude" xpointer="encodingDesc" href="../../../common.xml"/>
+      <encodingDesc n="local">
+         <variantEncoding method="parallel-segmentation" location="internal"/>
+      </encodingDesc>
+      <revisionDesc xml:lang="de">
+         <change when="2022-03-05" who="#nefeli">Konvertierung von Textverarbeitung nach TEI.</change>
+      </revisionDesc>
+   </teiHeader>
+   <text>
+      <body>
+         <lg met="al-Hafif">
+            <head>وقال <app>
+                  <lem>يمدح</lem>
+                  <rdg wit="#SF #QH">يمتدح</rdg>
+               </app> قاضي القضاة <anchor xml:id="rvl_nrd_vsb"/>جلال الدين <app>
+                  <lem>القزويني<anchor xml:id="yvl_nrd_vsb"/></lem>
+                  <rdg wit="#SF #QH"/>
+               </app><note anchored="true" xml:id="ws2_2z4_1vb" xml:lang="en">The present poem is a
+                  eulogy on chief judge <persName ref="psn:GalaladdinalQazwinialHatibalQazwini">Ǧalāladdīn al-Qazwīnī </persName>(666-739/1268-1339).</note></head>
+            <lg>
+               <l xml:id="d4e424">إنّ طَيْفًا <app>
+                     <lem>عن</lem>
+                     <rdg wit="#QH">في</rdg>
+                  </app> حالِ شَجْوِيَ <app>
+                     <lem>أَمْلَى</lem>
+                     <rdg wit="#QH">ام لا</rdg>
+                  </app><caesura/>لَسْتُ أَدري أَدَّى الأمانةَ أم لا</l>
+               <l xml:id="d4e444">جاءَ <app>
+                     <lem>ضَيفًا</lem>
+                     <rdg wit="#QH">طيفا</rdg>
+                  </app> ورَدَّهُ سُهْدُ عَينَــ <caesura/>ـيَّ فوَلَّى بِيَ <app>
+                     <lem>الهُمومَ</lem>
+                     <rdg wit="#SF">للهموم</rdg>
+                     <rdg wit="#QH">الهوم</rdg>
+                  </app> ووَلَّى</l>
+               <l xml:id="d4e468"><app>
+                     <lem>ليتَ طَيْفُ الحَبيبِ يَنقُلُ جِسمي<caesura/>لا حَدِيثي فكانَ <app>
+                           <lem>يُحسِنُ</lem>
+                           <rdg wit="#SF">احسن</rdg>
+                        </app> نَقْلا</lem>
+                     <rdg wit="#S"/>
+                  </app></l>
+               <l xml:id="d4e487">بِأَبي مَن إذا تَثَنَّى دَلالًا<caesura/>أَطرَقَتْ في رياضِها
+                  القُضْبُ خَجْلا</l>
+               <l xml:id="d4e492">فاتِكُ اللحظِ وَهْوَ حُلوٌ مَعَ الفَتْـ<caesura/>ـكِ فيا حَبَّذا الحُسامُ <app>
+                     <lem>المُحَلَّى</lem>
+                     <rdg wit="#SF">المعلا</rdg>
+                  </app></l>
+               <l xml:id="d4e505">عَرَفَ الناسُ سِحرَ عَينَيهِ لمّا<caesura/>هزّ جَفنًا فَصَيَّرَ الجَفنَ نَصْلا</l>
+               <l xml:id="d4e510">وعليه <app>
+                     <lem>تَأَصَّلَ</lem>
+                     <rdg wit="#SF">تامل</rdg>
+                  </app> الحُبُّ لمّا<caesura/>مَدَّ فَرْعًا فَصَيَّرَ الفَرعَ أَصْلا</l>
+               <l xml:id="d4e523">مَدَّ صُدْغًا على عِذارٍ وخَدٍّ<caesura/>فرَأَيْنا مَرعًى وماءً وظِلّا</l>
+               <l xml:id="d4e528"><app>
+                     <lem>وَرَنا</lem>
+                     <rdg wit="#QH">ودنا</rdg>
+                  </app> بَعْدَهُ الغَزالُ فَقُلنا<caesura/>حُطّ يا ظَبْيُ عن جُفُونِكَ ثِقْلا</l>
+               <l xml:id="d4e540">ليسَ يُسْلَى هَواهُ مِن قَلبِ صَبٍّ<caesura/>ونَعَمْ فوقَ نارِ
+                  خَدَّيهِ <app>
+                     <lem><anchor xml:id="d9796e233"/>يُسْلَى<span from="#d9796e233"><include xmlns="http://www.w3.org/2001/XInclude" href="BBlam52.tei.xml" xpointer="ivd_xgb_wxb"/></span></lem>
+                     <rdg wit="#QH">يصلا</rdg>
+                  </app></l>
+               <l xml:id="d4e552">يا سُلُوِّي عليه بُعْدًا وسُحْقًا<caesura/>وٱشْتِياقي إليه أَهْلًا وسَهْلا</l>
+               <l xml:id="d4e558">أَشْتَكِي جَورَهُ التِذاذًا بذِكرى<caesura/>شَخْصِهُ لا لِأَرتَجِي
+                  منه <sic>وَصْلا</sic></l>
+               <l xml:id="d4e571">عَجَبي منه ظالِمًا مُستطيلًا<caesura/>وَهْوَ إن ماسَ أَعْدَلُ <app>
+                     <lem>الناسِ</lem>
+                     <rdg wit="#SF #QH">الخلق</rdg>
+                  </app> شَكْلا</l>
+               <l xml:id="d4e584"><app>
+                     <lem>باخِلٌ</lem>
+                     <rdg wit="#QH">باخلا</rdg>
+                  </app> بالكلامِ لكِنْ له سَــ<caesura/>ـيّافُ لَحْظٍ <app>
+                     <lem>يُكَلِّمُ</lem>
+                     <rdg wit="#SF">تكلم</rdg>
+                  </app> الناسَ طفْلا</l>
+               <l xml:id="d4e604">يا بَخِيلًا بِلَفْظِهِ ولِقاهُ<caesura/><app>
+                     <lem>شَدَّ</lem>
+                     <rdg wit="#SF">سدَّ</rdg>
+                     <rdg wit="#QH">سد</rdg>
+                  </app> ما قد بَخلْتَ قَوْلًا وفِعْلا</l>
+               <l xml:id="d4e619">رُبَّ دَهرٍ قد كان ريقُكَ فيه<caesura/>ليَ راحًا وكان خَدُّكَ
+                     نُقْلا<witDetail wit="#S" xml:lang="ar">هذا البيت بعد البيت التالي
+                  </witDetail></l>
+               <l xml:id="d4e626">سائلي عن قديمِ دهريَ <app>
+                     <lem>إيهًا</lem>
+                     <rdg wit="#S">آها</rdg>
+                  </app><caesura/>ذاكَ وقتٌ مضى ودهرٌ تَوَلَّى</l>
+               <l xml:id="d4e639">وليالٍ جادتْ وأعقَبَتِ الشَجْـ<caesura/>ـوَ فيا ليتَ جُودَها كان بُخْلا</l>
+               <l xml:id="d4e644">وحبيب جفا ولستُ بِساليـ<caesura/>ـهِ وحاشَى ذاكَ الجمالِ
+                  وكَلَّا</l>
+               <l xml:id="d4e649"><app>
+                     <lem><sic>يَتَسَلَّى</sic> به العواذِلُ غَبْنًا<caesura/>فَهْوَ <choice>
+                           <corr>يُهْوَى</corr>
+                           <sic><app>
+                                 <lem/>
+                                 <rdg wit="#QH">يهدى</rdg>
+                                 <rdg wit="#SF">ىهدى</rdg>
+                              </app></sic>
+                        </choice> وعاذِلي فيه يُقْلَى</lem>
+                     <rdg wit="#S"/>
+                  </app></l>
+               <l xml:id="d4e678">عَذَلوني وفي الحَشا عَقدُ <app>
+                     <lem>ودٍّ</lem>
+                     <rdg wit="#SF">وذ</rdg>
+                  </app><caesura/>لم يَدَعْ لٱستِماعِ عَذْلي مَحَلَّا</l>
+               <l xml:id="d4e690">أنا في الحُبِّ مِثلُ قاضي قضاة الـ<caesura/>ـدِينِ في الجُودِ ليس يَسمَعُ عَذْلا</l>
+               <l xml:id="d4e695"><app>
+                     <lem><anchor xml:id="d9796e390"/>دُلَفِيٌّ<span from="#d9796e390" ana="tag:textrun"><note anchored="true" xml:lang="en">al-Qazwīnī claimed descent from
+                                 <persName ref="psn:AbuDulafalIgli">Abū Dulaf al-ʿIǧlī</persName>
+                              (d. 225/840 or 226/841), a distinguished emir of the early Abbasid
+                              period.</note></span></lem>
+                     <rdg wit="#QH">ولغىٌ</rdg>
+                  </app> يومَ الفخارِ <choice>
+                     <corr>يُجَلِّي</corr>
+                     <sic><app>
+                           <lem/>
+                           <rdg wit="#SF">يحلا</rdg>
+                           <rdg wit="#S">تحَلَّا</rdg>
+                           <rdg wit="#QH">تحلا</rdg>
+                        </app></sic>
+                  </choice><caesura/>وبه <app>
+                     <lem>مُبْهَمُ</lem>
+                     <rdg wit="#SF #QH">منهم</rdg>
+                  </app> الخُطوبِ <choice>
+                     <corr>يُجَلَّى</corr>
+                     <sic><app>
+                           <lem/>
+                           <rdg wit="#SF">تحلا</rdg>
+                           <rdg wit="#S">تُجلَّا</rdg>
+                           <rdg wit="#QH">تجلا</rdg>
+                        </app></sic>
+                  </choice></l>
+               <l xml:id="d4e761">حاز غاياتِ أَهْلِهِ بِمَسارٍ<caesura/><app>
+                     <lem>قَدَّمَتْهُ</lem>
+                     <rdg wit="#SF">قدميه</rdg>
+                  </app> إلى السِيادةِ أَهْلا</l>
+               <l xml:id="d4e773">وأَفاضَ الجودَيْنِ عَدْلًا ومالًا<caesura/>وحَمَى الجانِبَيْنِ
+                  حَزْنًا وسَهْلا</l>
+               <l xml:id="d4e778"><app>
+                     <lem><choice>
+                           <corr>وحرامٌ</corr>
+                           <sic><app>
+                                 <lem/>
+                                 <rdg wit="#S">وكريم</rdg>
+                              </app></sic>
+                        </choice> أن يَطرُقَ <choice>
+                           <corr>العُسرُ</corr>
+                           <sic><app>
+                                 <lem/>
+                                 <rdg wit="#S">العز</rdg>
+                              </app></sic>
+                        </choice> والجَو<caesura/>رُ فَتًى كان في <choice>
+                           <corr>مَغانيهِ</corr>
+                           <sic><app>
+                                 <lem/>
+                                 <rdg wit="#S">معانيه</rdg>
+                              </app></sic>
+                        </choice> حَلّا</lem>
+                     <rdg wit="#SF #QH"/>
+                  </app></l>
+               <l xml:id="d4e830">كم جَنَيْنا منه المَواهِبَ شهدًا<caesura/>إذ <choice>
+                     <corr>بَثَثْنا</corr>
+                     <sic><app>
+                           <lem/>
+                           <rdg wit="#SF">ىىىىا</rdg>
+                           <rdg wit="#S">ثنيىا</rdg>
+                           <rdg wit="#QH">بنينا</rdg>
+                        </app></sic>
+                  </choice> له الرَكائبَ <choice>
+                     <corr>نَمْلا</corr>
+                     <sic><app>
+                           <lem/>
+                           <rdg wit="#SF #S">تملا</rdg>
+                           <rdg wit="#QH">مملا</rdg>
+                        </app></sic>
+                  </choice></l>
+               <l xml:id="d4e871" ana="tag:Istihdam">كم إلى بَيْتِ مالِهِ في العطايا<caesura/>قد ضَرَبْنا <app>
+                     <lem>لِطالِعِ</lem>
+                     <rdg wit="#S">بطالع</rdg>
+                  </app>
+                  <app>
+                     <lem>العِيسِ</lem>
+                     <rdg wit="#QH">العيش</rdg>
+                  </app> رَمْلا<note anchored="true" xml:id="u43_tbc_wxb" xml:lang="en">The syntax
+                     of this verse is complex, as Ibn Nubātah apparently wishes to express two
+                     different meanings simultaneously (figure <term rend="italic" xml:lang="ar-Latn" sameAs="tag:Istihdam">istiḫdām</term>). The expression <hi rend="italic" xml:lang="ar-Latn">ḍarabnā
+                        ramlan</hi> may mean <q>we traversed sand dunes</q>; this meaning agrees
+                     best with the reading <hi rend="italic" xml:lang="ar-Latn">bi-ṭāliʿi
+                        l-ʿīsi</hi>, <q>with the first of the dingy white camels</q> (<hi rend="italic" xml:lang="ar-Latn">ṭāliʿ</hi> being used in the sense of <hi rend="italic" xml:lang="ar-Latn">ṭāliʿah</hi>), found in manuscripts of
+                     recensions BA and BB (lectio facilior). In geomantical terminology, however,
+                        <hi rend="italic" xml:lang="ar-Latn">ḍarb ar-raml li-ṭāliʿ fulān</hi> means
+                        <q>to use geomancy regarding (or: in conjunction with) the ascendant of
+                        somebody</q>: on geomancy in general and on combining geomantic and
+                     astrological procedures by divination, in particular, see <bibl corresp="bibl:EI2"><abbr type="siglum">EI<hi rend="superscript">2</hi>
+                        </abbr> s.v. <title type="lemma"><hi rend="ul">Kh</hi>aṭṭ</title>
+                           (<author>T. Fahd</author>)</bibl>. <hi rend="italic" xml:lang="ar-Latn">Bayt al-māl</hi>, too, is an astrological term, denoting the second
+                     astrological house after that of the <hi rend="italic" xml:lang="ar-Latn">ṭāliʿ</hi>, <q>ascendant</q>, which is the first of the twelve astrological
+                     houses (cf. <bibl corresp="bibl:EI3"><abbr type="siglum">EI<hi rend="superscript">3</hi>
+                        </abbr> s.v. <title type="lemma">Horoscope</title> (<author>Josep
+                           Cassuleras</author>)</bibl>).</note><witDetail wit="#QH" xml:lang="ar">هذا البيت بعد البيت 31 </witDetail></l>
+               <l xml:id="d4e894"><app>
+                     <lem><app>
+                           <lem>لائميهِ</lem>
+                           <rdg wit="#QH">لا بميل</rdg>
+                        </app> على المَكارِمِ <app>
+                           <lem>كُفُّوا</lem>
+                           <rdg wit="#QH">كفوء</rdg>
+                        </app><caesura/>إنّ للصَبِّ <choice>
+                           <corr>بالصَبابةِ</corr>
+                           <sic><app>
+                                 <lem/>
+                                 <rdg wit="#SF #QH">للصبابة</rdg>
+                              </app></sic>
+                        </choice> شُغْلا</lem>
+                     <rdg wit="#S"/>
+                  </app></l>
+               <l xml:id="d4e934">يا لهُ <app>
+                     <lem>سالِكًا</lem>
+                     <rdg wit="#QH">مالكا</rdg>
+                  </app> بغيرِ <app>
+                     <lem>مَثيلٍ</lem>
+                     <rdg wit="#SF">مثل</rdg>
+                  </app><caesura/>في طَريقٍ مِنَ السِيادةِ مُثْلَى</l>
+               <l xml:id="d4e954">وإمامًا أقلامُ فَتْواهُ <corr><app>
+                           <lem>كُلٌّ</lem>
+                           <rdg wit="#SF #S #QH">تلقى</rdg>
+                        </app></corr>
+                  <caesura/><corr><app>
+                           <lem>يَومَ تُلقَى الأقلامُ</lem>
+                           <rdg wit="#SF #S #QH">كل يوم اقلام</rdg>
+                        </app></corr> قِدْح مُعَلَّى</l>
+               <l xml:id="d4e962">لو أَرادَتْ شُهْبُ النُجومِ عُلاهُ<caesura/>ما <app>
+                     <lem>عَزا</lem>
+                     <rdg wit="#QH">عرى</rdg>
+                  </app> الفَيْلَسُوفُ للشُهْبِ عَقْلا</l>
+               <l xml:id="d4e975">يا إمامًا إذا <app>
+                     <lem>المَفاخِرُ</lem>
+                     <rdg wit="#SF #QH">المكارم</rdg>
+                  </app> نادَتْـ<caesura/>ـهُ مَشَى ساحِبَ <app>
+                     <lem>الذُيولِ</lem>
+                     <rdg wit="#QH">الى الذيل</rdg>
+                  </app> رِفَلَّا</l>
+               <l xml:id="d4e996">إن يَكُنْ أَحْسَنُ الثنا فيكَ قَولًا<caesura/>فلقَدْ أَحْسَنَتْ
+                  أياديكَ فِعْلا</l>
+               <l xml:id="d4e1001">جمع اللهُ فيكَ ما عَزَّ في الخَلْـ<caesura/>ـقِ فسُبْحانَهُ وعَزَّ وجَلّا</l>
+            </lg>
+         </lg>
+      </body>
+      <back>
+         <spanGrp>
+            <span from="#rvl_nrd_vsb" to="#yvl_nrd_vsb"><persName ref="psn:GalaladdinalQazwinialHatibalQazwini">جلال الدين
+               القزويني</persName></span>
+         </spanGrp>
+      </back>
+   </text>
+</TEI>
