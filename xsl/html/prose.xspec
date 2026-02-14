@@ -112,7 +112,7 @@
     </x:scenario>
 
 
-    <x:scenario label="diplomatic presentation">
+    <x:scenario label="diplomatic presentation, regression test for #71">
         <x:param name="prose:linebreaks" select="true()"/>
         <x:context mode="html:html">
             <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
@@ -141,7 +141,7 @@
             test="exists(//text()[. eq 'me der Innenwinkel des Dreiecks.'])"/>
     </x:scenario>
 
-    <x:scenario label="readers presentation">
+    <x:scenario label="readers presentation, regression test for #71">
         <x:param name="prose:linebreaks" select="false()"/>
         <x:context mode="html:html">
             <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
@@ -173,5 +173,30 @@
             test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
     </x:scenario>
 
+    <x:scenario label="line numbering in diplomatic presentation, regression test for #70">
+        <x:param name="prose:linebreaks" select="true()"/>
+        <x:context mode="html:html">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <lb n="1"/>Synthetische Urteile <span rend="i">a priori</span> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <lb n="c" break="no"/> me der Innenwinkel des
+                            <lb/>Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="line numbers" test="//*[@class eq 'line-number'] ! normalize-space(.)"
+            select="('1', '2', 'c', '?')"/>
+    </x:scenario>
 
 </x:description>

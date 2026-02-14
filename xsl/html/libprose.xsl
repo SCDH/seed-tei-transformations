@@ -216,7 +216,7 @@
                 </xsl:if>
                 <xsl:text>&#xa;</xsl:text>
                 <br/>
-                <span>
+                <span class="line-number">
                     <xsl:value-of select="common:line-number(.)"/>
                     <xsl:text>&#x20;</xsl:text>
                 </span>
