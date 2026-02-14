@@ -147,4 +147,15 @@
         />
     </x:scenario>
 
+    <x:scenario label="alea-style line numbering, regression test for #70">
+        <x:context href="../../../../test/samples/BAlam52.tei.xml"/>
+        <x:expect label="line H1 present"
+            test="exists(//*[@class eq 'content']//*[@class eq 'line-number']/text()[. eq 'H1'])"/>
+        <x:expect label="line V1 present"
+            test="exists(//*[@class eq 'content']//*[@class eq 'line-number']/text()[. eq 'V1'])"/>
+        <x:expect label="apparatus line V1 present"
+            test="exists(//*[@class eq 'variants']//*[tokenize(@class) = 'line-number']/text()[matches(., 'V1')])"
+        />
+    </x:scenario>
+
 </x:description>

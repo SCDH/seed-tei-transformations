@@ -124,11 +124,12 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
 
   <xsl:template name="source:text-node" visibility="public">
     <xsl:context-item as="text()" use="required"/>
+    <xsl:param name="content" select="." required="false"/>
     <xsl:choose>
       <!-- take care! order may matter since test predicates are not disjunctive for performance reasons-->
       <xsl:when test="$source:mode eq 0">
         <!-- no source information -->
-        <xsl:value-of select="."/>
+        <xsl:value-of select="$content"/>
       </xsl:when>
       <!-- the further order should depend on probablity of the value of $source:mode -->
       <xsl:when test="$source:is-mode-from-id">
@@ -138,7 +139,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
           <xsl:attribute name="data-source-offset"
             select="source:offset(., $source:is-mode-to-text-node)"/>
           <xsl:attribute name="data-source-length" select="string-length(.)"/>
-          <xsl:value-of select="."/>
+          <xsl:value-of select="$content"/>
         </span>
       </xsl:when>
       <xsl:when test="$source:is-mode-from-root-qname">
@@ -148,7 +149,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
           <xsl:attribute name="data-source-offset"
             select="source:offset(., $source:is-mode-to-text-node)"/>
           <xsl:attribute name="data-source-length" select="string-length(.)"/>
-          <xsl:value-of select="."/>
+          <xsl:value-of select="$content"/>
         </span>
       </xsl:when>
       <xsl:when test="$source:is-mode-from-root-clarkname">
@@ -157,7 +158,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
           <xsl:attribute name="data-source-offset"
             select="source:offset(., $source:is-mode-to-text-node)"/>
           <xsl:attribute name="data-source-length" select="string-length(.)"/>
-          <xsl:value-of select="."/>
+          <xsl:value-of select="$content"/>
         </span>
       </xsl:when>
       <xsl:when test="$source:is-mode-from-root-to-text-node-clarkname">
@@ -166,7 +167,7 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
           <xsl:attribute name="data-source-offset"
             select="source:offset(., $source:is-mode-to-text-node)"/>
           <xsl:attribute name="data-source-length" select="string-length(.)"/>
-          <xsl:value-of select="."/>
+          <xsl:value-of select="$content"/>
         </span>
       </xsl:when>
       <xsl:when test="$source:is-mode-from-root-lname">
@@ -176,12 +177,12 @@ modes 7-12 provide an xpath with name segments from element nodes and an offset 
           <xsl:attribute name="data-source-offset"
             select="source:offset(., $source:is-mode-to-text-node)"/>
           <xsl:attribute name="data-source-length" select="string-length(.)"/>
-          <xsl:value-of select="."/>
+          <xsl:value-of select="$content"/>
         </span>
       </xsl:when>
       <xsl:otherwise>
         <!-- no source information -->
-        <xsl:value-of select="."/>
+        <xsl:value-of select="$content"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
-    stylesheet="prose.xsl" run-as="external">
+    xmlns:prose="http://scdh.wwu.de/transform/prose#" stylesheet="prose.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
 
@@ -111,5 +111,92 @@
         </x:expect>
     </x:scenario>
 
+
+    <x:scenario label="diplomatic presentation, regression test for #71">
+        <x:param name="prose:linebreaks" select="true()"/>
+        <x:context mode="html:html">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <lb n="1"/>Synthetische Urteile <span rend="i">a priori</span> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <lb n="3" break="no"/> me der Innenwinkel des Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="space cut before in-word lb"
+            test="exists(//text()[. eq 'Synthetische Urteile  be'])"/>
+        <x:expect label="space cut in-between in-word lb"
+            test="exists(//text()[. eq 'weisen objektive Realität im Satz über die Sum'])"/>
+        <x:expect label="space cut after in-word lb"
+            test="exists(//text()[. eq 'me der Innenwinkel des Dreiecks.'])"/>
+    </x:scenario>
+
+    <x:scenario label="readers presentation, regression test for #71">
+        <x:param name="prose:linebreaks" select="false()"/>
+        <x:context mode="html:html">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <lb n="1"/>Synthetische Urteile <span rend="i">a priori</span> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <lb n="3" break="no"/> me der Innenwinkel des
+                            <lb n="4"/>Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has word 'beweisen' has been merged"
+            test="exists(tokenize(.)[. eq 'beweisen'])"/>
+        <x:expect label="has word 'Summe' has been merged" test="exists(tokenize(.)[. eq 'Summe'])"/>
+        <x:expect label="has word 'des Dreiecks.' has not been merged"
+            test="exists(tokenize(.)[. eq 'desDreiecks.']) => not()"/>
+        <x:expect label="has word 'des' is a token" test="exists(tokenize(.)[. eq 'des'])"/>
+        <x:expect label="has word 'Dreiecks.' is a token"
+            test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
+    </x:scenario>
+
+    <x:scenario label="line numbering in diplomatic presentation, regression test for #70">
+        <x:param name="prose:linebreaks" select="true()"/>
+        <x:context mode="html:html">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <lb n="1"/>Synthetische Urteile <span rend="i">a priori</span> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <lb n="c" break="no"/> me der Innenwinkel des
+                            <lb/>Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="line numbers" test="//*[@class eq 'line-number'] ! normalize-space(.)"
+            select="('1', '2', 'c', '?')"/>
+    </x:scenario>
 
 </x:description>

@@ -126,6 +126,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/diwan.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/html/diwan.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/common/libalea.xsl"
+               version="1.0.0" sourceLocation="xsl/projects/alea/common/libalea.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/common/diwan.xsl"
                version="1.0.0" sourceLocation="xsl/projects/alea/common/diwan.xsl"/>
           <package
