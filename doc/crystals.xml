@@ -14,14 +14,15 @@
       </sourceDesc>
     </fileDesc>
     <encodingDesc>
+      <!-- appInfo elements are used to set up transformations -->
       <appInfo xml:id="diplomatic-render" n="html" source="xsl/html/prose.xsl">
-        <application ident="prose:linebreaks" version="1">
-          <label>true</label>
+        <application ident="prose:linebreaks" version="1" n="true">
+          <desc>diplomatic representation</desc>
         </application>
       </appInfo>
       <appInfo xml:id="reading-render" n="html" source="xsl/html/prose.xsl">
-        <application ident="prose:linebreaks" version="1">
-          <label>false</label>
+        <application ident="_" version="1">
+          <desc>reading representation</desc>
         </application>
       </appInfo>
     </encodingDesc>
