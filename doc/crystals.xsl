@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+USAGE:
+
+generate examples only:
+
+target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:examples
+
+generate Apache Ant build file:
+
+target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:ant-build-file \!method=xml \!indent=true
+
+generate HTML overview:
+
+target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
+
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:eg="http://www.tei-c.org/ns/Examples"
-    xml:t="http://www.tei-c.org/ns/1.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    xmlns:t="http://www.tei-c.org/ns/1.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     exclude-result-prefixes="#all" version="3.0">
 
-    <xsl:output method="xml" indent="true"/>
+    <xsl:output method="html" indent="false"/>
 
     <xsl:param name="outdir" as="xs:string" select="resolve-uri('examples/', static-base-uri())"/>
 
@@ -17,27 +34,54 @@
 
     <xsl:template match="document-node()">
         <xsl:call-template name="examples"/>
-        <xsl:call-template name="ant-build-file"/>
+
     </xsl:template>
 
 
-    <!-- output examples to separate result-documents -->
+    <!-- entry point: output examples into separate result-documents -->
     <xsl:template name="examples">
         <xsl:context-item as="document-node(element(TEI))" use="required"/>
         <xsl:for-each select="/TEI/text/body//eg:egXML">
+            <xsl:variable name="base-indent" as="xs:integer">
+                <xsl:analyze-string select="text()[1]" regex="&#xa;(\s*)">
+                    <xsl:matching-substring>
+                        <xsl:sequence select="regex-group(1) => string-length()"/>
+                    </xsl:matching-substring>
+                    <xsl:fallback>
+                        <xsl:sequence select="0"/>
+                    </xsl:fallback>
+                </xsl:analyze-string>
+            </xsl:variable>
+            <xsl:message>
+                <xsl:text>indentation</xsl:text>
+                <xsl:value-of select="$base-indent"/>
+            </xsl:message>
+            <!-- the wrapped crystal goes into ID.xml -->
             <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.xml"
-                exclude-result-prefixes="#all" indent="no">
+                exclude-result-prefixes="#all" indent="no" method="xml">
                 <xsl:choose>
                     <xsl:when test="@source">
                         <xsl:apply-templates mode="wrap" select="substring(@source, 2) => id()">
                             <xsl:with-param name="slotted-children" as="node()*" select="node()"
                                 tunnel="true"/>
+                            <xsl:with-param name="base-indentation" as="xs:integer"
+                                select="$base-indent"/>
                         </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:apply-templates mode="example" select="node()"/>
+                        <xsl:apply-templates mode="example" select="node()">
+                            <xsl:with-param name="base-indentation" as="xs:integer"
+                                select="$base-indent"/>
+                        </xsl:apply-templates>
                     </xsl:otherwise>
                 </xsl:choose>
+            </xsl:result-document>
+            <!-- the crystal without wrapper goes into ID.crystal.xml -->
+            <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.crystal.xml"
+                exclude-result-prefixes="#all" indent="no" method="xml" omit-xml-declaration="true">
+                <xsl:apply-templates mode="example" select="node()">
+                    <xsl:with-param name="base-indentation" as="xs:integer" select="$base-indent"/>
+                </xsl:apply-templates>
             </xsl:result-document>
         </xsl:for-each>
     </xsl:template>
@@ -68,7 +112,21 @@
         </xsl:element>
     </xsl:template>
 
+    <!-- this removes the base indentation -->
+    <xsl:template mode="example" match="text()">
+        <xsl:analyze-string select="." regex="&#xa;\s{{1,12}}">
+            <xsl:matching-substring>
+                <xsl:text>&#xa;</xsl:text>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:template>
 
+
+
+    <!-- entry point for generating an Apache Ant build file -->
     <xsl:template name="ant-build-file">
         <project basedir="." name="transform-examples" default="transform">
 
@@ -98,7 +156,8 @@
 
     <xsl:mode name="antcall" on-no-match="shallow-skip"/>
 
-    <xsl:template mode="antcall target" match="back"/>
+    <!-- drop everything in back matter -->
+    <xsl:template mode="antcall target html" match="back"/>
 
     <xsl:template mode="antcall" match="eg:egXML[@xml:id]">
         <xsl:choose>
@@ -112,6 +171,8 @@
                 <antcall target="{@xml:id}"/>
             </xsl:otherwise>
         </xsl:choose>
+        <!-- allways make a generic HTML representation of the crystal -->
+        <antcall target="{@xml:id}.crystal.html"/>
     </xsl:template>
 
 
@@ -119,6 +180,7 @@
 
     <xsl:template mode="target" match="eg:egXML[@xml:id]">
         <xsl:variable name="context" as="element(eg:egXML)" select="."/>
+        <xsl:call-template name="ant-target-crystal"/>
         <xsl:choose>
             <xsl:when test="@rendition">
                 <xsl:for-each select="tokenize(@rendition)">
@@ -142,6 +204,23 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="ant-target-crystal">
+        <xsl:context-item as="element(eg:egXML)" use="required"/>
+        <target name="{@xml:id}.crystal.html">
+            <xslt>
+                <xsl:attribute name="classpathref">project.class.path</xsl:attribute>
+                <xsl:attribute name="style" select="'${pdu}/xsl/html/xml-source.xsl'"/>
+                <xsl:attribute name="in" select="'${outdir}/' || @xml:id || '.crystal.xml'"/>
+                <xsl:attribute name="out" select="'${outdir}/' || @xml:id || '.crystal.html'"/>
+                <factory name="net.sf.saxon.TransformerFactoryImpl">
+                    <attribute name="http://saxon.sf.net/feature/configuration-file"
+                        value="${{pdu}}/{$saxon-config}"/>
+                </factory>
+                <xsl:call-template name="post-size-js"/>
+            </xslt>
+        </target>
+    </xsl:template>
+
     <xsl:template name="xslt-target">
         <xsl:param name="example" as="element(eg:egXML)"/>
         <xsl:param name="rendition" as="element(appInfo)" required="false"
@@ -156,11 +235,17 @@
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${{pdu}}/{$saxon-config}"/>
             </factory>
+            <xsl:call-template name="post-size-js"/>
             <xsl:apply-templates mode="xslt-target-parameters" select="$rendition">
                 <xsl:with-param name="stylesheet" as="xs:anyURI"
                     select="resolve-uri($rendition/@source, $pdu)" tunnel="true"/>
             </xsl:apply-templates>
         </xslt>
+    </xsl:template>
+
+    <xsl:template name="post-size-js">
+        <param name="{{http://scdh.wwu.de/transform/html#}}after-body-js"
+            expression="${{basedir}}/post-size.js"/>
     </xsl:template>
 
     <xsl:mode name="xslt-target-parameters" on-no-match="shallow-skip"/>
@@ -266,6 +351,62 @@
                 select="resolve-uri($package-configuration/@sourceLocation, base-uri($package-configuration)) => doc()"
             />
         </xsl:if>
+    </xsl:template>
+
+
+
+    <xsl:template name="overview-html">
+        <html>
+            <head>
+                <title>
+                    <xsl:value-of select="/TEI/teiHeader/fileDesc/titleStmt/title"/>
+                </title>
+                <link rel="stylesheet" href="crystal.css"/>
+                <xsl:call-template name="resize-iframes"/>
+            </head>
+            <body>
+                <xsl:apply-templates mode="html"/>
+            </body>
+        </html>
+    </xsl:template>
+
+    <xsl:template name="resize-iframes">
+        <script type="application/javascript">
+            <!--
+            xsl: text >
+            window.addEventListener('message', (event) => {
+                console.log("message received", event.target);
+            }); < / xsl: text////-->
+            <xsl:value-of select="unparsed-text(resolve-uri('resizer.js', static-base-uri()))"/>
+        </script>
+    </xsl:template>
+
+    <xsl:mode name="html" on-no-match="shallow-skip"/>
+
+    <xsl:template mode="html" match="teiHeader"/>
+
+    <xsl:template mode="html" match="div">
+        <section>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </section>
+    </xsl:template>
+
+    <xsl:template mode="html" match="head">
+        <xsl:variable name="level" as="xs:integer" select="count(ancestor::div) + 1"/>
+        <xsl:element name="h{$level}">
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </xsl:element>
+    </xsl:template>
+
+    <xsl:template mode="html" match="text()">
+        <xsl:copy/>
+    </xsl:template>
+
+    <xsl:template mode="html" match="eg:egXML">
+
+        <iframe src="examples/{@xml:id}.crystal.html"
+            onload="javascript:registerIFrameResizer(this)"> </iframe>
+
     </xsl:template>
 
 
