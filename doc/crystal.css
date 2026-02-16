@@ -2,3 +2,15 @@ iframe {
     min-width: 33%;
     bg-color: lightgray;
 }
+.parameters table {
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+.parameters table thead {
+    background-color: lightgray;
+}
+.parameters table tr td,
+.parameters table thead th
+{
+    border: 1px solid darkgray;
+}
