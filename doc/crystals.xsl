@@ -128,10 +128,11 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
 
     <!-- entry point for generating an Apache Ant build file -->
     <xsl:template name="ant-build-file">
-        <project basedir="." name="transform-examples" default="transform">
+        <project basedir="." name="docs" default="transform">
 
-            <property name="pdu" value=".."/>
-            <property name="outdir" value="examples"/>
+            <dirname property="docs.basedir" file="${{ant.file.docs}}"/>
+            <property name="pdu" value="${{docs.basedir}}/.."/>
+            <property name="outdir" value="${{docs.basedir}}/examples"/>
 
 
             <path id="project.class.path">
@@ -245,7 +246,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
 
     <xsl:template name="post-size-js">
         <param name="{{http://scdh.wwu.de/transform/html#}}after-body-js"
-            expression="${{basedir}}/post-size.js"/>
+            expression="${{docs.basedir}}/post-size.js"/>
     </xsl:template>
 
     <xsl:mode name="xslt-target-parameters" on-no-match="shallow-skip"/>
