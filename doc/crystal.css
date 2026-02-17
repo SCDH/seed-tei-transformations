@@ -1,6 +1,14 @@
 body {
-    width: 33%;
     background-color: #dff0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.content {
+    border: 2px solid rgb(95 97 110);
+    border-radius: 0.5em;
+    padding: 20px;
+    width: 72em;
 }
 h1, h2, h3, h4, h5, h6, h7 {
     border-bottom: 1px solid darkgray;
