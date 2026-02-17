@@ -76,12 +76,20 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:result-document>
-            <!-- the crystal without wrapper goes into ID.crystal.xml -->
+            <!--
+                The crystal with eg:egXML wrapper goes into ID.crystal.xml which
+                is used for generating a view on the XML source.
+                The wrapper is required to make the result document wellformed and
+                will be invisible.
+            -->
             <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.crystal.xml"
                 exclude-result-prefixes="#all" indent="no" method="xml" omit-xml-declaration="true">
-                <xsl:apply-templates mode="example" select="node()">
-                    <xsl:with-param name="base-indentation" as="xs:integer" select="$base-indent"/>
-                </xsl:apply-templates>
+                <xsl:copy>
+                    <xsl:apply-templates mode="source" select="node()">
+                        <xsl:with-param name="base-indentation" as="xs:integer"
+                            select="$base-indent"/>
+                    </xsl:apply-templates>
+                </xsl:copy>
             </xsl:result-document>
         </xsl:for-each>
     </xsl:template>
@@ -92,10 +100,24 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
     <!-- mode for outputting part of a result-document containing the example -->
     <xsl:mode name="example" on-no-match="shallow-copy"/>
 
+    <!-- mode for outputting the source code -->
+    <xsl:mode name="source" on-no-match="shallow-copy"/>
+
     <!-- change namespace from example to tei -->
     <xsl:template mode="wrap example" match="eg:*">
+        <xsl:param name="slotted-children" as="node()*" tunnel="true"/>
+        <xsl:variable name="lname" as="xs:string" select="local-name(.)"/>
+        <!-- change namesapce -->
         <xsl:element name="{local-name()}" namespace="http://www.tei-c.org/ns/1.0">
             <xsl:apply-templates mode="#current" select="node() | @*"/>
+            <!-- add slotted children -->
+            <xsl:for-each select="$slotted-children/self::*[@slot eq $lname]">
+                <xsl:text>&#xa;</xsl:text>
+                <xsl:apply-templates mode="#current" select=".">
+                    <xsl:with-param name="slotted-children" select="()"/>
+                </xsl:apply-templates>
+                <xsl:text>&#xa;</xsl:text>
+            </xsl:for-each>
         </xsl:element>
     </xsl:template>
 
@@ -112,8 +134,14 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
         </xsl:element>
     </xsl:template>
 
+    <!-- drop elements that have to go into a slot -->
+    <xsl:template mode="example" match="*[@slot]" priority="100"/>
+
+    <!-- drop @slot from source view -->
+    <xsl:template mode="source" match="@slot"/>
+
     <!-- this removes the base indentation -->
-    <xsl:template mode="example" match="text()">
+    <xsl:template mode="example source" match="text()">
         <xsl:analyze-string select="." regex="&#xa;\s{{1,12}}">
             <xsl:matching-substring>
                 <xsl:text>&#xa;</xsl:text>
