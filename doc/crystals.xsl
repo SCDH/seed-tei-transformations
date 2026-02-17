@@ -579,5 +579,12 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
         </xsl:element>
     </xsl:template>
 
+    <xsl:template mode="html" match="code">
+        <pre>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </pre>
+    </xsl:template>
+
+
 
 </xsl:stylesheet>
