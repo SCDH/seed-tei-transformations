@@ -580,9 +580,21 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
     </xsl:template>
 
     <xsl:template mode="html" match="code">
-        <pre>
+        <code>
             <xsl:apply-templates mode="#current" select="@* | node()"/>
-        </pre>
+        </code>
+    </xsl:template>
+
+    <xsl:template mode="html" match="ref">
+        <a href="{@target}">
+            <xsl:apply-templates mode="#current"/>
+        </a>
+    </xsl:template>
+
+    <xsl:template mode="html" match="ptr">
+        <a href="{@target}">
+            <xsl:value-of select="@target"/>
+        </a>
     </xsl:template>
 
 
