@@ -34,7 +34,20 @@
         <head>Supported Encoding Crystals</head>
 
         <div>
-          <head>Diplomatic vs. Reading Representation</head>
+          <head>Lines</head>
+
+          <p>Lines are encoded with <gi>lb</gi> (line beginning). There's a switch for toggeling
+            on/off the evaluation of <gi>lb</gi>, i.e. toggeling between <hi rend="b"
+              >diplomatic</hi> vs. <hi rend="b">reading</hi> representations. <att>n</att> is used
+            as line label (number) in diplomatic representation.</p>
+
+          <p>In-word line breaks can be encoded using <att>break</att> with an value of
+              <val>no</val>. This will result in an inserted hyphenation character in diplomatic
+            representation. The character can be overridden by a stylesheet parameter. Note, that
+            spaces around in-word <gi>lb</gi> are stripped as required by the output type.</p>
+
+          <p>The stylesheets work with <gi>lb</gi> at the beginning of a new line as well as at the
+            end.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
             source="#simple" rendition="#diplomatic-render #reading-render">
