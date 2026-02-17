@@ -436,7 +436,6 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
             <iframe class="transformation-result {@n}-transformation"
                 src="examples/{$example/@xml:id}_{@xml:id}.html"
                 onload="javascript:registerIFrameResizer(this)"/>
-            <br/>
             <section class="stylesheet">
                 <xsl:element name="h{$level + 2}">stylesheet / package</xsl:element>
                 <pre><xsl:value-of select="@source"/></pre>
@@ -445,11 +444,11 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                 <xsl:element name="h{$level + 2}">parameters</xsl:element>
                 <table>
                     <thead>
-                        <td>local name</td>
-                        <td>prefix</td>
-                        <td>namespace</td>
-                        <td>value</td>
-                        <td>type</td>
+                        <th>local name</th>
+                        <th>prefix</th>
+                        <th>namespace</th>
+                        <th>value</th>
+                        <th>type</th>
                     </thead>
                     <tbody>
                         <xsl:apply-templates mode="html" select="application"/>
@@ -495,6 +494,56 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                 </tr>
             </xsl:when>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template mode="html" match="gi">
+        <span class="element">
+            <span class="angle-brackets">
+                <xsl:text>&lt;</xsl:text>
+            </span>
+            <span class="element-name">
+                <xsl:apply-templates mode="#current" select="@* | node()"/>
+            </span>
+            <span class="angle-brackets">
+                <xsl:text>&gt;</xsl:text>
+            </span>
+        </span>
+    </xsl:template>
+
+    <xsl:template mode="html" match="att">
+        <span class="attribute">
+            <span class="attribute-at">
+                <xsl:text>@</xsl:text>
+            </span>
+            <span class="attribute-name">
+                <xsl:apply-templates mode="#current" select="@* | node()"/>
+            </span>
+        </span>
+    </xsl:template>
+
+    <xsl:template mode="html" match="val">
+        <span class="value">
+            <span class="quotes">
+                <xsl:text>&quot;</xsl:text>
+            </span>
+            <span class="value">
+                <xsl:apply-templates mode="#current" select="@* | node()"/>
+            </span>
+            <span class="quotes">
+                <xsl:text>&quot;</xsl:text>
+            </span>
+        </span>
+    </xsl:template>
+    <xsl:template mode="html" match="p">
+        <p>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </p>
+    </xsl:template>
+
+    <xsl:template mode="html" match="hi">
+        <xsl:element name="{@rend}">
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </xsl:element>
     </xsl:template>
 
 
