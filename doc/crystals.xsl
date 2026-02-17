@@ -394,9 +394,13 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                 <xsl:call-template name="resize-iframes"/>
             </head>
             <body>
-                <xsl:apply-templates mode="html">
-                    <xsl:with-param name="level" as="xs:integer" select="0" tunnel="true"/>
-                </xsl:apply-templates>
+                <div class="content">
+                    <div class="content-wrapper">
+                        <xsl:apply-templates mode="html">
+                            <xsl:with-param name="level" as="xs:integer" select="0" tunnel="true"/>
+                        </xsl:apply-templates>
+                    </div>
+                </div>
             </body>
         </html>
     </xsl:template>
