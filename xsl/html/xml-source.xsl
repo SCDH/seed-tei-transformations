@@ -8,8 +8,8 @@ java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
-    xmlns:source="http://scdh.wwu.de/transform/source#" exclude-result-prefixes="#all" version="3.1"
-    default-mode="source:source">
+    xmlns:source="http://scdh.wwu.de/transform/source#" xmlns:eg="http://www.tei-c.org/ns/Examples"
+    exclude-result-prefixes="#all" version="3.1" default-mode="source:source">
 
     <xsl:output method="html" encoding="UTF-8"/>
 
@@ -30,6 +30,9 @@ java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC
     <xsl:param name="source:text-color" as="xs:string" select="'black'"/>
 
     <xsl:param name="default-language" as="xs:string" select="'en'"/>
+
+    <!-- if true (default), <eg:egXML> will not be contained in the output, but its children will -->
+    <xsl:param name="drop-egxml" as="xs:boolean" select="true()" static="true"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -78,6 +81,10 @@ java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC
     </xsl:template>
 
     <xsl:mode name="source:source" on-no-match="shallow-skip"/>
+
+    <xsl:template mode="source:source" match="eg:egXML" use-when="$drop-egxml">
+        <xsl:apply-templates mode="source:source"/>
+    </xsl:template>
 
     <xsl:template match="element()" mode="source:source">
         <span class="angle-brackets" style="color:{$source:angle-brackets-color}">
