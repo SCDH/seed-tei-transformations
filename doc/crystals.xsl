@@ -197,7 +197,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-                <antcall target="{@xml:id}"/>
+                <!--antcall target="{@xml:id}"/-->
             </xsl:otherwise>
         </xsl:choose>
         <!-- allways make a generic HTML representation of the crystal -->
@@ -224,11 +224,11 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-                <target target="{@xml:id}">
+                <!--target name="{@xml:id}">
                     <xsl:call-template name="xslt-target">
                         <xsl:with-param name="example" as="element(eg:egXML)" select="$context"/>
                     </xsl:call-template>
-                </target>
+                </target-->
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
