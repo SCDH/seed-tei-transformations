@@ -131,6 +131,8 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 </span>
             </xsl:template>
 
+            <xsl:template mode="source:source" match="@slot"/>
+
         </xsl:override>
     </xsl:use-package>
 
