@@ -5,7 +5,9 @@ USAGE:
 java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC -o:OUTPUT.html
 
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libxmlsource.xsl"
+    package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
     xmlns:source="http://scdh.wwu.de/transform/source#" xmlns:eg="http://www.tei-c.org/ns/Examples"
@@ -47,7 +49,7 @@ java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC
         package-version="1.0.0">
 
         <xsl:accept component="mode" names="html:html" visibility="public"/>
-        <xsl:accept component="template" names="html:*" visibility="public"/>
+        <xsl:accept component="template" names="html:*" visibility="private"/>
 
         <xsl:override>
 
@@ -80,7 +82,7 @@ java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC
         </xsl:choose>
     </xsl:template>
 
-    <xsl:mode name="source:source" on-no-match="shallow-skip"/>
+    <xsl:mode name="source:source" on-no-match="shallow-skip" visibility="public"/>
 
     <xsl:template mode="source:source" match="eg:egXML" use-when="$drop-egxml">
         <xsl:apply-templates mode="source:source"/>
@@ -251,4 +253,4 @@ java -jar=saxon.jar -config:saxon.xml -xsl:xsl/html/xml-source.xsl -s:SOURCE_DOC
         </xsl:if>
     </xsl:template>
 
-</xsl:stylesheet>
+</xsl:package>

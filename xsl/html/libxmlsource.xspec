@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:source="http://scdh.wwu.de/transform/source#"
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
-    stylesheet="xml-source.xsl" run-as="external">
+    stylesheet="libxmlsource.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
