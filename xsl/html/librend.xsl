@@ -15,12 +15,20 @@ in the base text, the apparatus and in the editorial notes. -->
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:app="http://scdh.wwu.de/transform/app#" xmlns:note="http://scdh.wwu.de/transform/note#"
-    xmlns:i18n="http://scdh.wwu.de/transform/i18n#" exclude-result-prefixes="#all"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
+    xmlns:ref="http://scdh.wwu.de/transform/ref#" xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0">
 
     <xsl:mode name="text:text" on-no-match="text-only-copy" visibility="public"/>
     <xsl:mode name="app:reading-text" on-no-match="text-only-copy" visibility="public"/>
     <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="function" names="ref:references-from-attribute#1"
+            visibility="private"/>
+    </xsl:use-package>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]"
         priority="0.6">
@@ -126,16 +134,16 @@ in the base text, the apparatus and in the editorial notes. -->
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="ref">
-        <a href="{@target}">
+        <a href="{ref:references-from-attribute(@target)}">
             <xsl:call-template name="text:class-attribute"/>
             <xsl:apply-templates mode="#current"/>
         </a>
     </xsl:template>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="ptr">
-        <a href="{@target}">
+        <a href="{ref:references-from-attribute(@target)}">
             <xsl:call-template name="text:class-attribute"/>
-            <xsl:value-of select="@target"/>
+            <xsl:value-of select="ref:references-from-attribute(@target)"/>
         </a>
     </xsl:template>
 
