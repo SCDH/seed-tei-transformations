@@ -21,6 +21,9 @@ auto
 /log.txt
 .settings
 .project
+doc/examples
+doc/build.xml
+doc/*.html
 
 # xspec reports
 *-report.html

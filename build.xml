@@ -19,8 +19,14 @@
     <echo>classpath: ${java.class.path}</echo>
     <echo>ext.dirs: ${java.ext.dirs}</echo>
 
+    <path id="project.class.path">
+        <fileset dir="${basedir}/target/lib/">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
     <!-- default rule: run all tests -->
-    <target name="test">
+    <target name="test" description="run all tests">
         <antcall target="test-xsl-common-libcommon.xsl"/>
         <antcall target="test-xsl-common-libapp2.xsl"/>
         <antcall target="test-xsl-common-libapp2-first-child.xsl"/>
@@ -35,7 +41,7 @@
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-librend.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
-        <antcall target="test-xsl-html-source-xml.xsl"/>
+        <antcall target="test-xsl-html-libxmlsource.xsl"/>
         <antcall target="test-xsl-html-prose-with-popups.xsl"/>
         <antcall target="test-xsl-html-bible-with-popups.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
@@ -147,9 +153,9 @@
         </antcall>
     </target>
 
-    <target name="test-xsl-html-source-xml.xsl">
+    <target name="test-xsl-html-libxmlsource.xsl">
         <antcall target="xspec.xspec" inheritall="false">
-            <param name="xspec.xml" location="${basedir}/xsl/html/xml-source.xspec"/>
+            <param name="xspec.xml" location="${basedir}/xsl/html/libxmlsource.xspec"/>
         </antcall>
     </target>
 
@@ -267,5 +273,53 @@
         </antcall>
     </target>
 
+
+    <target name="doc" description="make documentation of encoding crystals">
+        <antcall target="crystals-examples"/>
+        <antcall target="crystals.html"/>
+        <antcall target="crystals-ant-build.xml"/>
+        <antcall target="doc.transform"/>
+    </target>
+
+    <target name="crystals-examples">
+        <xslt classpathref="project.class.path" style="${basedir}/doc/crystals.xsl"
+            in="${basedir}/doc/crystals.xml" out="${basedir}/doc/examples.log">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="examples"/>
+            </factory>
+        </xslt>
+    </target>
+
+    <target name="crystals.html">
+        <xslt classpathref="project.class.path" style="${basedir}/doc/crystals.xsl"
+            in="${basedir}/doc/crystals.xml" out="${basedir}/doc/crystals.html">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="overview-html"
+                />
+            </factory>
+        </xslt>
+    </target>
+
+    <target name="crystals-ant-build.xml">
+        <xslt classpathref="project.class.path" style="${basedir}/doc/crystals.xsl"
+            in="${basedir}/doc/crystals.xml" out="${basedir}/doc/build.xml">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="ant-build-file"
+                />
+            </factory>
+            <outputproperty name="method" value="xml"/>
+            <outputproperty name="indent" value="true"/>
+        </xslt>
+    </target>
+
+    <import file="doc/build.xml" as="doc" optional="true"/>
+
+
+    <target name="clean" description="remove generated documentation">
+        <delete file="doc/crystals.html"/>
+        <delete file="doc/build.xml"/>
+        <delete file="doc/examples.log"/>
+        <delete dir="doc/examples"/>
+    </target>
 
 </project>

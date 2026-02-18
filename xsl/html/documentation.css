@@ -1,0 +1,81 @@
+body {
+    background-color: #dff0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.content {
+    border: 2px solid rgb(95 97 110);
+    border-radius: 0.5em;
+    padding: 20px;
+    width: 72em;
+}
+.code-example {
+    background-color: white;
+    border: 1px solid darkgray;
+    padding: 10px;
+}
+h1, h2, h3, h4, h5, h6, h7 {
+    border-bottom: 1px solid darkgray;
+    width: 100%
+}
+iframe {
+    min-width: 100%;
+    background-color: white;
+    border: 1px solid darkgray;
+}
+.parameters table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+.parameters table thead {
+    background-color: lightgray;
+}
+.parameters table tr td,
+.parameters table thead th
+{
+    border: 1px solid darkgray;
+}
+.parameters table tr td
+{
+    border-top: none;
+}
+.parameters table tbody tr:nth-child(odd) {
+    background-color: #efffef;
+}
+.parameters table tbody tr:nth-child(even) {
+    background-color: #efffff;
+}
+.element-name,
+.angle-brackets {
+    color: darkblue;
+    font-family: mono;
+}
+.attribute-at,
+.attribute-name {
+    color: darkorange;
+    font-family: mono;
+}
+.value {
+    color: brown;
+    font-family: mono;
+}
+.value .quotes {
+    display: none;
+}
+section.transformation {
+    margin: 10px 0;
+    border: 1px solid darkgrey;
+    padding: 10px;
+    background-color: #efffe0;
+}
+section.transformation h1,
+section.transformation h2, 
+section.transformation h3, 
+section.transformation h4, 
+section.transformation h5, 
+section.transformation h6, 
+section.transformation h7 {
+    border-bottom: none;
+}

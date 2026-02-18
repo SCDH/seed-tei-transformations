@@ -14,7 +14,7 @@
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
     <!-- whether or not lb elements are evaluated in the HTML -->
-    <xsl:param name="prose:linebreaks" as="xs:boolean" select="true()" required="false"/>
+    <xsl:param name="prose:linebreaks" as="xs:boolean" select="false()" required="false"/>
 
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="prose:linebreaks-hyphen" as="xs:string" select="'-'" required="false"/>
@@ -210,15 +210,14 @@
                         select="key('text-delimited-by-in-word-lb', 'both-ends') => count()"/>
                 </xsl:message>
                 <xsl:if test="@break eq 'no'">
-                    <span class="static-text hyphen">
+                    <span class="hyphen">
                         <xsl:value-of select="$prose:linebreaks-hyphen"/>
                     </span>
                 </xsl:if>
-                <xsl:text>&#xa;</xsl:text>
                 <br/>
+                <xsl:text>&#xa;</xsl:text>
                 <span class="line-number">
                     <xsl:value-of select="common:line-number(.)"/>
-                    <xsl:text>&#x20;</xsl:text>
                 </span>
             </xsl:template>
 

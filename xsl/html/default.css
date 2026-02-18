@@ -1,0 +1,8 @@
+.static-text,
+.line-number {
+    color: silver;
+}
+
+.line-number:after {
+    content: " ";
+}

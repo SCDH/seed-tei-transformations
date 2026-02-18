@@ -11,7 +11,7 @@
   <xsl:output method="html" encoding="UTF-8"/>
 
   <!-- whether to use the HTML template from libhtml and make a full HTML file -->
-  <xsl:param name="use-libhtml" as="xs:boolean" select="false()"/>
+  <xsl:param name="use-libhtml" as="xs:boolean" select="true()"/>
 
 
   <xsl:use-package

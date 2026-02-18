@@ -65,6 +65,9 @@ Note, that the default mode is html:html!
   <!-- a second way additional to $html:css to pass in CSS files -->
   <xsl:variable name="html:extra-css" as="xs:anyURI*" select="()" visibility="public"/>
 
+  <!-- default CSS -->
+  <xsl:param name="html:default-css" as="xs:anyURI?"
+    select="resolve-uri('default.css', static-base-uri())"/>
 
   <xsl:param name="html:title-sep" as="xs:string" select="' :: '"/>
 
@@ -150,7 +153,7 @@ Note, that the default mode is html:html!
     <xsl:variable name="base-uri" select="base-uri()"/>
     <xsl:choose>
       <xsl:when test="$html:css-method eq 'internal'">
-        <xsl:for-each select="$html:extra-css, $html:css">
+        <xsl:for-each select="$html:default-css, $html:extra-css, $html:css">
           <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
           <xsl:choose>
             <xsl:when test="unparsed-text-available($href)">
