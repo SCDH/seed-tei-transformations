@@ -282,28 +282,32 @@
     </target>
 
     <target name="crystals-examples">
-        <xslt classpathref="project.class.path" style="${basedir}/doc/crystals.xsl"
+        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
             in="${basedir}/doc/crystals.xml" out="${basedir}/doc/examples.log">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${basedir}/saxon.he.xml"/>
                 <attribute name="http://saxon.sf.net/feature/initialTemplate" value="examples"/>
             </factory>
         </xslt>
     </target>
 
     <target name="crystals.html">
-        <xslt classpathref="project.class.path" style="${basedir}/doc/crystals.xsl"
+        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
             in="${basedir}/doc/crystals.xml" out="${basedir}/doc/crystals.html">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
-                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="overview-html"
-                />
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${basedir}/saxon.he.html.xml"/>
             </factory>
         </xslt>
     </target>
 
     <target name="crystals-ant-build.xml">
-        <xslt classpathref="project.class.path" style="${basedir}/doc/crystals.xsl"
+        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
             in="${basedir}/doc/crystals.xml" out="${basedir}/doc/build.xml">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${basedir}/saxon.he.xml"/>
                 <attribute name="http://saxon.sf.net/feature/initialTemplate" value="ant-build-file"
                 />
             </factory>
