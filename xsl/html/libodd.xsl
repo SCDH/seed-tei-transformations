@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!-- XSLT for making project documentations based on an ODD
+
+This transformation transforms the descriptive part of an ODD into an HTML documentation.
+When the $odd:transform switch is turned on, each egXML code snipped with one or more
+declared transformations is followed by an iframe with the transformation results.
+This feature make this XSLT perfect for documentation which encoding crystals are supported
+by a transformation and how the result looks like.
 
 USAGE:
 
+generate HTML representation of ODD
+
+target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml
+
 generate examples only:
 
-target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:examples
+target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml -it:examples
 
 generate Apache Ant build file:
 
-target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:ant-build-file \!method=xml \!indent=true
-
-generate HTML overview:
-
-target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
+target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml -it:ant-build-file \!method=xml \!indent=true
 
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libodd.xsl"
+    package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:eg="http://www.tei-c.org/ns/Examples"
-    xmlns:t="http://www.tei-c.org/ns/1.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-    exclude-result-prefixes="#all" version="3.0">
+    xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:odd="http://scdh.wwu.de/transform/odd#"
+    xmlns:source="http://scdh.wwu.de/transform/source#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
+    version="3.0" default-mode="odd:documentation">
 
     <xsl:output method="html" indent="false"/>
 
@@ -32,30 +43,59 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
 
     <xsl:param name="default-app-info" as="element(appInfo)" select="id('diplomatic-render')"/>
 
-    <xsl:template match="document-node()">
-        <xsl:call-template name="examples"/>
+    <!-- whether to use the HTML template from libhtml and make a full HTML file -->
+    <xsl:param name="odd:transform" as="xs:boolean" select="false()"/>
 
+    <xsl:mode name="odd:documentation" on-no-match="shallow-skip" visibility="public"/>
+
+    <!-- if parameter $use-libhtml is true, switch to html:html mode -->
+    <xsl:template match="/" mode="odd:documentation">
+        <xsl:choose>
+            <xsl:when test="$use-libhtml">
+                <xsl:apply-templates mode="html:html" select="root()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="text:text" select="//body">
+                    <xsl:with-param name="base-indentation" as="xs:integer" select="0" tunnel="true"
+                    />
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libhtml.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="html:html" visibility="public"/>
+        <xsl:accept component="template" names="html:*" visibility="public"/>
+        <xsl:override>
+
+            <xsl:template name="html:content">
+                <xsl:apply-templates mode="text:text"/>
+            </xsl:template>
+
+            <xsl:param name="html:default-css" as="xs:anyURI?"
+                select="resolve-uri('documentation.css', static-base-uri())"/>
+
+        </xsl:override>
+    </xsl:use-package>
+
+    <xsl:function name="odd:get-indent" as="xs:integer" visibility="final">
+        <xsl:param name="context" as="node()"/>
+        <xsl:analyze-string select="$context/text()[1]" regex="&#xa;(\s*)">
+            <xsl:matching-substring>
+                <xsl:sequence select="regex-group(1) => string-length()"/>
+            </xsl:matching-substring>
+            <xsl:fallback>
+                <xsl:sequence select="0"/>
+            </xsl:fallback>
+        </xsl:analyze-string>
+    </xsl:function>
 
     <!-- entry point: output examples into separate result-documents -->
     <xsl:template name="examples">
         <xsl:context-item as="document-node(element(TEI))" use="required"/>
         <xsl:for-each select="/TEI/text/body//eg:egXML">
-            <xsl:variable name="base-indent" as="xs:integer">
-                <xsl:analyze-string select="text()[1]" regex="&#xa;(\s*)">
-                    <xsl:matching-substring>
-                        <xsl:sequence select="regex-group(1) => string-length()"/>
-                    </xsl:matching-substring>
-                    <xsl:fallback>
-                        <xsl:sequence select="0"/>
-                    </xsl:fallback>
-                </xsl:analyze-string>
-            </xsl:variable>
-            <xsl:message>
-                <xsl:text>indentation</xsl:text>
-                <xsl:value-of select="$base-indent"/>
-            </xsl:message>
             <!-- the wrapped crystal goes into ID.xml -->
             <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.xml"
                 exclude-result-prefixes="#all" indent="no" method="xml">
@@ -65,13 +105,13 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                             <xsl:with-param name="slotted-children" as="node()*" select="node()"
                                 tunnel="true"/>
                             <xsl:with-param name="base-indentation" as="xs:integer"
-                                select="$base-indent"/>
+                                select="odd:get-indent(.)"/>
                         </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:apply-templates mode="example" select="node()">
                             <xsl:with-param name="base-indentation" as="xs:integer"
-                                select="$base-indent"/>
+                                select="odd:get-indent(.)"/>
                         </xsl:apply-templates>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -87,7 +127,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                 <xsl:copy>
                     <xsl:apply-templates mode="source" select="node()">
                         <xsl:with-param name="base-indentation" as="xs:integer"
-                            select="$base-indent"/>
+                            select="odd:get-indent(.)"/>
                     </xsl:apply-templates>
                 </xsl:copy>
             </xsl:result-document>
@@ -99,9 +139,6 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
 
     <!-- mode for outputting part of a result-document containing the example -->
     <xsl:mode name="example" on-no-match="shallow-copy"/>
-
-    <!-- mode for outputting the source code -->
-    <xsl:mode name="source" on-no-match="shallow-copy"/>
 
     <!-- change namespace from example to tei -->
     <xsl:template mode="wrap example" match="eg:*">
@@ -137,11 +174,8 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
     <!-- drop elements that have to go into a slot -->
     <xsl:template mode="example" match="*[@slot]" priority="100"/>
 
-    <!-- drop @slot from source view -->
-    <xsl:template mode="source" match="@slot"/>
-
     <!-- this removes the base indentation -->
-    <xsl:template mode="example source" match="text()">
+    <xsl:template mode="example" match="text()">
         <xsl:analyze-string select="." regex="&#xa;\s{{1,12}}">
             <xsl:matching-substring>
                 <xsl:text>&#xa;</xsl:text>
@@ -186,7 +220,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
     <xsl:mode name="antcall" on-no-match="shallow-skip"/>
 
     <!-- drop everything in back matter -->
-    <xsl:template mode="antcall target html" match="back"/>
+    <xsl:template mode="antcall target odd:transformation" match="back"/>
 
     <xsl:template mode="antcall" match="eg:egXML[@xml:id]">
         <xsl:choose>
@@ -364,7 +398,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
     </xsl:template>
 
     <xsl:template mode="namespace-for-prefix" match="xsl:use-package">
-        <xsl:variable name="saxon-config" as="node()" select="doc(resolve-uri($saxon-config, $pdu))"/>
+        <xsl:variable name="saxon-config" as="node()" select="doc($saxon-config)"/>
         <xsl:variable name="name" as="xs:string" select="@name"/>
         <xsl:variable name="version" as="xs:string" select="@package-version"/>
         <xsl:variable name="package-configuration" as="element()?"
@@ -383,80 +417,82 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
     </xsl:template>
 
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libxmlsource.xsl"
+        package-version="1.0.0">
+        <xsl:override>
 
-    <xsl:template name="overview-html">
-        <html>
-            <head>
-                <title>
-                    <xsl:value-of select="/TEI/teiHeader/fileDesc/titleStmt/title"/>
-                </title>
-                <link rel="stylesheet" href="crystal.css"/>
-                <xsl:call-template name="resize-iframes"/>
-            </head>
-            <body>
-                <div class="content">
-                    <div class="content-wrapper">
-                        <xsl:apply-templates mode="html">
-                            <xsl:with-param name="level" as="xs:integer" select="0" tunnel="true"/>
-                        </xsl:apply-templates>
-                    </div>
+            <xsl:template mode="source:source" match="text()">
+                <xsl:param name="base-indentation" as="xs:integer" tunnel="true"/>
+                <span class="text" style="color:{$source:text-color}">
+                    <xsl:analyze-string select="string(.)"
+                        regex="&#xa;&#xd;?&#x20;{{0,{$base-indentation}}}(&#x20;*)">
+                        <xsl:matching-substring>
+                            <br/>
+                            <xsl:if test="regex-group(1) => string-length() gt 0">
+                                <span class="identation"
+                                    style="margin-left:{regex-group(1) => string-length()}em;"/>
+                            </xsl:if>
+                        </xsl:matching-substring>
+                        <xsl:non-matching-substring>
+                            <!--xsl:analyze-string select="." regex="&amp;[^;]+;">
+                    <xsl:matching-substring>
+                        <span class="entity" style="color:{$source:entity-color}">
+                            <xsl:value-of select="."/>
+                        </span>
+                    </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:value-of select="."/>
+                    </xsl:non-matching-substring>
+                </xsl:analyze-string-->
+                            <xsl:value-of select="."/>
+                        </xsl:non-matching-substring>
+                    </xsl:analyze-string>
+                </span>
+            </xsl:template>
+
+        </xsl:override>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="*" visibility="public"/>
+        <xsl:override>
+
+            <xsl:template mode="text:text" match="eg:egXML">
+                <xsl:variable name="example" as="element(eg:egXML)" select="."/>
+                <!-- render example source with libxmlsource -->
+                <div class="xml-source code-example">
+                    <xsl:apply-templates mode="source:source">
+                        <xsl:with-param name="base-indentation" as="xs:integer"
+                            select="odd:get-indent(.)" tunnel="true"/>
+                    </xsl:apply-templates>
                 </div>
-            </body>
-        </html>
-    </xsl:template>
+                <!-- output for presentations declared with @rendition -->
+                <xsl:if test="$odd:transform">
+                    <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
+                        <xsl:apply-templates mode="odd:transformation" select=".">
+                            <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
+                                tunnel="true"/>
+                            <xsl:with-param name="level" as="xs:integer"
+                                select="count(ancestor::div) + 1" tunnel="true"/>
+                        </xsl:apply-templates>
+                    </xsl:for-each>
+                </xsl:if>
+            </xsl:template>
 
-    <xsl:template name="resize-iframes">
-        <script type="application/javascript">
-            <!--
-            xsl: text >
-            window.addEventListener('message', (event) => {
-                console.log("message received", event.target);
-            }); < / xsl: text////-->
-            <xsl:value-of select="unparsed-text(resolve-uri('resizer.js', static-base-uri()))"/>
-        </script>
-    </xsl:template>
+            <!-- drop the backmatter where wrapping templates are -->
+            <xsl:template mode="text:text" match="back"/>
 
-    <xsl:mode name="html" on-no-match="shallow-skip"/>
+        </xsl:override>
+    </xsl:use-package>
 
-    <xsl:template mode="html" match="teiHeader"/>
 
-    <xsl:template mode="html" match="div">
-        <xsl:param name="level" as="xs:integer" tunnel="true"/>
-        <section>
-            <xsl:apply-templates mode="#current" select="@* | node()">
-                <xsl:with-param name="level" as="xs:integer" select="$level + 1" tunnel="true"/>
-            </xsl:apply-templates>
-        </section>
-    </xsl:template>
+    <!-- a mode for presenting information about a transformation in HTML -->
+    <xsl:mode name="odd:transformation" on-no-match="shallow-skip" visibility="public"/>
 
-    <xsl:template mode="html" match="head">
-        <xsl:param name="level" as="xs:integer" tunnel="true"/>
-        <!--xsl:variable name="level" as="xs:integer" select="count(ancestor::div) + 1"/-->
-        <xsl:element name="h{$level}">
-            <xsl:apply-templates mode="#current" select="@* | node()"/>
-        </xsl:element>
-    </xsl:template>
-
-    <xsl:template mode="html" match="text()">
-        <xsl:copy/>
-    </xsl:template>
-
-    <xsl:template mode="html" match="eg:egXML">
-        <xsl:variable name="example" as="element(eg:egXML)" select="."/>
-
-        <iframe src="examples/{@xml:id}.crystal.html"
-            onload="javascript:registerIFrameResizer(this)"/>
-
-        <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
-            <xsl:apply-templates mode="html" select=".">
-                <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
-                    tunnel="true"/>
-            </xsl:apply-templates>
-        </xsl:for-each>
-
-    </xsl:template>
-
-    <xsl:template mode="html" match="appInfo">
+    <xsl:template mode="odd:transformation" match="appInfo">
         <xsl:param name="level" as="xs:integer" tunnel="true"/>
         <xsl:param name="example" as="element(eg:egXML)" tunnel="true"/>
         <section class="transformation">
@@ -484,7 +520,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
                         <th>type</th>
                     </thead>
                     <tbody>
-                        <xsl:apply-templates mode="html" select="application"/>
+                        <xsl:apply-templates mode="odd:transformation" select="application"/>
                     </tbody>
                 </table>
             </section>
@@ -502,7 +538,7 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
         </section>
     </xsl:template>
 
-    <xsl:template mode="html" match="application">
+    <xsl:template mode="odd:transformation" match="application">
         <xsl:choose>
             <xsl:when test="matches(@ident, '^_$')"/>
             <xsl:when test="matches(@ident, $prefixed-name)">
@@ -529,74 +565,4 @@ target/bin/xslt.sh -xsl:doc/crystals.xsl -s:doc/crystals.xml -it:overview-html
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template mode="html" match="gi">
-        <span class="element">
-            <span class="angle-brackets">
-                <xsl:text>&lt;</xsl:text>
-            </span>
-            <span class="element-name">
-                <xsl:apply-templates mode="#current" select="@* | node()"/>
-            </span>
-            <span class="angle-brackets">
-                <xsl:text>&gt;</xsl:text>
-            </span>
-        </span>
-    </xsl:template>
-
-    <xsl:template mode="html" match="att">
-        <span class="attribute">
-            <span class="attribute-at">
-                <xsl:text>@</xsl:text>
-            </span>
-            <span class="attribute-name">
-                <xsl:apply-templates mode="#current" select="@* | node()"/>
-            </span>
-        </span>
-    </xsl:template>
-
-    <xsl:template mode="html" match="val">
-        <span class="value">
-            <span class="quotes">
-                <xsl:text>&quot;</xsl:text>
-            </span>
-            <span class="value">
-                <xsl:apply-templates mode="#current" select="@* | node()"/>
-            </span>
-            <span class="quotes">
-                <xsl:text>&quot;</xsl:text>
-            </span>
-        </span>
-    </xsl:template>
-    <xsl:template mode="html" match="p">
-        <p>
-            <xsl:apply-templates mode="#current" select="@* | node()"/>
-        </p>
-    </xsl:template>
-
-    <xsl:template mode="html" match="hi">
-        <xsl:element name="{@rend}">
-            <xsl:apply-templates mode="#current" select="@* | node()"/>
-        </xsl:element>
-    </xsl:template>
-
-    <xsl:template mode="html" match="code">
-        <code>
-            <xsl:apply-templates mode="#current" select="@* | node()"/>
-        </code>
-    </xsl:template>
-
-    <xsl:template mode="html" match="ref">
-        <a href="{@target}">
-            <xsl:apply-templates mode="#current"/>
-        </a>
-    </xsl:template>
-
-    <xsl:template mode="html" match="ptr">
-        <a href="{@target}">
-            <xsl:value-of select="@target"/>
-        </a>
-    </xsl:template>
-
-
-
-</xsl:stylesheet>
+</xsl:package>
