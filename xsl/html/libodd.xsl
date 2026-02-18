@@ -34,17 +34,18 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
     <xsl:output method="html" indent="false"/>
 
-    <xsl:param name="outdir" as="xs:string" select="resolve-uri('examples/', static-base-uri())"/>
+    <!-- outdir is based on an outdir -->
+    <xsl:param name="outdir" as="xs:string" select="resolve-uri('examples/', base-uri())"/>
 
     <!-- project directory URI -->
-    <xsl:param name="pdu" as="xs:string" select="resolve-uri('..', static-base-uri())"/>
+    <xsl:param name="pdu" as="xs:string" select="resolve-uri('../..', static-base-uri())"/>
 
-    <xsl:param name="saxon-config" as="xs:string" select="'saxon.he.xml'"/>
+    <xsl:param name="saxon-config" as="xs:string" select="resolve-uri('saxon.he.xml', $pdu)"/>
 
     <xsl:param name="default-app-info" as="element(appInfo)" select="id('diplomatic-render')"/>
 
     <!-- whether to use the HTML template from libhtml and make a full HTML file -->
-    <xsl:param name="odd:transform" as="xs:boolean" select="false()"/>
+    <xsl:param name="odd:transform" as="xs:boolean" select="true()"/>
 
     <xsl:mode name="odd:documentation" on-no-match="shallow-skip" visibility="public"/>
 
@@ -76,6 +77,9 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
             <xsl:param name="html:default-css" as="xs:anyURI?"
                 select="resolve-uri('documentation.css', static-base-uri())"/>
+
+            <xsl:param name="html:js" as="xs:string*"
+                select="resolve-uri('resizer.js', static-base-uri())"/>
 
         </xsl:override>
     </xsl:use-package>
@@ -179,7 +183,7 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 <xsl:text>)</xsl:text>
             </xsl:element>
             <iframe class="transformation-result {@n}-transformation"
-                src="examples/{$example/@xml:id}_{@xml:id}.html"
+                src="{resolve-uri($example/@xml:id || '_' || @xml:id || '.html', $outdir)}"
                 onload="javascript:registerIFrameResizer(this)"/>
             <section class="stylesheet">
                 <xsl:element name="h{$level + 2}">stylesheet / package</xsl:element>
@@ -344,12 +348,21 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
     <!-- generate an Apache build file for transforming the extracted examples -->
 
     <!-- entry point for generating an Apache Ant build file -->
-    <xsl:template name="ant-build-file">
+    <xsl:template name="ant-build-file" visibility="public">
         <project basedir="." name="docs" default="transform">
 
             <dirname property="docs.basedir" file="${{ant.file.docs}}"/>
+            <xsl:comment>pdu is the base directory URI of the project with the transformations</xsl:comment>
             <property name="pdu" value="${{docs.basedir}}/.."/>
             <property name="outdir" value="${{docs.basedir}}/examples"/>
+            <property name="seed-tei-transformations" value="${{pdu}}"/>
+
+            <property name="saxon-config-" value="${{pdu}}/saxon.he.xml"/>
+            <property name="saxon-config-html" value="${{pdu}}/saxon.he.html.xml"/>
+            <property name="saxon-config-latex" value="${{pdu}}/saxon.he.xml"/>
+
+            <property name="post-size.js"
+                value="${{seed-tei-transformations}}/xsl/html/post-size.js"/>
 
 
             <path id="project.class.path">
@@ -389,8 +402,6 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 <!--antcall target="{@xml:id}"/-->
             </xsl:otherwise>
         </xsl:choose>
-        <!-- allways make a generic HTML representation of the crystal -->
-        <antcall target="{@xml:id}.crystal.html"/>
     </xsl:template>
 
 
@@ -398,7 +409,6 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
     <xsl:template mode="target" match="eg:egXML[@xml:id]">
         <xsl:variable name="context" as="element(eg:egXML)" select="."/>
-        <xsl:call-template name="ant-target-crystal"/>
         <xsl:choose>
             <xsl:when test="@rendition">
                 <xsl:for-each select="tokenize(@rendition)">
@@ -422,22 +432,6 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="ant-target-crystal">
-        <xsl:context-item as="element(eg:egXML)" use="required"/>
-        <target name="{@xml:id}.crystal.html">
-            <xslt>
-                <xsl:attribute name="classpathref">project.class.path</xsl:attribute>
-                <xsl:attribute name="style" select="'${pdu}/xsl/html/xml-source.xsl'"/>
-                <xsl:attribute name="in" select="'${outdir}/' || @xml:id || '.crystal.xml'"/>
-                <xsl:attribute name="out" select="'${outdir}/' || @xml:id || '.crystal.html'"/>
-                <factory name="net.sf.saxon.TransformerFactoryImpl">
-                    <attribute name="http://saxon.sf.net/feature/configuration-file"
-                        value="${{pdu}}/{$saxon-config}"/>
-                </factory>
-                <xsl:call-template name="post-size-js"/>
-            </xslt>
-        </target>
-    </xsl:template>
 
     <xsl:template name="xslt-target">
         <xsl:param name="example" as="element(eg:egXML)"/>
@@ -451,7 +445,7 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 select="'${outdir}/' || $example/@xml:id || '_' || $rendition/@xml:id || '.' || $rendition/@n"/>
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
-                    value="${{pdu}}/{$saxon-config}"/>
+                    value="${{saxon-config-{$rendition/@n}}}"/>
             </factory>
             <xsl:call-template name="post-size-js"/>
             <xsl:apply-templates mode="xslt-target-parameters" select="$rendition">
@@ -463,7 +457,7 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
     <xsl:template name="post-size-js">
         <param name="{{http://scdh.wwu.de/transform/html#}}after-body-js"
-            expression="${{docs.basedir}}/post-size.js"/>
+            expression="${{post-size.js}}"/>
     </xsl:template>
 
     <xsl:mode name="xslt-target-parameters" on-no-match="shallow-skip"/>
