@@ -60,6 +60,14 @@ in the base text, the apparatus and in the editorial notes. -->
         </sup>
     </xsl:template>
 
+    <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend]" priority="0.2">
+        <xsl:element name="{local-name()}">
+            <xsl:call-template name="text:class-attribute-opt"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </xsl:element>
+    </xsl:template>
+
+
     <!-- segmentation offers hooks for project-specific insertions -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="seg | s | w | c | pc">
         <span>
