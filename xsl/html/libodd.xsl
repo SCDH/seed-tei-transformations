@@ -92,8 +92,161 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
         </xsl:analyze-string>
     </xsl:function>
 
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libxmlsource.xsl"
+        package-version="1.0.0">
+        <xsl:override>
+
+            <xsl:template mode="source:source" match="text()">
+                <xsl:param name="base-indentation" as="xs:integer" tunnel="true"/>
+                <span class="text" style="color:{$source:text-color}">
+                    <xsl:analyze-string select="string(.)"
+                        regex="&#xa;&#xd;?&#x20;{{0,{$base-indentation}}}(&#x20;*)">
+                        <xsl:matching-substring>
+                            <br/>
+                            <xsl:if test="regex-group(1) => string-length() gt 0">
+                                <span class="identation"
+                                    style="margin-left:{regex-group(1) => string-length()}em;"/>
+                            </xsl:if>
+                        </xsl:matching-substring>
+                        <xsl:non-matching-substring>
+                            <!--xsl:analyze-string select="." regex="&amp;[^;]+;">
+                    <xsl:matching-substring>
+                        <span class="entity" style="color:{$source:entity-color}">
+                            <xsl:value-of select="."/>
+                        </span>
+                    </xsl:matching-substring>
+                    <xsl:non-matching-substring>
+                        <xsl:value-of select="."/>
+                    </xsl:non-matching-substring>
+                </xsl:analyze-string-->
+                            <xsl:value-of select="."/>
+                        </xsl:non-matching-substring>
+                    </xsl:analyze-string>
+                </span>
+            </xsl:template>
+
+        </xsl:override>
+    </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="mode" names="*" visibility="public"/>
+        <xsl:override>
+
+            <xsl:template mode="text:text" match="eg:egXML">
+                <xsl:variable name="example" as="element(eg:egXML)" select="."/>
+                <!-- render example source with libxmlsource -->
+                <div class="xml-source code-example">
+                    <xsl:apply-templates mode="source:source">
+                        <xsl:with-param name="base-indentation" as="xs:integer"
+                            select="odd:get-indent(.)" tunnel="true"/>
+                    </xsl:apply-templates>
+                </div>
+                <!-- output for presentations declared with @rendition -->
+                <xsl:if test="$odd:transform">
+                    <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
+                        <xsl:apply-templates mode="odd:transformation" select=".">
+                            <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
+                                tunnel="true"/>
+                            <xsl:with-param name="level" as="xs:integer"
+                                select="count(ancestor::div) + 1" tunnel="true"/>
+                        </xsl:apply-templates>
+                    </xsl:for-each>
+                </xsl:if>
+            </xsl:template>
+
+            <!-- drop the backmatter where wrapping templates are -->
+            <xsl:template mode="text:text" match="back"/>
+
+        </xsl:override>
+    </xsl:use-package>
+
+
+    <!-- a mode for presenting information about a transformation in HTML -->
+    <xsl:mode name="odd:transformation" on-no-match="shallow-skip" visibility="public"/>
+
+    <xsl:template mode="odd:transformation" match="appInfo">
+        <xsl:param name="level" as="xs:integer" tunnel="true"/>
+        <xsl:param name="example" as="element(eg:egXML)" tunnel="true"/>
+        <section class="transformation">
+            <xsl:element name="h{$level + 1}">
+                <xsl:value-of select="descendant::desc[1]"/>
+                <xsl:text> (</xsl:text>
+                <xsl:value-of select="@n"/>
+                <xsl:text>)</xsl:text>
+            </xsl:element>
+            <iframe class="transformation-result {@n}-transformation"
+                src="examples/{$example/@xml:id}_{@xml:id}.html"
+                onload="javascript:registerIFrameResizer(this)"/>
+            <section class="stylesheet">
+                <xsl:element name="h{$level + 2}">stylesheet / package</xsl:element>
+                <pre><xsl:value-of select="@source"/></pre>
+            </section>
+            <section class="parameters">
+                <xsl:element name="h{$level + 2}">parameters</xsl:element>
+                <table>
+                    <thead>
+                        <th>local name</th>
+                        <th>prefix</th>
+                        <th>namespace</th>
+                        <th>value</th>
+                        <th>type</th>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates mode="odd:transformation" select="application"/>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <xsl:element name="h{$level + 2}">Ant target</xsl:element>
+                <pre>
+                    <target name="...">
+                       <xsl:call-template name="xslt-target">
+                           <xsl:with-param name="example" select="$example"/>
+                           <xsl:with-param name="rendition" select="."/>
+                       </xsl:call-template>
+                    </target>
+                </pre>
+            </section>
+        </section>
+    </xsl:template>
+
+    <xsl:template mode="odd:transformation" match="application">
+        <xsl:choose>
+            <xsl:when test="matches(@ident, '^_$')"/>
+            <xsl:when test="matches(@ident, $prefixed-name)">
+                <xsl:variable name="lname" select="replace(@ident, $prefixed-name, '$2')"/>
+                <xsl:variable name="prefix" select="replace(@ident, $prefixed-name, '$1')"/>
+                <tr>
+                    <td>
+                        <pre><xsl:value-of select="$lname"/></pre>
+                    </td>
+                    <td>
+                        <pre><xsl:value-of select="$prefix"/></pre>
+                    </td>
+                    <td>
+                        <pre><xsl:apply-templates mode="namespace-for-prefix" select="parent::appInfo/@source => resolve-uri($pdu) => doc()">
+                            <xsl:with-param name="prefix" as="xs:string" select="$prefix" tunnel="true"/>
+                        </xsl:apply-templates></pre>
+                    </td>
+                    <td>
+                        <pre><xsl:value-of select="@n"/></pre>
+                    </td>
+                    <td>runtime</td>
+                </tr>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
+
+
+    <!-- generating TEI source files from egXML -->
+
     <!-- entry point: output examples into separate result-documents -->
-    <xsl:template name="examples">
+    <xsl:template name="examples" visibility="public">
         <xsl:context-item as="document-node(element(TEI))" use="required"/>
         <xsl:for-each select="/TEI/text/body//eg:egXML">
             <!-- the wrapped crystal goes into ID.xml -->
@@ -187,6 +340,8 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
     </xsl:template>
 
 
+
+    <!-- generate an Apache build file for transforming the extracted examples -->
 
     <!-- entry point for generating an Apache Ant build file -->
     <xsl:template name="ant-build-file">
@@ -414,155 +569,6 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 select="resolve-uri($package-configuration/@sourceLocation, base-uri($package-configuration)) => doc()"
             />
         </xsl:if>
-    </xsl:template>
-
-
-    <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libxmlsource.xsl"
-        package-version="1.0.0">
-        <xsl:override>
-
-            <xsl:template mode="source:source" match="text()">
-                <xsl:param name="base-indentation" as="xs:integer" tunnel="true"/>
-                <span class="text" style="color:{$source:text-color}">
-                    <xsl:analyze-string select="string(.)"
-                        regex="&#xa;&#xd;?&#x20;{{0,{$base-indentation}}}(&#x20;*)">
-                        <xsl:matching-substring>
-                            <br/>
-                            <xsl:if test="regex-group(1) => string-length() gt 0">
-                                <span class="identation"
-                                    style="margin-left:{regex-group(1) => string-length()}em;"/>
-                            </xsl:if>
-                        </xsl:matching-substring>
-                        <xsl:non-matching-substring>
-                            <!--xsl:analyze-string select="." regex="&amp;[^;]+;">
-                    <xsl:matching-substring>
-                        <span class="entity" style="color:{$source:entity-color}">
-                            <xsl:value-of select="."/>
-                        </span>
-                    </xsl:matching-substring>
-                    <xsl:non-matching-substring>
-                        <xsl:value-of select="."/>
-                    </xsl:non-matching-substring>
-                </xsl:analyze-string-->
-                            <xsl:value-of select="."/>
-                        </xsl:non-matching-substring>
-                    </xsl:analyze-string>
-                </span>
-            </xsl:template>
-
-        </xsl:override>
-    </xsl:use-package>
-
-    <xsl:use-package
-        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
-        package-version="1.0.0">
-        <xsl:accept component="mode" names="*" visibility="public"/>
-        <xsl:override>
-
-            <xsl:template mode="text:text" match="eg:egXML">
-                <xsl:variable name="example" as="element(eg:egXML)" select="."/>
-                <!-- render example source with libxmlsource -->
-                <div class="xml-source code-example">
-                    <xsl:apply-templates mode="source:source">
-                        <xsl:with-param name="base-indentation" as="xs:integer"
-                            select="odd:get-indent(.)" tunnel="true"/>
-                    </xsl:apply-templates>
-                </div>
-                <!-- output for presentations declared with @rendition -->
-                <xsl:if test="$odd:transform">
-                    <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
-                        <xsl:apply-templates mode="odd:transformation" select=".">
-                            <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
-                                tunnel="true"/>
-                            <xsl:with-param name="level" as="xs:integer"
-                                select="count(ancestor::div) + 1" tunnel="true"/>
-                        </xsl:apply-templates>
-                    </xsl:for-each>
-                </xsl:if>
-            </xsl:template>
-
-            <!-- drop the backmatter where wrapping templates are -->
-            <xsl:template mode="text:text" match="back"/>
-
-        </xsl:override>
-    </xsl:use-package>
-
-
-    <!-- a mode for presenting information about a transformation in HTML -->
-    <xsl:mode name="odd:transformation" on-no-match="shallow-skip" visibility="public"/>
-
-    <xsl:template mode="odd:transformation" match="appInfo">
-        <xsl:param name="level" as="xs:integer" tunnel="true"/>
-        <xsl:param name="example" as="element(eg:egXML)" tunnel="true"/>
-        <section class="transformation">
-            <xsl:element name="h{$level + 1}">
-                <xsl:value-of select="descendant::desc[1]"/>
-                <xsl:text> (</xsl:text>
-                <xsl:value-of select="@n"/>
-                <xsl:text>)</xsl:text>
-            </xsl:element>
-            <iframe class="transformation-result {@n}-transformation"
-                src="examples/{$example/@xml:id}_{@xml:id}.html"
-                onload="javascript:registerIFrameResizer(this)"/>
-            <section class="stylesheet">
-                <xsl:element name="h{$level + 2}">stylesheet / package</xsl:element>
-                <pre><xsl:value-of select="@source"/></pre>
-            </section>
-            <section class="parameters">
-                <xsl:element name="h{$level + 2}">parameters</xsl:element>
-                <table>
-                    <thead>
-                        <th>local name</th>
-                        <th>prefix</th>
-                        <th>namespace</th>
-                        <th>value</th>
-                        <th>type</th>
-                    </thead>
-                    <tbody>
-                        <xsl:apply-templates mode="odd:transformation" select="application"/>
-                    </tbody>
-                </table>
-            </section>
-            <section>
-                <xsl:element name="h{$level + 2}">Ant target</xsl:element>
-                <pre>
-                    <target name="...">
-                       <xsl:call-template name="xslt-target">
-                           <xsl:with-param name="example" select="$example"/>
-                           <xsl:with-param name="rendition" select="."/>
-                       </xsl:call-template>
-                    </target>
-                </pre>
-            </section>
-        </section>
-    </xsl:template>
-
-    <xsl:template mode="odd:transformation" match="application">
-        <xsl:choose>
-            <xsl:when test="matches(@ident, '^_$')"/>
-            <xsl:when test="matches(@ident, $prefixed-name)">
-                <xsl:variable name="lname" select="replace(@ident, $prefixed-name, '$2')"/>
-                <xsl:variable name="prefix" select="replace(@ident, $prefixed-name, '$1')"/>
-                <tr>
-                    <td>
-                        <pre><xsl:value-of select="$lname"/></pre>
-                    </td>
-                    <td>
-                        <pre><xsl:value-of select="$prefix"/></pre>
-                    </td>
-                    <td>
-                        <pre><xsl:apply-templates mode="namespace-for-prefix" select="parent::appInfo/@source => resolve-uri($pdu) => doc()">
-                            <xsl:with-param name="prefix" as="xs:string" select="$prefix" tunnel="true"/>
-                        </xsl:apply-templates></pre>
-                    </td>
-                    <td>
-                        <pre><xsl:value-of select="@n"/></pre>
-                    </td>
-                    <td>runtime</td>
-                </tr>
-            </xsl:when>
-        </xsl:choose>
     </xsl:template>
 
 </xsl:package>
