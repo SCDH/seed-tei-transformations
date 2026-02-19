@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader>
+<encodingDesc slot="teiHeader">
+                  <variantEncoding method="location-referenced" location="internal"/>
+                </encodingDesc>
+</teiHeader>
+            <text>
+              <body n="slot">
+    <!-- in the header -->
+    
+    <!-- in the body -->
+    <l n="1">Experience<app>
+        <rdg wit="#La">Experiment</rdg>
+        <rdg wit="#Ra2">Eryment</rdg>
+      </app> though noon Auctoritee </l>
+    <l n="2">Were in this world ...</l>
+  </body>
+            </text>
+          </TEI>
+        

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="docs" default="transform">
+   <dirname property="docs.basedir" file="${ant.file.docs}"/>
+   <!--pdu is the base directory URI of the project with the transformations-->
+   <property name="pdu" value="${docs.basedir}/.."/>
+   <property name="outdir" value="${docs.basedir}/examples"/>
+   <property name="seed-tei-transformations" value="${pdu}"/>
+   <property name="saxon-config-" value="${pdu}/saxon.he.xml"/>
+   <property name="saxon-config-html" value="${pdu}/saxon.he.html.xml"/>
+   <property name="saxon-config-latex" value="${pdu}/saxon.he.xml"/>
+   <property name="post-size.js"
+             value="${seed-tei-transformations}/xsl/html/post-size.js"/>
+   <path id="project.class.path">
+      <fileset dir="${pdu}/target/lib/">
+         <include name="*.jar"/>
+      </fileset>
+   </path>
+   <target name="transform">
+      <antcall target="diplomatic-vs-reading_diplomatic-render"/>
+      <antcall target="diplomatic-vs-reading_reading-render"/>
+      <antcall target="parallel-segmentation_prose-with-popups"/>
+      <antcall target="double-end-point-internal_prose-with-popups"/>
+      <antcall target="double-end-point-external_prose-with-popups"/>
+      <antcall target="location-referenced_prose-with-popups"/>
+   </target>
+   <target name="clean-transformed">
+      <delete dir="${outdir}" includes="**/*.html,**/*.tex"/>
+   </target>
+   <target name="diplomatic-vs-reading_diplomatic-render">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose.xsl"
+            in="${outdir}/diplomatic-vs-reading.xml"
+            out="${outdir}/diplomatic-vs-reading_diplomatic-render.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${saxon-config-html}"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+         <param name="{http://scdh.wwu.de/transform/prose#}linebreaks"
+                expression="true"/>
+      </xslt>
+   </target>
+   <target name="diplomatic-vs-reading_reading-render">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose.xsl"
+            in="${outdir}/diplomatic-vs-reading.xml"
+            out="${outdir}/diplomatic-vs-reading_reading-render.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${saxon-config-html}"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="parallel-segmentation_prose-with-popups">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-with-popups.xsl"
+            in="${outdir}/parallel-segmentation.xml"
+            out="${outdir}/parallel-segmentation_prose-with-popups.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${saxon-config-html}"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="double-end-point-internal_prose-with-popups">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-with-popups.xsl"
+            in="${outdir}/double-end-point-internal.xml"
+            out="${outdir}/double-end-point-internal_prose-with-popups.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${saxon-config-html}"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="double-end-point-external_prose-with-popups">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-with-popups.xsl"
+            in="${outdir}/double-end-point-external.xml"
+            out="${outdir}/double-end-point-external_prose-with-popups.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${saxon-config-html}"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="location-referenced_prose-with-popups">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-with-popups.xsl"
+            in="${outdir}/location-referenced.xml"
+            out="${outdir}/location-referenced_prose-with-popups.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${saxon-config-html}"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+</project>

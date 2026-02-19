@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>SEED TEI Transformations</title>
+      <link rel="canonical" href="file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/doc/examples/location-referenced.xml">
+      <!--CSS from tagsDecl/rendition-->
+      
+      <style></style>
+      <!--CSS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/default.css-->
+      <style>.static-text,
+.line-number {
+    color: silver;
+}
+
+.line-number:after {
+    content: " ";
+}
+</style>
+      <!--CSS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/popup.css-->
+      <style>/* Popup container - can be anything you want */
+/* cf. https://www.w3schools.com/howto/howto_js_popup.asp */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+
+.popup-anchor {
+    color: lightblue;
+    vertical-align: super;
+    font-size: 0.9em;
+}</style>
+   </head>
+   <body>
+      <div class="content">
+         
+         
+         <div class="text" xml:lang="en" lang="en" dir="ltr">
+            
+            <div class="body" data-tei-n="slot">
+               
+               
+               
+               
+               <div class="l verse" data-tei-n="1">Experience<span class="popup" onclick="(()=&gt;{console.log(&#34;clicked on apparatus entry &#34;,&#34;d18e21-popup&#34;); const popup = document.getElementById('d18e21-popup'); popup.classList.toggle(&#34;show&#34;);})()"><span class="static-text clickable-text popup-anchor">?</span><span class="popuptext" id="d18e21-popup"><span class="apparatus-entry"><span class="apparatus-lemma">Experience</span><span class="apparatus-sep" data-i18n-key="lem-rdg-sep">]</span> <span class="reading">Experience Experiment<span class="apparatus-sep" style="padding-left: 3px" data-i18n-key="rdg-siglum-sep">:</span>La<span class="apparatus-sep" style="padding-left: 4px" data-i18n-key="rdgs-sep">;</span></span><span class="reading">Experience Eryment<span class="apparatus-sep" style="padding-left: 3px" data-i18n-key="rdg-siglum-sep">:</span>Ra2</span></span></span></span> though noon Auctoritee </div>
+               
+               <div class="l verse" data-tei-n="2">Were in this world ...</div>
+               </div>
+            </div>
+         </div>
+   </body>
+   <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/post-size.js--><script type="text/javascript">window.onload = function () {
+    console.log("window loaded");
+    if (window.parent) {
+	console.debug("size of document in iframe", document.body.scrollWidth, document.body.scrollHeight);
+	window.parent.postMessage({"height": document.body.scrollHeight, "width": document.body.scrollWidth}, "*");
+    }
+};
+</script></html>

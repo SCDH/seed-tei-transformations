@@ -3,8 +3,8 @@
     xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="de.wwu.scdh.tei.seed-tei-transformations">
-        <xt:location href="https://github.com/SCDH/seed-tei-transformations/releases/download/0.17.1/seed-tei-transformations-0.17.1-oxygen-distribution.jar"/>
-        <xt:version>0.17.1</xt:version>
+        <xt:location href="https://github.com/SCDH/seed-tei-transformations/releases/download/0.18.0-rc3/seed-tei-transformations-0.18.0-rc3-oxygen-distribution.jar"/>
+        <xt:version>0.18.0-rc3</xt:version>
         <xt:oxy_version>17.0+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Christian Lück</xt:author>
