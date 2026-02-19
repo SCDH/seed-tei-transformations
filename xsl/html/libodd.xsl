@@ -34,8 +34,9 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
     <xsl:output method="html" indent="false"/>
 
-    <!-- path of outdir relative to the source file -->
-    <xsl:param name="outdir-rel" as="xs:string" select="'examples'"/>
+    <!-- path of outdir relative to the source file, defaults to the source's basename without extension -->
+    <xsl:param name="outdir-rel" as="xs:string"
+        select="(base-uri(.) => tokenize('/'))[last()] => replace('\.[^\.]*$', '')"/>
 
     <!-- outdir is based on an odd -->
     <xsl:param name="outdir" as="xs:string"
@@ -360,7 +361,7 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
             <dirname property="docs.basedir" file="${{ant.file.docs}}"/>
             <xsl:comment>pdu is the base directory URI of the project with the transformations</xsl:comment>
             <property name="pdu" value="${{docs.basedir}}/.."/>
-            <property name="outdir" value="${{docs.basedir}}/examples"/>
+            <property name="outdir" value="${{docs.basedir}}/{$outdir-rel}"/>
             <property name="seed-tei-transformations" value="${{pdu}}"/>
 
             <property name="saxon-config-" value="${{pdu}}/saxon.he.xml"/>

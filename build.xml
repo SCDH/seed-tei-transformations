@@ -276,14 +276,18 @@
 
     <target name="doc" description="make documentation of encoding crystals">
         <antcall target="crystals-examples"/>
-        <antcall target="crystals.html"/>
+        <antcall target="crystals-html"/>
         <antcall target="crystals-ant-build.xml"/>
-        <antcall target="doc.transform"/>
+
+        <!-- register transform for every ODD -->
+        <antcall target="crystals.transform"/>
     </target>
 
+
     <target name="crystals-examples">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
-            in="${basedir}/doc/crystals.xml" out="${basedir}/doc/examples.log">
+        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl" basedir="doc"
+            destdir="doc" includes="*.odd" extension=".examples.log">
+            <include name="*.odd"/>
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${basedir}/saxon.he.xml"/>
@@ -292,9 +296,9 @@
         </xslt>
     </target>
 
-    <target name="crystals.html">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
-            in="${basedir}/doc/crystals.xml" out="${basedir}/doc/crystals.html">
+    <target name="crystals-html">
+        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl" basedir="doc"
+            destdir="doc" includes="*.odd" extension=".html">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${basedir}/saxon.he.html.xml"/>
@@ -303,8 +307,8 @@
     </target>
 
     <target name="crystals-ant-build.xml">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
-            in="${basedir}/doc/crystals.xml" out="${basedir}/doc/build.xml">
+        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl" basedir="doc"
+            destdir="doc" includes="*.odd" extension="-build.xml">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${basedir}/saxon.he.xml"/>
@@ -316,14 +320,17 @@
         </xslt>
     </target>
 
-    <import file="doc/build.xml" as="doc" optional="true"/>
+    <!-- import Ant build for every ODD -->
+    <import file="doc/crystals-build.xml" as="crystals" optional="true"/>
 
 
     <target name="clean" description="remove generated documentation">
-        <delete file="doc/crystals.html"/>
-        <delete file="doc/build.xml"/>
-        <delete file="doc/examples.log"/>
-        <delete dir="doc/examples"/>
+        <delete>
+            <fileset dir="doc">
+                <include name="**/*"/>
+                <exclude name="*.odd"/>
+            </fileset>
+        </delete>
     </target>
 
 </project>
