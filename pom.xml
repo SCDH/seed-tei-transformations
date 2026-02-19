@@ -44,6 +44,7 @@
         <xerces.version>2.12.2</xerces.version>
         <xspec.version>3.3.2</xspec.version>
         <xspec.version.OLD>1.6.0</xspec.version.OLD>
+        <ant.version>1.10.15</ant.version>
         <xslt.dir>${project.basedir}/xsl</xslt.dir>
         <seed-config-xsl.url>${project.basedir}/distribution/seed/seed-config.xsl</seed-config-xsl.url>
         <release.url/>
@@ -70,6 +71,12 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>${xerces.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>${ant.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -158,7 +165,8 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <includeArtifactIds>Saxon-HE,xmlresolver,xercesImpl</includeArtifactIds>
+                            <!-- we need to prevent some outdated or replaced jars from being copied -->
+                            <excludeArtifactIds>saxon</excludeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>

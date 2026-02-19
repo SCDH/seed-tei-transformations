@@ -1,3 +1,10 @@
 #!/bin/sh
 
-ant -lib target/lib/Saxon-HE-${saxon.version}.jar -lib target/lib/xmlresolver-${xmlresolver.version}.jar -Dxspec.version=${xspec.version} $@
+JAVAOPTS="-Ddebug=true -Dorg.slf4j.simpleLogger.defaultLogLevel=info"
+
+CP=$CLASSPATH
+for j in ${project.build.directory}/lib/*.jar; do
+    CP=$CP:$j
+done
+
+java  $JAVAOPTS -cp $CP org.apache.tools.ant.Main $@
