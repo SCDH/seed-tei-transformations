@@ -14,6 +14,10 @@
       </sourceDesc>
     </fileDesc>
     <encodingDesc>
+      <listPrefixDef>
+        <prefixDef ident="tg" matchPattern="(..)(.*)"
+          replacementPattern="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/$1.html#$1$2"/>
+      </listPrefixDef>
       <!-- appInfo elements are used to set up transformations -->
       <appInfo xml:id="diplomatic-render" n="html" source="xsl/html/prose.xsl">
         <application ident="prose:linebreaks" version="1" n="true">
@@ -82,9 +86,7 @@
                 <code xml:space="preserve">&lt;variantEncoding method=&quot;parallel-segmenation&quot; location=&quot;internal&quot;/&gt;</code>
                 in the header.</p>
 
-              <p>See <ref
-                  target="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/TC.html#TCAPPS"
-                  >Guidelines, sec. TCAPPS</ref>.</p>
+              <p>See <ref target="tg:TCAPPS">Guidelines, sec. TCAPPS</ref>.</p>
 
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="parallel-segmentation"
