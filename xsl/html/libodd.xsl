@@ -34,8 +34,12 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
     <xsl:output method="html" indent="false"/>
 
-    <!-- outdir is based on an outdir -->
-    <xsl:param name="outdir" as="xs:string" select="resolve-uri('examples/', base-uri())"/>
+    <!-- path of outdir relative to the source file -->
+    <xsl:param name="outdir-rel" as="xs:string" select="'examples'"/>
+
+    <!-- outdir is based on an odd -->
+    <xsl:param name="outdir" as="xs:string"
+        select="resolve-uri(concat($outdir-rel, '/'), base-uri())"/>
 
     <!-- project directory URI -->
     <xsl:param name="pdu" as="xs:string" select="resolve-uri('../..', static-base-uri())"/>
@@ -185,7 +189,7 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 <xsl:text>)</xsl:text>
             </xsl:element>
             <iframe class="transformation-result {@n}-transformation"
-                src="{resolve-uri($example/@xml:id || '_' || @xml:id || '.html', $outdir)}"
+                src="{$outdir-rel || '/'  || $example/@xml:id || '_' || @xml:id || '.html'}"
                 onload="javascript:registerIFrameResizer(this)"/>
             <section class="stylesheet">
                 <xsl:element name="h{$level + 2}">stylesheet / package</xsl:element>
