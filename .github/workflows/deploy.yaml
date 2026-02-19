@@ -80,6 +80,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: documentation
+          path: doc
 
       - name: create directory for github pages
         run: mkdir -p public
