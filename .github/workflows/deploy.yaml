@@ -27,6 +27,9 @@ jobs:
       - name: Run XSpec tests
         run: target/bin/test.sh
 
+      - name: Generate documentation
+        run: target/bin/ant.sh doc
+
       - name: Push packages to the package registry, commit tag is the single source of truth for the release version
         run: ./mvnw -Drevision=${{ github.ref_name }} -Dchangelist="" -Drelease.url=https://github.com/SCDH/seed-tei-transformations/releases/download/${{ github.ref_name }}/ --batch-mode --update-snapshots deploy
         env:
@@ -37,6 +40,13 @@ jobs:
         with:
           name: oxygen-plugin-descriptor
           path: target/descriptor.xml
+          retention-days: 1
+
+      - name: store documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: doc
           retention-days: 1
 
       - name: Create release
@@ -66,6 +76,11 @@ jobs:
         with:
           name: oxygen-plugin-descriptor
 
+      - name: Download documentation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: documentation
+
       - name: create directory for github pages
         run: mkdir -p public
 
@@ -75,7 +90,10 @@ jobs:
       - name: copy descriptor file
         run: cp descriptor.xml public/
 
-      - name: Deploy descriptor file on Github pages
+      - name: copy documentation directory
+        run: cp -Rf doc public/
+
+      - name: Deploy on Github pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

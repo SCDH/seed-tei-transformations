@@ -25,3 +25,6 @@ jobs:
 
       - name: Run XSpec tests
         run: target/bin/test.sh
+
+      - name: Generate documentation
+        run: target/bin/ant.sh doc
