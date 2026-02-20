@@ -13,13 +13,20 @@ generate HTML representation of ODD
 
 target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml
 
+
 generate examples only:
 
 target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml -it:examples
 
-generate Apache Ant build file:
+
+generate Apache Ant build file from an ODD:
 
 target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml -it:ant-build-file \!method=xml \!indent=true
+
+
+generate an Apache Ant build file importing all other Apache Ant build files:
+
+target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-ant-build-file odd-dir=$(realpath doc) \!method=xml \!indent=true
 
 -->
 <xsl:package
@@ -51,6 +58,16 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
 
     <!-- whether to use the HTML template from libhtml and make a full HTML file -->
     <xsl:param name="odd:transform" as="xs:boolean" select="true()"/>
+
+    <!-- path to directory containing documentation ODDs, only required for template named 'importing-ant-build-file' -->
+    <xsl:param name="odd-dir" as="xs:string" select="''"/>
+
+    <!-- directory collection of ODDs, only required for template named 'importing-ant-build-file' -->
+    <xsl:param name="odd-collection" as="xs:string" select="$odd-dir || '?select=*.odd'"/>
+
+    <!-- suffix of generated Ant build files per ODD, only required for template named 'importing-ant-build-file' -->
+    <xsl:param name="odd:build-suffix" as="xs:string" select="'-build.xml'"/>
+
 
     <xsl:mode name="odd:documentation" on-no-match="shallow-skip" visibility="public"/>
 
@@ -570,6 +587,30 @@ target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/cry
                 select="resolve-uri($package-configuration/@sourceLocation, base-uri($package-configuration)) => doc()"
             />
         </xsl:if>
+    </xsl:template>
+
+
+
+    <!-- entry point for generating an apache Ant build file that imports all build files generated from ODDs -->
+    <xsl:template name="importing-ant-build-file" visibility="public">
+        <project basedir="." name="documentation" default="transform">
+            <!--  ! tokenize(., '/') ! .[last()] -->
+            <xsl:variable name="odds" as="xs:string*"
+                select="uri-collection($odd-collection) ! tokenize(., '/')[last()]"/>
+            <xsl:message>
+                <xsl:text>found ODD files: </xsl:text>
+                <xsl:value-of select="$odds"/>
+            </xsl:message>
+            <target name="docs">
+                <xsl:for-each select="$odds">
+                    <antcall target="{replace(., '\.[^\.]+$', '')}.transform"/>
+                </xsl:for-each>
+            </target>
+            <xsl:for-each select="$odds">
+                <import file="{replace(., '\.[^\.]+$', $odd:build-suffix)}"
+                    as="{replace(., '\.[^\.]+$', '')}" optional="true"/>
+            </xsl:for-each>
+        </project>
     </xsl:template>
 
 </xsl:package>
