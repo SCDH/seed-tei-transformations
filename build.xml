@@ -25,6 +25,9 @@
         </fileset>
     </path>
 
+    <import file="build-doc.xml" as="doc" optional="true"/>
+
+
     <!-- default rule: run all tests -->
     <target name="test" description="run all tests">
         <antcall target="test-xsl-common-libcommon.xsl"/>
@@ -271,85 +274,6 @@
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/projects/alea/latex/prose.xspec"/>
         </antcall>
-    </target>
-
-
-    <!-- documentation -->
-
-    <target name="doc" description="make HTML documentation from ODD files">
-        <antcall target="odd-examples"/>
-        <antcall target="odd-html"/>
-        <antcall target="odd-build.xml"/>
-        <antcall target="documentation-build.xml"/>
-
-        <!-- transform every ODD's examples into HTTML. -->
-        <antcall target="documentation.docs"/>
-    </target>
-
-    <!-- import Ant build file generated for every ODD -->
-    <import file="doc/build.xml" as="documentation" optional="true"/>
-
-
-    <target name="odd-examples">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl" basedir="doc"
-            destdir="doc" includes="*.odd" extension=".examples.log">
-            <include name="*.odd"/>
-            <factory name="net.sf.saxon.TransformerFactoryImpl">
-                <attribute name="http://saxon.sf.net/feature/configuration-file"
-                    value="${basedir}/saxon.he.xml"/>
-                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="examples"/>
-            </factory>
-        </xslt>
-    </target>
-
-    <target name="odd-html">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl" basedir="doc"
-            destdir="doc" includes="*.odd" extension=".html">
-            <factory name="net.sf.saxon.TransformerFactoryImpl">
-                <attribute name="http://saxon.sf.net/feature/configuration-file"
-                    value="${basedir}/saxon.he.html.xml"/>
-            </factory>
-        </xslt>
-    </target>
-
-    <target name="odd-build.xml">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl" basedir="doc"
-            destdir="doc" includes="*.odd" extension="-build.xml">
-            <factory name="net.sf.saxon.TransformerFactoryImpl">
-                <attribute name="http://saxon.sf.net/feature/configuration-file"
-                    value="${basedir}/saxon.he.xml"/>
-                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="ant-build-file"
-                />
-            </factory>
-            <outputproperty name="method" value="xml"/>
-            <outputproperty name="indent" value="true"/>
-        </xslt>
-    </target>
-
-    <target name="documentation-build.xml">
-        <xslt classpathref="project.class.path" style="${basedir}/xsl/html/libodd.xsl"
-            in="build.xml" out="doc/build.xml">
-            <factory name="net.sf.saxon.TransformerFactoryImpl">
-                <attribute name="http://saxon.sf.net/feature/configuration-file"
-                    value="${basedir}/saxon.he.xml"/>
-                <attribute name="http://saxon.sf.net/feature/initialTemplate"
-                    value="importing-ant-build-file"/>
-            </factory>
-            <param name="odd-dir" expression="${basedir}/doc" type="STRING"/>
-            <outputproperty name="method" value="xml"/>
-            <outputproperty name="indent" value="true"/>
-        </xslt>
-    </target>
-
-
-
-    <target name="clean" description="remove generated documentation">
-        <delete>
-            <fileset dir="doc">
-                <include name="**/*"/>
-                <exclude name="*.odd"/>
-            </fileset>
-        </delete>
     </target>
 
 </project>

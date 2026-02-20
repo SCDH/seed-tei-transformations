@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Apache Ant build file for generating a documentation from ODD files -->
+<project basedir="." name="doc" default="doc">
+
+    <dirname property="doc.basedir" file="${{ant.file.doc}}"/>
+
+    <dirname property="seed-tei-transformations" file="${ant.file.doc}"/>
+
+    <property name="odd-dir" value="${doc.basedir}/doc"/>
+
+    <property name="dist-dir" value="${odd-dir}"/>
+
+    <property name="odd-extension" value=".odd"/>
+
+    <!-- where to find relevant jar files. Defaults to library provided by maven -->
+    <property name="oxygenlib" value="${doc.basedir}/target/lib"/>
+
+    <path id="project.class.path">
+        <fileset dir="${oxygenlib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+
+    <target name="doc" description="make HTML documentation from ODD files">
+        <antcall target="odd-examples"/>
+        <antcall target="odd-html"/>
+        <antcall target="odd-build.xml"/>
+        <antcall target="documentation-build.xml"/>
+
+        <!-- transform every ODD's examples into HTTML. -->
+        <antcall target="documentation.docs"/>
+    </target>
+
+    <!-- import Ant build file generated for every ODD -->
+    <import file="doc/build.xml" as="documentation" optional="true"/>
+
+
+    <target name="odd-examples">
+        <xslt classpathref="project.class.path"
+            style="${seed-tei-transformations}/xsl/html/libodd.xsl" basedir="${odd-dir}"
+            destdir="${dist-dir}" includes="*.odd" extension=".examples.log">
+            <include name="*.odd"/>
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${seed-tei-transformations}/saxon.he.xml"/>
+                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="examples"/>
+            </factory>
+        </xslt>
+    </target>
+
+    <target name="odd-html">
+        <xslt classpathref="project.class.path"
+            style="${seed-tei-transformations}/xsl/html/libodd.xsl" basedir="${odd-dir}"
+            destdir="${dist-dir}" includes="*.odd" extension=".html">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${seed-tei-transformations}/saxon.he.html.xml"/>
+            </factory>
+        </xslt>
+    </target>
+
+    <target name="odd-build.xml">
+        <xslt classpathref="project.class.path"
+            style="${seed-tei-transformations}/xsl/html/libodd.xsl" basedir="${odd-dir}"
+            destdir="${dist-dir}" includes="*.odd" extension="-build.xml">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${seed-tei-transformations}/saxon.he.xml"/>
+                <attribute name="http://saxon.sf.net/feature/initialTemplate" value="ant-build-file"
+                />
+            </factory>
+            <outputproperty name="method" value="xml"/>
+            <outputproperty name="indent" value="true"/>
+        </xslt>
+    </target>
+
+    <target name="documentation-build.xml">
+        <xslt classpathref="project.class.path"
+            style="${seed-tei-transformations}/xsl/html/libodd.xsl" in="build-doc.xml"
+            out="${dist-dir}/build.xml">
+            <factory name="net.sf.saxon.TransformerFactoryImpl">
+                <attribute name="http://saxon.sf.net/feature/configuration-file"
+                    value="${seed-tei-transformations}/saxon.he.xml"/>
+                <attribute name="http://saxon.sf.net/feature/initialTemplate"
+                    value="importing-ant-build-file"/>
+            </factory>
+            <param name="odd-dir" expression="${odd-dir}" type="STRING"/>
+            <outputproperty name="method" value="xml"/>
+            <outputproperty name="indent" value="true"/>
+        </xslt>
+    </target>
+
+
+
+    <target name="clean" description="remove generated documentation">
+        <delete>
+            <fileset dir="doc">
+                <include name="**/*"/>
+                <exclude name="*.odd"/>
+            </fileset>
+        </delete>
+    </target>
+
+</project>
