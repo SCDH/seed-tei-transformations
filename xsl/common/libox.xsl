@@ -60,24 +60,24 @@
 
       <iframe src="{$output}"/>
 
-      <select>
+      <section>
         <xsl:element name="h{$level + 1}">stylesheet / package</xsl:element>
         <code>
           <xsl:value-of
             select="ox:get-field($scenario, 'inputXSLURL') ! replace(., '^\$\{[^\}]*\}/', '')"/>
         </code>
-      </select>
+      </section>
 
-      <select>
+      <section>
         <xsl:element name="h{$level + 1}">Saxon config</xsl:element>
         <code>
           <xsl:value-of
             select="ox:get-field($scenario//xsltSaxonBAdvancedOptions, 'configSystemID') ! replace(., '^\$\{[^\}]*\}/', '')"
           />
         </code>
-      </select>
+      </section>
 
-      <select>
+      <section>
         <xsl:element name="h{$level + 1}">Parameters</xsl:element>
         <table>
           <thead>
@@ -89,10 +89,11 @@
             <th>static</th>
           </thead>
           <tbody>
-            <xsl:apply-templates mode="ox:parameter-html" select="ox:get-list($scenario, 'xsltParams')"/>
+            <xsl:apply-templates mode="ox:parameter-html"
+              select="ox:get-list($scenario, 'xsltParams')"/>
           </tbody>
         </table>
-      </select>
+      </section>
 
     </section>
   </xsl:template>
