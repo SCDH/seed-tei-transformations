@@ -47,6 +47,7 @@
 			<includes>
 				<include>saxon.xml</include>
 				<include>saxon-local.xml</include>
+				<include>build-doc.xml</include>
 			</includes>
 		</fileSet>
 		<fileSet>
