@@ -39,8 +39,7 @@
     <target name="odd-examples">
         <xslt classpathref="project.class.path"
             style="${seed-tei-transformations}/xsl/html/libodd.xsl" basedir="${odd-dir}"
-            destdir="${dist-dir}" includes="*.odd" extension=".examples.log">
-            <include name="*.odd"/>
+            destdir="${dist-dir}" includes="*${odd-extension}" extension=".examples.log">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${seed-tei-transformations}/saxon.he.xml"/>
@@ -52,7 +51,7 @@
     <target name="odd-html">
         <xslt classpathref="project.class.path"
             style="${seed-tei-transformations}/xsl/html/libodd.xsl" basedir="${odd-dir}"
-            destdir="${dist-dir}" includes="*.odd" extension=".html">
+            destdir="${dist-dir}" includes="*${odd-extension}" extension=".html">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${seed-tei-transformations}/saxon.he.html.xml"/>
@@ -63,7 +62,7 @@
     <target name="odd-build.xml">
         <xslt classpathref="project.class.path"
             style="${seed-tei-transformations}/xsl/html/libodd.xsl" basedir="${odd-dir}"
-            destdir="${dist-dir}" includes="*.odd" extension="-build.xml">
+            destdir="${dist-dir}" includes="*${odd-extension}" extension="-build.xml">
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${seed-tei-transformations}/saxon.he.xml"/>
@@ -85,7 +84,8 @@
                 <attribute name="http://saxon.sf.net/feature/initialTemplate"
                     value="importing-ant-build-file"/>
             </factory>
-            <param name="odd-dir" expression="${odd-dir}" type="STRING"/>
+            <param name="odd-collection" expression="${odd-dir}?select=*${odd-extension}"
+                type="STRING"/>
             <outputproperty name="method" value="xml"/>
             <outputproperty name="indent" value="true"/>
         </xslt>
@@ -97,7 +97,7 @@
         <delete>
             <fileset dir="doc">
                 <include name="**/*"/>
-                <exclude name="*.odd"/>
+                <exclude name="*${odd-extension}"/>
             </fileset>
         </delete>
     </target>
