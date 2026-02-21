@@ -185,10 +185,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                             select="odd:get-indent(.)" tunnel="true"/>
                     </xsl:apply-templates>
                 </div>
-                <!-- output for presentations declared with @transformations -->
+                <!-- output for presentations declared with @ox:transformations -->
                 <xsl:if test="$odd:transform">
                     <xsl:for-each
-                        select="@transformations ! ref:references-from-attribute(.) ! ox:scenario-by-uri(.)">
+                        select="@ox:transformations ! ref:references-from-attribute(.) ! ox:scenario-by-uri(.)">
                         <xsl:call-template name="ox:transformation-info">
                             <xsl:with-param name="output" as="xs:string">
                                 <xsl:value-of
@@ -442,9 +442,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
 
     <xsl:template mode="antcall" match="eg:egXML[@xml:id]">
         <xsl:choose>
-            <xsl:when test="@transformations">
+            <xsl:when test="@ox:transformations">
                 <xsl:variable name="context" as="element(eg:egXML)" select="."/>
-                <xsl:for-each select="ref:references-from-attribute(@transformations)">
+                <xsl:for-each select="ref:references-from-attribute(@ox:transformations)">
                     <xsl:for-each select="tokenize(., '#')[2]">
                         <antcall target="{$context/@xml:id}_{.}"/>
                     </xsl:for-each>
@@ -468,9 +468,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     <xsl:template mode="target" match="eg:egXML[@xml:id]">
         <xsl:variable name="context" as="element(eg:egXML)" select="."/>
         <xsl:choose>
-            <xsl:when test="@transformations">
+            <xsl:when test="@ox:transformations">
                 <xsl:for-each
-                    select="ref:references-from-attribute(@transformations) ! ox:scenario-by-uri(.)">
+                    select="ref:references-from-attribute(@ox:transformations) ! ox:scenario-by-uri(.)">
                     <target
                         name="{$context/@xml:id}_{ox:get-field(., 'name') => ox:scenario-identifier()}">
                         <xsl:call-template name="ox:xslt-target">

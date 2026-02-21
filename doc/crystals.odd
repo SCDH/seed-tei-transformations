@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
-  xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
+  xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:ox="http://scdh.wwu.de/transform/ox#"
+  xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
   <teiHeader>
     <fileDesc>
       <titleStmt>
@@ -15,8 +16,10 @@
     </fileDesc>
     <encodingDesc>
       <listPrefixDef>
-        <prefixDef ident="ts" matchPattern="(.*)" replacementPattern="../transformation.scenarios#$1"/>
-        <prefixDef ident="xpr" matchPattern="(.*)" replacementPattern="../SEED_TEI_Transformations.xpr#$1"/>
+        <prefixDef ident="ts" matchPattern="(.*)"
+          replacementPattern="../transformation.scenarios#$1"/>
+        <prefixDef ident="xpr" matchPattern="(.*)"
+          replacementPattern="../SEED_TEI_Transformations.xpr#$1"/>
         <prefixDef ident="tg" matchPattern="(..)(.*)"
           replacementPattern="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/$1.html#$1$2"/>
       </listPrefixDef>
@@ -61,7 +64,7 @@
             end.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
-            source="#simple" transformations="ts:Diplomatic">
+            source="#simple" ox:transformations="ts:Diplomatic">
             <p xml:space="preserve" xml:lang="de"><lb n="1"/>
               Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
               weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
