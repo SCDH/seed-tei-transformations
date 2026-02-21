@@ -103,7 +103,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
         class="transformation-result {ox:get-field(., 'name') => ox:scenario-identifier()}-transformation"
         src="{$output}"/>
 
-      <section  class="stylesheet">
+      <section class="stylesheet">
         <xsl:element name="h{$level + 1}">stylesheet</xsl:element>
         <xsl:text> </xsl:text>
         <code>
@@ -186,12 +186,13 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
   <xsl:template name="ox:xslt-target" visibility="public">
     <xsl:context-item as="element(scenario)" use="required"/>
     <xsl:param name="example" as="xs:string"/>
+    <xsl:param name="project" as="xs:string"/>
     <xslt>
       <xsl:attribute name="classpathref">project.class.path</xsl:attribute>
       <xsl:attribute name="style" select="ox:get-field(., 'inputXSLURL')"/>
-      <xsl:attribute name="in" select="'${outdir}/' || $example || '.xml'"/>
+      <xsl:attribute name="in" select="'${' || $project || '-outdir}/' || $example || '.xml'"/>
       <xsl:attribute name="out"
-        select="'${outdir}/' || $example || '_' || (ox:get-field(., 'name') => ox:scenario-identifier()) || ox:suffix(.)"/>
+        select="'${' || $project || '-outdir}/' || $example || '_' || (ox:get-field(., 'name') => ox:scenario-identifier()) || ox:suffix(.)"/>
       <factory name="net.sf.saxon.TransformerFactoryImpl">
         <xsl:if test="ox:get-field(.//xsltSaxonBAdvancedOptions, 'configSystemID')">
           <attribute name="http://saxon.sf.net/feature/configuration-file"

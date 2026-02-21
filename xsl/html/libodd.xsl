@@ -42,6 +42,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
 
     <xsl:output method="html" indent="false"/>
 
+    <!-- project name, defaults to the source's basename without extension -->
+    <xsl:param name="project" as="xs:string"
+        select="(base-uri(.) => tokenize('/'))[last()] => replace('\.[^\.]*$', '')"/>
+
     <!-- path of outdir relative to the source file, defaults to the source's basename without extension -->
     <xsl:param name="outdir-rel" as="xs:string"
         select="(base-uri(.) => tokenize('/'))[last()] => replace('\.[^\.]*$', '')"/>
@@ -177,7 +181,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
         <xsl:override>
 
             <xsl:template mode="text:text" match="eg:egXML">
-                <xsl:variable name="example" as="element(eg:egXML)" select="."/>
                 <!-- render example source with libxmlsource -->
                 <div class="xml-source code-example">
                     <xsl:apply-templates mode="source:source">
@@ -185,28 +188,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                             select="odd:get-indent(.)" tunnel="true"/>
                     </xsl:apply-templates>
                 </div>
-                <!-- output for presentations declared with @ox:transformations -->
+                <!-- output for presentations declared with @transfox etc -->
                 <xsl:if test="$odd:transform">
-                    <xsl:for-each
-                        select="@ox:transformations ! ref:references-from-attribute(.) ! ox:scenario-by-uri(.)">
-                        <xsl:call-template name="ox:transformation-info">
-                            <xsl:with-param name="output" as="xs:string">
-                                <xsl:value-of
-                                    select="$outdir-rel || '/' || $example/@xml:id || '_' || ox:get-field(., 'name') => ox:scenario-identifier() || ox:suffix(.)"
-                                />
-                            </xsl:with-param>
-                            <xsl:with-param name="level" as="xs:integer"
-                                select="count($example/ancestor::div) + 1"/>
-                        </xsl:call-template>
-                    </xsl:for-each>
-                    <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
-                        <xsl:apply-templates mode="odd:transformation" select=".">
-                            <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
-                                tunnel="true"/>
-                            <xsl:with-param name="level" as="xs:integer"
-                                select="count($example/ancestor::div) + 1" tunnel="true"/>
-                        </xsl:apply-templates>
-                    </xsl:for-each>
+                    <xsl:apply-templates mode="odd:transformation"
+                        select="@transfox | @transfant | @transform"/>
                 </xsl:if>
             </xsl:template>
 
@@ -219,6 +204,33 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
 
     <!-- a mode for presenting information about a transformation in HTML -->
     <xsl:mode name="odd:transformation" on-no-match="shallow-skip" visibility="public"/>
+
+    <xsl:template mode="odd:transformation" match="@transfox">
+        <xsl:variable name="example" as="element(eg:egXML)" select="parent::*"/>
+        <xsl:for-each select="ref:references-from-attribute(.) ! ox:scenario-by-uri(.)">
+            <xsl:call-template name="ox:transformation-info">
+                <xsl:with-param name="output" as="xs:string">
+                    <xsl:value-of
+                        select="$outdir-rel || '/' || $example/@xml:id || '_' || ox:get-field(., 'name') => ox:scenario-identifier() || ox:suffix(.)"
+                    />
+                </xsl:with-param>
+                <xsl:with-param name="level" as="xs:integer"
+                    select="count($example/ancestor::div) + 1"/>
+            </xsl:call-template>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template mode="odd:transformation" match="@transform">
+        <xsl:variable name="example" as="element(eg:egXML)" select="parent::*"/>
+        <xsl:for-each select="tokenize(.) ! substring(., 2) ! id(., $example)">
+            <xsl:apply-templates mode="odd:transformation" select=".">
+                <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
+                    tunnel="true"/>
+                <xsl:with-param name="level" as="xs:integer"
+                    select="count($example/ancestor::div) + 1" tunnel="true"/>
+            </xsl:apply-templates>
+        </xsl:for-each>
+    </xsl:template>
 
     <xsl:template mode="odd:transformation" match="appInfo">
         <xsl:param name="level" as="xs:integer" tunnel="true"/>
@@ -305,8 +317,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
             <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.xml"
                 exclude-result-prefixes="#all" indent="no" method="xml">
                 <xsl:choose>
-                    <xsl:when test="@source">
-                        <xsl:apply-templates mode="wrap" select="substring(@source, 2) => id()">
+                    <xsl:when test="@template">
+                        <xsl:apply-templates mode="wrap" select="substring(@template, 2) => id()">
                             <xsl:with-param name="slotted-children" as="node()*" select="node()"
                                 tunnel="true"/>
                             <xsl:with-param name="base-indentation" as="xs:integer"
@@ -397,12 +409,13 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
 
     <!-- entry point for generating an Apache Ant build file -->
     <xsl:template name="ant-build-file" visibility="public">
-        <project basedir="." name="docs" default="transform">
+        <xsl:context-item as="document-node(element(TEI))" use="required"/>
+        <project basedir="." name="{$project}" default="transform">
 
-            <dirname property="docs.basedir" file="${{ant.file.docs}}"/>
+            <dirname property="{$project}.basedir" file="${{ant.file.{$project}}}"/>
             <xsl:comment>pdu is the base directory URI of the project with the transformations</xsl:comment>
-            <property name="pdu" value="${{docs.basedir}}/.."/>
-            <property name="outdir" value="${{docs.basedir}}/{$outdir-rel}"/>
+            <property name="pdu" value="${{{$project}.basedir}}/.."/>
+            <property name="{$project}-outdir" value="${{{$project}.basedir}}/{$outdir-rel}"/>
             <property name="seed-tei-transformations" value="${{pdu}}"/>
 
             <loadproperties srcFile="${{pdu}}/{$properties}"/>
@@ -427,7 +440,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
             </target>
 
             <target name="clean-transformed">
-                <delete dir="${{outdir}}" includes="**/*.html,**/*.tex"/>
+                <delete dir="${{{$project}-outdir}}" includes="**/*.html,**/*.tex"/>
             </target>
 
             <xsl:apply-templates mode="target"/>
@@ -440,59 +453,49 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     <!-- drop everything in back matter -->
     <xsl:template mode="antcall target odd:transformation" match="back"/>
 
-    <xsl:template mode="antcall" match="eg:egXML[@xml:id]">
-        <xsl:choose>
-            <xsl:when test="@ox:transformations">
-                <xsl:variable name="context" as="element(eg:egXML)" select="."/>
-                <xsl:for-each select="ref:references-from-attribute(@ox:transformations)">
-                    <xsl:for-each select="tokenize(., '#')[2]">
-                        <antcall target="{$context/@xml:id}_{.}"/>
-                    </xsl:for-each>
-                </xsl:for-each>
-            </xsl:when>
-            <xsl:when test="@rendition">
-                <xsl:variable name="context" as="element(eg:egXML)" select="."/>
-                <xsl:for-each select="tokenize(@rendition)">
-                    <antcall target="{$context/@xml:id}_{substring(., 2)}"/>
-                </xsl:for-each>
-            </xsl:when>
-            <xsl:otherwise>
-                <!--antcall target="{@xml:id}"/-->
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:template mode="antcall" match="@transfox">
+        <xsl:variable name="context" as="element(eg:egXML)" select="parent::*"/>
+        <xsl:for-each select="ref:references-from-attribute(.)">
+            <xsl:for-each select="tokenize(., '#')[2]">
+                <antcall target="{$context/@xml:id}_{.}"/>
+            </xsl:for-each>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template mode="antcall" match="@transform">
+        <xsl:variable name="context" as="element(eg:egXML)" select="parent::*"/>
+        <xsl:for-each select="tokenize(.)">
+            <antcall target="{$context/@xml:id}_{substring(., 2)}"/>
+        </xsl:for-each>
     </xsl:template>
 
 
     <xsl:mode name="target" on-no-match="shallow-skip"/>
 
-    <xsl:template mode="target" match="eg:egXML[@xml:id]">
-        <xsl:variable name="context" as="element(eg:egXML)" select="."/>
-        <xsl:choose>
-            <xsl:when test="@ox:transformations">
-                <xsl:for-each
-                    select="ref:references-from-attribute(@ox:transformations) ! ox:scenario-by-uri(.)">
-                    <target
-                        name="{$context/@xml:id}_{ox:get-field(., 'name') => ox:scenario-identifier()}">
-                        <xsl:call-template name="ox:xslt-target">
-                            <xsl:with-param name="example" as="xs:string" select="$context/@xml:id"
-                            />
-                        </xsl:call-template>
-                    </target>
-                </xsl:for-each>
-            </xsl:when>
-            <xsl:when test="@rendition">
-                <xsl:for-each select="tokenize(@rendition)">
-                    <xsl:variable name="rendition" as="xs:string" select="substring(., 2)"/>
-                    <target name="{$context/@xml:id}_{$rendition}">
-                        <xsl:call-template name="xslt-target">
-                            <xsl:with-param name="example" as="element(eg:egXML)" select="$context"/>
-                            <xsl:with-param name="rendition" as="element(appInfo)"
-                                select="id($rendition, root($context))"/>
-                        </xsl:call-template>
-                    </target>
-                </xsl:for-each>
-            </xsl:when>
-        </xsl:choose>
+    <xsl:template mode="target" match="@transfox">
+        <xsl:variable name="context" as="element(eg:egXML)" select="parent::*"/>
+        <xsl:for-each select="ref:references-from-attribute(.) ! ox:scenario-by-uri(.)">
+            <target name="{$context/@xml:id}_{ox:get-field(., 'name') => ox:scenario-identifier()}">
+                <xsl:call-template name="ox:xslt-target">
+                    <xsl:with-param name="example" as="xs:string" select="$context/@xml:id"/>
+                    <xsl:with-param name="project" as="xs:string" select="$project"/>
+                </xsl:call-template>
+            </target>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template mode="target" match="@transform">
+        <xsl:variable name="context" as="element(eg:egXML)" select="parent::*"/>
+        <xsl:for-each select="tokenize(.)">
+            <xsl:variable name="rendition" as="xs:string" select="substring(., 2)"/>
+            <target name="{$context/@xml:id}_{$rendition}">
+                <xsl:call-template name="xslt-target">
+                    <xsl:with-param name="example" as="element(eg:egXML)" select="$context"/>
+                    <xsl:with-param name="rendition" as="element(appInfo)"
+                        select="id($rendition, root($context))"/>
+                </xsl:call-template>
+            </target>
+        </xsl:for-each>
     </xsl:template>
 
 
@@ -503,9 +506,10 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
         <xslt>
             <xsl:attribute name="classpathref">project.class.path</xsl:attribute>
             <xsl:attribute name="style" select="'${pdu}/' || $rendition/@source"/>
-            <xsl:attribute name="in" select="'${outdir}/' || $example/@xml:id || '.xml'"/>
+            <xsl:attribute name="in"
+                select="'${' || $project || '-outdir}/' || $example/@xml:id || '.xml'"/>
             <xsl:attribute name="out"
-                select="'${outdir}/' || $example/@xml:id || '_' || $rendition/@xml:id || '.' || $rendition/@n"/>
+                select="'${' || $project || '-outdir}/' || $example/@xml:id || '_' || $rendition/@xml:id || '.' || $rendition/@n"/>
             <factory name="net.sf.saxon.TransformerFactoryImpl">
                 <attribute name="http://saxon.sf.net/feature/configuration-file"
                     value="${{saxon-config-{$rendition/@n}}}"/>
