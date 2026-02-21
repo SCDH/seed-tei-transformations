@@ -96,7 +96,7 @@
 
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="parallel-segmentation"
-                source="#simple" rendition="#prose-with-popups">
+                template="#simple" transfext="#prose-with-popups">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -126,7 +126,7 @@
                 <head>Internal</head>
 
                 <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-internal"
-                  source="#simple" rendition="#prose-with-popups">
+                  template="#simple" transfext="#prose-with-popups">
                   <!-- in the header -->
                   <encodingDesc slot="teiHeader">
                     <variantEncoding method="double-end-point" location="internal"/>
@@ -144,7 +144,7 @@
                 <head>External</head>
 
                 <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-external"
-                  source="#simple" rendition="#prose-with-popups">
+                  template="#simple" transfext="#prose-with-popups">
                   <!-- in the header -->
                   <encodingDesc slot="teiHeader">
                     <variantEncoding method="double-end-point" location="external"/>
@@ -175,7 +175,7 @@
                   >Guidelines, sec. TCAPLO</ref>.</p>
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="location-referenced"
-                source="#simple" rendition="#prose-with-popups">
+                template="#simple" transfext="#prose-with-popups">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="location-referenced" location="internal"/>
