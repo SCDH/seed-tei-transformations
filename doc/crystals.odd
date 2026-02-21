@@ -15,6 +15,8 @@
     </fileDesc>
     <encodingDesc>
       <listPrefixDef>
+        <prefixDef ident="ts" matchPattern="(.*)" replacementPattern="../transformation.scenarios#$1"/>
+        <prefixDef ident="xpr" matchPattern="(.*)" replacementPattern="../SEED_TEI_Transformations.xpr#$1"/>
         <prefixDef ident="tg" matchPattern="(..)(.*)"
           replacementPattern="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/$1.html#$1$2"/>
       </listPrefixDef>
@@ -59,7 +61,7 @@
             end.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
-            source="#simple" rendition="#diplomatic-render #reading-render">
+            source="#simple" transformations="ts:Diplomatic">
             <p xml:space="preserve" xml:lang="de"><lb n="1"/>
               Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
               weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
