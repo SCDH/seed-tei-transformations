@@ -30,6 +30,23 @@
     <import file="build-doc.xml" as="doc" optional="true"/>
 
 
+    <property name="OXG.URL" value="https://teigarage.tei-c.org"/>
+
+    <target name="seed.rng" description="Make Relax NG from ODD by sending to TEI-Garage">
+        <exec executable="curl">
+            <arg value="-vs"/>
+            <arg value="-o"/>
+            <arg value="doc/seed.rng"/>
+            <arg value="-F"/>
+            <arg value="upload=@doc/seed.odd"/>
+            <arg
+                value="${OXG.URL}/ege-webservice/Conversions/ODD%3Atext%3Axml/ODDC%3Atext%3Axml/relaxng%3Aapplication%3Axml-relaxng/"
+            />
+        </exec>
+    </target>
+
+
+
     <!-- default rule: run all tests -->
     <target name="test" description="run all tests">
         <antcall target="test-xsl-common-libcommon.xsl"/>

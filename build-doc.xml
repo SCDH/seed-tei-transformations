@@ -98,6 +98,8 @@
             <fileset dir="doc">
                 <include name="**/*"/>
                 <exclude name="*${odd-extension}"/>
+                <exclude name="seed.odd"/>
+                <exclude name="seed.rng"/>
             </fileset>
         </delete>
     </target>
