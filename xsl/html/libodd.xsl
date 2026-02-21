@@ -35,7 +35,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:eg="http://www.tei-c.org/ns/Examples"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:odd="http://scdh.wwu.de/transform/odd#"
-    xmlns:source="http://scdh.wwu.de/transform/source#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:source="http://scdh.wwu.de/transform/source#" xmlns:ox="http://scdh.wwu.de/transform/ox#"
+    xmlns:ref="http://scdh.wwu.de/transform/ref#" xmlns:t="http://www.tei-c.org/ns/1.0"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.0" default-mode="odd:documentation">
 
@@ -52,6 +53,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     <!-- project directory URI -->
     <xsl:param name="pdu" as="xs:string" select="resolve-uri('../..', static-base-uri())"/>
 
+    <!-- link to property file, relative to pdu -->
+    <xsl:param name="properties" as="xs:string" select="'project.properties'"/>
+
     <xsl:param name="saxon-config" as="xs:string" select="resolve-uri('saxon.he.xml', $pdu)"/>
 
     <xsl:param name="default-app-info" as="element(appInfo)" select="id('diplomatic-render')"/>
@@ -67,6 +71,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
 
     <!-- suffix of generated Ant build files per ODD, only required for template named 'importing-ant-build-file' -->
     <xsl:param name="odd:build-suffix" as="xs:string" select="'-build.xml'"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libox.xsl"
+        package-version="1.0.0"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+        package-version="1.0.0"/>
 
 
     <xsl:mode name="odd:documentation" on-no-match="shallow-skip" visibility="public"/>
@@ -173,8 +185,20 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                             select="odd:get-indent(.)" tunnel="true"/>
                     </xsl:apply-templates>
                 </div>
-                <!-- output for presentations declared with @rendition -->
+                <!-- output for presentations declared with @transformations -->
                 <xsl:if test="$odd:transform">
+                    <xsl:for-each
+                        select="@transformations ! ref:references-from-attribute(.) ! ox:scenario-by-uri(.)">
+                        <xsl:call-template name="ox:transformation-info">
+                            <xsl:with-param name="output" as="xs:string">
+                                <xsl:value-of
+                                    select="$outdir-rel || '/' || $example/@xml:id || '_' || ox:get-field(., 'name') => ox:scenario-identifier() || ox:suffix(.)"
+                                />
+                            </xsl:with-param>
+                            <xsl:with-param name="level" as="xs:integer"
+                                select="count(ancestor::div) + 1"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
                     <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
                         <xsl:apply-templates mode="odd:transformation" select=".">
                             <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
@@ -381,6 +405,8 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
             <property name="outdir" value="${{docs.basedir}}/{$outdir-rel}"/>
             <property name="seed-tei-transformations" value="${{pdu}}"/>
 
+            <loadproperties srcFile="${{pdu}}/{$properties}"/>
+
             <property name="saxon-config-" value="${{pdu}}/saxon.he.xml"/>
             <property name="saxon-config-html" value="${{pdu}}/saxon.he.html.xml"/>
             <property name="saxon-config-latex" value="${{pdu}}/saxon.he.xml"/>
@@ -416,6 +442,14 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
 
     <xsl:template mode="antcall" match="eg:egXML[@xml:id]">
         <xsl:choose>
+            <xsl:when test="@transformations">
+                <xsl:variable name="context" as="element(eg:egXML)" select="."/>
+                <xsl:for-each select="ref:references-from-attribute(@transformations)">
+                    <xsl:for-each select="tokenize(., '#')[2]">
+                        <antcall target="{$context/@xml:id}_{.}"/>
+                    </xsl:for-each>
+                </xsl:for-each>
+            </xsl:when>
             <xsl:when test="@rendition">
                 <xsl:variable name="context" as="element(eg:egXML)" select="."/>
                 <xsl:for-each select="tokenize(@rendition)">
@@ -434,6 +468,18 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     <xsl:template mode="target" match="eg:egXML[@xml:id]">
         <xsl:variable name="context" as="element(eg:egXML)" select="."/>
         <xsl:choose>
+            <xsl:when test="@transformations">
+                <xsl:for-each
+                    select="ref:references-from-attribute(@transformations) ! ox:scenario-by-uri(.)">
+                    <target
+                        name="{$context/@xml:id}_{ox:get-field(., 'name') => ox:scenario-identifier()}">
+                        <xsl:call-template name="ox:xslt-target">
+                            <xsl:with-param name="example" as="xs:string" select="$context/@xml:id"
+                            />
+                        </xsl:call-template>
+                    </target>
+                </xsl:for-each>
+            </xsl:when>
             <xsl:when test="@rendition">
                 <xsl:for-each select="tokenize(@rendition)">
                     <xsl:variable name="rendition" as="xs:string" select="substring(., 2)"/>
@@ -446,13 +492,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                     </target>
                 </xsl:for-each>
             </xsl:when>
-            <xsl:otherwise>
-                <!--target name="{@xml:id}">
-                    <xsl:call-template name="xslt-target">
-                        <xsl:with-param name="example" as="element(eg:egXML)" select="$context"/>
-                    </xsl:call-template>
-                </target-->
-            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 

@@ -81,6 +81,11 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
     <xsl:sequence select="$scenario/field[@name eq $name]/list/*"/>
   </xsl:function>
 
+  <xsl:function name="ox:normalize-value" as="xs:string">
+    <xsl:param name="value" as="xs:string"/>
+    <xsl:value-of select="replace($value, '[)(]', '.')"/>
+  </xsl:function>
+
 
 
   <!-- html output with information about a scenario -->
@@ -89,23 +94,27 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
     <xsl:param name="output" as="xs:string"/>
     <xsl:param name="level" as="xs:integer" select="7"/>
     <xsl:variable name="scenario" as="element(scenario)" select="."/>
-    <section>
+    <section class="transformation">
       <xsl:element name="h{$level}">
         <xsl:value-of select="ox:get-field($scenario, 'name')"/>
       </xsl:element>
 
-      <iframe src="{$output}"/>
+      <iframe
+        class="transformation-result {ox:get-field(., 'name') => ox:scenario-identifier()}-transformation"
+        src="{$output}"/>
 
-      <section>
-        <xsl:element name="h{$level + 1}">stylesheet / package</xsl:element>
+      <section  class="stylesheet">
+        <xsl:element name="h{$level + 1}">stylesheet</xsl:element>
+        <xsl:text> </xsl:text>
         <code>
           <xsl:value-of
             select="ox:get-field($scenario, 'inputXSLURL') ! replace(., '^\$\{[^\}]*\}/', '')"/>
         </code>
       </section>
 
-      <section>
+      <section class="stylesheet">
         <xsl:element name="h{$level + 1}">Saxon config</xsl:element>
+        <xsl:text> </xsl:text>
         <code>
           <xsl:value-of
             select="ox:get-field($scenario//xsltSaxonBAdvancedOptions, 'configSystemID') ! replace(., '^\$\{[^\}]*\}/', '')"
@@ -113,7 +122,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
         </code>
       </section>
 
-      <section>
+      <section class="parameters">
         <xsl:element name="h{$level + 1}">Parameters</xsl:element>
         <table>
           <thead>
@@ -151,10 +160,10 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
         <pre><xsl:value-of select="ox:get-field(., 'value')"/></pre>
       </td>
       <td>
-        <pre><xsl:value-of select="ox:get-field(., 'hasXPathValue')"/></pre>
+        <pre><xsl:value-of select="ox:get-bool(., 'hasXPathValue')"/></pre>
       </td>
       <td>
-        <pre><xsl:value-of select="ox:get-field(., 'isStatic')"/></pre>
+        <pre><xsl:value-of select="ox:get-bool(., 'isStatic')"/></pre>
       </td>
     </tr>
   </xsl:template>
@@ -182,7 +191,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
       <xsl:attribute name="style" select="ox:get-field(., 'inputXSLURL')"/>
       <xsl:attribute name="in" select="'${outdir}/' || $example || '.xml'"/>
       <xsl:attribute name="out"
-        select="'${outdir}/' || $example || '_' || (ox:get-field(., 'name') => ox:name-to-id()) || ox:suffix(.)"/>
+        select="'${outdir}/' || $example || '_' || (ox:get-field(., 'name') => ox:scenario-identifier()) || ox:suffix(.)"/>
       <factory name="net.sf.saxon.TransformerFactoryImpl">
         <xsl:if test="ox:get-field(.//xsltSaxonBAdvancedOptions, 'configSystemID')">
           <attribute name="http://saxon.sf.net/feature/configuration-file"
@@ -207,7 +216,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
     <xsl:value-of select="replace($name, '\s+', '')"/>
   </xsl:function>
 
-  <xsl:function name="ox:suffix" as="xs:string">
+  <xsl:function name="ox:suffix" as="xs:string" visibility="final">
     <xsl:param name="scenario" as="element(scenario)"/>
     <xsl:value-of
       select="ox:get-field($scenario, 'outputResource') => replace('\$\{[a-zA-Z]+\}', '')"/>

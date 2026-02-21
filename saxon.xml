@@ -118,6 +118,9 @@ http://www.saxonica.com/documentation/index/configuration-file.html
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libxmlsource.xsl"
                version="1.0.0" sourceLocation="xsl/html/libxmlsource.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libox.xsl"
+               version="1.0.0" sourceLocation="xsl/common/libox.xsl"/>
 
           <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/projects/alea/html/libmeta.xsl"
