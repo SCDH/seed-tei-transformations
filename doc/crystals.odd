@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="seed.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="seed.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
-  xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:ox="http://scdh.wwu.de/transform/ox#"
-  xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
+  xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
   <teiHeader>
     <fileDesc>
       <titleStmt>
@@ -64,7 +65,7 @@
             end.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
-            source="#simple" ox:transformations="ts:Diplomatic">
+            template="#simple" transfox="ts:Diplomatic">
             <p xml:space="preserve" xml:lang="de"><lb n="1"/>
               Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
               weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
