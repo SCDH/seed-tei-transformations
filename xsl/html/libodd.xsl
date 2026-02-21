@@ -191,7 +191,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                 <!-- output for presentations declared with @transfox etc -->
                 <xsl:if test="$odd:transform">
                     <xsl:apply-templates mode="odd:transformation"
-                        select="@transfox | @transfant | @transform"/>
+                        select="@transfox | @transfant | @transfext"/>
                 </xsl:if>
             </xsl:template>
 
@@ -220,7 +220,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template mode="odd:transformation" match="@transform">
+    <xsl:template mode="odd:transformation" match="@transfext">
         <xsl:variable name="example" as="element(eg:egXML)" select="parent::*"/>
         <xsl:for-each select="tokenize(.) ! substring(., 2) ! id(., $example)">
             <xsl:apply-templates mode="odd:transformation" select=".">
@@ -462,7 +462,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template mode="antcall" match="@transform">
+    <xsl:template mode="antcall" match="@transfext">
         <xsl:variable name="context" as="element(eg:egXML)" select="parent::*"/>
         <xsl:for-each select="tokenize(.)">
             <antcall target="{$context/@xml:id}_{substring(., 2)}"/>
@@ -484,7 +484,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template mode="target" match="@transform">
+    <xsl:template mode="target" match="@transfext">
         <xsl:variable name="context" as="element(eg:egXML)" select="parent::*"/>
         <xsl:for-each select="tokenize(.)">
             <xsl:variable name="rendition" as="xs:string" select="substring(., 2)"/>
