@@ -13,17 +13,19 @@
 
     <include file="${xspec.project.dir}/build.xml"/>
 
-    <echo>basedir: ${basedir}</echo>
-    <echo>using XSpec ${xspec.version}</echo>
-
-    <echo>classpath: ${java.class.path}</echo>
-    <echo>ext.dirs: ${java.ext.dirs}</echo>
-
     <path id="project.class.path">
         <fileset dir="${basedir}/target/lib/">
             <include name="*.jar"/>
         </fileset>
     </path>
+
+    <target name="info">
+        <echo>basedir: ${basedir}</echo>
+        <echo>using XSpec ${xspec.version}</echo>
+        <echo>classpath: ${java.class.path}</echo>
+        <echo>ext.dirs: ${java.ext.dirs}</echo>
+    </target>
+
 
     <import file="build-doc.xml" as="doc" optional="true"/>
 
