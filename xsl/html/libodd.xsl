@@ -196,7 +196,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                                 />
                             </xsl:with-param>
                             <xsl:with-param name="level" as="xs:integer"
-                                select="count(ancestor::div) + 1"/>
+                                select="count($example/ancestor::div) + 1"/>
                         </xsl:call-template>
                     </xsl:for-each>
                     <xsl:for-each select="tokenize(@rendition) ! substring(., 2) ! id(., $example)">
@@ -204,7 +204,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                             <xsl:with-param name="example" as="element(eg:egXML)" select="$example"
                                 tunnel="true"/>
                             <xsl:with-param name="level" as="xs:integer"
-                                select="count(ancestor::div) + 1" tunnel="true"/>
+                                select="count($example/ancestor::div) + 1" tunnel="true"/>
                         </xsl:apply-templates>
                     </xsl:for-each>
                 </xsl:if>
