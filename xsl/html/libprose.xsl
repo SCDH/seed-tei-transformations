@@ -19,6 +19,9 @@
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="prose:linebreaks-hyphen" as="xs:string" select="'-'" required="false"/>
 
+    <!-- whether or not to output named anchors for headlines etc. required for toc -->
+    <xsl:param name="prose:anchors" as="xs:boolean" select="false()" required="false"/>
+
     <!--
         A key for distinguishing text nodes in 'before', 'after' and 'both-ends' delimitation
         by in-word <lb>.
@@ -140,9 +143,15 @@
                     select="concat('h', if ($level eq 0) then 1 else $level)"/>
                 <xsl:element name="{$heading}">
                     <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
+                    <a class="target">
+                        <xsl:attribute name="name" select="parent::*/@xml:id"/>
+                        <xsl:if test="$prose:anchors">
+                            <xsl:attribute name="href" select="'#' || parent::*/@xml:id"/>
+                        </xsl:if>
+                        <xsl:apply-templates select="@* | node()"/>
+                    </a>
+                    <xsl:apply-templates mode="text:hook-after" select="."/>
                 </xsl:element>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
 
             <!-- output pb/@n in square brackets -->
