@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="prose-footnotes.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
+                                objektive Realität im Satz über die Summe der Innenwinkel des <app
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.</p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
+                                eine dritte Gerade geschnitten werden.</p>
+                        </div>
+                    </div>
+                    <div xml:id="d2" n="2">
+                        <lg>
+                            <l>
+                                <w n="1">Beim</w>
+                                <w n="2">Styx</w><pc>!</pc>
+                                <w n="3">Drüber</w>
+                            </l>
+                        </lg>
+                    </div>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+
+    <x:scenario label="mode text:text on d2">
+        <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
+        <x:expect label="result">
+            <section id="d2" data-tei-n="2">
+                <div>
+                    <div>BeimStyx!Drüber</div>
+                </div>
+            </section>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode text:text on apparatus">
+        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
+        <x:expect label="result">
+            <p data-tei-n="1" id="d1.1.p1">...</p>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="mode prose on apparatus" pending="test not working">
+        <x:context select="$tei-text//t:front" mode="prose"/>
+        <x:expect label="result">
+            <div>
+                <section>
+                    <h1>Vorrede</h1>
+                    <p>Der hochwohlgebohrenen Prinzessin Z.</p>
+                </section>
+            </div>
+        </x:expect>
+    </x:scenario>
+
+    <x:scenario label="full html">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="result">
+            <html lang="de">
+                <head>...</head>
+                <body>...</body>
+            </html>
+        </x:expect>
+    </x:scenario>
+
+</x:description>
