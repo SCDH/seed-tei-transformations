@@ -168,7 +168,8 @@
 
               <p>When using the location referenced method, the apparatus mark (footnote, popup)
                 will be placed exactly at the position of the <gi>app</gi> element. Internal
-                location is supported only.</p>
+                location is supported only. Since the lemma cannot be constructed from the encoding,
+                it has to be provided in the <gi>lem</gi> element.</p>
 
               <p>See <ref
                   target="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/TC.html#TCAPLO"
@@ -182,6 +183,7 @@
                 </encodingDesc>
                 <!-- in the body -->
                 <l n="1">Experience<app>
+                    <lem>Experience</lem>
                     <rdg wit="#La">Experiment</rdg>
                     <rdg wit="#Ra2">Eryment</rdg>
                   </app> though noon Auctoritee </l>
