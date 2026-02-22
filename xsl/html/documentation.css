@@ -23,28 +23,35 @@ iframe {
     min-width: 100%;
     background-color: white;
     border: 1px solid darkgray;
+    margin-bottom: 20px;
 }
-.parameters table {
-    width: 100%;
+.transformation table {
     border-collapse: separate;
     border-spacing: 0px;
 }
-.parameters table thead {
-    background-color: lightgray;
+.parameters table {
+    width: 100%;
 }
-.parameters table tr td,
-.parameters table thead th
+.transformation table thead,
+.transformation table th {
+    background-color: lightgray !important;
+}
+.transformation table td,
+.transformation table th
 {
     border: 1px solid darkgray;
 }
-.parameters table tr td
+.transformation table > tr > th {
+    padding: 5px;
+}
+.parameters table td
 {
     border-top: none;
 }
-.parameters table tbody tr:nth-child(odd) {
+.transformation table tbody tr:nth-child(odd) {
     background-color: #efffef;
 }
-.parameters table tbody tr:nth-child(even) {
+.transformation table tbody tr:nth-child(even) {
     background-color: #efffff;
 }
 .element-name,

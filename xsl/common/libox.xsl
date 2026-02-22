@@ -104,22 +104,28 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
         src="{$output}" onload="javascript:registerIFrameResizer(this)"/>
 
       <section class="stylesheet">
-        <xsl:element name="h{min(($level + 1, 6))}">stylesheet</xsl:element>
-        <xsl:text> </xsl:text>
-        <code>
-          <xsl:value-of
-            select="ox:get-field($scenario, 'inputXSLURL') ! replace(., '^\$\{[^\}]*\}/', '')"/>
-        </code>
-      </section>
-
-      <section class="stylesheet">
-        <xsl:element name="h{min(($level + 1, 6))}">Saxon config</xsl:element>
-        <xsl:text> </xsl:text>
-        <code>
-          <xsl:value-of
-            select="ox:get-field($scenario//xsltSaxonBAdvancedOptions, 'configSystemID') ! replace(., '^\$\{[^\}]*\}/', '')"
-          />
-        </code>
+        <table>
+          <tr>
+            <th>Stylesheet</th>
+            <td>
+              <code>
+                <xsl:value-of
+                  select="ox:get-field($scenario, 'inputXSLURL') ! replace(., '^\$\{[^\}]*\}/', '')"
+                />
+              </code>
+            </td>
+          </tr>
+          <tr>
+            <th>Saxon configuration</th>
+            <td>
+              <code>
+                <xsl:value-of
+                  select="ox:get-field($scenario//xsltSaxonBAdvancedOptions, 'configSystemID') ! replace(., '^\$\{[^\}]*\}/', '')"
+                />
+              </code>
+            </td>
+          </tr>
+        </table>
       </section>
 
       <section class="parameters">
