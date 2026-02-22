@@ -101,7 +101,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
 
       <iframe
         class="transformation-result {ox:get-field(., 'name') => ox:scenario-identifier()}-transformation"
-        src="{$output}"/>
+        src="{$output}" onload="javascript:registerIFrameResizer(this)"/>
 
       <section class="stylesheet">
         <xsl:element name="h{$level + 1}">stylesheet</xsl:element>
