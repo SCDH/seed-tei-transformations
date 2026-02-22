@@ -34,7 +34,7 @@ iframe {
 }
 .transformation table thead,
 .transformation table th {
-    background-color: lightgray !important;
+    background-color: #eee !important;
 }
 .transformation table td,
 .transformation table th
