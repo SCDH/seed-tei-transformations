@@ -92,10 +92,10 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
   <xsl:template name="ox:transformation-info" visibility="final">
     <xsl:context-item as="element(scenario)" use="required"/>
     <xsl:param name="output" as="xs:string"/>
-    <xsl:param name="level" as="xs:integer" select="7"/>
+    <xsl:param name="level" as="xs:integer" select="5"/>
     <xsl:variable name="scenario" as="element(scenario)" select="."/>
     <section class="transformation">
-      <xsl:element name="h{$level}">
+      <xsl:element name="h{min(($level, 6))}">
         <xsl:value-of select="ox:get-field($scenario, 'name')"/>
       </xsl:element>
 
@@ -104,7 +104,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
         src="{$output}" onload="javascript:registerIFrameResizer(this)"/>
 
       <section class="stylesheet">
-        <xsl:element name="h{$level + 1}">stylesheet</xsl:element>
+        <xsl:element name="h{min(($level + 1, 6))}">stylesheet</xsl:element>
         <xsl:text> </xsl:text>
         <code>
           <xsl:value-of
@@ -113,7 +113,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
       </section>
 
       <section class="stylesheet">
-        <xsl:element name="h{$level + 1}">Saxon config</xsl:element>
+        <xsl:element name="h{min(($level + 1, 6))}">Saxon config</xsl:element>
         <xsl:text> </xsl:text>
         <code>
           <xsl:value-of
@@ -123,7 +123,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
       </section>
 
       <section class="parameters">
-        <xsl:element name="h{$level + 1}">Parameters</xsl:element>
+        <xsl:element name="h{min(($level + 1, 6))}">Parameters</xsl:element>
         <table>
           <thead>
             <th>local name</th>
