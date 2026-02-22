@@ -48,7 +48,7 @@
       <div>
         <head>Supported Encoding Crystals</head>
 
-        <div>
+        <div xml:id="lines">
           <head>Lines</head>
 
           <p>Lines are encoded with <gi>lb</gi> (line beginning). There's a switch for toggeling
@@ -75,17 +75,17 @@
 
         </div>
 
-        <div>
+        <div xml:id="TC">
           <head>Critical Apparatus</head>
 
-          <div>
+          <div xml:id="TCAP">
             <head>Encoding Variants with <gi>app</gi></head>
 
             <p>There are three different methods of encoding variants with <gi>app</gi>. The SEED
               TEI Transfromations support all of them and detects the right one by evaluating
                 <gi>variantEncoding</gi> in the file's <gi>encodingDesc</gi>.</p>
 
-            <div>
+            <div xml:id="TCAPPS">
               <head>Parallel Segmentation</head>
 
               <p>Parallel segmentation requires
@@ -113,7 +113,7 @@
 
             </div>
 
-            <div>
+            <div xml:id="TCAPDE">
               <head>Double End-Point Attachement</head>
 
               <p>See <ref
@@ -163,7 +163,7 @@
               </div>
             </div>
 
-            <div>
+            <div xml:id="TCAPLO">
               <head>Location Referenced Method</head>
 
               <p>When using the location referenced method, the apparatus mark (footnote, popup)
@@ -194,16 +194,17 @@
 
           </div>
 
-          <div>
+          <div xml:id="TCAPVIZ">
             <head>Apparatus Visualizations</head>
 
-            <p>A critical apparatus can be visialized in different ways: with popups, as a
-              line-based apparatus, with footnotes. These are only different arrangements of the
-              same apparatus entries on the screen. Structure and content of the apparatus entries
-              remain the same.</p>
+            <p>A critical apparatus can be visialized in different ways: with popups (CAP), as a
+              line-based apparatus (CAL), with footnotes (CAF). These are only different
+              arrangements of the same apparatus entries on the screen. Structure and content of the
+              apparatus entries remain the same.</p>
 
             <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="appartus-presentations"
-              template="#simple" transfox="xpr:SEED::ReadingCAP xpr:SEED::ReadingCAF xpr:SEED::DiplomaticCAL">
+              template="#simple"
+              transfox="xpr:SEED::ReadingCAP xpr:SEED::ReadingCAF xpr:SEED::DiplomaticCAL">
               <!-- in the header -->
               <encodingDesc slot="teiHeader">
                 <variantEncoding method="double-end-point" location="internal"/>
