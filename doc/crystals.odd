@@ -192,6 +192,29 @@
 
             </div>
 
+            <div xml:id="TCAPLL">
+              <head>Alternative Segments</head>
+
+              <p>As a simple alternative to encoding variation with <gi>app</gi>, <gi>choice</gi>
+                can be used with segments in <gi>seg</gi>. The first segment will be presented in
+                the text, while subsequent segments go into the apparatus.</p>
+
+              <p>See <ref target="tg:TCAPLL">Guidelines, sec. TCAPLL</ref> and <ref
+                  target="tg:COEDCOR">sec. COEDCOR</ref>.</p>
+
+              <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="choice-segments"
+                template="#simple" transfox="xpr:SEED::ReadingCAF">
+                <!-- in the body -->
+                <l n="1"><choice>
+                    <seg source="#El #Hg">Experience</seg>
+                    <seg source="#La">Experiment</seg>
+                    <seg source="#Ra2">Eryment</seg>
+                  </choice> though noon Auctoritee </l>
+                <l n="2">Were in this world ...</l>
+              </egXML>
+
+            </div>
+
           </div>
 
           <div xml:id="TCAPVIZ">
