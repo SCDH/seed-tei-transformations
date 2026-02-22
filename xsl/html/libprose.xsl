@@ -186,7 +186,13 @@
                     <xsl:call-template name="text:class-attribute">
                         <xsl:with-param name="additional" select="'verse'"/>
                     </xsl:call-template>
-                    <xsl:apply-templates select="@* | node()"/>
+                    <xsl:apply-templates select="@*"/>
+                    <xsl:if test="$prose:linebreaks">
+                        <span class="line-number">
+                            <xsl:value-of select="common:line-number(.)"/>
+                        </span>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()"/>
                 </div>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
