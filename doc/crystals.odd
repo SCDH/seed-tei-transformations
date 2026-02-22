@@ -65,7 +65,7 @@
             end.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
-            template="#simple" transfox="ts:Diplomatic">
+            template="#simple" transfox="xpr:SEED::Diplomatic xpr:SEED::Reading">
             <p xml:space="preserve" xml:lang="de"><lb n="1"/>
               Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
               weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
@@ -96,7 +96,7 @@
 
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="parallel-segmentation"
-                template="#simple" transfext="#prose-with-popups">
+                template="#simple" transfox="xpr:SEED::ReadingCAP">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -126,7 +126,7 @@
                 <head>Internal</head>
 
                 <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-internal"
-                  template="#simple" transfext="#prose-with-popups">
+                  template="#simple" transfox="xpr:SEED::ReadingCAP">
                   <!-- in the header -->
                   <encodingDesc slot="teiHeader">
                     <variantEncoding method="double-end-point" location="internal"/>
@@ -144,7 +144,7 @@
                 <head>External</head>
 
                 <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-external"
-                  template="#simple" transfext="#prose-with-popups">
+                  template="#simple" transfox="xpr:SEED::ReadingCAP">
                   <!-- in the header -->
                   <encodingDesc slot="teiHeader">
                     <variantEncoding method="double-end-point" location="external"/>
@@ -175,7 +175,7 @@
                   >Guidelines, sec. TCAPLO</ref>.</p>
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="location-referenced"
-                template="#simple" transfext="#prose-with-popups">
+                template="#simple" transfox="xpr:SEED::ReadingCAP">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="location-referenced" location="internal"/>
