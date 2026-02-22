@@ -20,8 +20,14 @@
     <xsl:function name="common:line-number" as="xs:string">
         <xsl:param name="el" as="node()"/>
         <xsl:choose>
-            <xsl:when test="$el/@n">
+            <xsl:when test="$el[ancestor-or-self::l[@n]]">
+                <xsl:value-of select="$el/ancestor-or-self::l/@n"/>
+            </xsl:when>
+            <xsl:when test="$el/self::lb[@n]">
                 <xsl:value-of select="$el/@n"/>
+            </xsl:when>
+            <xsl:when test="$el/preceding::lb[1][@n]">
+                <xsl:value-of select="$el/preceding::lb[1]/@n"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:text>?</xsl:text>
