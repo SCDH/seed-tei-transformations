@@ -23,6 +23,9 @@
             <xsl:when test="$el[ancestor-or-self::l[@n]]">
                 <xsl:value-of select="$el/ancestor-or-self::l/@n"/>
             </xsl:when>
+            <xsl:when test="$el/self::lb[not(@n)]">
+                <xsl:text>?</xsl:text>
+            </xsl:when>
             <xsl:when test="$el/self::lb[@n]">
                 <xsl:value-of select="$el/@n"/>
             </xsl:when>
