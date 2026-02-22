@@ -106,6 +106,12 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
       <section class="stylesheet">
         <table>
           <tr>
+            <th>oXygen transformation scenario</th>
+            <td>
+              <xsl:value-of select="ox:get-field($scenario, 'name')"/>
+            </td>
+          </tr>
+          <tr>
             <th>Stylesheet</th>
             <td>
               <code>
