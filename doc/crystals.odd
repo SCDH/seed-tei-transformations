@@ -96,7 +96,7 @@
 
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="parallel-segmentation"
-                template="#simple" transfox="xpr:SEED::ReadingCAP">
+                template="#simple" transfox="xpr:SEED::ReadingCAF">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -126,7 +126,7 @@
                 <head>Internal</head>
 
                 <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-internal"
-                  template="#simple" transfox="xpr:SEED::ReadingCAP">
+                  template="#simple" transfox="xpr:SEED::ReadingCAF">
                   <!-- in the header -->
                   <encodingDesc slot="teiHeader">
                     <variantEncoding method="double-end-point" location="internal"/>
@@ -144,7 +144,7 @@
                 <head>External</head>
 
                 <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-external"
-                  template="#simple" transfox="xpr:SEED::ReadingCAP">
+                  template="#simple" transfox="xpr:SEED::ReadingCAF">
                   <!-- in the header -->
                   <encodingDesc slot="teiHeader">
                     <variantEncoding method="double-end-point" location="external"/>
@@ -175,7 +175,7 @@
                   >Guidelines, sec. TCAPLO</ref>.</p>
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="location-referenced"
-                template="#simple" transfox="xpr:SEED::ReadingCAP">
+                template="#simple" transfox="xpr:SEED::ReadingCAF">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="location-referenced" location="internal"/>
@@ -190,7 +190,29 @@
 
             </div>
 
+          </div>
 
+          <div>
+            <head>Apparatus Visualizations</head>
+
+            <p>A critical apparatus can be visialized in different ways: with popups, as a
+              line-based apparatus, with footnotes. These are only different arrangements of the
+              same apparatus entries on the screen. Structure and content of the apparatus entries
+              remain the same.</p>
+
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="appartus-presentations"
+              template="#simple" transfox="xpr:SEED::ReadingCAP xpr:SEED::ReadingCAF xpr:SEED::DiplomaticCAL">
+              <!-- in the header -->
+              <encodingDesc slot="teiHeader">
+                <variantEncoding method="double-end-point" location="internal"/>
+              </encodingDesc>
+              <!-- the the body -->
+              <l n="1"><anchor xml:id="wbp.1"/>Experience<app from="#wbp.1">
+                  <rdg wit="#La">Experiment</rdg>
+                  <rdg wit="#Ra2">Eryment</rdg>
+                </app> though noon Auctoritee</l>
+              <l n="2">Were in this world ...</l>
+            </egXML>
 
           </div>
 
