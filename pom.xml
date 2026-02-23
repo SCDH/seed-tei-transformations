@@ -325,6 +325,29 @@
                                 </fileMapper>
                             </fileMappers>
                         </transformationSet>
+                        <transformationSet>
+                            <dir>${project.basedir}</dir>
+                            <includes>
+                                <include>SEED_TEI_Transformations.xpr</include>
+                            </includes>
+                            <stylesheet>utils/scenarios.xsl</stylesheet>
+                            <parameters>
+                                <parameter>
+                                    <name>edition</name>
+                                    <value>ee</value>
+                                </parameter>
+                                <parameter>
+                                    <name>extension</name>
+                                    <value>${pluginDirURL(${project.groupId}.${project.artifactId})}</value>
+                                </parameter>
+                            </parameters>
+                            <fileMappers>
+                                <fileMapper
+                                    implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                    <targetExtension>.scenarios</targetExtension>
+                                </fileMapper>
+                            </fileMappers>
+                        </transformationSet>
                     </transformationSets>
                 </configuration>
                 <dependencies>

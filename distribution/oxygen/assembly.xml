@@ -27,6 +27,7 @@
          <outputDirectory>/</outputDirectory>
          <includes>
             <include>saxon.*.xml</include>
+            <include>*.scenarios</include>
          </includes>
       </fileSet>
    </fileSets>
