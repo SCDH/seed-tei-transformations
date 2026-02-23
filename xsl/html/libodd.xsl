@@ -4,24 +4,24 @@
 This transformation transforms the descriptive part of an ODD into an HTML documentation.
 When the $odd:transform switch is turned on, each egXML code snipped with one or more
 declared transformations is followed by an iframe with the transformation results.
-This feature make this XSLT perfect for documentation which encoding crystals are supported
+This feature make this XSLT perfect for documentation which encodings are supported
 by a transformation and how the result looks like.
 
 USAGE:
 
 generate HTML representation of ODD
 
-target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml
+target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/documentation.xml
 
 
 generate examples only:
 
-target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml -it:examples
+target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/documentation.xml -it:examples
 
 
 generate Apache Ant build file from an ODD:
 
-target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/crystals.xml -it:ant-build-file \!method=xml \!indent=true
+target/bin/xslt.sh -config:saxon.he.html.xml -xsl:xsl/html/libodd.xsl -s:doc/documentation.xml -it:ant-build-file \!method=xml \!indent=true
 
 
 generate an Apache Ant build file importing all other Apache Ant build files:
@@ -313,7 +313,7 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     <xsl:template name="examples" visibility="public">
         <xsl:context-item as="document-node(element(TEI))" use="required"/>
         <xsl:for-each select="/TEI/text/body//eg:egXML">
-            <!-- the wrapped crystal goes into ID.xml -->
+            <!-- the example is wrapped into the template and goes into $outdir/ID.xml -->
             <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.xml"
                 exclude-result-prefixes="#all" indent="no" method="xml">
                 <xsl:choose>
@@ -332,21 +332,6 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                         </xsl:apply-templates>
                     </xsl:otherwise>
                 </xsl:choose>
-            </xsl:result-document>
-            <!--
-                The crystal with eg:egXML wrapper goes into ID.crystal.xml which
-                is used for generating a view on the XML source.
-                The wrapper is required to make the result document wellformed and
-                will be invisible.
-            -->
-            <xsl:result-document href="{resolve-uri(@xml:id, $outdir)}.crystal.xml"
-                exclude-result-prefixes="#all" indent="no" method="xml" omit-xml-declaration="true">
-                <xsl:copy>
-                    <xsl:apply-templates mode="source" select="node()">
-                        <xsl:with-param name="base-indentation" as="xs:integer"
-                            select="odd:get-indent(.)"/>
-                    </xsl:apply-templates>
-                </xsl:copy>
             </xsl:result-document>
         </xsl:for-each>
     </xsl:template>
