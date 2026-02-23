@@ -14,7 +14,7 @@ building blocks highly reusable.
 Documentation:
 
 1. [Features](features.md)
-1. [transformationed encoding snippets](https://scdh.github.io/seed-tei-transformations/doc/crystals.hml)
+1. [transformed encoding snippets](https://scdh.github.io/seed-tei-transformations/doc/crystals.html)
 1. [Wiki](https://github.com/SCDH/seed-tei-transformations/wiki)!
 
 This project is part of the SEED, which is an recursive acronym for
@@ -59,7 +59,7 @@ If you have Saxon HE at hand, simply use it as follows.
 
 If you don't have Saxon HE at hand but want to try from the command
 line, have a look into the
-[Wiki](https://github.com/SCDH/seed-tei-transformations/wiki/tooling.md)
+[Wiki](https://github.com/SCDH/seed-tei-transformations/wiki/tooling)
 and use the project's Tooling environment to get all you need.
 
 
@@ -80,7 +80,7 @@ then use the packages from the plugin.
 
 Further information on writing your own transformation scenarios using
 this plugin is given in the
-[Wiki](https://github.com/SCDH/seed-tei-transformations/wiki/oxygen.md).
+[Wiki](https://github.com/SCDH/seed-tei-transformations/wiki/oxygen).
 
 
 ### SEED XML Transformer
