@@ -70,6 +70,7 @@
     <!-- CSS -->
 
     <x:scenario label="no CSS but from tagsDecl">
+        <x:param name="html:default-css" select="()"/>
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="no CSS style elements, but from tagsDecl" test="count(/html/head/style)"
             select="1"/>
@@ -100,6 +101,7 @@
     </x:scenario>
 
     <x:scenario label="internal CSS, non-existing CSS source">
+        <x:param name="html:default-css" select="()"/>
         <x:param name="html:css" select="('unknown.css')"/>
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="style element not present than that from tagsDecl"
@@ -179,7 +181,7 @@
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="no JS script elements" test="not(exists(/html/head/script))"/>
         <x:expect label="JS not available"
-            test="not(matches(/html/head/comment(), '^JS not available'))"/>
+            test="count(/html/head/comment()[matches(., '^JS not available')])" select="0"/>
     </x:scenario>
 
     <x:scenario label="internal JS">

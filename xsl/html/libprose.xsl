@@ -14,10 +14,13 @@
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
 
     <!-- whether or not lb elements are evaluated in the HTML -->
-    <xsl:param name="prose:linebreaks" as="xs:boolean" select="true()" required="false"/>
+    <xsl:param name="prose:linebreaks" as="xs:boolean" select="false()" required="false"/>
 
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="prose:linebreaks-hyphen" as="xs:string" select="'-'" required="false"/>
+
+    <!-- whether or not to make clickable links from named anchors for headlines etc. -->
+    <xsl:param name="prose:anchors" as="xs:boolean" select="false()" required="false"/>
 
     <!--
         A key for distinguishing text nodes in 'before', 'after' and 'both-ends' delimitation
@@ -140,9 +143,25 @@
                     select="concat('h', if ($level eq 0) then 1 else $level)"/>
                 <xsl:element name="{$heading}">
                     <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@* | node()"/>
+                    <a class="target">
+                        <xsl:variable name="id" as="xs:string">
+                            <xsl:choose>
+                                <xsl:when test="parent::*/@xml:id">
+                                    <xsl:value-of select="parent::*/@xml:id"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="generate-id(parent::*)"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable>
+                        <xsl:attribute name="name" select="$id"/>
+                        <xsl:if test="$prose:anchors">
+                            <xsl:attribute name="href" select="'#' || $id"/>
+                        </xsl:if>
+                        <xsl:apply-templates select="@* | node()"/>
+                    </a>
+                    <xsl:apply-templates mode="text:hook-after" select="."/>
                 </xsl:element>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
 
             <!-- output pb/@n in square brackets -->
@@ -177,7 +196,13 @@
                     <xsl:call-template name="text:class-attribute">
                         <xsl:with-param name="additional" select="'verse'"/>
                     </xsl:call-template>
-                    <xsl:apply-templates select="@* | node()"/>
+                    <xsl:apply-templates select="@*"/>
+                    <xsl:if test="$prose:linebreaks">
+                        <span class="line-number">
+                            <xsl:value-of select="common:line-number(.)"/>
+                        </span>
+                    </xsl:if>
+                    <xsl:apply-templates select="node()"/>
                 </div>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
@@ -210,15 +235,14 @@
                         select="key('text-delimited-by-in-word-lb', 'both-ends') => count()"/>
                 </xsl:message>
                 <xsl:if test="@break eq 'no'">
-                    <span class="static-text hyphen">
+                    <span class="hyphen">
                         <xsl:value-of select="$prose:linebreaks-hyphen"/>
                     </span>
                 </xsl:if>
-                <xsl:text>&#xa;</xsl:text>
                 <br/>
+                <xsl:text>&#xa;</xsl:text>
                 <span class="line-number">
                     <xsl:value-of select="common:line-number(.)"/>
-                    <xsl:text>&#x20;</xsl:text>
                 </span>
             </xsl:template>
 

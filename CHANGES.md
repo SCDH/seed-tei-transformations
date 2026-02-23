@@ -2,6 +2,10 @@
 
 ## 0.18.0
 
+- makes generated HTML navigable by making named anchors from section heads (see issue #73)
+  - These anchors can optionally be made clickable by setting the
+    `prose:target` stylesheet parameter to a truth value.
+- support `<ref>` and `<ptr>` with links shortend by `<prefixDef>`
 - support alternants encoded by `<alt mode="excl" target="..."/>` (see
   issue #66)
 - support pair of `<add>` and `<del>` enclosed in `<subst>` (see issue #64)
@@ -24,6 +28,9 @@
   (see issue #70)
   - former line numbering was considered project-specific and has been
     moved to `xsl/projects/alea/common/libalea.xsl`
+- introduces `xsl/html/libodd.xsl` for generating documentations from
+  ODD where transformation output for encoding crystals in `<egXML>`
+  can be included
 
 ## 0.17.1
 

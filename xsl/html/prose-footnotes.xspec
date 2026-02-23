@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
-    stylesheet="prose-with-popups.xsl" run-as="external">
+    stylesheet="prose-footnotes.xsl" run-as="external">
 
     <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
 
@@ -34,23 +34,24 @@
                                 eine dritte Gerade geschnitten werden.</p>
                         </div>
                     </div>
-                    <div xml:id="alt1">
-                        <t:ab>first <t:seg xml:id="op1" type="alternative">text</t:seg>
-                            <t:add xml:id="op2" type="alternative" place="above">addition</t:add>
-                            <t:alt target="#op1 #op2" mode="excl"/> last</t:ab>
-                    </div>
                 </body>
             </text>
         </TEI>
     </x:variable>
 
-    <x:scenario label="apparatus in popups, regression for issue #74">
+    <x:scenario label="apparatus in footnotes, regression for issue #74">
         <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="has 2 apparatus entries in popup" test="count(//span[@class eq 'popup'])"
-            select="3"/>
+        <x:expect label="has 2 apparatus entries in footnotes"
+            test="count(//section[@class eq 'content']//a[@name and @href])" select="2"/>
+        <x:expect label="footnote marks"
+            test="//section[@class eq 'content']//a[@name and @href] ! string(.)"
+            select="('1', '2')"/>
+        <x:expect label="footnote numbers"
+            test="//section[@class eq 'variants']//span[matches(@class, '-number')]/a[@name and @href] ! string(.)"
+            select="('1', '2')"/>
         <x:expect label="apparatus lemmas"
-            test="//span[@class eq 'popup']//span[@class eq 'apparatus-lemma'] ! string(.)"
-            select="('Dreiecks', 'Paralellen', 'text')"/>
+            test="//section[@class eq 'variants']//span[@class eq 'apparatus-lemma'] ! string(.)"
+            select="('Dreiecks', 'Paralellen')"/>
     </x:scenario>
 
     <x:scenario label="full html">
@@ -61,12 +62,6 @@
                 <body>...</body>
             </html>
         </x:expect>
-    </x:scenario>
-
-    <x:scenario label="alternants have apparatus entry; regression for issue #66">
-        <x:context select="$tei-text" mode="html:html"/>
-        <x:expect label="apparatus entry exists"
-            test="exists(//*[@id eq 'alt1']//*[@class eq 'apparatus-entry'])"/>
     </x:scenario>
 
 </x:description>

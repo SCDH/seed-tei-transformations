@@ -57,7 +57,7 @@
     <xsl:override>
       <xsl:template name="text:inline-marks">
         <xsl:param name="context" as="element()" required="false" select="."/>
-        <xsl:call-template name="app:inline-alternatives">
+        <xsl:call-template name="app:footnote-marks">
           <xsl:with-param name="entries" select="map:merge($prose:apparatus-entries)"/>
           <xsl:with-param name="context" select="$context"/>
         </xsl:call-template>
@@ -76,7 +76,7 @@
     <xsl:override>
 
       <xsl:template name="html:content">
-        <xsl:apply-templates mode="text:text"/>
+        <xsl:call-template name="body"/>
       </xsl:template>
 
       <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css"
@@ -95,9 +95,24 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- how is app:popup-css passed into? -->
-        <xsl:apply-templates mode="text:text" select="//body"/>
+        <xsl:call-template name="body">
+          <xsl:with-param name="context" select="//body"/>
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="body">
+    <xsl:param name="context" as="node()" select="." required="false"/>
+    <section class="content">
+      <xsl:apply-templates select="$context" mode="text:text"/>
+    </section>
+    <hr/>
+    <section class="variants">
+      <xsl:call-template name="app:note-based-apparatus">
+        <xsl:with-param name="entries" select="$prose:apparatus-entries"/>
+      </xsl:call-template>
+    </section>
   </xsl:template>
 
 </xsl:package>

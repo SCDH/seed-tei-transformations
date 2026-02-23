@@ -1,7 +1,9 @@
 #!/bin/sh
 
-JARS=${project.build.directory}/lib/Saxon-HE-${saxon.version}.jar
-JARS=$JARS:${project.build.directory}/lib/xmlresolver-${xmlresolver.version}.jar
-JARS=$JARS:${project.build.directory}/lib/xercesImpl-${xerces.version}.jar
+CP=$CLASSPATH
+for j in ${project.build.directory}/lib/*.jar; do
+    CP=$CP:$j
+done
 
-java -Ddebug="true" -Dhttp://apache.org/xml/features/xinclude/fixup-base-uris=true -cp $JARS net.sf.saxon.Transform $@
+
+java -Ddebug="true" -Dhttp://apache.org/xml/features/xinclude/fixup-base-uris=true -cp $CP net.sf.saxon.Transform $@

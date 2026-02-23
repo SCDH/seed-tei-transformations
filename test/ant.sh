@@ -7,4 +7,4 @@ for j in ${project.build.directory}/lib/*.jar; do
     CP=$CP:$j
 done
 
-java  -Dxspec.version=${xspec.version} $JAVAOPTS -cp $CP org.apache.tools.ant.Main $@
+java $JAVAOPTS -cp $CP org.apache.tools.ant.Main $@

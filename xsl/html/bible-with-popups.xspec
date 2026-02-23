@@ -5,100 +5,125 @@
     xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
     stylesheet="bible-with-popups.xsl" run-as="external">
 
-    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
 
     <x:variable name="tei-text">
-        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
-            <teiHeader>
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="la" xml:id="_2ES">
+            <teiHeader xml:lang="en">
                 <fileDesc>
                     <titleStmt>
-                        <title>Test</title>
+                        <title type="id" rendition="#id">Latin: Biblia Sacra (Vulgata)
+                            1983</title><title type="h" rendition="#h">LIBER IIII
+                            EZRAE</title><title type="sub" xml:lang="en">Digital Edition</title>
+                        <editor>R. Weber, et. al.</editor>
                     </titleStmt>
                 </fileDesc>
+                <encodingDesc>
+                    <variantEncoding location="internal" method="location-referenced"/>
+                    <tagsDecl>
+                        <rendition xml:id="add" scheme="css">vertical-align: super; font-size:
+                            0.7em</rendition>
+                        <rendition xml:id="it" scheme="css">font-style: italic</rendition>
+                        <rendition xml:id="id" scheme="css"/>
+                        <rendition xml:id="ide" scheme="css"/>
+                        <rendition xml:id="rem" scheme="css"/>
+                        <rendition xml:id="h" scheme="css"/>
+                        <rendition xml:id="toc3" scheme="css"/>
+                        <rendition xml:id="toc2" scheme="css"/>
+                        <rendition xml:id="toc1" scheme="css"/>
+                        <rendition xml:id="mt1" scheme="css"/>
+                        <rendition xml:id="f" scheme="css"/>
+                        <rendition xml:id="fr" scheme="css"/>
+                        <rendition xml:id="ft" scheme="css"/>
+                        <rendition xml:id="c" scheme="css"/>
+                        <rendition xml:id="p" scheme="css"/>
+                        <rendition xml:id="v" scheme="css"/>
+                        <rendition xml:id="xt" scheme="css"/>
+                        <rendition xml:id="nb" scheme="css"/>
+                        <rendition xml:id="mte1" scheme="css"/>
+                    </tagsDecl>
+                </encodingDesc>
+                <revisionDesc>
+                    <change xml:lang="en" when="2024-09-13+02:00">Converted from USX source file
+                            <ptr target="$source-url"/> to TEI using usx2tei.xsl.</change>
+                </revisionDesc>
             </teiHeader>
-            <text xml:id="the-text">
-                <front>
-                    <div>
-                        <head>Vorrede</head>
-                        <p>Der hochwohlgebohrenen Prinzessin Z.</p>
-                    </div>
-                </front>
+            <text>
                 <body>
-                    <div xml:id="d1" n="1">
-                        <head>Erstes Hauptstück</head>
-                        <div xml:id="d1.1">
-                            <head>Des ersten Hauptstücks erster Teil</head>
-                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
-                                objektive Realität im Satz über die Summe der Innenwinkel des <app
-                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
-                                    >n-Ecks</rdg></app>.</p>
-                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
-                                Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
-                                eine dritte Gerade geschnitten werden.</p>
-                        </div>
-                    </div>
-                    <div xml:id="d2" n="2">
-                        <lg>
-                            <l>
-                                <w n="1">Beim</w>
-                                <w n="2">Styx</w><pc>!</pc>
-                                <w n="3">Drüber</w>
-                            </l>
+                    <head xml:id="_2ES.0.0">INCIPIT LIBER EZRAE QUARTUS</head>
+                    <!--found verses overlapping paragraph boundaries: 2ES 4:11, 2ES 5:55, 2ES 8:62, 2ES 9:42, 2ES 10:17, 2ES 10:37, 2ES 12:3, 2ES 12:9, 2ES 12:31, 2ES 12:40, 2ES 12:45, 2ES 13:20, 2ES 16:64-->
+                    <lg n="1" xml:id="_2ES.1">
+                        <lg rendition="#p">
+                            <l n="1" xml:id="_2ES.1.1">
+                                <app><lem><note type="verse-reference">1,1 </note></lem><rdg
+                                        wit="#C #M #E">
+                                        <hi rendition="#it">vv.</hi> 1–3 <hi rendition="#it"
+                                            >om.</hi>
+                                        <wit>C</wit><wit>M</wit><wit>E</wit>, <hi rendition="#it"
+                                            >qui in capp.</hi> 1 <hi rendition="#it">et</hi> 2, <hi
+                                            rendition="#it">quae post</hi>
+                                        <hi rendition="#xt">16,78</hi>
+                                        <hi rendition="#it">ponunt, alteram textus recensionem
+                                            exhibent et ideo rarius a nobis
+                                    citantur</hi></rdg></app>
+                                <app><lem><note type="verse-reference">1,1 </note></lem><witDetail
+                                        wit="#l">[<hi rendition="#it">deest</hi>
+                                        <wit>l</wit>
+                                        <hi rendition="#it">usque ad</hi>
+                                        <hi rendition="#xt">7,67</hi>]</witDetail></app>Liber Ezrae
+                                            prophetae<app><lem><note type="verse-reference">1,1
+                                        </note></lem><rdg wit="#S #_𝔠 #_𝔟">prophetae + secundus
+                                            <wit>S</wit>
+                                        <wit>𝔠</wit><wit>𝔟</wit></rdg></app>, filii Sarei, filii
+                                Azarei, filii Helchiae, filii Salame<app><lem><note
+                                            type="verse-reference">1,1 </note>salame</lem><rdg
+                                        wit="#_𝔠"> sadaniae <wit>𝔠</wit></rdg></app>, filii
+                                Sadoch, filii Acitob, </l>
+                            <l n="2" xml:id="_2ES.1.2">filii Achiae, filii Finees, filii Heli, filii
+                                Ameriae, filii Aziei<app><lem><note type="verse-reference">1,2
+                                        </note>aziei</lem><rdg wit="#_𝔠"> asiel
+                                    <wit>𝔠</wit></rdg></app>, filii Marimoth, filii Arna, filii
+                                Oziae, filii Borith, filii Abissei, filii Finees, filii
+                                            Eleazar<app><lem><note type="verse-reference">1,2
+                                        </note></lem><rdg wit="#A">eleazari
+                                <wit>A</wit></rdg></app>, </l>
+                            <l n="3" xml:id="_2ES.1.3">filii Aaron ex tribu Levi, qui fuit captivus
+                                in regione Medorum, in regno Artaxersis regis<app><lem><note
+                                            type="verse-reference">1,3 </note></lem><rdg wit="#S"
+                                        >rege <wit>S</wit></rdg></app> Persarum.</l></lg>
+                        <lg rendition="#p">
+                            <l n="4" xml:id="_2ES.1.4">Et<app><lem><note type="verse-reference">1,4
+                                        </note></lem><rdg wit="#S">et <hi rendition="#it">om.</hi>
+                                        <wit>S</wit></rdg></app> factum est verbum Domini ad me
+                                dicens: </l>
                         </lg>
-                    </div>
+                    </lg>
                 </body>
             </text>
         </TEI>
     </x:variable>
 
-
-    <x:scenario label="mode text:text on front">
-        <x:context select="$tei-text//t:front" mode="text:text"/>
-        <x:expect label="result">
-            <div>
-                <section>
-                    <h1>Vorrede</h1>
-                    <p>Der hochwohlgebohrenen Prinzessin Z.</p>
-                </section>
-            </div>
-        </x:expect>
+    <x:scenario label="bible structured in chapters and verses">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="count of verses" test="count(//div[tokenize(@class) = 'verse'])" select="4"/>
+        <x:expect label="vers numbers in attributes"
+            test="//div[tokenize(@class) = 'verse']/@data-tei-n ! string(.)"
+            select="('1','2','3','4')"/>
+        <x:expect label="vers+chapter numbers in attributes"
+            test="//div[tokenize(@class) = 'verse']/@data-chapter-verse ! string(.)"
+            select="('1,1','1,2','1,3','1,4')"/>
     </x:scenario>
 
-    <x:scenario label="mode text:text on d2">
-        <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
-        <x:expect label="result">
-            <section id="d2" data-tei-n="2">
-                <div>
-                    <div>BeimStyx!Drüber</div>
-                </div>
-            </section>
-        </x:expect>
+    <x:scenario label="apparatus in popups, regression for issue #74">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="has right count of apparatus entries in popup"
+            test="count(//span[@class eq 'popup'])" select="8"/>
     </x:scenario>
-
-    <x:scenario label="mode text:text on apparatus">
-        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
-        <x:expect label="result">
-            <p data-tei-n="1" id="d1.1.p1">...</p>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="mode prose on apparatus" pending="test not working">
-        <x:context select="$tei-text//t:front" mode="prose"/>
-        <x:expect label="result">
-            <div>
-                <section>
-                    <h1>Vorrede</h1>
-                    <p>Der hochwohlgebohrenen Prinzessin Z.</p>
-                </section>
-            </div>
-        </x:expect>
-    </x:scenario>
-
 
     <x:scenario label="full html">
         <x:context select="$tei-text" mode="html:html"/>
         <x:expect label="result">
-            <html lang="de">
+            <html lang="la" id="...">
                 <head>...</head>
                 <body>...</body>
             </html>

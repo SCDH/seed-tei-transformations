@@ -15,12 +15,20 @@ in the base text, the apparatus and in the editorial notes. -->
     package-version="1.0.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:text="http://scdh.wwu.de/transform/text#"
     xmlns:app="http://scdh.wwu.de/transform/app#" xmlns:note="http://scdh.wwu.de/transform/note#"
-    xmlns:i18n="http://scdh.wwu.de/transform/i18n#" exclude-result-prefixes="#all"
-    xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0">
+    xmlns:ref="http://scdh.wwu.de/transform/ref#" xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
+    exclude-result-prefixes="#all" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    version="3.0">
 
     <xsl:mode name="text:text" on-no-match="text-only-copy" visibility="public"/>
     <xsl:mode name="app:reading-text" on-no-match="text-only-copy" visibility="public"/>
     <xsl:mode name="note:editorial" on-no-match="text-only-copy" visibility="public"/>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libref.xsl"
+        package-version="1.0.0">
+        <xsl:accept component="function" names="ref:references-from-attribute#1"
+            visibility="private"/>
+    </xsl:use-package>
 
     <xsl:template mode="text:text app:reading-text note:editorial" match="*[@rendition]"
         priority="0.6">
@@ -60,6 +68,14 @@ in the base text, the apparatus and in the editorial notes. -->
         </sup>
     </xsl:template>
 
+    <xsl:template mode="text:text app:reading-text note:editorial" match="hi[@rend]" priority="0.2">
+        <xsl:element name="{local-name()}">
+            <xsl:call-template name="text:class-attribute-opt"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </xsl:element>
+    </xsl:template>
+
+
     <!-- segmentation offers hooks for project-specific insertions -->
     <xsl:template mode="text:text app:reading-text note:editorial" match="seg | s | w | c | pc">
         <span>
@@ -67,6 +83,70 @@ in the base text, the apparatus and in the editorial notes. -->
             <xsl:apply-templates mode="#current" select="@* | node()"/>
         </span>
     </xsl:template>
+
+    <xsl:template mode="text:text app:reading-text note:editorial" match="gi">
+        <span class="element">
+            <xsl:call-template name="text:class-attribute"/>
+            <span class="angle-brackets">
+                <xsl:text>&lt;</xsl:text>
+            </span>
+            <span class="element-name">
+                <xsl:apply-templates mode="#current" select="@* | node()"/>
+            </span>
+            <span class="angle-brackets">
+                <xsl:text>&gt;</xsl:text>
+            </span>
+        </span>
+    </xsl:template>
+
+    <xsl:template mode="text:text app:reading-text note:editorial" match="att">
+        <span class="attribute">
+            <xsl:call-template name="text:class-attribute"/>
+            <span class="attribute-at">
+                <xsl:text>@</xsl:text>
+            </span>
+            <span class="attribute-name">
+                <xsl:apply-templates mode="#current" select="@* | node()"/>
+            </span>
+        </span>
+    </xsl:template>
+
+    <xsl:template mode="text:text app:reading-text note:editorial" match="val">
+        <span class="value">
+            <xsl:call-template name="text:class-attribute"/>
+            <span class="quotes">
+                <xsl:text>&quot;</xsl:text>
+            </span>
+            <span class="value">
+                <xsl:apply-templates mode="#current" select="@* | node()"/>
+            </span>
+            <span class="quotes">
+                <xsl:text>&quot;</xsl:text>
+            </span>
+        </span>
+    </xsl:template>
+
+    <xsl:template mode="text:text app:reading-text note:editorial" match="code">
+        <code>
+            <xsl:call-template name="text:class-attribute"/>
+            <xsl:apply-templates mode="#current" select="@* | node()"/>
+        </code>
+    </xsl:template>
+
+    <xsl:template mode="text:text app:reading-text note:editorial" match="ref">
+        <a href="{ref:references-from-attribute(@target)}">
+            <xsl:call-template name="text:class-attribute"/>
+            <xsl:apply-templates mode="#current"/>
+        </a>
+    </xsl:template>
+
+    <xsl:template mode="text:text app:reading-text note:editorial" match="ptr">
+        <a href="{ref:references-from-attribute(@target)}">
+            <xsl:call-template name="text:class-attribute"/>
+            <xsl:value-of select="ref:references-from-attribute(@target)"/>
+        </a>
+    </xsl:template>
+
 
     <!-- space left by scribe (lacuna) -->
     <xsl:template mode="text:text app:reading-text" match="space">

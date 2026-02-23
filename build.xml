@@ -13,14 +13,42 @@
 
     <include file="${xspec.project.dir}/build.xml"/>
 
-    <echo>basedir: ${basedir}</echo>
-    <echo>using XSpec ${xspec.version}</echo>
+    <path id="project.class.path">
+        <fileset dir="${basedir}/target/lib/">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
 
-    <echo>classpath: ${java.class.path}</echo>
-    <echo>ext.dirs: ${java.ext.dirs}</echo>
+    <target name="info">
+        <echo>basedir: ${basedir}</echo>
+        <echo>using XSpec ${xspec.version}</echo>
+        <echo>classpath: ${java.class.path}</echo>
+        <echo>ext.dirs: ${java.ext.dirs}</echo>
+    </target>
+
+
+    <import file="build-doc.xml" as="doc" optional="true"/>
+
+
+    <property name="OXG.URL" value="https://teigarage.tei-c.org"/>
+
+    <target name="seed.rng" description="Make Relax NG from ODD by sending to TEI-Garage">
+        <exec executable="curl">
+            <arg value="-vs"/>
+            <arg value="-o"/>
+            <arg value="doc/seed.rng"/>
+            <arg value="-F"/>
+            <arg value="upload=@doc/seed.odd"/>
+            <arg
+                value="${OXG.URL}/ege-webservice/Conversions/ODD%3Atext%3Axml/ODDC%3Atext%3Axml/relaxng%3Aapplication%3Axml-relaxng/"
+            />
+        </exec>
+    </target>
+
+
 
     <!-- default rule: run all tests -->
-    <target name="test">
+    <target name="test" description="run all tests">
         <antcall target="test-xsl-common-libcommon.xsl"/>
         <antcall target="test-xsl-common-libapp2.xsl"/>
         <antcall target="test-xsl-common-libapp2-first-child.xsl"/>
@@ -34,9 +62,11 @@
         <antcall target="test-xsl-html-libtext-first-child.xsl"/>
         <antcall target="test-xsl-html-text.xsl"/>
         <antcall target="test-xsl-html-librend.xsl"/>
+        <antcall target="test-xsl-html-libxmlsource.xsl"/>
         <antcall target="test-xsl-html-prose.xsl"/>
-        <antcall target="test-xsl-html-source-xml.xsl"/>
         <antcall target="test-xsl-html-prose-with-popups.xsl"/>
+        <antcall target="test-xsl-html-prose-linebased.xsl"/>
+        <antcall target="test-xsl-html-prose-footnotes.xsl"/>
         <antcall target="test-xsl-html-bible-with-popups.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
         <antcall target="test-xsl-html-libapp2c-html-librend.xsl"/>
@@ -55,6 +85,7 @@
         <antcall target="test-xsl-projects-alea-tei-extract-recension.xsl"/>
         <antcall target="test-xsl-projects-alea-latex-prose.xsl"/>
         <antcall target="test-xsl-html-libhtml.xsl"/>
+        <antcall target="test-xsl-html-libodd.xsl"/>
     </target>
 
     <target name="test-xsl-common-libapp2.xsl">
@@ -141,21 +172,33 @@
         </antcall>
     </target>
 
+    <target name="test-xsl-html-libxmlsource.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/libxmlsource.xspec"/>
+        </antcall>
+    </target>
+
     <target name="test-xsl-html-prose.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/prose.xspec"/>
         </antcall>
     </target>
 
-    <target name="test-xsl-html-source-xml.xsl">
-        <antcall target="xspec.xspec" inheritall="false">
-            <param name="xspec.xml" location="${basedir}/xsl/html/xml-source.xspec"/>
-        </antcall>
-    </target>
-
     <target name="test-xsl-html-prose-with-popups.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/prose-with-popups.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-prose-linebased.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/prose-linebased.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-prose-footnotes.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/prose-footnotes.xspec"/>
         </antcall>
     </target>
 
@@ -180,6 +223,12 @@
     <target name="test-xsl-html-libhtml.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/libhtml.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-libodd.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/libodd.xspec"/>
         </antcall>
     </target>
 
@@ -266,6 +315,5 @@
             <param name="xspec.xml" location="${basedir}/xsl/projects/alea/latex/prose.xspec"/>
         </antcall>
     </target>
-
 
 </project>

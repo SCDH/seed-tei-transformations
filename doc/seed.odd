@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:ox="http://scdh.wwu.de/transform/ox#"
+  xmlns:ant="http://scdh.wwu.de/transform/ant#" xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>SEED Crystal Documentation Schema</title>
+      </titleStmt>
+      <publicationStmt>
+        <p>Publication Information</p>
+      </publicationStmt>
+      <sourceDesc>
+        <p>Information about the source</p>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <schemaSpec ident="seed" start="TEI">
+        <moduleRef key="header"/>
+        <moduleRef key="core"/>
+        <moduleRef key="tei"/>
+        <moduleRef key="textstructure"/>
+        <moduleRef key="tagdocs"/>
+        <classSpec type="atts" ident="att.transformable" mode="add">
+          <desc><val>att.transformable</val> is an attribute class that provides attributes for
+            linking to transformation scenarios.</desc>
+          <!-- 
+            Due to a bug in the ODD stylesheets, we cannot put attributes in a custom namesapce!
+            See https://github.com/TEIC/Stylesheets/issues/237
+          -->
+          <attList>
+            <attDef ident="transfox">
+              <desc>Provides links to oXygen transformation scenarios provided in scenario or xpr
+                files. The fragment identifier is evaluated as a scenario name.</desc>
+              <datatype maxOccurs="unbounded">
+                <dataRef key="teidata.pointer"/>
+              </datatype>
+            </attDef>
+            <attDef ident="transfant">
+              <desc>Provides links to Ant transformations provided in Ant build files. The fragment
+                identifier is evaluated as a target name.</desc>
+              <datatype maxOccurs="unbounded">
+                <dataRef key="teidata.pointer"/>
+              </datatype>
+            </attDef>
+            <attDef ident="transfext">
+              <desc>Provides links to transformations declared in by some extension.</desc>
+              <datatype maxOccurs="unbounded">
+                <dataRef key="teidata.pointer"/>
+              </datatype>
+            </attDef>
+            <attDef ident="template">
+              <desc>Points to an <gi>egXML</gi> into which the current code example is wrapped into
+                so that it results to a well formed TEI document that can be transformed.</desc>
+              <datatype>
+                <dataRef key="teidata.pointer"/>
+              </datatype>
+            </attDef>
+          </attList>
+        </classSpec>
+        <elementSpec ns="http://www.tei-c.org/ns/Examples" ident="egXML" mode="change">
+          <classes mode="change">
+            <memberOf key="att.transformable"/>
+          </classes>
+        </elementSpec>
+      </schemaSpec>
+    </body>
+  </text>
+</TEI>

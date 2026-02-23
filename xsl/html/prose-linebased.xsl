@@ -46,23 +46,13 @@
     <xsl:accept component="mode" names="seed:lemma-text-nodes" visibility="public"/>
   </xsl:use-package>
 
-  <xsl:variable name="prose:apparatus-entries" as="map(xs:string, map(*))" visibility="public"
-    select="app:apparatus-entries(/) => seed:note-based-apparatus-nodes-map(true())"/>
+  <xsl:variable name="prose:apparatus-entries" as="map(*)*" visibility="public"
+    select="app:apparatus-entries(/)"/>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libprose.xsl"
     package-version="1.0.0">
     <xsl:accept component="mode" names="*" visibility="public"/>
-
-    <xsl:override>
-      <xsl:template name="text:inline-marks">
-        <xsl:param name="context" as="element()" required="false" select="."/>
-        <xsl:call-template name="app:inline-alternatives">
-          <xsl:with-param name="entries" select="map:merge($prose:apparatus-entries)"/>
-          <xsl:with-param name="context" select="$context"/>
-        </xsl:call-template>
-      </xsl:template>
-    </xsl:override>
   </xsl:use-package>
 
   <xsl:use-package
@@ -76,7 +66,7 @@
     <xsl:override>
 
       <xsl:template name="html:content">
-        <xsl:apply-templates mode="text:text"/>
+        <xsl:call-template name="body"/>
       </xsl:template>
 
       <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css"
@@ -95,9 +85,24 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- how is app:popup-css passed into? -->
-        <xsl:apply-templates mode="text:text" select="//body"/>
+        <xsl:call-template name="body">
+          <xsl:with-param name="context" select="//body"/>
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="body">
+    <xsl:param name="context" as="node()" select="." required="false"/>
+    <section class="content">
+      <xsl:apply-templates select="$context" mode="text:text"/>
+    </section>
+    <hr/>
+    <section class="variants">
+      <xsl:call-template name="app:line-based-apparatus-block">
+        <xsl:with-param name="entries" select="$prose:apparatus-entries"/>
+      </xsl:call-template>
+    </section>
   </xsl:template>
 
 </xsl:package>

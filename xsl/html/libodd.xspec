@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    xmlns:prose="http://scdh.wwu.de/transform/prose#" stylesheet="libodd.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
+
+    <x:param name="outdir" select="resolve-uri('test-output', base-uri())"/>
+
+    <x:variable name="odd">
+        <TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
+            xmlns:math="http://www.w3.org/1998/Math/MathML"
+            xmlns:ox="http://scdh.wwu.de/transform/ox#" xmlns="http://www.tei-c.org/ns/1.0"
+            xml:lang="en">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Encoding Crystals :: SEED TEI Transformations</title>
+                    </titleStmt>
+                    <publicationStmt>
+                        <p xml:lang="de">SCDH, ULB Münster</p>
+                    </publicationStmt>
+                    <sourceDesc>
+                        <p>born digital</p>
+                    </sourceDesc>
+                </fileDesc>
+                <encodingDesc>
+                    <listPrefixDef>
+                        <prefixDef ident="ts" matchPattern="(.*)"
+                            replacementPattern="../transformation.scenarios#$1"/>
+                        <prefixDef ident="xpr" matchPattern="(.*)"
+                            replacementPattern="../SEED_TEI_Transformations.xpr#$1"/>
+                        <prefixDef ident="tg" matchPattern="(..)(.*)"
+                            replacementPattern="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/$1.html#$1$2"
+                        />
+                    </listPrefixDef>
+                    <!-- appInfo elements are used to set up transformations -->
+                    <appInfo xml:id="diplomatic-render" n="html" source="xsl/html/prose.xsl">
+                        <application ident="prose:linebreaks" version="1" n="true">
+                            <desc>diplomatic representation</desc>
+                        </application>
+                    </appInfo>
+                    <appInfo xml:id="reading-render" n="html" source="xsl/html/prose.xsl">
+                        <application ident="_" version="1">
+                            <desc>reading representation</desc>
+                        </application>
+                    </appInfo>
+                    <appInfo xml:id="prose-with-popups" n="html"
+                        source="xsl/html/prose-with-popups.xsl">
+                        <application ident="_" version="1">
+                            <desc>apparatus in popups</desc>
+                        </application>
+                    </appInfo>
+                </encodingDesc>
+            </teiHeader>
+            <text>
+                <body>
+                    <head>SEED TEI Transformations</head>
+                    <div>
+                        <head>Supported Encoding Crystals</head>
+                        <div>
+                            <head>Lines</head>
+                            <p>Lines are encoded with <gi>lb</gi> (line beginning). There's a switch
+                                for toggeling on/off the evaluation of <gi>lb</gi>, i.e. toggeling
+                                between <hi rend="b">diplomatic</hi> vs. <hi rend="b">reading</hi>
+                                representations. <att>n</att> is used as line label (number) in
+                                diplomatic representation.</p>
+                            <p>In-word line breaks can be encoded using <att>break</att> with an
+                                value of <val>no</val>. This will result in an inserted hyphenation
+                                character in diplomatic representation. The character can be
+                                overridden by a stylesheet parameter. Note, that spaces around
+                                in-word <gi>lb</gi> are stripped as required by the output type.</p>
+                            <p>The stylesheets work with <gi>lb</gi> at the beginning of a new line
+                                as well as at the end.</p>
+                            <egXML xmlns="http://www.tei-c.org/ns/Examples"
+                                xml:id="diplomatic-vs-reading" source="#simple"
+                                ox:transformations="ts:Diplomatic">
+                                <p xml:space="preserve" xml:lang="de"><lb n="1"/>
+                                    Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
+                                    weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
+                                    me der Innenwinkel des<lb n="4"/>
+                                    Dreiecks.</p>
+                            </egXML>
+                        </div>
+                    </div>
+                </body>
+                <back>
+                    <div>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="simple">
+                            <TEI>
+                                <teiHeader/>
+                                <text>
+                                    <body n="slot"/>
+                                </text>
+                            </TEI>
+                        </egXML>
+                    </div>
+                </back>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario label="extracts example" pending="no context item">
+        <x:context href="../../doc/crystals.odd"/>
+        <x:call template="examples"/>
+        <x:expect label="result"/>
+    </x:scenario>
+
+</x:description>
