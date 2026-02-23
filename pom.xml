@@ -292,6 +292,60 @@
                             </fileMappers>
                         </transformationSet>
                         <transformationSet>
+                            <dir>${project.basedir}</dir>
+                            <includes>
+                                <include>saxon.xml</include>
+                            </includes>
+                            <stylesheet>utils/saxon-config.xsl</stylesheet>
+                            <parameters>
+                                <parameter>
+                                    <name>edition</name>
+                                    <value>EE</value>
+                                </parameter>
+                                <parameter>
+                                    <name>package-name</name>
+                                    <value>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl</value>
+                                </parameter>
+                                <parameter>
+                                    <name>output</name>
+                                    <value>html</value>
+                                </parameter>
+                            </parameters>
+                            <fileMappers>
+                                <fileMapper
+                                    implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                    <targetExtension>.ee.html.xml</targetExtension>
+                                </fileMapper>
+                            </fileMappers>
+                        </transformationSet>
+                        <transformationSet>
+                            <dir>${project.basedir}</dir>
+                            <includes>
+                                <include>saxon.xml</include>
+                            </includes>
+                            <stylesheet>utils/saxon-config.xsl</stylesheet>
+                            <parameters>
+                                <parameter>
+                                    <name>edition</name>
+                                    <value>PE</value>
+                                </parameter>
+                                <parameter>
+                                    <name>package-name</name>
+                                    <value>https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/librend.xsl</value>
+                                </parameter>
+                                <parameter>
+                                    <name>output</name>
+                                    <value>html</value>
+                                </parameter>
+                            </parameters>
+                            <fileMappers>
+                                <fileMapper
+                                    implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                    <targetExtension>.pe.html.xml</targetExtension>
+                                </fileMapper>
+                            </fileMappers>
+                        </transformationSet>
+                        <transformationSet>
                             <!-- generate configuration for SEED XML Transformer -->
                             <dir>${project.basedir}</dir>
                             <includes>
