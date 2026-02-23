@@ -2,6 +2,9 @@
 
 ## 0.18.0
 
+- makes generated HTML navigable by making named anchors from section heads (see issue #73)
+  - These anchors can optionally be made clickable by setting the
+    `prose:target` stylesheet parameter to a truth value.
 - support `<ref>` and `<ptr>` with links shortend by `<prefixDef>`
 - support alternants encoded by `<alt mode="excl" target="..."/>` (see
   issue #66)
