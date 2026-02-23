@@ -72,11 +72,10 @@ https://scdh.github.io/seed-tei-transformations/descriptor.xml
 ```
 
 Unfortunately, it is not possible to provide transformation scenarios
-from a plugin. However, there is a scenario file which you can
-download and import to your project. These imported scenarios will
-then use the packages from the plugin.
-
-[https://scdh.github.io/seed-tei-transformations/transformation.scenarios](https://scdh.github.io/seed-tei-transformations/transformation.scenarios)
+from a plugin. However, there is a `scenarios` file in the [release
+assets](https://github.com/SCDH/seed-tei-transformations/releases/)
+which you can download and import to your project. These imported
+scenarios will then use the packages from the plugin.
 
 Further information on writing your own transformation scenarios using
 this plugin is given in the
