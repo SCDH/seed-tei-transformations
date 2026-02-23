@@ -15,6 +15,9 @@
                         <title>Test</title>
                     </titleStmt>
                 </fileDesc>
+                <encodingDesc>
+                    <variantEncoding method="parallel-segmentation" location="internal"/>
+                </encodingDesc>
             </teiHeader>
             <text xml:id="the-text">
                 <body>
@@ -31,49 +34,22 @@
                                 eine dritte Gerade geschnitten werden.</p>
                         </div>
                     </div>
-                    <div xml:id="d2" n="2">
-                        <lg>
-                            <l>
-                                <w n="1">Beim</w>
-                                <w n="2">Styx</w><pc>!</pc>
-                                <w n="3">Drüber</w>
-                            </l>
-                        </lg>
-                    </div>
                 </body>
             </text>
         </TEI>
     </x:variable>
 
-
-    <x:scenario label="mode text:text on d2">
-        <x:context select="$tei-text//t:div[@xml:id eq 'd2']" mode="text:text"/>
-        <x:expect label="result">
-            <section id="d2" data-tei-n="2">
-                <div>
-                    <div>BeimStyx!Drüber</div>
-                </div>
-            </section>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="mode text:text on apparatus">
-        <x:context select="$tei-text//t:p[@xml:id eq 'd1.1.p1']" mode="text:text"/>
-        <x:expect label="result">
-            <p data-tei-n="1" id="d1.1.p1">...</p>
-        </x:expect>
-    </x:scenario>
-
-    <x:scenario label="mode prose on apparatus" pending="test not working">
-        <x:context select="$tei-text//t:front" mode="prose"/>
-        <x:expect label="result">
-            <div>
-                <section>
-                    <h1>Vorrede</h1>
-                    <p>Der hochwohlgebohrenen Prinzessin Z.</p>
-                </section>
-            </div>
-        </x:expect>
+    <x:scenario label="linebased apparatus, regression for issue #74">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="count of apparatus lines: only one since source has no line numbers"
+            test="count(//section[@class eq 'variants']//span[matches(@class, '-number')])"
+            select="1"/>
+        <x:expect label="footnote numbers: nothing but '?' since source has no line numbers"
+            test="//section[@class eq 'variants']//span[matches(@class, '-number')] ! normalize-space(.)"
+            select="('?')"/>
+        <x:expect label="apparatus lemmas"
+            test="//section[@class eq 'variants']//span[@class eq 'apparatus-lemma'] ! string(.)"
+            select="('Dreiecks', 'Paralellen')"/>
     </x:scenario>
 
     <x:scenario label="full html">
