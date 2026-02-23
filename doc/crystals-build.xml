@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="crystals" default="transform">
+   <dirname property="crystals.basedir" file="${ant.file.crystals}"/>
+   <!--pdu is the base directory URI of the project with the transformations-->
+   <property name="pdu" value="${crystals.basedir}/.."/>
+   <property name="crystals-outdir" value="${crystals.basedir}/crystals"/>
+   <property name="seed-tei-transformations" value="${pdu}"/>
+   <loadproperties srcFile="${pdu}/project.properties"/>
+   <property name="saxon-config-" value="${pdu}/saxon.he.xml"/>
+   <property name="saxon-config-html" value="${pdu}/saxon.he.html.xml"/>
+   <property name="saxon-config-latex" value="${pdu}/saxon.he.xml"/>
+   <property name="post-size.js"
+             value="${seed-tei-transformations}/xsl/html/post-size.js"/>
+   <path id="project.class.path">
+      <fileset dir="${pdu}/target/lib/">
+         <include name="*.jar"/>
+      </fileset>
+   </path>
+   <target name="transform">
+      <antcall target="diplomatic-vs-reading_SEED-Diplomatic"/>
+      <antcall target="diplomatic-vs-reading_SEED-Reading"/>
+      <antcall target="parallel-segmentation_SEED-Reading-CAF"/>
+      <antcall target="double-end-point-internal_SEED-Reading-CAF"/>
+      <antcall target="double-end-point-external_SEED-Reading-CAF"/>
+      <antcall target="location-referenced_SEED-Reading-CAF"/>
+      <antcall target="choice-segments_SEED-Reading-CAF"/>
+      <antcall target="appartus-presentations_SEED-Reading-CAP"/>
+      <antcall target="appartus-presentations_SEED-Reading-CAF"/>
+      <antcall target="appartus-presentations_SEED-Diplomatic-CAL"/>
+      <antcall target="empty-rdg_SEED-Reading-CAF"/>
+      <antcall target="empty-lem_SEED-Reading-CAF"/>
+      <antcall target="app-order1_SEED-Reading-CAF"/>
+      <antcall target="app-order2_SEED-Reading-CAF"/>
+   </target>
+   <target name="clean-transformed">
+      <delete dir="${crystals-outdir}" includes="**/*.html,**/*.tex"/>
+   </target>
+   <target name="diplomatic-vs-reading_SEED-Diplomatic">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose.xsl"
+            in="${crystals-outdir}/diplomatic-vs-reading.xml"
+            out="${crystals-outdir}/diplomatic-vs-reading_SEED-Diplomatic.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+         <param name="{http://scdh.wwu.de/transform/prose#}linebreaks"
+                expression="true()"
+                type="XPATH_BOOLEAN"/>
+      </xslt>
+   </target>
+   <target name="diplomatic-vs-reading_SEED-Reading">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose.xsl"
+            in="${crystals-outdir}/diplomatic-vs-reading.xml"
+            out="${crystals-outdir}/diplomatic-vs-reading_SEED-Reading.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="parallel-segmentation_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/parallel-segmentation.xml"
+            out="${crystals-outdir}/parallel-segmentation_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="double-end-point-internal_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/double-end-point-internal.xml"
+            out="${crystals-outdir}/double-end-point-internal_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="double-end-point-external_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/double-end-point-external.xml"
+            out="${crystals-outdir}/double-end-point-external_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="location-referenced_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/location-referenced.xml"
+            out="${crystals-outdir}/location-referenced_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="choice-segments_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/choice-segments.xml"
+            out="${crystals-outdir}/choice-segments_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="appartus-presentations_SEED-Reading-CAP">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-with-popups.xsl"
+            in="${crystals-outdir}/appartus-presentations.xml"
+            out="${crystals-outdir}/appartus-presentations_SEED-Reading-CAP.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="appartus-presentations_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/appartus-presentations.xml"
+            out="${crystals-outdir}/appartus-presentations_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="appartus-presentations_SEED-Diplomatic-CAL">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-linebased.xsl"
+            in="${crystals-outdir}/appartus-presentations.xml"
+            out="${crystals-outdir}/appartus-presentations_SEED-Diplomatic-CAL.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+         <param name="{http://scdh.wwu.de/transform/prose#}linebreaks"
+                expression="true()"
+                type="XPATH_BOOLEAN"/>
+      </xslt>
+   </target>
+   <target name="empty-rdg_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/empty-rdg.xml"
+            out="${crystals-outdir}/empty-rdg_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="empty-lem_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/empty-lem.xml"
+            out="${crystals-outdir}/empty-lem_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="app-order1_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/app-order1.xml"
+            out="${crystals-outdir}/app-order1_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="app-order2_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/app-order2.xml"
+            out="${crystals-outdir}/app-order2_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+</project>

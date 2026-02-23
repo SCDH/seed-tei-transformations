@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader/>
+            <text>
+              <body n="slot">
+  <!-- in the body -->
+  <l n="1"><choice>
+      <seg source="#El #Hg">Experience</seg>
+      <seg source="#La">Experiment</seg>
+      <seg source="#Ra2">Eryment</seg>
+    </choice> though noon Auctoritee </l>
+  <l n="2">Were in this world ...</l>
+</body>
+            </text>
+          </TEI>
+        

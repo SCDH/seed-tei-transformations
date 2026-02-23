@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="seed.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="seed.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Encoding Crystals :: SEED TEI Transformations</title>
+      </titleStmt>
+      <publicationStmt>
+        <p xml:lang="de">SCDH, ULB Münster</p>
+      </publicationStmt>
+      <sourceDesc>
+        <p>born digital</p>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <listPrefixDef>
+        <prefixDef ident="ts" matchPattern="(.*)"
+          replacementPattern="../transformation.scenarios#$1"/>
+        <prefixDef ident="xpr" matchPattern="(.*)"
+          replacementPattern="../SEED_TEI_Transformations.xpr#$1"/>
+        <prefixDef ident="tg" matchPattern="(..)(.*)"
+          replacementPattern="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/$1.html#$1$2"/>
+      </listPrefixDef>
+    </encodingDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <head>SEED TEI Transformations</head>
+
+      <p>This documentation provides minimal snippets of supported encodings (call them encoding
+        crystals) and presents how they look like when being transformed. HTML results of
+        transformations are provided in iframes. Have fun!</p>
+
+      <p>Since it's brand-new, this documentation is behind the development. It's work in progress
+        and is still far from providing examples for all supported encodings.</p>
+
+
+      <div xml:id="lines">
+        <head>Lines</head>
+
+        <p>Lines are encoded with <gi>lb</gi> (line beginning). There's a switch for toggeling
+          on/off the evaluation of <gi>lb</gi>, i.e. toggeling between <hi rend="b">diplomatic</hi>
+          vs. <hi rend="b">reading</hi> representations. <att>n</att> is used as line label (number)
+          in diplomatic representation.</p>
+
+        <p>In-word line breaks can be encoded using <att>break</att> with an value of <val>no</val>.
+          This will result in an inserted hyphenation character in diplomatic representation. The
+          character can be overridden by a stylesheet parameter. Note, that spaces around in-word
+            <gi>lb</gi> are stripped as required by the output type.</p>
+
+        <p>The stylesheets work with <gi>lb</gi> at the beginning of a new line as well as at the
+          end.</p>
+
+        <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
+          template="#simple" transfox="xpr:SEED-Diplomatic xpr:SEED-Reading">
+          <p xml:space="preserve" xml:lang="de"><lb n="1"/>
+              Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
+              weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
+              me der Innenwinkel des<lb n="4"/>
+              Dreiecks.</p>
+        </egXML>
+
+      </div>
+
+      <div xml:id="TC">
+        <head>Critical Apparatus</head>
+
+        <div xml:id="TCAP">
+          <head>Encoding Variants with <gi>app</gi></head>
+
+          <p>There are three different methods of encoding variants with <gi>app</gi>. The SEED TEI
+            Transfromations support all of them and detects the right one by evaluating
+              <gi>variantEncoding</gi> in the file's <gi>encodingDesc</gi>.</p>
+
+          <div xml:id="TCAPPS">
+            <head>Parallel Segmentation</head>
+
+            <p>Parallel segmentation requires
+              <code xml:space="preserve">&lt;variantEncoding method=&quot;parallel-segmenation&quot; location=&quot;internal&quot;/&gt;</code>
+              in the header.</p>
+
+            <p>See <ref target="tg:TCAPPS">Guidelines, sec. TCAPPS</ref>.</p>
+
+
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="parallel-segmentation"
+              template="#simple" transfox="xpr:SEED-Reading-CAF">
+              <!-- in the header -->
+              <encodingDesc slot="teiHeader">
+                <variantEncoding method="parallel-segmentation" location="internal"/>
+              </encodingDesc>
+              <!-- in the body -->
+              <l n="1">
+                <app>
+                  <lem wit="#El #Hg">Experience</lem>
+                  <rdg wit="#La">Experiment</rdg>
+                  <rdg wit="#Ra2">Eryment</rdg>
+                </app> though noon Auctoritee </l>
+              <l n="2">Were in this world ...</l>
+            </egXML>
+
+          </div>
+
+          <div xml:id="TCAPDE">
+            <head>Double End-Point Attachement</head>
+
+            <p>See <ref target="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/TC.html#TCAPDE"
+                >Guidelines, Sec. TCSPDE</ref>.</p>
+
+            <p>An internal as well as an external apparatus is supported.</p>
+
+            <div>
+              <head>Internal</head>
+
+              <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-internal"
+                template="#simple" transfox="xpr:SEED-Reading-CAF">
+                <!-- in the header -->
+                <encodingDesc slot="teiHeader">
+                  <variantEncoding method="double-end-point" location="internal"/>
+                </encodingDesc>
+                <!-- the the body -->
+                <l n="1"><anchor xml:id="wbp.1"/>Experience<app from="#wbp.1">
+                    <rdg wit="#La">Experiment</rdg>
+                    <rdg wit="#Ra2">Eryment</rdg>
+                  </app> though noon Auctoritee</l>
+                <l n="2">Were in this world ...</l>
+              </egXML>
+
+            </div>
+            <div>
+              <head>External</head>
+
+              <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-external"
+                template="#simple" transfox="xpr:SEED-Reading-CAF">
+                <!-- in the header -->
+                <encodingDesc slot="teiHeader">
+                  <variantEncoding method="double-end-point" location="external"/>
+                </encodingDesc>
+                <!-- the the body -->
+                <l n="1"><anchor xml:id="wbp.1"/>Experience<anchor xml:id="wbp.2"/> though noon
+                  Auctoritee</l>
+                <l n="2">Were in this world ...</l>
+                <!-- somewhere else -->
+                <app from="#wbp.1" to="#wbp.2">
+                  <rdg wit="#La">Experiment</rdg>
+                  <rdg wit="#Ra2">Eryment</rdg>
+                </app>
+              </egXML>
+
+            </div>
+          </div>
+
+          <div xml:id="TCAPLO">
+            <head>Location Referenced Method</head>
+
+            <p>When using the location referenced method, the apparatus mark (footnote, popup) will
+              be placed exactly at the position of the <gi>app</gi> element. Internal location is
+              supported only. Since the lemma cannot be constructed from the encoding, it has to be
+              provided in the <gi>lem</gi> element.</p>
+
+            <p>See <ref target="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/TC.html#TCAPLO"
+                >Guidelines, sec. TCAPLO</ref>.</p>
+
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="location-referenced"
+              template="#simple" transfox="xpr:SEED-Reading-CAF">
+              <!-- in the header -->
+              <encodingDesc slot="teiHeader">
+                <variantEncoding method="location-referenced" location="internal"/>
+              </encodingDesc>
+              <!-- in the body -->
+              <l n="1">Experience<app>
+                  <lem>Experience</lem>
+                  <rdg wit="#La">Experiment</rdg>
+                  <rdg wit="#Ra2">Eryment</rdg>
+                </app> though noon Auctoritee </l>
+              <l n="2">Were in this world ...</l>
+            </egXML>
+
+          </div>
+
+          <div xml:id="TCAPLL">
+            <head>Alternative Segments</head>
+
+            <p>As a simple alternative to encoding variation with <gi>app</gi>, <gi>choice</gi> can
+              be used with segments in <gi>seg</gi>. The first segment will be presented in the
+              text, while subsequent segments go into the apparatus.</p>
+
+            <p>See <ref target="tg:TCAPLL">Guidelines, sec. TCAPLL</ref> and <ref
+                target="tg:COEDCOR">sec. COEDCOR</ref>.</p>
+
+            <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="choice-segments"
+              template="#simple" transfox="xpr:SEED-Reading-CAF">
+              <!-- in the body -->
+              <l n="1"><choice>
+                  <seg source="#El #Hg">Experience</seg>
+                  <seg source="#La">Experiment</seg>
+                  <seg source="#Ra2">Eryment</seg>
+                </choice> though noon Auctoritee </l>
+              <l n="2">Were in this world ...</l>
+            </egXML>
+
+          </div>
+
+        </div>
+
+        <div xml:id="TCAPVIZ">
+          <head>Apparatus Visualizations</head>
+
+          <p>A critical apparatus can be visialized in different ways: with popups (CAP), as a
+            line-based apparatus (CAL), with footnotes (CAF). These are only different arrangements
+            of the same apparatus entries on the screen. Structure and content of the apparatus
+            entries remain the same.</p>
+
+          <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="appartus-presentations"
+            template="#simple"
+            transfox="xpr:SEED-Reading-CAP xpr:SEED-Reading-CAF xpr:SEED-Diplomatic-CAL">
+            <!-- in the header -->
+            <encodingDesc slot="teiHeader">
+              <variantEncoding method="double-end-point" location="internal"/>
+            </encodingDesc>
+            <!-- the the body -->
+            <l n="1"><anchor xml:id="wbp.1"/>Experience<app from="#wbp.1">
+                <rdg wit="#La">Experiment</rdg>
+                <rdg wit="#Ra2">Eryment</rdg>
+              </app> though noon Auctoritee</l>
+            <l n="2">Were in this world ...</l>
+          </egXML>
+
+        </div>
+
+        <div xml:id="TCAPMEW">
+          <head>Missing or extra words in witnesses</head>
+
+          <p>An empty <gi>rdg</gi> can be used to encode a missing word in witness.</p>
+
+          <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="empty-rdg" template="#simple"
+            transfox="xpr:SEED-Reading-CAF">
+            <!-- in the header -->
+            <encodingDesc slot="teiHeader">
+              <variantEncoding method="parallel-segmentation" location="internal"/>
+            </encodingDesc>
+            <!-- in the body -->
+            <l n="1">
+              <app>
+                <lem wit="#El #Hg #Ra2">Experience</lem>
+                <rdg wit="#La"/>
+              </app> though noon Auctoritee </l>
+            <l n="2">Were in this world ...</l>
+          </egXML>
+
+          <p>An empty <gi>lem</gi> can be used to encode a extra words in witness. In order to
+            provide the exact location in the text, the preceding (or following) word is provided
+            before the lemma bracket and befor the extra words we can read in the witness.</p>
+
+          <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="empty-lem" template="#simple"
+            transfox="xpr:SEED-Reading-CAF">
+            <!-- in the header -->
+            <encodingDesc slot="teiHeader">
+              <variantEncoding method="parallel-segmentation" location="internal"/>
+            </encodingDesc>
+            <!-- in the body -->
+            <l n="1">Experience<app><lem/><rdg wit="#L7">of crafters</rdg></app> though noon
+              Auctoritee</l>
+            <l n="2">Were in this world ...</l>
+          </egXML>
+
+        </div>
+
+        <div xml:id="TCAPORD">
+          <head>Order of readings and witnesses</head>
+
+          <p>The order of the readings and the witnesses is simply determined by document order.
+            First in, first out.</p>
+
+          <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="app-order1" template="#simple"
+            transfox="xpr:SEED-Reading-CAF">
+            <!-- in the header -->
+            <encodingDesc slot="teiHeader">
+              <variantEncoding method="parallel-segmentation" location="internal"/>
+            </encodingDesc>
+            <!-- in the body -->
+            <l n="1">
+              <app>
+                <lem wit="#El">Experience</lem>
+                <rdg wit="#Hg #La">Experiment</rdg>
+                <rdg wit="#Ra2">Eryment</rdg>
+              </app> though noon Auctoritee </l>
+            <l n="2">Were in this world ...</l>
+          </egXML>
+
+          <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="app-order2" template="#simple"
+            transfox="xpr:SEED-Reading-CAF">
+            <!-- in the header -->
+            <encodingDesc slot="teiHeader">
+              <variantEncoding method="parallel-segmentation" location="internal"/>
+            </encodingDesc>
+            <!-- in the body -->
+            <l n="1">
+              <app>
+                <lem wit="#El">Experience</lem>
+                <rdg wit="#Ra2">Eryment</rdg>
+                <rdg wit="#La #Hg">Experiment</rdg>
+              </app> though noon Auctoritee </l>
+            <l n="2">Were in this world ...</l>
+          </egXML>
+
+
+        </div>
+
+      </div>
+
+    </body>
+    <back>
+      <div>
+        <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="simple">
+          <TEI>
+            <teiHeader/>
+            <text>
+              <body n="slot"/>
+            </text>
+          </TEI>
+        </egXML>
+      </div>
+    </back>
+  </text>
+</TEI>

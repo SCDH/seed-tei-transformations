@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="seed" default="transform">
+   <dirname property="seed.basedir" file="${ant.file.seed}"/>
+   <!--pdu is the base directory URI of the project with the transformations-->
+   <property name="pdu" value="${seed.basedir}/.."/>
+   <property name="seed-outdir" value="${seed.basedir}/seed"/>
+   <property name="seed-tei-transformations" value="${pdu}"/>
+   <loadproperties srcFile="${pdu}/project.properties"/>
+   <property name="saxon-config-" value="${pdu}/saxon.he.xml"/>
+   <property name="saxon-config-html" value="${pdu}/saxon.he.html.xml"/>
+   <property name="saxon-config-latex" value="${pdu}/saxon.he.xml"/>
+   <property name="post-size.js"
+             value="${seed-tei-transformations}/xsl/html/post-size.js"/>
+   <path id="project.class.path">
+      <fileset dir="${pdu}/target/lib/">
+         <include name="*.jar"/>
+      </fileset>
+   </path>
+   <target name="transform"/>
+   <target name="clean-transformed">
+      <delete dir="${seed-outdir}" includes="**/*.html,**/*.tex"/>
+   </target>
+</project>
