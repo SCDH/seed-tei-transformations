@@ -24,22 +24,6 @@
         <prefixDef ident="tg" matchPattern="(..)(.*)"
           replacementPattern="https://www.tei-c.org/release/doc/tei-p5-doc/en/html/$1.html#$1$2"/>
       </listPrefixDef>
-      <!-- appInfo elements are used to set up transformations -->
-      <appInfo xml:id="diplomatic-render" n="html" source="xsl/html/prose.xsl">
-        <application ident="prose:linebreaks" version="1" n="true">
-          <desc>diplomatic representation</desc>
-        </application>
-      </appInfo>
-      <appInfo xml:id="reading-render" n="html" source="xsl/html/prose.xsl">
-        <application ident="_" version="1">
-          <desc>reading representation</desc>
-        </application>
-      </appInfo>
-      <appInfo xml:id="prose-with-popups" n="html" source="xsl/html/prose-with-popups.xsl">
-        <application ident="_" version="1">
-          <desc>apparatus in popups</desc>
-        </application>
-      </appInfo>
     </encodingDesc>
   </teiHeader>
   <text>
