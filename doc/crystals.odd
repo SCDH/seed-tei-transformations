@@ -29,8 +29,16 @@
   <text>
     <body>
       <head>SEED TEI Transformations</head>
+
+      <p>This documentation provides minimal snippets of supported encodings (call them encoding
+        crystals) and presents how they look like when being transformed. HTML results of
+        transformations are provided in iframes. Have fun!</p>
+
+      <p>Since it's brand-new, this documentation is behind the development. It's work in progress
+        and is still far from providing examples for all supported encodings.</p>
+
       <div>
-        <head>Supported Encoding Crystals</head>
+        <head>Supported Encodings</head>
 
         <div xml:id="lines">
           <head>Lines</head>
