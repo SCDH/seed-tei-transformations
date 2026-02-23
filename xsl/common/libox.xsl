@@ -60,7 +60,7 @@ Note that the fragment identifier of the uri parameter must contain the name, bu
   <!-- strips characters from the name so that it can be used as a fragment identifier -->
   <xsl:function name="ox:scenario-identifier" as="xs:string" visibility="final">
     <xsl:param name="name" as="xs:string"/>
-    <xsl:value-of select="replace($name, '[#\s]+', '')"/>
+    <xsl:value-of select="replace($name, '[#\s&quot;:&lt;&gt;|*?]+', '-')"/>
   </xsl:function>
 
   <xsl:function name="ox:get-field" as="xs:string?" visibility="final">
