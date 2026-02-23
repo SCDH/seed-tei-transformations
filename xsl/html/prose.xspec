@@ -57,11 +57,23 @@
         <x:expect label="result">
             <div class="...">
                 <section class="...">
-                    <h1 class="...">Vorrede</h1>
+                    <h1 class="...">...</h1>
                     <p class="...">Der hochwohlgebohrenen Prinzessin Z.</p>
                 </section>
             </div>
         </x:expect>
+    </x:scenario>
+
+    <x:scenario label="named anchor for front head; regression test for issue #73">
+        <x:context select="$tei-text//t:front" mode="text:text"/>
+        <x:expect label="has named anchor" test="exists(//a[@name])"/>
+        <x:expect label="has non-empty name" test="//a/@name => string-length() gt 0"/>
+    </x:scenario>
+
+    <x:scenario label="named anchor for first section heads; regression test for issue #73">
+        <x:context select="$tei-text//t:body/t:div[1]" mode="text:text"/>
+        <x:expect label="has named anchor" test="exists(//h1/a[@name])"/>
+        <x:expect label="has name from xml:id" test="//h1/a/@name => string()" select="'d1'"/>
     </x:scenario>
 
     <x:scenario label="mode text:text on d2">

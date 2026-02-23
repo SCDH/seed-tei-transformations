@@ -19,7 +19,7 @@
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="prose:linebreaks-hyphen" as="xs:string" select="'-'" required="false"/>
 
-    <!-- whether or not to output named anchors for headlines etc. required for toc -->
+    <!-- whether or not to make clickable links from named anchors for headlines etc. -->
     <xsl:param name="prose:anchors" as="xs:boolean" select="false()" required="false"/>
 
     <!--
@@ -144,9 +144,19 @@
                 <xsl:element name="{$heading}">
                     <xsl:call-template name="text:class-attribute"/>
                     <a class="target">
-                        <xsl:attribute name="name" select="parent::*/@xml:id"/>
+                        <xsl:variable name="id" as="xs:string">
+                            <xsl:choose>
+                                <xsl:when test="parent::*/@xml:id">
+                                    <xsl:value-of select="parent::*/@xml:id"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="generate-id(parent::*)"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable>
+                        <xsl:attribute name="name" select="$id"/>
                         <xsl:if test="$prose:anchors">
-                            <xsl:attribute name="href" select="'#' || parent::*/@xml:id"/>
+                            <xsl:attribute name="href" select="'#' || $id"/>
                         </xsl:if>
                         <xsl:apply-templates select="@* | node()"/>
                     </a>
