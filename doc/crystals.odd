@@ -55,7 +55,7 @@
           end.</p>
 
         <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
-          template="#simple" transfox="xpr:SEED::Diplomatic xpr:SEED::Reading">
+          template="#simple" transfox="xpr:SEED-Diplomatic xpr:SEED-Reading">
           <p xml:space="preserve" xml:lang="de"><lb n="1"/>
               Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
               weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
@@ -86,7 +86,7 @@
 
 
             <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="parallel-segmentation"
-              template="#simple" transfox="xpr:SEED::ReadingCAF">
+              template="#simple" transfox="xpr:SEED-Reading-CAF">
               <!-- in the header -->
               <encodingDesc slot="teiHeader">
                 <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -115,7 +115,7 @@
               <head>Internal</head>
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-internal"
-                template="#simple" transfox="xpr:SEED::ReadingCAF">
+                template="#simple" transfox="xpr:SEED-Reading-CAF">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="double-end-point" location="internal"/>
@@ -133,7 +133,7 @@
               <head>External</head>
 
               <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="double-end-point-external"
-                template="#simple" transfox="xpr:SEED::ReadingCAF">
+                template="#simple" transfox="xpr:SEED-Reading-CAF">
                 <!-- in the header -->
                 <encodingDesc slot="teiHeader">
                   <variantEncoding method="double-end-point" location="external"/>
@@ -164,7 +164,7 @@
                 >Guidelines, sec. TCAPLO</ref>.</p>
 
             <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="location-referenced"
-              template="#simple" transfox="xpr:SEED::ReadingCAF">
+              template="#simple" transfox="xpr:SEED-Reading-CAF">
               <!-- in the header -->
               <encodingDesc slot="teiHeader">
                 <variantEncoding method="location-referenced" location="internal"/>
@@ -191,7 +191,7 @@
                 target="tg:COEDCOR">sec. COEDCOR</ref>.</p>
 
             <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="choice-segments"
-              template="#simple" transfox="xpr:SEED::ReadingCAF">
+              template="#simple" transfox="xpr:SEED-Reading-CAF">
               <!-- in the body -->
               <l n="1"><choice>
                   <seg source="#El #Hg">Experience</seg>
@@ -215,7 +215,7 @@
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="appartus-presentations"
             template="#simple"
-            transfox="xpr:SEED::ReadingCAP xpr:SEED::ReadingCAF xpr:SEED::DiplomaticCAL">
+            transfox="xpr:SEED-Reading-CAP xpr:SEED-Reading-CAF xpr:SEED-Diplomatic-CAL">
             <!-- in the header -->
             <encodingDesc slot="teiHeader">
               <variantEncoding method="double-end-point" location="internal"/>
@@ -236,7 +236,7 @@
           <p>An empty <gi>rdg</gi> can be used to encode a missing word in witness.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="empty-rdg" template="#simple"
-            transfox="xpr:SEED::ReadingCAF">
+            transfox="xpr:SEED-Reading-CAF">
             <!-- in the header -->
             <encodingDesc slot="teiHeader">
               <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -255,7 +255,7 @@
             before the lemma bracket and befor the extra words we can read in the witness.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="empty-lem" template="#simple"
-            transfox="xpr:SEED::ReadingCAF">
+            transfox="xpr:SEED-Reading-CAF">
             <!-- in the header -->
             <encodingDesc slot="teiHeader">
               <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -275,7 +275,7 @@
             First in, first out.</p>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="app-order1" template="#simple"
-            transfox="xpr:SEED::ReadingCAF">
+            transfox="xpr:SEED-Reading-CAF">
             <!-- in the header -->
             <encodingDesc slot="teiHeader">
               <variantEncoding method="parallel-segmentation" location="internal"/>
@@ -291,7 +291,7 @@
           </egXML>
 
           <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="app-order2" template="#simple"
-            transfox="xpr:SEED::ReadingCAF">
+            transfox="xpr:SEED-Reading-CAF">
             <!-- in the header -->
             <encodingDesc slot="teiHeader">
               <variantEncoding method="parallel-segmentation" location="internal"/>
