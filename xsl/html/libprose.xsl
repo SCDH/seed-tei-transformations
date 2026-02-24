@@ -34,6 +34,7 @@
         <xsl:accept component="template" names="text:inline-marks" visibility="public"/>
         <xsl:accept component="variable" names="text:diplomatic" visibility="public"/>
         <xsl:accept component="variable" names="text:diplomatic-hyphen" visibility="public"/>
+        <xsl:accept component="variable" names="text:line-facs-linking" visibility="public"/>
 
         <xsl:override>
 

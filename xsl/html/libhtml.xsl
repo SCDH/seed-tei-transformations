@@ -90,7 +90,7 @@ Note, that the default mode is html:html!
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
     package-version="1.0.0">
     <xsl:accept component="*" names="*" visibility="hidden"/>
-    <xsl:accept component="variable" names="text:line-facs-linking" visibility="private"/>
+    <xsl:accept component="variable" names="text:line-facs-linking" visibility="hidden"/>
   </xsl:use-package>
 
   <xsl:use-package
