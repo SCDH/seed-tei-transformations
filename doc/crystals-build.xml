@@ -19,6 +19,8 @@
    <target name="transform">
       <antcall target="diplomatic-vs-reading_SEED-Diplomatic"/>
       <antcall target="diplomatic-vs-reading_SEED-Reading"/>
+      <antcall target="text-image-facs_SEED-Diplomatic-TIL"/>
+      <antcall target="text-image-facs_SEED-Reading-TIL"/>
       <antcall target="parallel-segmentation_SEED-Reading-CAF"/>
       <antcall target="double-end-point-internal_SEED-Reading-CAF"/>
       <antcall target="double-end-point-external_SEED-Reading-CAF"/>
@@ -46,7 +48,7 @@
          </factory>
          <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
                 expression="${post-size.js}"/>
-         <param name="{http://scdh.wwu.de/transform/prose#}linebreaks"
+         <param name="{http://scdh.wwu.de/transform/text#}diplomatic"
                 expression="true()"
                 type="XPATH_BOOLEAN"/>
       </xslt>
@@ -62,6 +64,41 @@
          </factory>
          <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
                 expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="text-image-facs_SEED-Diplomatic-TIL">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose.xsl"
+            in="${crystals-outdir}/text-image-facs.xml"
+            out="${crystals-outdir}/text-image-facs_SEED-Diplomatic-TIL.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+         <param name="{http://scdh.wwu.de/transform/text#}diplomatic"
+                expression="true()"
+                type="XPATH_BOOLEAN"/>
+         <param name="{http://scdh.wwu.de/transform/text#}line-facs-linking"
+                expression="true()"
+                type="XPATH_BOOLEAN"/>
+      </xslt>
+   </target>
+   <target name="text-image-facs_SEED-Reading-TIL">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose.xsl"
+            in="${crystals-outdir}/text-image-facs.xml"
+            out="${crystals-outdir}/text-image-facs_SEED-Reading-TIL.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+         <param name="{http://scdh.wwu.de/transform/text#}line-facs-linking"
+                expression="true()"
+                type="XPATH_BOOLEAN"/>
       </xslt>
    </target>
    <target name="parallel-segmentation_SEED-Reading-CAF">
@@ -166,7 +203,7 @@
          </factory>
          <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
                 expression="${post-size.js}"/>
-         <param name="{http://scdh.wwu.de/transform/prose#}linebreaks"
+         <param name="{http://scdh.wwu.de/transform/text#}diplomatic"
                 expression="true()"
                 type="XPATH_BOOLEAN"/>
       </xslt>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>SEED TEI Transformations</title>
+      <link rel="canonical" href="file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/doc/crystals/text-image-facs.xml">
+      <!--CSS from tagsDecl/rendition-->
+      
+      <style></style>
+      <!--CSS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/default.css-->
+      <style>.static-text,
+.line-number {
+    color: silver;
+}
+
+.line-number:after {
+    content: " ";
+}
+</style>
+      <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/post-message-base.js--><script type="text/javascript">// assert that we have a documentMetadata variable
+if (typeof documentMetadata === "undefined") {
+    var documentMetadata = {};
+}
+// make a msg object with basic metadata; it is used in postMessage
+// channel to identify the source of various events
+let msg = {
+    ...documentMetadata,
+    origin: window.location.origin,
+    href: window.location.href,
+    pathname: window.location.pathname,
+};
+</script>
+      <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/line-facs.js--><script type="text/javascript">// add event listener for mouse events on segments/spans
+function seedRegisterOnSegmentEvents() {
+    console.debug("add event listener for mouse over and mouse out events");
+    document.body.addEventListener(
+        "mouseover",
+        seedPostMessageOnSegmentEvent("mouse-over-segment"),
+    );
+    document.body.addEventListener(
+        "mouseout",
+        seedPostMessageOnSegmentEvent("mouse-out-segment"),
+    );
+    document.body.addEventListener(
+        "click",
+        seedPostMessageOnSegmentEvent("click-segment"),
+    );
+}
+window.addEventListener("load", (event) => {
+    seedRegisterOnSegmentEvents();
+});
+// this returns the function to be fired on the event
+const seedPostMessageOnSegmentEvent = (eventType) => {
+    return function (e) {
+	console.log(e);
+        e = e || window.event;
+        var targetElement = e.target || e.srcElement;
+        var lineFacs = seedAncestorOrSelfLineFacs(targetElement, []);
+	// switch highlighting
+	if (eventType == "mouse-over-segment") {
+	    for (const el of document.getElementsByClassName("facs-" + lineFacs)) {
+		el.style.borderTop = "1px solid orange";
+		el.style.borderBottom = "1px solid orange";
+		el.style.background = "papayawhip";
+	    }
+	} else if (eventType == "mouse-out-segment") {
+	    for (const el of document.getElementsByClassName("facs-" + lineFacs)) {
+		el.style.border = "none";
+		el.style.background = "white";
+	    };
+	}
+	// notify parent window
+	if (window?.parent?.location?.href) return;
+        window.parent.postMessage(
+            { ...msg, event: eventType, segmentFacs: lineFacs },
+            window.parent.location.href,
+        );
+    };
+};
+/*
+ * Recursively collects the @data-linefacs from the element and its
+ * ancestors. The IDs from ancestors are of interest, since
+ * annotations may be nested or attributed to whole paragraphs or
+ * divisions.
+ */
+function seedAncestorOrSelfLineFacs(element, facs) {
+    if (!(element instanceof HTMLElement)) return facs;
+    if (element.hasAttribute("data-linefacs")) facs.push(element.dataset.linefacs);
+    if (!element.parentNode) return facs;
+    return seedAncestorOrSelfLineFacs(element.parentNode, facs);
+}
+</script></head>
+   <body>
+      <div class="content"><span class="facs- text-d11t2 line-snippet" data-linefacs="">
+            </span><span class="facs- text-d11t4 line-snippet" data-linefacs="">
+            </span><div class="text" xml:lang="en" lang="en" dir="ltr"><span class="facs- text-d11t6 line-snippet" data-linefacs="">
+               </span><div class="body" data-tei-n="slot"><span class="facs- text-d11t8 line-snippet" data-linefacs="">
+                  </span><span class="facs- text-d11t10 line-snippet" data-linefacs="">
+                  
+                  </span><span class="facs- text-d11t12 line-snippet" data-linefacs="">
+                  </span><p class="p" xml:lang="de" lang="de" dir="ltr"><br>
+                  <span class="line-number">1</span><span class="facs-fl1.1 text-d11t15 line-snippet" data-linefacs="fl1.1">
+                     Synthetische Urteile </span><hi><span class="facs-fl1.1 text-d11t17 line-snippet" data-linefacs="fl1.1">a priori</span></hi><span class="facs-fl1.1 text-d11t18 line-snippet" data-linefacs="fl1.1"> be</span><span class="hyphen">-</span><br>
+                  <span class="line-number">2</span><span class="facs-fl1.2 text-d11t20 line-snippet" data-linefacs="fl1.2">weisen objektive Realität im Satz über die Sum</span><span class="hyphen">-</span><br>
+                  <span class="line-number">3</span><span class="facs-fl1.3 text-d11t22 line-snippet" data-linefacs="fl1.3">me der Innenwinkel des</span><br>
+                  <span class="line-number">4</span><span class="facs-fl1.4 text-d11t24 line-snippet" data-linefacs="fl1.4">
+                     Dreiecks.</span></p><span class="facs-fl1.4 text-d11t25 line-snippet" data-linefacs="fl1.4">
+                  </span></div><span class="facs-fl1.4 text-d11t26 line-snippet" data-linefacs="fl1.4">
+               </span></div><span class="facs-fl1.4 text-d11t27 line-snippet" data-linefacs="fl1.4">
+            
+            </span><span class="facs-fl1.4 text-d11t29 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t31 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t33 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t35 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t37 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t39 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t41 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t42 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d11t43 line-snippet" data-linefacs="fl1.4">
+            </span></div>
+   </body>
+   <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/post-size.js--><script type="text/javascript">window.onload = function () {
+    console.log("window loaded");
+    if (window.parent) {
+	console.debug("size of document in iframe", document.body.scrollWidth, document.body.scrollHeight);
+	window.parent.postMessage({"height": document.body.scrollHeight, "width": document.body.scrollWidth}, "*");
+    }
+};
+</script></html>

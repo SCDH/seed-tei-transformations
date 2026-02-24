@@ -57,11 +57,44 @@
         <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="diplomatic-vs-reading"
           template="#simple" transfox="xpr:SEED-Diplomatic xpr:SEED-Reading">
           <p xml:space="preserve" xml:lang="de"><lb n="1"/>
-              Synthetische Urteile <span rend="i">a priori</span> be<lb n="2" break="no"/>
+              Synthetische Urteile <hi rend="i">a priori</hi> be<lb n="2" break="no"/>
               weisen objektive Realität im Satz über die Sum<lb n="3" break="no"/>
               me der Innenwinkel des<lb n="4"/>
               Dreiecks.</p>
         </egXML>
+
+        <div xml:id="text-image-linking">
+          <head>Text-Image Linking</head>
+
+          <p>Line-based text-image linking is supported based on <gi>lb</gi>. Mouse-over events on a
+            line result in highlighted text nodes of the line and dispatched events with a payload
+            of the IDREF in the <att>facs</att>, which are sent over the <ref
+              target="https://developer.mozilla.org/de/docs/Web/API/Window/postMessage">post-message
+              protocol</ref> to the parent window.</p>
+
+          <p>See <ref target="tg:PH-transcr">TEI Guidelines, sec. PH-transcr</ref></p>
+
+          <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="text-image-facs"
+            template="#simple" transfox="xpr:SEED-Diplomatic-TIL xpr:SEED-Reading-TIL">
+            <!-- facsimile layer -->
+            <facsimile slot="TEI">
+              <surface>
+                <graphic/>
+                <zone xml:id="fl1.1" points="..."/>
+                <zone xml:id="fl1.2" points="..."/>
+                <zone xml:id="fl1.3" points="..."/>
+                <zone xml:id="fl1.4" points="..."/>
+              </surface>
+            </facsimile>
+            <!-- in text -->
+            <p xml:space="preserve" xml:lang="de"><lb n="1" facs="#fl1.1"/>
+              Synthetische Urteile <hi rend="i">a priori</hi> be<lb n="2" facs="#fl1.2" break="no"/>
+              weisen objektive Realität im Satz über die Sum<lb n="3" facs="#fl1.3" break="no"/>
+              me der Innenwinkel des<lb n="4" facs="#fl1.4"/>
+              Dreiecks.</p>
+          </egXML>
+
+        </div>
 
       </div>
 

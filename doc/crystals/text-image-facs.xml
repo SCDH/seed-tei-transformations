@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader/>
+            <text>
+              <body n="slot">
+<!-- facsimile layer -->
+
+<!-- in text -->
+<p xml:space="preserve" xml:lang="de"><lb n="1" facs="#fl1.1"/>
+  Synthetische Urteile <hi rend="i">a priori</hi> be<lb n="2" facs="#fl1.2" break="no"/>
+  weisen objektive Realität im Satz über die Sum<lb n="3" facs="#fl1.3" break="no"/>
+  me der Innenwinkel des<lb n="4" facs="#fl1.4"/>
+  Dreiecks.</p>
+</body>
+            </text>
+          
+<facsimile slot="TEI">
+              <surface>
+                <graphic/>
+                <zone xml:id="fl1.1" points="..."/>
+                <zone xml:id="fl1.2" points="..."/>
+                <zone xml:id="fl1.3" points="..."/>
+                <zone xml:id="fl1.4" points="..."/>
+              </surface>
+            </facsimile>
+</TEI>
+        
