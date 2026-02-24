@@ -37,6 +37,9 @@ Note, that there is a default mode in this package.
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="text:diplomatic-hyphen" as="xs:string" select="'-'" required="false"/>
 
+    <!-- whether to make line-based text-image linking -->
+    <xsl:param name="text:line-facs-linking" as="xs:boolean" select="false()" required="false"/>
+
 
     <!-- keys cannot be importet via use-package -->
     <xsl:import href="../common/libkeys.xsl"/>
@@ -155,7 +158,11 @@ Note, that there is a default mode in this package.
                 inserting project-specific things before and after an element -->
 
             <xsl:template mode="text:text" match="text()">
-                <xsl:call-template name="source:text-node"/>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="node()*">
+                        <xsl:call-template name="source:text-node"/>
+                    </xsl:with-param>
+                </xsl:call-template>
             </xsl:template>
 
             <!-- diplomatic presentation with linebreaks -->
@@ -188,9 +195,13 @@ Note, that there is a default mode in this package.
                 <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>cutting whitespace at both ends</xsl:text>
                 </xsl:message>
-                <xsl:call-template name="source:text-node">
-                    <xsl:with-param name="content"
-                        select="replace(., '^\s+', '') => replace('\s+$', '')"/>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="item()*">
+                        <xsl:call-template name="source:text-node">
+                            <xsl:with-param name="content"
+                                select="replace(., '^\s+', '') => replace('\s+$', '')"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
                 </xsl:call-template>
             </xsl:template>
 
@@ -198,8 +209,12 @@ Note, that there is a default mode in this package.
                 <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>cutting whitespace at end</xsl:text>
                 </xsl:message>
-                <xsl:call-template name="source:text-node">
-                    <xsl:with-param name="content" select="replace(., '\s+$', '')"/>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="item()*">
+                        <xsl:call-template name="source:text-node">
+                            <xsl:with-param name="content" select="replace(., '\s+$', '')"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
                 </xsl:call-template>
             </xsl:template>
 
@@ -207,8 +222,12 @@ Note, that there is a default mode in this package.
                 <xsl:message use-when="system-property('debug') eq 'true'">
                     <xsl:text>cutting whitespace a beginning</xsl:text>
                 </xsl:message>
-                <xsl:call-template name="source:text-node">
-                    <xsl:with-param name="content" select="replace(., '^\s+', '')"/>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="item()*">
+                        <xsl:call-template name="source:text-node">
+                            <xsl:with-param name="content" select="replace(., '^\s+', '')"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
                 </xsl:call-template>
             </xsl:template>
 
@@ -533,6 +552,37 @@ Note, that there is a default mode in this package.
     <!-- you probably want to override this for adding footnote marks etc. to the text -->
     <xsl:template name="text:inline-marks" visibility="public">
         <xsl:param name="context" as="element()" required="false" select="."/>
+    </xsl:template>
+
+    <!-- wraps text nodes into spans for line-based -->
+    <xsl:template name="text:line-facs-linking" visibility="final">
+        <xsl:context-item as="text()" use="required"/>
+        <xsl:param name="content" as="item()*" select="." required="false"/>
+        <xsl:choose>
+            <xsl:when test="not($text:line-facs-linking)">
+                <xsl:copy-of select="$content"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="lb" as="element(lb)?" select="preceding::lb[1]"/>
+                <xsl:variable name="facs" as="xs:string">
+                    <xsl:choose>
+                        <xsl:when test="$lb/@facs">
+                            <xsl:value-of select="$lb/@facs"/>
+                        </xsl:when>
+                        <xsl:when test="$lb/@xml:id">
+                            <xsl:value-of select="$lb/@xml:id"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="generate-id($lb)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <span class="facs-{$facs} text-{generate-id(.)} line-snippet"
+                    data-linefacs="{$facs}">
+                    <xsl:copy-of select="$content"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 
