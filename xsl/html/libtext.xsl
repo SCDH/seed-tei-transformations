@@ -567,7 +567,7 @@ Note, that there is a default mode in this package.
                 <xsl:variable name="facs" as="xs:string">
                     <xsl:choose>
                         <xsl:when test="$lb/@facs">
-                            <xsl:value-of select="$lb/@facs"/>
+                            <xsl:value-of select="$lb/@facs => replace('^#', '')"/>
                         </xsl:when>
                         <xsl:when test="$lb/@xml:id">
                             <xsl:value-of select="$lb/@xml:id"/>
