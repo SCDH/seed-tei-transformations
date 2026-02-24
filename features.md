@@ -120,9 +120,8 @@ differently](https://github.com/SCDH/seed-tei-transformations/wiki/apparatus#gen
 
 ## Text-Image Linking
 
-Text-image linking is currently developed and will be supported based
-on `<lb facs="#IDREF">`, where `IDREF` points to a zone in the
-`<facsimile>` layer.
+Text-image linking is supported based on `<lb facs="#IDREF">`, where
+`IDREF` points to a zone in the `<facsimile>` layer.
 
 - based on milestone-like `<lb>` elements; no need to rewrite to `<l>`
   - whole line will be highlighted nevertheless
