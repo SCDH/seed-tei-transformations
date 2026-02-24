@@ -299,13 +299,13 @@
                                             <field name="paramDescription">
                                                 <paramDescriptor>
                                                     <field name="localName">
-                                                        <String>linebreaks</String>
+                                                        <String>diplomatic</String>
                                                     </field>
                                                     <field name="prefix">
                                                         <null/>
                                                     </field>
                                                     <field name="namespace">
-                                                        <String>http://scdh.wwu.de/transform/prose#</String>
+                                                        <String>http://scdh.wwu.de/transform/text#</String>
                                                     </field>
                                                 </paramDescriptor>
                                             </field>
@@ -467,13 +467,13 @@
                                             <field name="paramDescription">
                                                 <paramDescriptor>
                                                     <field name="localName">
-                                                        <String>linebreaks</String>
+                                                        <String>diplomatic</String>
                                                     </field>
                                                     <field name="prefix">
                                                         <null/>
                                                     </field>
                                                     <field name="namespace">
-                                                        <String>http://scdh.wwu.de/transform/prose#</String>
+                                                        <String>http://scdh.wwu.de/transform/text#</String>
                                                     </field>
                                                 </paramDescriptor>
                                             </field>
