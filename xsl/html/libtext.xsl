@@ -31,8 +31,93 @@ Note, that there is a default mode in this package.
     <!-- with false (default), there are some specific templates for alternative text in choice -->
     <xsl:param name="compat:first-child" as="xs:boolean" select="false()" static="true"/>
 
+    <!-- whether or not lb elements are evaluated in the HTML -->
+    <xsl:param name="text:diplomatic" as="xs:boolean" select="false()" required="false"/>
+
+    <!-- the hyphenation mark to be inserted in <lb> inside a word -->
+    <xsl:param name="text:diplomatic-hyphen" as="xs:string" select="'-'" required="false"/>
+
+    <!-- whether to make line-based text-image linking -->
+    <xsl:param name="text:line-facs-linking" as="xs:boolean" select="false()" required="false"/>
+
+
     <!-- keys cannot be importet via use-package -->
     <xsl:import href="../common/libkeys.xsl"/>
+
+    <!--
+        A key for distinguishing text nodes in 'before', 'after' and 'both-ends' delimitation
+        by in-word <lb>.
+    -->
+    <xsl:key name="text-delimited-by-in-word-lb" match="//text()">
+        <xsl:variable name="this" as="text()" select="."/>
+        <xsl:variable name="lb-before" as="element()?" select="preceding::lb[1][@break eq 'no']"/>
+        <xsl:variable name="lb-after" as="element()?" select="following::lb[1][@break eq 'no']"/>
+        <!-- make a sequence of values! -->
+        <xsl:sequence>
+            <xsl:if test="$lb-before">
+                <xsl:variable name="text-before" as="node()*"
+                    select="$lb-before/following::text() intersect $this/preceding::text()"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>before: </xsl:text>
+                    <xsl:value-of select="generate-id(.)"/>
+                    <xsl:text> lb: </xsl:text>
+                    <xsl:value-of select="generate-id($lb-before)"/>
+                    <xsl:text> count of inter text nodes: </xsl:text>
+                    <xsl:value-of select="count($text-before)"/>
+                    <xsl:text> key value: </xsl:text>
+                    <xsl:value-of select="normalize-space(string-join($text-before)) eq ''"/>
+                    <xsl:text> content: "</xsl:text>
+                    <xsl:value-of select="."/>
+                    <xsl:text>"</xsl:text>
+                </xsl:message>
+                <xsl:if test="normalize-space(string-join($text-before)) eq ''">before</xsl:if>
+            </xsl:if>
+            <xsl:if test="$lb-after">
+                <xsl:variable name="text-after" as="node()*"
+                    select="$this/following::text() intersect $lb-after/preceding::text()"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>after: </xsl:text>
+                    <xsl:value-of select="generate-id(.)"/>
+                    <xsl:text> lb: </xsl:text>
+                    <xsl:value-of select="generate-id($lb-after)"/>
+                    <xsl:text> count of inter text nodes: </xsl:text>
+                    <xsl:value-of select="count($text-after)"/>
+                    <xsl:text> key value: </xsl:text>
+                    <xsl:value-of select="normalize-space(string-join($text-after)) eq ''"/>
+                    <xsl:text> content: "</xsl:text>
+                    <xsl:value-of select="."/>
+                    <xsl:text>"</xsl:text>
+                </xsl:message>
+                <xsl:if test="normalize-space(string-join($text-after)) eq ''">after</xsl:if>
+            </xsl:if>
+            <xsl:if test="$lb-after and $lb-before">
+                <xsl:variable name="text-before" as="node()*"
+                    select="$lb-before/following::text() intersect $this/preceding::text()"/>
+                <xsl:variable name="text-after" as="node()*"
+                    select="$this/following::text() intersect $lb-after/preceding::text()"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>both-ends: </xsl:text>
+                    <xsl:value-of select="generate-id(.)"/>
+                    <xsl:text> lb: </xsl:text>
+                    <xsl:value-of select="generate-id($lb-before)"/>
+                    <xsl:text> count of text nodes before: </xsl:text>
+                    <xsl:value-of select="count($text-before)"/>
+                    <xsl:text> count of text nodes after: </xsl:text>
+                    <xsl:value-of select="count($text-after)"/>
+                    <xsl:text> key value set: </xsl:text>
+                    <xsl:value-of
+                        select="normalize-space(string-join($text-before)) eq '' and normalize-space(string-join($text-after)) eq ''"/>
+                    <xsl:text> content: "</xsl:text>
+                    <xsl:value-of select="."/>
+                    <xsl:text>"</xsl:text>
+                </xsl:message>
+                <xsl:if
+                    test="normalize-space(string-join($text-before)) eq '' and normalize-space(string-join($text-after)) eq ''"
+                    >both-ends</xsl:if>
+            </xsl:if>
+        </xsl:sequence>
+    </xsl:key>
+
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -73,8 +158,80 @@ Note, that there is a default mode in this package.
                 inserting project-specific things before and after an element -->
 
             <xsl:template mode="text:text" match="text()">
-                <xsl:call-template name="source:text-node"/>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="node()*">
+                        <xsl:call-template name="source:text-node"/>
+                    </xsl:with-param>
+                </xsl:call-template>
             </xsl:template>
+
+            <!-- diplomatic presentation with linebreaks -->
+
+            <!-- @break='no' means that lb is inside a token and therefore a hyphen must be inserted -->
+            <xsl:template match="lb[$text:diplomatic]">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>text nodes from before key: </xsl:text>
+                    <xsl:value-of select="key('text-delimited-by-in-word-lb', 'before') => count()"/>
+                    <xsl:text> text nodes from after key: </xsl:text>
+                    <xsl:value-of select="key('text-delimited-by-in-word-lb', 'after') => count()"/>
+                    <xsl:text> text nodes from double key: </xsl:text>
+                    <xsl:value-of
+                        select="key('text-delimited-by-in-word-lb', 'both-ends') => count()"/>
+                </xsl:message>
+                <xsl:if test="@break eq 'no'">
+                    <span class="hyphen">
+                        <xsl:value-of select="$text:diplomatic-hyphen"/>
+                    </span>
+                </xsl:if>
+                <br/>
+                <xsl:text>&#xa;</xsl:text>
+                <span class="line-number">
+                    <xsl:value-of select="common:line-number(.)"/>
+                </span>
+            </xsl:template>
+
+            <!-- remove whitespace next to lb -->
+            <xsl:template match="key('text-delimited-by-in-word-lb', 'both-ends')" priority="20">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>cutting whitespace at both ends</xsl:text>
+                </xsl:message>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="item()*">
+                        <xsl:call-template name="source:text-node">
+                            <xsl:with-param name="content"
+                                select="replace(., '^\s+', '') => replace('\s+$', '')"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </xsl:template>
+
+            <xsl:template match="key('text-delimited-by-in-word-lb', 'after')" priority="10">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>cutting whitespace at end</xsl:text>
+                </xsl:message>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="item()*">
+                        <xsl:call-template name="source:text-node">
+                            <xsl:with-param name="content" select="replace(., '\s+$', '')"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </xsl:template>
+
+            <xsl:template match="key('text-delimited-by-in-word-lb', 'before')">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>cutting whitespace a beginning</xsl:text>
+                </xsl:message>
+                <xsl:call-template name="text:line-facs-linking">
+                    <xsl:with-param name="content" as="item()*">
+                        <xsl:call-template name="source:text-node">
+                            <xsl:with-param name="content" select="replace(., '^\s+', '')"/>
+                        </xsl:call-template>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </xsl:template>
+
+
 
             <!-- parts of the document -->
 
@@ -395,6 +552,37 @@ Note, that there is a default mode in this package.
     <!-- you probably want to override this for adding footnote marks etc. to the text -->
     <xsl:template name="text:inline-marks" visibility="public">
         <xsl:param name="context" as="element()" required="false" select="."/>
+    </xsl:template>
+
+    <!-- wraps text nodes into spans for line-based -->
+    <xsl:template name="text:line-facs-linking" visibility="final">
+        <xsl:context-item as="text()" use="required"/>
+        <xsl:param name="content" as="item()*" select="." required="false"/>
+        <xsl:choose>
+            <xsl:when test="not($text:line-facs-linking)">
+                <xsl:copy-of select="$content"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="lb" as="element(lb)?" select="preceding::lb[1]"/>
+                <xsl:variable name="facs" as="xs:string">
+                    <xsl:choose>
+                        <xsl:when test="$lb/@facs">
+                            <xsl:value-of select="$lb/@facs => replace('^#', '')"/>
+                        </xsl:when>
+                        <xsl:when test="$lb/@xml:id">
+                            <xsl:value-of select="$lb/@xml:id"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="generate-id($lb)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <span class="facs-{$facs} text-{generate-id(.)} line-snippet"
+                    data-linefacs="{$facs}">
+                    <xsl:copy-of select="$content"/>
+                </span>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 
