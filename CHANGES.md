@@ -2,6 +2,7 @@
 
 ## 0.18.0
 
+- support line-based text-image linking (see issue #79)
 - insert external apparatus entries at the right `<anchor>` in the text (see issue #80)
 - makes generated HTML navigable by making named anchors from section heads (see issue #73)
   - These anchors can optionally be made clickable by setting the
