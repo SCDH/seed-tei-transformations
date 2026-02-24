@@ -19,7 +19,7 @@ Note, that the default mode is html:html!
   xmlns:i18n="http://scdh.wwu.de/transform/i18n#" xmlns:app="http://scdh.wwu.de/transform/app#"
   xmlns:seed="http://scdh.wwu.de/transform/seed#"
   xmlns:common="http://scdh.wwu.de/transform/common#"
-  xmlns:html="http://scdh.wwu.de/transform/html#"
+  xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:text="http://scdh.wwu.de/transform/text#"
   xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="3.1"
   default-mode="html:html">
 
@@ -69,10 +69,29 @@ Note, that the default mode is html:html!
   <xsl:param name="html:default-css" as="xs:anyURI?"
     select="resolve-uri('default.css', static-base-uri())"/>
 
+
+  <!-- a second way additional to $html:css to pass in CSS files -->
+  <xsl:variable name="html:extra-js" as="xs:anyURI*" select="()" visibility="public"/>
+
+  <!-- default CSS -->
+  <xsl:param name="html:default-js" as="xs:anyURI*">
+    <xsl:if test="$text:line-facs-linking">
+      <xsl:sequence select="resolve-uri('post-message-base.js', static-base-uri())"/>
+      <xsl:sequence select="resolve-uri('line-facs.js', static-base-uri())"/>
+    </xsl:if>
+  </xsl:param>
+
+
   <xsl:param name="html:title-sep" as="xs:string" select="' :: '"/>
 
   <xsl:param name="html:title-suffix" as="xs:string?" select="'SEED TEI Transformations'"/>
 
+  <xsl:use-package
+    name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
+    package-version="1.0.0">
+    <xsl:accept component="*" names="*" visibility="hidden"/>
+    <xsl:accept component="variable" names="text:line-facs-linking" visibility="private"/>
+  </xsl:use-package>
 
   <xsl:use-package
     name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -207,7 +226,7 @@ Note, that the default mode is html:html!
     <xsl:variable name="base-uri" select="base-uri()"/>
     <xsl:choose>
       <xsl:when test="$html:js-method eq 'internal'">
-        <xsl:for-each select="$html:js">
+        <xsl:for-each select="$html:js, $html:extra-js, $html:default-js">
           <xsl:variable name="href" select="resolve-uri(., $base-uri)"/>
           <xsl:choose>
             <xsl:when test="unparsed-text-available($href)">
@@ -229,12 +248,12 @@ Note, that the default mode is html:html!
         </xsl:for-each>
       </xsl:when>
       <xsl:when test="$html:js-method eq 'absolute'">
-        <xsl:for-each select="$html:js">
+        <xsl:for-each select="$html:js, $html:extra-js, $html:default-js">
           <script type="text/javascript" src="{resolve-uri(., $base-uri)}"/>
         </xsl:for-each>
       </xsl:when>
       <xsl:when test="$html:js-method eq 'relative'">
-        <xsl:for-each select="$html:js">
+        <xsl:for-each select="$html:js, $html:extra-js, $html:default-js">
           <script type="text/javascript" src="{.}"/>
         </xsl:for-each>
       </xsl:when>
