@@ -326,7 +326,7 @@
             </TEI>
         </x:context>
         <x:expect label="space cut before in-word lb"
-            test="exists(//text()[. eq 'Synthetische Urteile  be'])"/>
+            test="exists(//text()[. eq 'Synthetische Urteile a priori be'])"/>
         <x:expect label="space cut in-between in-word lb"
             test="exists(//text()[. eq 'weisen objektive Realität im Satz über die Sum'])"/>
         <x:expect label="space cut after in-word lb"
