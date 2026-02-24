@@ -51,4 +51,17 @@ USAGE:
         <xsl:sequence select="$alternants-in-order[1] eq $id"/>
     </xsl:function>
 
+
+    <!-- external apparatus -->
+
+    <!-- a key for external apparatus entries; the values are IDs of targets -->
+    <xsl:key name="external-app-entry" match="//app[//variantEncoding/@location eq 'external']"
+        use="@to => substring(2)"/>
+
+    <!-- a key that tells us which elements are targets of an external apparatus entry; true/false value -->
+    <xsl:key name="external-app-target" match="//*[@xml:id]">
+        <xsl:variable name="id" as="xs:string" select="@xml:id"/>
+        <xsl:sequence select="exists(key('external-app-entry', $id)) => string()"/>
+    </xsl:key>
+
 </xsl:stylesheet>

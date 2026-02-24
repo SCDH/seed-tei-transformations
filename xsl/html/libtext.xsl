@@ -118,11 +118,25 @@ Note, that there is a default mode in this package.
 
             <xsl:template match="witDetail"/>
 
-            <xsl:template match="app">
+            <xsl:template match="app[//variantEncoding/@location eq 'internal']">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <xsl:apply-templates select="lem"/>
                 <xsl:call-template name="text:inline-marks"/>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
+            </xsl:template>
+
+            <!--
+                insert inline marks for external apparatus
+                TODO: other app-targets than anchor elements
+            -->
+            <xsl:template match="key('external-app-target', 'true')/self::anchor">
+                <xsl:variable name="app" as="element(app)"
+                    select="key('external-app-entry', @xml:id)"/>
+                <xsl:apply-templates mode="text:hook-before" select="$app"/>
+                <xsl:call-template name="text:inline-marks">
+                    <xsl:with-param name="context" select="$app"/>
+                </xsl:call-template>
+                <xsl:apply-templates mode="text:hook-after" select="$app"/>
             </xsl:template>
 
             <xsl:template match="lem[//variantEncoding/@method ne 'parallel-segmentation']"/>
@@ -137,6 +151,7 @@ Note, that there is a default mode in this package.
             <xsl:template match="choice">
                 <xsl:apply-templates mode="text:hook-before" select="."/>
                 <span class="choice">
+                    <xsl:call-template name="text:standard-attributes"/>
                     <xsl:call-template name="text:class-attribute"/>
                     <xsl:apply-templates select="@*"/>
                     <xsl:apply-templates select="*[1]"/>
