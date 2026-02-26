@@ -67,6 +67,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
     <!-- whether to use the HTML template from libhtml and make a full HTML file -->
     <xsl:param name="odd:transform" as="xs:boolean" select="true()"/>
 
+    <!-- whether to generate a TOC -->
+    <xsl:param name="odd:toc" as="xs:boolean" select="true()"/>
+
     <!-- path to directory containing documentation ODDs, only required for template named 'importing-ant-build-file' -->
     <xsl:param name="odd-dir" as="xs:string" select="''"/>
 
@@ -110,6 +113,9 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
         <xsl:override>
 
             <xsl:template name="html:content">
+                <xsl:if test="$odd:toc">
+                    <xsl:call-template name="odd:toc"/>
+                </xsl:if>
                 <xsl:apply-templates mode="text:text"/>
             </xsl:template>
 
@@ -303,6 +309,36 @@ target/bin/xslt.sh -config:saxon.he.xml -xsl:xsl/html/libodd.xsl -it:importing-a
                 </tr>
             </xsl:when>
         </xsl:choose>
+    </xsl:template>
+
+
+
+    <!-- mode for generating a recursive TOC -->
+    <xsl:template name="odd:toc">
+        <nav class="toc">
+            <ul>
+                <xsl:apply-templates mode="odd:toc" select="//body/div"/>
+            </ul>
+        </nav>
+    </xsl:template>
+
+    <xsl:mode name="odd:toc" on-no-match="shallow-skip" visibility="public"/>
+
+    <xsl:template mode="odd:toc" match="div[head]">
+        <li>
+            <a href="#{if (@xml:id) then @xml:id else generate-id()}">
+                <xsl:apply-templates mode="odd:toc" select="head"/>
+            </a>
+            <xsl:if test="div[head]">
+                <ul>
+                    <xsl:apply-templates mode="odd:toc" select="div"/>
+                </ul>
+            </xsl:if>
+        </li>
+    </xsl:template>
+
+    <xsl:template mode="odd:toc" match="head">
+        <xsl:apply-templates mode="text:text"/>
     </xsl:template>
 
 
