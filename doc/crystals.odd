@@ -30,6 +30,8 @@
     <body>
       <head>SEED TEI Transformations</head>
 
+      <divGen type="toc"/>
+
       <p>This documentation provides minimal snippets of supported encodings (call them encoding
         crystals) and presents how they look like when being transformed. HTML results of
         transformations are provided in iframes. Have fun!</p>
