@@ -46,7 +46,7 @@ Templates or functions? Just as required for building JSON-LD data structures.
         <xsl:param name="format" as="xs:string"/>
         <xsl:param name="language" as="xs:string"/>
         <xsl:map>
-            <xsl:map-entry key="'type'">TextualBody</xsl:map-entry>
+            <xsl:map-entry key="'type'" select="'TextualBody'"/>
             <xsl:map-entry key="'value'" select="$value"/>
             <xsl:map-entry key="'format'" select="$format"/>
             <xsl:map-entry key="'language'" select="$language"/>
@@ -56,12 +56,12 @@ Templates or functions? Just as required for building JSON-LD data structures.
     <xsl:function name="oa:target-samedoc-css" as="map(xs:string, item())" visibility="final">
         <xsl:param name="class"/>
         <xsl:map>
-            <xsl:map-entry key="'type'">SpecificResource</xsl:map-entry>
-            <xsl:map-entry key="'source'">.</xsl:map-entry>
+            <xsl:map-entry key="'type'" select="'SpecificResource'"/>
+            <xsl:map-entry key="'source'" select="'.'"/>
             <xsl:map-entry key="'selector'">
                 <xsl:map>
-                    <xsl:map-entry key="'type'">CssSelector</xsl:map-entry>
-                    <xsl:map-entry key="'selector'" select="'.' || $class"/>
+                    <xsl:map-entry key="'type'" select="'CssSelector'"/>
+                    <xsl:map-entry key="'value'" select="'.' || $class"/>
                 </xsl:map>
             </xsl:map-entry>
         </xsl:map>

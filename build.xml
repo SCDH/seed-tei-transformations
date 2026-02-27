@@ -67,6 +67,7 @@
         <antcall target="test-xsl-html-prose-with-popups.xsl"/>
         <antcall target="test-xsl-html-prose-linebased.xsl"/>
         <antcall target="test-xsl-html-prose-footnotes.xsl"/>
+        <antcall target="test-xsl-html-prose-annotations.xsl"/>
         <antcall target="test-xsl-html-bible-with-popups.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
         <antcall target="test-xsl-html-libapp2c-html-librend.xsl"/>
@@ -199,6 +200,12 @@
     <target name="test-xsl-html-prose-footnotes.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/prose-footnotes.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-prose-annotations.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/prose-annotations.xspec"/>
         </antcall>
     </target>
 

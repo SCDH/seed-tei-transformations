@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    xmlns:array="http://www.w3.org/2005/xpath-functions/array"
+    xmlns:ht="http://www.w3.org/1999/xhtml" xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:text="http://scdh.wwu.de/transform/text#"
+    xmlns:prose="http://scdh.wwu.de/transform/prose#"
+    xmlns:html="http://scdh.wwu.de/transform/html#" xmlns:t="http://www.tei-c.org/ns/1.0"
+    stylesheet="prose-annotations.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.html.xml"/>
+
+    <x:variable name="tei-text">
+        <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <teiHeader>
+                <fileDesc>
+                    <titleStmt>
+                        <title>Test</title>
+                    </titleStmt>
+                </fileDesc>
+                <encodingDesc>
+                    <variantEncoding method="parallel-segmentation" location="internal"/>
+                </encodingDesc>
+            </teiHeader>
+            <text xml:id="the-text">
+                <body>
+                    <div xml:id="d1" n="1">
+                        <head>Erstes Hauptstück</head>
+                        <div xml:id="d1.1">
+                            <head>Des ersten Hauptstücks erster Teil</head>
+                            <p n="1" xml:id="d1.1.p1">Synthetische Urteile a priori beweisen
+                                objektive Realität im Satz über die Summe der Innenwinkel des <app
+                                    xml:id="d1.1.a1"><lem>Dreiecks</lem><rdg wit="#N"
+                                    >n-Ecks</rdg></app>.</p>
+                            <p n="2" xml:id="d1.1.p2">Vorausgesetzt werden die Sätze über
+                                Wechselwinkel und Gegenwinkel an <sic>Paralellen</sic>, die durch
+                                eine dritte Gerade geschnitten werden.</p>
+                        </div>
+                    </div>
+                </body>
+            </text>
+        </TEI>
+    </x:variable>
+
+    <x:scenario
+        label="apparatus in annotations has json-ld structure of an ldp container with annotation descriptions, regression for issue #83">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:call template="prose:annotations"/>
+        <x:expect label="has property '@context'" test="map:keys(.) = '@context'"/>
+        <x:expect label="has no property '@kontext'" test="(map:keys(.) = '@kontext') => not()"/>
+        <x:expect label="has property 'id'" test="map:keys(.) = 'id'"/>
+        <x:expect label="has property 'type'" test="map:keys(.) = 'type'"/>
+        <x:expect label="has property 'total'" test="map:keys(.) = 'total'"/>
+        <x:expect label="has property 'modified'" test="map:keys(.) = 'modified'"/>
+        <x:expect label="has property 'label'" test="map:keys(.) = 'label'"/>
+        <x:expect label="has property 'first'" test="map:keys(.) = 'first'"/>
+        <x:expect label="has property 'last'" test="map:keys(.) = 'last'"/>
+        <x:expect label="has oa context"
+            test="map:get(., '@context') = 'http://www.w3.org/ns/anno.jsonld'"/>
+        <x:expect label="has ldp context"
+            test="map:get(., '@context') = 'http://www.w3.org/ns/ldp.jsonld'"/>
+        <x:expect label="is a BasisContainer" test="map:get(., 'type') = 'BasicContainer'"/>
+        <x:expect label="is a AnnotationCollection"
+            test="map:get(., 'type') = 'AnnotationCollection'"/>
+        <x:expect label="first page has an id" test="map:get(., 'first') => map:keys() = 'id'"/>
+        <x:expect label="first page has an type" test="map:get(., 'first') => map:keys() = 'type'"/>
+        <x:expect label="first page has an next" test="map:get(., 'first') => map:keys() = 'next'"/>
+        <x:expect label="first page has an items" test="map:get(., 'first') => map:keys() = 'items'"/>
+        <x:expect label="first page is a AnnotationPage"
+            test="map:get(., 'first') => map:get('type') = 'AnnotationPage'"/>
+        <x:expect label="first item has property id"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:keys() = 'id'"/>
+        <x:expect label="first item has property type"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:keys() = 'type'"/>
+        <x:expect label="first item has property body"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:keys() = 'body'"/>
+        <x:expect label="first item has property target"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:keys() = 'target'"/>
+        <x:expect label="first item is a Annotation"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('type') = 'Annotation'"
+        />
+    </x:scenario>
+
+    <x:scenario label="apparatus in annotations, body structure, regression for issue #83">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:call template="prose:annotations"/>
+        <x:expect label="annotation body has property type"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('body') => map:keys() = 'type'"/>
+        <x:expect label="annotation body has property value"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('body') => map:keys() = 'value'"/>
+        <x:expect label="annotation body has property format"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('body') => map:keys() = 'format'"/>
+        <x:expect label="annotation body has property language"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('body') => map:keys() = 'language'"/>
+        <x:expect label="annotation body is a TextualBody"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('body') => map:get('type') = 'TextualBody'"
+        />
+    </x:scenario>
+
+    <x:scenario label="apparatus in annotations, target structure, regression for issue #83">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:call template="prose:annotations"/>
+        <x:expect label="annotation target has property source"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('target') => map:keys() = 'source'"/>
+        <x:expect label="annotation target has property selector"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('target') => map:keys() = 'selector'"/>
+        <x:expect label="target selector has property type"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('target') => map:get('selector') => map:keys() = 'type'"/>
+        <x:expect label="target selector has property value"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('target') => map:get('selector') => map:keys() = 'value'"/>
+        <x:expect label="target selector is a CssSelector"
+            test="map:get(., 'first') => map:get('items') => array:get(1) => map:get('target') => map:get('selector') => map:get('type') = 'CssSelector'"/>
+
+    </x:scenario>
+
+
+    <x:scenario label="apparatus in annotations, values, regression for issue #83">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:call template="prose:annotations"/>
+        <x:expect label="2 annotations in total" test="map:get(., 'total')" select="2"/>
+        <x:expect label="annotation present with body of first entry's lemma"
+            test="map:get(., 'first') => map:get('items') => array:filter(function ($x) {map:get($x, 'body') => map:get('value') => matches('Dreiecks')}) => array:size()"
+            select="1"/>
+        <x:expect label="annotation present with body of first entry's reading"
+            test="map:get(., 'first') => map:get('items') => array:filter(function ($x) {map:get($x, 'body') => map:get('value') => matches('n-Ecks')}) => array:size()"
+            select="1"/>
+        <x:expect label="annotation present with body of first entry's lemma"
+            test="map:get(., 'first') => map:get('items') => array:filter(function ($x) {map:get($x, 'body') => map:get('value') => matches('Paralellen')}) => array:size()"
+            select="1"/>
+    </x:scenario>
+
+    <x:scenario label="full html">
+        <x:context select="$tei-text" mode="html:html"/>
+        <x:expect label="result">
+            <html lang="de">
+                <head>...</head>
+                <body>...</body>
+            </html>
+        </x:expect>
+    </x:scenario>
+
+</x:description>
