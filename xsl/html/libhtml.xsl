@@ -145,6 +145,7 @@ Note, that the default mode is html:html!
         <xsl:call-template name="html:css"/>
         <xsl:call-template name="html:js-modules"/>
         <xsl:call-template name="html:js"/>
+        <xsl:call-template name="html:extra-head"/>
         <xsl:call-template name="html:last-in-head-hook"/>
       </head>
       <body>
@@ -317,6 +318,8 @@ Note, that the default mode is html:html!
   </xsl:template>
 
   <xsl:template name="html:after-body-additional-js" visibility="public"/>
+
+  <xsl:template name="html:extra-head" visibility="public"/>
 
   <xsl:template name="html:last-in-head-hook" visibility="public"/>
 
