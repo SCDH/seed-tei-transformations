@@ -349,6 +349,13 @@ see xsl/projects/alea/preview.xsl
         <xsl:param name="context" as="element()" required="false" select="."/>
     </xsl:template>
 
+    <!-- generate annotations for the apparatus -->
+    <xsl:template name="app:annotation-based-apparatus" as="map(xs:string, item()*)"
+        visibility="abstract">
+        <xsl:param name="entries" as="map(xs:string, map(*))"/>
+        <xsl:param name="serialization" as="item()?" select="()"/>
+    </xsl:template>
+
 
     <!-- the template for an entry -->
     <xsl:template name="app:apparatus-entry" visibility="abstract"/>

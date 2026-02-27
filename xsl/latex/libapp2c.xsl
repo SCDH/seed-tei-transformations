@@ -67,6 +67,15 @@
                 <!-- not doing anything here -->
             </xsl:template>
 
+            <!-- generate annotations for the apparatus -->
+            <xsl:template name="app:annotation-based-apparatus" as="map(xs:string, item()*)"
+                visibility="public">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="serialization" as="item()?" select="()"/>
+                <!-- not doing anything here -->
+            </xsl:template>
+
+
             <!-- generate footnotes for the context element. Hook this to text:inline-marks -->
             <xsl:template name="app:footnote-marks" visibility="public">
                 <xsl:param name="entries" as="map(xs:string, map(*))"/>

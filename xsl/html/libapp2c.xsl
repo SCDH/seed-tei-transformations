@@ -17,7 +17,7 @@
     xmlns:seed="http://scdh.wwu.de/transform/seed#" xmlns:wit="http://scdh.wwu.de/transform/wit#"
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:text="http://scdh.wwu.de/transform/text#"
-    xmlns:compat="http://scdh.wwu.de/transform/compat#"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#" xmlns:oa="http://scdh.wwu.de/transform/oa#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.1">
 
@@ -30,6 +30,8 @@
     <xsl:param name="app:lemma" as="xs:boolean" select="true()" required="false"/>
 
     <xsl:import href="../common/libkeys.xsl"/>
+
+    <xsl:variable name="app:serialization" as="item()" select="map { 'method': 'html' }" visibility="public"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libi18n.xsl"
@@ -44,6 +46,10 @@
         package-version="1.0.0">
         <xsl:accept component="variable" names="wit:witness" visibility="private"/>
     </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/liboa.xsl"
+        package-version="1.0.0"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libapp2.xsl"
@@ -230,6 +236,52 @@
                     </span>
                 </xsl:if>
             </xsl:template>
+
+            <!-- generate annotations for the apparatus -->
+            <xsl:template name="app:annotation-based-apparatus" as="map(xs:string, item()*)"
+                visibility="public">
+                <xsl:param name="entries" as="map(xs:string, map(*))"/>
+                <xsl:param name="serialization" as="item()?" select="$app:serialization"/>
+                <xsl:variable name="merged-entries" select="map:merge($entries)"/>
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>printing note based apparatus for </xsl:text>
+                    <xsl:value-of select="map:size($entries)"/>
+                    <xsl:text> entries</xsl:text>
+                </xsl:message>
+                <xsl:call-template name="oa:container">
+                    <xsl:with-param name="container-id" select="'.-annotations-container'"/>
+                    <xsl:with-param name="annotations" as="map(xs:string, item()*)*">
+                        <xsl:for-each select="map:keys($entries)">
+                            <xsl:variable name="entry-id" as="xs:string" select="."/>
+                            <xsl:variable name="entry" as="map(*)"
+                                select="map:get($entries, $entry-id)"/>
+                            <xsl:variable name="number" as="xs:string"
+                                select="map:get($entry, 'number')"/>
+                            <xsl:call-template name="oa:annotation">
+                                <xsl:with-param name="id" select="."/>
+                                <xsl:with-param name="body" as="map(*)">
+                                    <xsl:call-template name="oa:textual-body">
+                                        <xsl:with-param name="value">
+                                            <xsl:variable name="entry">
+                                                <xsl:call-template name="app:apparatus-entry">
+                                                  <xsl:with-param name="entries"
+                                                  select="map:get($entry, 'entries')"/>
+                                                </xsl:call-template>
+                                            </xsl:variable>
+                                            <xsl:sequence
+                                                select="serialize($entry, $serialization )"/>
+                                        </xsl:with-param>
+                                        <xsl:with-param name="format">text/html</xsl:with-param>
+                                        <xsl:with-param name="language">en</xsl:with-param>
+                                    </xsl:call-template>
+                                </xsl:with-param>
+                                <xsl:with-param name="target" select="oa:target-samedoc-css(.)"/>
+                            </xsl:call-template>
+                        </xsl:for-each>
+                    </xsl:with-param>
+                </xsl:call-template>
+            </xsl:template>
+
 
 
             <!-- the template for an entry -->
