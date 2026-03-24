@@ -85,19 +85,6 @@
                 </xsl:element>
             </xsl:template>
 
-            <!-- output pb/@n in square brackets -->
-            <xsl:template match="pb">
-                <xsl:apply-templates mode="text:hook-before" select="."/>
-                <span class="pb static-text">
-                    <xsl:call-template name="text:class-attribute"/>
-                    <xsl:apply-templates select="@*"/>
-                    <xsl:text>[</xsl:text>
-                    <xsl:value-of select="@n"/>
-                    <xsl:text>]</xsl:text>
-                </span>
-                <xsl:apply-templates mode="text:hook-after" select="."/>
-            </xsl:template>
-
             <!-- minimal support for verses -->
 
             <xsl:template match="lg[l]">
