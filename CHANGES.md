@@ -1,5 +1,9 @@
 # Changes
 
+## 0.19.1
+
+- removes redundant rule for `<pb>` from libprose
+
 ## 0.19.0
 
 - switch between diplomatic and readers representation for `<pb>` (see
