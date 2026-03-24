@@ -1,5 +1,14 @@
 # Changes
 
+## 0.19.0
+
+- switch between diplomatic and readers representation for `<pb>` (see
+  issue #84)
+  - keep page numbers per default in readers representation
+  - turn them off by setting stylesheet parameter `text:keep-pb` to
+    false
+  - evaluate `<pb break="no"/>` just like for `<lb>`
+
 ## 0.18.0
 
 - support line-based text-image linking (see issue #79)
@@ -21,7 +30,7 @@
     `orig`/`reg` or multiple `seg` elements
   - apparatus entries accordingly
 - allows switching between diplomatic representation and reading
-  representation by setting `prose:linebreaks` (see issue #71)
+  representation by setting `text:diplomatic` (see issue #71)
   - whitespace around in-word `<lb break="no">` is removed in reading
     representation
   - hyphenation for in-word `<lb break="no">` is inserted in

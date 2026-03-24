@@ -38,6 +38,25 @@
         </xsl:choose>
     </xsl:function>
 
+    <!-- returns the page number -->
+    <xsl:function name="common:page-number" as="xs:string">
+        <xsl:param name="el" as="node()"/>
+        <xsl:choose>
+            <xsl:when test="$el/self::pb[not(@n)]">
+                <xsl:text>?</xsl:text>
+            </xsl:when>
+            <xsl:when test="$el/self::pb[@n]">
+                <xsl:value-of select="$el/@n"/>
+            </xsl:when>
+            <xsl:when test="$el/preceding::pb[1][@n]">
+                <xsl:value-of select="$el/preceding::pb[1]/@n"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>?</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
     <!-- returns the number of the editorial note in context -->
     <xsl:function name="common:note-number" as="xs:string">
         <xsl:param name="context" as="element()"/>

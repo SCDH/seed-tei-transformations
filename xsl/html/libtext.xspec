@@ -363,6 +363,143 @@
         <x:expect label="has word 'des' is a token" test="exists(tokenize(.)[. eq 'des'])"/>
         <x:expect label="has word 'Dreiecks.' is a token"
             test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
+        <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="0"
+        />
+    </x:scenario>
+
+    <x:scenario label="diplomatic presentation with pb, regression test for #84">
+        <x:param name="text:diplomatic" select="true()"/>
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <pb n="r"/><lb n="1"/>Synthetische Urteile <hi rend="i">a priori</hi> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <pb n="v" break="no"/><lb n="1" break="no"/> me der Innenwinkel des Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="space cut before in-word lb"
+            test="exists(//text()[. eq 'Synthetische Urteile a priori be'])"/>
+        <x:expect label="space cut in-between in-word lb"
+            test="exists(//text()[. eq 'weisen objektive Realität im Satz über die Sum'])"/>
+        <x:expect label="space cut after in-word lb"
+            test="exists(//text()[. eq 'me der Innenwinkel des Dreiecks.'])"/>
+        <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="2"
+        />
+    </x:scenario>
+
+    <x:scenario label="readers presentation with pb off from lb, regression test for #84">
+        <x:param name="text:diplomatic" select="true()"/>
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <pb n="r"/><lb n="1"/>Synthetische Urteile <hi rend="i">a priori</hi> be
+                            <pb n="v" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <lb n="3" break="no"/> me der Innenwinkel des Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="space cut before in-word lb"
+            test="exists(//text()[. eq 'Synthetische Urteile a priori be'])"/>
+        <x:expect label="space cut in-between in-word lb"
+            test="exists(//text()[. eq 'weisen objektive Realität im Satz über die Sum'])"/>
+        <x:expect label="space cut after in-word lb"
+            test="exists(//text()[. eq 'me der Innenwinkel des Dreiecks.'])"/>
+        <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="2"
+        pending="not yet"/>
+    </x:scenario>
+    
+
+    <x:scenario label="readers presentation with pb, regression test for #84">
+        <x:param name="text:diplomatic" select="false()"/>
+        <x:param name="text:keep-pb" select="true()"/>
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <pb n="r"/><lb n="1"/>Synthetische Urteile <hi rend="i">a priori</hi> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <pb n="v" break="no"/><lb n="3" break="no"/> me der Innenwinkel des
+                            <lb n="4"/>Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has word 'beweisen' has been merged"
+            test="exists(tokenize(.)[. eq 'beweisen'])"/>
+        <x:expect label="has word 'Summe' has not been merged"
+            test="exists(tokenize(.)[. eq 'Summe']) => not()"/>
+        <x:expect label="has word 'des Dreiecks.' has not been merged"
+            test="exists(tokenize(.)[. eq 'desDreiecks.']) => not()"/>
+        <x:expect label="has word 'des' is a token" test="exists(tokenize(.)[. eq 'des'])"/>
+        <x:expect label="has word 'Dreiecks.' is a token"
+            test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
+        <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="1"
+        />
+    </x:scenario>
+
+    <x:scenario label="readers presentation outwith pb, regression test for #84">
+        <x:param name="text:diplomatic" select="false()"/>
+        <x:param name="text:keep-pb" select="false()"/>
+        <x:context mode="text:text">
+            <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+                <teiHeader>
+                    <fileDesc>
+                        <titleStmt>
+                            <title>Test</title>
+                        </titleStmt>
+                    </fileDesc>
+                </teiHeader>
+                <text>
+                    <body>
+                        <p xml:space="preserve">
+                            <pb n="r"/><lb n="1"/>Synthetische Urteile <hi rend="i">a priori</hi> be
+                            <lb n="2" break="no"/> weisen objektive Realität im Satz über die Sum
+                            <pb n="v" break="no"/><lb n="3" break="no"/> me der Innenwinkel des
+                            <lb n="4"/>Dreiecks.</p>
+                    </body>
+                </text>
+            </TEI>
+        </x:context>
+        <x:expect label="has word 'beweisen' has been merged"
+            test="exists(tokenize(.)[. eq 'beweisen'])"/>
+        <x:expect label="has word 'Summe' has not been merged"
+            test="exists(tokenize(.)[. eq 'Summe'])"/>
+        <x:expect label="has word 'des Dreiecks.' has not been merged"
+            test="exists(tokenize(.)[. eq 'desDreiecks.']) => not()"/>
+        <x:expect label="has word 'des' is a token" test="exists(tokenize(.)[. eq 'des'])"/>
+        <x:expect label="has word 'Dreiecks.' is a token"
+            test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
+        <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="0"
+        />
     </x:scenario>
 
     <x:scenario label="line numbering in diplomatic presentation, regression test for #70">

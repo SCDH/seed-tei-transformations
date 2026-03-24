@@ -23,7 +23,8 @@ Note, that there is a default mode in this package.
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:source="http://scdh.wwu.de/transform/source#"
     xmlns:wit="http://scdh.wwu.de/transform/wit#" xmlns:app="http://scdh.wwu.de/transform/app#"
-    xmlns:compat="http://scdh.wwu.de/transform/compat#" exclude-result-prefixes="#all"
+    xmlns:compat="http://scdh.wwu.de/transform/compat#"
+    xmlns:seed="http://scdh.wwu.de/transform/seed#" exclude-result-prefixes="#all"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="3.0" default-mode="text:text">
 
     <xsl:output media-type="text/html" method="html" encoding="UTF-8"/>
@@ -36,6 +37,9 @@ Note, that there is a default mode in this package.
 
     <!-- the hyphenation mark to be inserted in <lb> inside a word -->
     <xsl:param name="text:diplomatic-hyphen" as="xs:string" select="'-'" required="false"/>
+
+    <!-- whether to keep pb (page beginning) elements in non-diplomatic -->
+    <xsl:param name="text:keep-pb" as="xs:boolean" select="true()" required="false"/>
 
     <!-- whether to make line-based text-image linking -->
     <xsl:param name="text:line-facs-linking" as="xs:boolean" select="false()" required="false"/>
@@ -50,8 +54,10 @@ Note, that there is a default mode in this package.
     -->
     <xsl:key name="text-delimited-by-in-word-lb" match="//text()">
         <xsl:variable name="this" as="text()" select="."/>
-        <xsl:variable name="lb-before" as="element()?" select="preceding::lb[1][@break eq 'no']"/>
-        <xsl:variable name="lb-after" as="element()?" select="following::lb[1][@break eq 'no']"/>
+        <xsl:variable name="lb-before" as="element()?"
+            select="preceding::*[self::lb or self::pb][1][@break eq 'no']"/>
+        <xsl:variable name="lb-after" as="element()?"
+            select="following::*[self::lb or self::pb][1][@break eq 'no']"/>
         <!-- make a sequence of values! -->
         <xsl:sequence>
             <xsl:if test="$lb-before">
@@ -144,6 +150,10 @@ Note, that there is a default mode in this package.
         <xsl:accept component="function" names="common:is-block#1" visibility="private"/>
     </xsl:use-package>
 
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libbetween.xsl"
+        package-version="1.0.0"/>
+
     <xsl:mode name="text:hook-before" on-no-match="deep-skip" visibility="public"/>
     <xsl:mode name="text:hook-after" on-no-match="deep-skip" visibility="public"/>
 
@@ -179,14 +189,56 @@ Note, that there is a default mode in this package.
                         select="key('text-delimited-by-in-word-lb', 'both-ends') => count()"/>
                 </xsl:message>
                 <xsl:if test="@break eq 'no'">
-                    <span class="hyphen">
-                        <xsl:value-of select="$text:diplomatic-hyphen"/>
-                    </span>
+                    <xsl:variable name="preceding-pb" as="element(pb)?" select="preceding::pb[1]"/>
+                    <xsl:choose>
+                        <xsl:when test="not(exists($preceding-pb))">
+                            <span class="hyphen">
+                                <xsl:value-of select="$text:diplomatic-hyphen"/>
+                            </span>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:variable name="follows-pb" as="xs:boolean"
+                                select="seed:subtrees-between-anchors($preceding-pb, .) ! normalize-space(.) => string-join() => normalize-space() eq ''"/>
+                            <xsl:message>
+                                <xsl:text>pb before: </xsl:text>
+                                <xsl:value-of select="common:page-number($preceding-pb)"/>
+                            </xsl:message>
+                            <xsl:if test="$follows-pb">
+                                <span class="hyphen">
+                                    <xsl:value-of select="$text:diplomatic-hyphen"/>
+                                </span>
+                            </xsl:if>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:if>
                 <br/>
                 <xsl:text>&#xa;</xsl:text>
                 <span class="line-number">
                     <xsl:value-of select="common:line-number(.)"/>
+                </span>
+            </xsl:template>
+
+            <xsl:template match="pb[$text:diplomatic or $text:keep-pb]">
+                <xsl:message use-when="system-property('debug') eq 'true'">
+                    <xsl:text>pb: text nodes from before key: </xsl:text>
+                    <xsl:value-of select="key('text-delimited-by-in-word-lb', 'before') => count()"/>
+                    <xsl:text> text nodes from after key: </xsl:text>
+                    <xsl:value-of select="key('text-delimited-by-in-word-lb', 'after') => count()"/>
+                    <xsl:text> text nodes from double key: </xsl:text>
+                    <xsl:value-of
+                        select="key('text-delimited-by-in-word-lb', 'both-ends') => count()"/>
+                </xsl:message>
+                <xsl:if test="@break eq 'no'">
+                    <span class="hyphen">
+                        <xsl:value-of select="$text:diplomatic-hyphen"/>
+                    </span>
+                </xsl:if>
+                <xsl:if test="$text:diplomatic">
+                    <br/>
+                </xsl:if>
+                <xsl:text>&#xa;</xsl:text>
+                <span class="page-number">
+                    <xsl:value-of select="common:page-number(.)"/>
                 </span>
             </xsl:template>
 
