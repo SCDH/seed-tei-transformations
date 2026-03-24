@@ -1,8 +1,16 @@
 .static-text,
-.line-number {
+.line-number,
+.page-number {
     color: silver;
 }
 
 .line-number:after {
     content: " ";
+}
+
+.page-number:before {
+    content: "[";
+}
+.page-number:after {
+    content: "]";
 }
