@@ -189,26 +189,26 @@ Note, that there is a default mode in this package.
                         select="key('text-delimited-by-in-word-lb', 'both-ends') => count()"/>
                 </xsl:message>
                 <xsl:if test="@break eq 'no'">
-                    <xsl:variable name="preceding-pb" as="element(pb)?" select="preceding::pb[1]"/>
+                    <!--
+                        With a immediatly preceding pb, hyphen must not be inserted.
+                        $preceding-pb stores <pb/> between this lb and lb before:
+                    -->
+                    <xsl:variable name="preceding-pb" as="element(pb)?"
+                        select="preceding::*[self::pb or self::lb][1][self::pb]"/>
                     <xsl:choose>
                         <xsl:when test="not(exists($preceding-pb))">
                             <span class="hyphen">
                                 <xsl:value-of select="$text:diplomatic-hyphen"/>
                             </span>
                         </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:variable name="follows-pb" as="xs:boolean"
-                                select="seed:subtrees-between-anchors($preceding-pb, .) ! normalize-space(.) => string-join() => normalize-space() eq ''"/>
-                            <xsl:message>
-                                <xsl:text>pb before: </xsl:text>
-                                <xsl:value-of select="common:page-number($preceding-pb)"/>
-                            </xsl:message>
-                            <xsl:if test="$follows-pb">
-                                <span class="hyphen">
-                                    <xsl:value-of select="$text:diplomatic-hyphen"/>
-                                </span>
-                            </xsl:if>
-                        </xsl:otherwise>
+                        <xsl:when
+                            test="seed:subtrees-between-anchors($preceding-pb, .) ! normalize-space(.) => string-join() => normalize-space() ne ''">
+                            <!-- there's a preceding hyphen but there's text in between -->
+                            <span class="hyphen">
+                                <xsl:value-of select="$text:diplomatic-hyphen"/>
+                            </span>
+                        </xsl:when>
+                        <xsl:otherwise/>
                     </xsl:choose>
                 </xsl:if>
                 <br/>
