@@ -396,6 +396,7 @@
             test="exists(//text()[. eq 'me der Innenwinkel des Dreiecks.'])"/>
         <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="2"
         />
+        <x:expect label="counts of breaks" test="count(//br)" select="5"/>
     </x:scenario>
 
     <x:scenario label="readers presentation with pb off from lb, regression test for #84">
@@ -427,6 +428,7 @@
             test="exists(//text()[. eq 'me der Innenwinkel des Dreiecks.'])"/>
         <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="2"
         pending="not yet"/>
+        <x:expect label="counts of breaks" test="count(//br)" select="4"/>
     </x:scenario>
     
 
@@ -464,6 +466,7 @@
             test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
         <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="1"
         />
+        <x:expect label="counts of breaks" test="count(//br)" select="0"/>
     </x:scenario>
 
     <x:scenario label="readers presentation outwith pb, regression test for #84">
@@ -500,6 +503,7 @@
             test="exists(tokenize(.)[. eq 'Dreiecks.'])"/>
         <x:expect label="counts of hyphenations" test="count(//span[@class = 'hyphen'])" select="0"
         />
+        <x:expect label="counts of breaks" test="count(//br)" select="0"/>
     </x:scenario>
 
     <x:scenario label="line numbering in diplomatic presentation, regression test for #70">
