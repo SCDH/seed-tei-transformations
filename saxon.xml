@@ -116,6 +116,12 @@ http://www.saxonica.com/documentation/index/configuration-file.html
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/latex/libpreamble.xsl"
                version="1.0.0" sourceLocation="xsl/latex/libpreamble.xsl"/>
           <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libnaf.xsl"
+               version="1.0.0" sourceLocation="xsl/common/libnaf.xsl"/>
+          <package
+               name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libregister.xsl"
+               version="1.0.0" sourceLocation="xsl/html/libregister.xsl"/>
+          <package
                name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libxmlsource.xsl"
                version="1.0.0" sourceLocation="xsl/html/libxmlsource.xsl"/>
           <package

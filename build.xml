@@ -57,6 +57,7 @@
         <antcall target="test-xsl-common-libref.xsl"/>
         <antcall target="test-xsl-common-libentry2.xsl"/>
         <antcall target="test-xsl-common-libsource.xsl"/>
+        <antcall target="test-xsl-common-libnaf.xsl"/>
         <antcall target="test-xsl-json-witnesses.xsl"/>
         <antcall target="test-xsl-html-libtext.xsl"/>
         <antcall target="test-xsl-html-libtext-first-child.xsl"/>
@@ -133,6 +134,12 @@
     <target name="test-xsl-common-libsource.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/common/libsource.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-common-libnaf.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/common/libnaf.xspec"/>
         </antcall>
     </target>
 

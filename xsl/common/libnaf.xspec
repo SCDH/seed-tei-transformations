@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Unit tests (regression tests) for libnaf.xsl -->
+
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ht="http://www.w3.org/1999/xhtml"
+  xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:common="http://scdh.wwu.de/transform/naf#"
+  stylesheet="libnaf.xsl" run-as="external">
+
+  <x:variable name="x:saxon-config">
+    <configuration xmlns="http://saxon.sf.net/ns/configuration">
+      <xsltPackages>
+        <package
+          name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libnaf.xsl"
+          package-version="1.0.0" sourceLocation="libnaf.xsl"/>
+      </xsltPackages>
+    </configuration>
+  </x:variable>
+
+  <x:scenario label="label from idno with type attribute">
+    <x:context>
+      <tei:idno type="zoo"/>
+    </x:context>
+    <x:expect label="is zoo">zoo</x:expect>
+  </x:scenario>
+
+  <x:scenario label="label from idno with type attribute overrides xml base">
+    <x:context>
+      <tei:idno type="zoo" xml:base="http://viaf.org/viaf/90045354"/>
+    </x:context>
+    <x:expect label="is zoo">zoo</x:expect>
+  </x:scenario>
+
+  <x:scenario label="label from idno with type attribute overrides xml base">
+    <x:context>
+      <tei:idno xml:base="http://viaf.org/viaf/90045354"/>
+    </x:context>
+    <x:expect label="is viaf">viaf</x:expect>
+  </x:scenario>
+  
+</x:description>
