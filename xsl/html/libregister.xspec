@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:register="http://scdh.wwu.de/transform/register#"
+    xmlns:t="http://www.tei-c.org/ns/1.0" stylesheet="libregister.xsl" run-as="external">
+
+    <x:variable name="x:saxon-config" href="../../saxon.he.xml"/>
+
+    <x:variable name="persons">
+        <listPerson xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de">
+            <person xml:id="a">
+                <persName xml:lang="fr">Edith Croissant</persName>
+                <idno type="lab">???</idno>
+                <desc>seen on screen</desc>
+            </person>
+            <person xml:id="b">
+                <persName>Mitzi Katz</persName>
+                <desc>walks the dog</desc>
+            </person>
+            <person xml:id="c">
+                <idno xml:base="http://viaf.org/viaf/">123</idno>
+                <idno xml:base="http://bnf.de/gnd/">234</idno>
+                <persName>Molly</persName>
+                <desc>cloned</desc>
+            </person>
+        </listPerson>
+    </x:variable>
+
+    <x:scenario label="base features of table for $persons">
+        <x:context select="$persons"/>
+        <x:call template="register:register"/>
+        <x:expect label="output is a table" test="exists(/table)"/>
+        <x:expect label="table has CSS class" test="exists(/table/@class)"/>
+        <x:expect label="table is sortable" test="tokenize(/table/@class) = 'sortable'"/>
+        <x:expect label="table is listPerson" test="tokenize(/table/@class) = 'listPerson'"/>
+        <x:expect label="table has head" test="exists(/table/thead)"/>
+        <x:expect label="table has body" test="exists(/table/tbody)"/>
+        <x:expect label="body has at least one row" test="count(/table/tbody/tr) gt 1"/>
+        <x:expect label="first row has at least 4 columns" test="count(/table/tbody/tr[1]/td) ge 4"/>
+        <x:expect label="columns have lang attribute" test="exists(/table/tbody/tr[1]/td/@lang)"/>
+    </x:scenario>
+
+
+    <x:scenario label="content-related features of table for $persons">
+        <x:context select="$persons"/>
+        <x:call template="register:register"/>
+        <x:expect label="column 1 has no lang attribute "
+            test="exists(/table/tbody/tr[1]/td[1]/@lang) => not()"/>
+        <x:expect label="column 2 has lang de" test="/table/tbody/tr[1]/td[2]/@lang ! string(.)"
+            select="'de'"/>
+        <x:expect label="column 3 has lang fr" test="/table/tbody/tr[1]/td[3]/@lang ! string(.)"
+            select="'fr'"/>
+        <x:expect label="columns have counter" test="/table/tbody/tr/td[1] ! string(.)"
+            select="(1 to count($persons/self::t:listPerson/*)) ! string(.)"/>
+        <x:expect label="column 1 has content a" test="/table/tbody/tr[1]/td[2]/text()" xml:space="preserve">a</x:expect>
+        <x:expect label="content of column 2" test="/table/tbody/tr[1]/td[3]/text()" xml:space="preserve">Edith Croissant</x:expect>
+        <x:expect label="column 1 has content b" test="/table/tbody/tr[2]/td[2]/text()" xml:space="preserve">b</x:expect>
+        <x:expect label="content of column 2" test="/table/tbody/tr[2]/td[3]/text()" xml:space="preserve">Mitzi Katz</x:expect>
+        <x:expect label="content of column 4 has 2 items" test="count(/table/tbody/tr[3]/td[4]//li)"
+            select="2"/>
+        <x:expect label="content of column 4 has 2 items"
+            test="(/table/tbody/tr[3]/td[4]//li) ! string(.)" select="'viaf:123', 'bnf:234'"/>
+        <x:expect label="links of column 4 has 2 items"
+            test="(/table/tbody/tr[3]/td[4]//li/a/@href) ! string(.)"
+            select="'http://viaf.org/viaf/123', 'http://bnf.de/gnd/234'"/>
+    </x:scenario>
+
+</x:description>

@@ -16,7 +16,7 @@
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/common/libnaf.xsl"
         package-version="1.0.0"/>
 
-    <xsl:template name="register:register">
+    <xsl:template name="register:register" visibility="final">
         <xsl:context-item as="element()" use="required"/>
         <xsl:variable name="heads" as="xs:string*">
             <xsl:apply-templates mode="register:heads" select="."/>
@@ -28,13 +28,14 @@
             <xsl:text>202</xsl:text>
             <xsl:text>Count of heads and columns differ</xsl:text>
         </xsl:assert>
+        <xsl:variable name="classes" as="xs:string*">
+            <xsl:value-of select="local-name(.)"/>
+            <xsl:if test="$register:sortable">
+                <xsl:text>sortable</xsl:text>
+            </xsl:if>
+        </xsl:variable>
         <table>
-            <xsl:attribute name="class">
-                <xsl:value-of select="local-name(.)"/>
-                <xsl:if test="$register:sortable">
-                    <xsl:text>sortable</xsl:text>
-                </xsl:if>
-            </xsl:attribute>
+            <xsl:attribute name="class" select="$classes"/>
             <thead>
                 <tr>
                     <xsl:for-each select="$heads">
@@ -44,9 +45,11 @@
                     </xsl:for-each>
                 </tr>
             </thead>
-            <xsl:apply-templates mode="register:row">
-                <xsl:with-param name="columns" as="xs:string*" select="$columns" tunnel="true"/>
-            </xsl:apply-templates>
+            <tbody>
+                <xsl:apply-templates mode="register:row">
+                    <xsl:with-param name="columns" as="xs:string*" select="$columns" tunnel="true"/>
+                </xsl:apply-templates>
+            </tbody>
         </table>
     </xsl:template>
 
@@ -55,15 +58,17 @@
     <xsl:mode name="register:columns" on-no-match="fail" visibility="public"/>
 
     <xsl:template mode="register:heads" match="*" as="xs:string*">
+        <xsl:value-of>No.</xsl:value-of>
         <xsl:value-of>ID</xsl:value-of>
         <xsl:value-of>Name</xsl:value-of>
         <xsl:value-of>URI</xsl:value-of>
     </xsl:template>
 
     <xsl:template mode="register:columns" match="*" as="xs:string*">
+        <xsl:value-of>preceding-sibling::* => count() + 1</xsl:value-of>
         <xsl:value-of>@xml:id</xsl:value-of>
         <xsl:value-of>*[local-name(.) => lower-case() => ends-with('name')]</xsl:value-of>
-        <xsl:value-of>@xml:id</xsl:value-of>
+        <xsl:value-of>idno</xsl:value-of>
     </xsl:template>
 
 
@@ -74,20 +79,31 @@
         <xsl:param name="columns" as="xs:string*" tunnel="true"/>
         <xsl:variable name="context" as="element()" select="."/>
         <tr>
+            <xsl:if test="@xml:id">
+                <xsl:attribute name="id" select="@xml:id"/>
+            </xsl:if>
             <xsl:for-each select="$columns">
                 <td>
-                    <xsl:variable name="cell" as="element()*">
-                        <xsl:evaluate as="element()*" expand-text="true" xpath="."
+                    <xsl:variable name="cell" as="item()*">
+                        <xsl:evaluate as="item()*" expand-text="true" xpath="."
                             context-item="$context"/>
                     </xsl:variable>
                     <xsl:choose>
-                        <xsl:when test="count($cell) le 1">
+                        <xsl:when test="empty($cell)"/>
+                        <xsl:when test="register:is-atomic($cell)">
+                            <xsl:value-of select="$cell"/>
+                        </xsl:when>
+                        <xsl:when test="count($cell) eq 1">
+                            <xsl:attribute name="lang"
+                                select="($cell/ancestor-or-self::*/@xml:lang)[last()]"/>
                             <xsl:apply-templates mode="register:cell" select="$cell"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <ul class="data-sequence">
                                 <xsl:for-each select="$cell">
                                     <li>
+                                        <xsl:attribute name="lang"
+                                            select="($cell/ancestor-or-self::*/@xml:lang)[last()]"/>
                                         <xsl:apply-templates mode="register:cell" select="."/>
                                     </li>
                                 </xsl:for-each>
@@ -98,6 +114,18 @@
             </xsl:for-each>
         </tr>
     </xsl:template>
+
+    <xsl:function name="register:is-atomic" as="xs:boolean">
+        <xsl:param name="x" as="item()*"/>
+        <xsl:try>
+            <xsl:sequence select="if ($x[self::node()]) then false() else false()"/>
+            <xsl:catch>
+                <xsl:sequence select="true()"/>
+            </xsl:catch>
+        </xsl:try>
+    </xsl:function>
+
+
 
     <xsl:mode name="register:cell" on-no-match="shallow-skip" visibility="public"/>
 
@@ -114,6 +142,5 @@
             <xsl:value-of select="."/>
         </a>
     </xsl:template>
-
 
 </xsl:package>

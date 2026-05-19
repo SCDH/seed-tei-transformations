@@ -71,6 +71,7 @@
         <antcall target="test-xsl-html-bible-with-popups.xsl"/>
         <antcall target="test-xsl-html-libapp2c.xsl"/>
         <antcall target="test-xsl-html-libapp2c-html-librend.xsl"/>
+        <antcall target="test-xsl-html-libregister.xsl"/>
         <antcall target="test-xsl-latex-libreledmac.xsl"/>
         <antcall target="test-xsl-latex-librend.xsl"/>
         <antcall target="test-xsl-latex-libapp2c.xsl"/>
@@ -230,6 +231,12 @@
     <target name="test-xsl-html-libhtml.xsl">
         <antcall target="xspec.xspec" inheritall="false">
             <param name="xspec.xml" location="${basedir}/xsl/html/libhtml.xspec"/>
+        </antcall>
+    </target>
+
+    <target name="test-xsl-html-libregister.xsl">
+        <antcall target="xspec.xspec" inheritall="false">
+            <param name="xspec.xml" location="${basedir}/xsl/html/libregister.xspec"/>
         </antcall>
     </target>
 
