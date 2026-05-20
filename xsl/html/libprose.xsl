@@ -6,6 +6,7 @@
     xmlns:common="http://scdh.wwu.de/transform/common#"
     xmlns:i18n="http://scdh.wwu.de/transform/i18n#"
     xmlns:prose="http://scdh.wwu.de/transform/prose#"
+    xmlns:register="http://scdh.wwu.de/transform/register#"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
     version="3.0" default-mode="text:text">
 
@@ -24,6 +25,10 @@
         package-version="0.1.0">
         <xsl:accept component="function" names="common:line-number#1" visibility="public"/>
     </xsl:use-package>
+
+    <xsl:use-package
+        name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libregister.xsl"
+        package-version="1.0.0"/>
 
     <xsl:use-package
         name="https://scdh.zivgitlabpages.uni-muenster.de/tei-processing/transform/xsl/html/libtext.xsl"
@@ -125,6 +130,12 @@
                     <!-- leave to hooks or css? -->
                     <xsl:text> || </xsl:text>
                 </span>
+                <xsl:apply-templates mode="text:hook-after" select="."/>
+            </xsl:template>
+
+            <xsl:template match="listPerson | listPlace | listOrg | listEvent">
+                <xsl:apply-templates mode="text:hook-before" select="."/>
+                <xsl:call-template name="register:table"/>
                 <xsl:apply-templates mode="text:hook-after" select="."/>
             </xsl:template>
 
