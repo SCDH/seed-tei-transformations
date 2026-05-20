@@ -1,5 +1,16 @@
 # Changes
 
+## 0.20.0
+
+- adds `xsl/html/libregister.xsl` for making a HTML table
+  representation from a TEI register (personography etc.)
+  - customizable throught vectors for making columns
+  - defaults to 4 column (running number, ID, name, URIs)
+- adds `xsl/html/libnaf.xsl` for getting name authority labels from
+  URIs etc.
+- `xsl/html/prose.xsl` and variants with footnotes etc. use the new
+  table for registers
+
 ## 0.19.1
 
 - removes redundant rule for `<pb>` from libprose
