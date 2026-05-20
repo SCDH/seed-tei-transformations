@@ -28,7 +28,7 @@
 
     <x:scenario label="base features of table for $persons">
         <x:context select="$persons"/>
-        <x:call template="register:register"/>
+        <x:call template="register:table"/>
         <x:expect label="output is a table" test="exists(/table)"/>
         <x:expect label="table has CSS class" test="exists(/table/@class)"/>
         <x:expect label="table is sortable" test="tokenize(/table/@class) = 'sortable'"/>
@@ -43,7 +43,7 @@
 
     <x:scenario label="content-related features of table for $persons">
         <x:context select="$persons"/>
-        <x:call template="register:register"/>
+        <x:call template="register:table"/>
         <x:expect label="column 1 has no lang attribute "
             test="exists(/table/tbody/tr[1]/td[1]/@lang) => not()"/>
         <x:expect label="column 2 has lang de" test="/table/tbody/tr[1]/td[2]/@lang ! string(.)"
