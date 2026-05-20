@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader/>
+            <text>
+              <body n="slot">
+<listPerson xml:lang="de">
+<person xml:id="a">
+  <persName xml:lang="fr">Edith Croissant</persName>
+  <idno type="lab">???</idno>
+  <desc>seen on screen</desc>
+</person>
+<person xml:id="b">
+  <persName>Mitzi Katz</persName>
+  <desc>walks the dog</desc>
+</person>
+<person xml:id="c">
+  <idno xml:base="http://viaf.org/viaf/">123</idno>
+  <idno xml:base="http://bnf.de/gnd/">234</idno>
+  <persName>Dolly</persName>
+  <desc>cloned</desc>
+</person>
+</listPerson>
+</body>
+            </text>
+          </TEI>
+        

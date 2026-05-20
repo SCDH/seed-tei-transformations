@@ -33,6 +33,7 @@
       <antcall target="empty-lem_SEED-Reading-CAF"/>
       <antcall target="app-order1_SEED-Reading-CAF"/>
       <antcall target="app-order2_SEED-Reading-CAF"/>
+      <antcall target="register1_SEED-Reading-CAF"/>
    </target>
    <target name="clean-transformed">
       <delete dir="${crystals-outdir}" includes="**/*.html,**/*.tex"/>
@@ -252,6 +253,19 @@
             style="${pdu}/xsl/html/prose-footnotes.xsl"
             in="${crystals-outdir}/app-order2.xml"
             out="${crystals-outdir}/app-order2_SEED-Reading-CAF.html">
+         <factory name="net.sf.saxon.TransformerFactoryImpl">
+            <attribute name="http://saxon.sf.net/feature/configuration-file"
+                       value="${pdu}/saxon.he.html.xml"/>
+         </factory>
+         <param name="{http://scdh.wwu.de/transform/html#}after-body-js"
+                expression="${post-size.js}"/>
+      </xslt>
+   </target>
+   <target name="register1_SEED-Reading-CAF">
+      <xslt classpathref="project.class.path"
+            style="${pdu}/xsl/html/prose-footnotes.xsl"
+            in="${crystals-outdir}/register1.xml"
+            out="${crystals-outdir}/register1_SEED-Reading-CAF.html">
          <factory name="net.sf.saxon.TransformerFactoryImpl">
             <attribute name="http://saxon.sf.net/feature/configuration-file"
                        value="${pdu}/saxon.he.html.xml"/>

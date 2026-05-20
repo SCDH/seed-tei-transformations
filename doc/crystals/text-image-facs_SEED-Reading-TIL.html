@@ -25,7 +25,276 @@
 .page-number:after {
     content: "]";
 }
+
+.sr-only {
+  position: absolute;
+  top: -30em;
+}
+
+table.sortable td,
+table.sortable th {
+  padding: 0.125em 0.25em;
+  width: 8em;
+}
+
+table.sortable th {
+  font-weight: bold;
+  border-bottom: thin solid #888;
+  position: relative;
+}
+
+table.sortable th.no-sort {
+  padding-top: 0.35em;
+}
+
+table.sortable th:nth-child(5) {
+  width: 10em;
+}
+
+table.sortable th button {
+  padding: 4px;
+  margin: 1px;
+  font-size: 100%;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  display: inline;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  cursor: pointer;
+}
+
+table.sortable th button span {
+  position: absolute;
+  right: 4px;
+}
+
+table.sortable th[aria-sort="descending"] span::after {
+  content: "▼";
+  color: currentcolor;
+  font-size: 100%;
+  top: 0;
+}
+
+table.sortable th[aria-sort="ascending"] span::after {
+  content: "▲";
+  color: currentcolor;
+  font-size: 100%;
+  top: 0;
+}
+
+table.show-unsorted-icon th:not([aria-sort]) button span::after {
+  content: "♢";
+  color: currentcolor;
+  font-size: 100%;
+  position: relative;
+  top: -3px;
+  left: -4px;
+}
+
+table.sortable td.num {
+  text-align: right;
+}
+
+table.sortable tbody tr:nth-child(odd) {
+  background-color: #ddd;
+}
+
+/* Focus and hover styling */
+
+table.sortable th button:focus,
+table.sortable th button:hover {
+  padding: 2px;
+  border: 2px solid currentcolor;
+  background-color: #e5f4ff;
+}
+
+table.sortable th button:focus span,
+table.sortable th button:hover span {
+  right: 2px;
+}
+
+table.sortable th:not([aria-sort]) button:focus span::after,
+table.sortable th:not([aria-sort]) button:hover span::after {
+  content: "▼";
+  color: currentcolor;
+  font-size: 100%;
+  top: 0;
+}
 </style>
+      <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/sortable-table.js--><script type="text/javascript">/*
+ *   This content is licensed according to the W3C Software License at
+ *   https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ *   File:   sortable-table.js
+ *
+ *   Desc:   Adds sorting to a HTML data table that implements ARIA Authoring Practices
+ */
+
+'use strict';
+
+class SortableTable {
+  constructor(tableNode) {
+    this.tableNode = tableNode;
+
+    this.columnHeaders = tableNode.querySelectorAll('thead th');
+
+    this.sortColumns = [];
+
+    for (var i = 0; i < this.columnHeaders.length; i++) {
+      var ch = this.columnHeaders[i];
+      var buttonNode = ch.querySelector('button');
+      if (buttonNode) {
+        this.sortColumns.push(i);
+        buttonNode.setAttribute('data-column-index', i);
+        buttonNode.addEventListener('click', this.handleClick.bind(this));
+      }
+    }
+
+    this.optionCheckbox = document.querySelector(
+      'input[type="checkbox"][value="show-unsorted-icon"]'
+    );
+
+    if (this.optionCheckbox) {
+      this.optionCheckbox.addEventListener(
+        'change',
+        this.handleOptionChange.bind(this)
+      );
+      if (this.optionCheckbox.checked) {
+        this.tableNode.classList.add('show-unsorted-icon');
+      }
+    }
+  }
+
+  setColumnHeaderSort(columnIndex) {
+    if (typeof columnIndex === 'string') {
+      columnIndex = parseInt(columnIndex);
+    }
+
+    for (var i = 0; i < this.columnHeaders.length; i++) {
+      var ch = this.columnHeaders[i];
+      var buttonNode = ch.querySelector('button');
+      if (i === columnIndex) {
+        var value = ch.getAttribute('aria-sort');
+        if (value === 'descending') {
+          ch.setAttribute('aria-sort', 'ascending');
+          this.sortColumn(
+            columnIndex,
+            'ascending',
+            ch.classList.contains('num')
+          );
+        } else {
+          ch.setAttribute('aria-sort', 'descending');
+          this.sortColumn(
+            columnIndex,
+            'descending',
+            ch.classList.contains('num')
+          );
+        }
+      } else {
+        if (ch.hasAttribute('aria-sort') && buttonNode) {
+          ch.removeAttribute('aria-sort');
+        }
+      }
+    }
+  }
+
+  sortColumn(columnIndex, sortValue, isNumber) {
+    function compareValues(a, b) {
+      if (sortValue === 'ascending') {
+        if (a.value === b.value) {
+          return 0;
+        } else {
+          if (isNumber) {
+            return a.value - b.value;
+          } else {
+            return a.value < b.value ? -1 : 1;
+          }
+        }
+      } else {
+        if (a.value === b.value) {
+          return 0;
+        } else {
+          if (isNumber) {
+            return b.value - a.value;
+          } else {
+            return a.value > b.value ? -1 : 1;
+          }
+        }
+      }
+    }
+
+    if (typeof isNumber !== 'boolean') {
+      isNumber = false;
+    }
+
+    var tbodyNode = this.tableNode.querySelector('tbody');
+    var rowNodes = [];
+    var dataCells = [];
+
+    var rowNode = tbodyNode.firstElementChild;
+
+    var index = 0;
+    while (rowNode) {
+      rowNodes.push(rowNode);
+      var rowCells = rowNode.querySelectorAll('th, td');
+      var dataCell = rowCells[columnIndex];
+
+      var data = {};
+      data.index = index;
+      data.value = dataCell.textContent.toLowerCase().trim();
+      if (isNumber) {
+        data.value = parseFloat(data.value);
+      }
+      dataCells.push(data);
+      rowNode = rowNode.nextElementSibling;
+      index += 1;
+    }
+
+    dataCells.sort(compareValues);
+
+    // remove rows
+    while (tbodyNode.firstChild) {
+      tbodyNode.removeChild(tbodyNode.lastChild);
+    }
+
+    // add sorted rows
+    for (var i = 0; i < dataCells.length; i += 1) {
+      tbodyNode.appendChild(rowNodes[dataCells[i].index]);
+    }
+  }
+
+  /* EVENT HANDLERS */
+
+  handleClick(event) {
+    var tgt = event.currentTarget;
+    this.setColumnHeaderSort(tgt.getAttribute('data-column-index'));
+  }
+
+  handleOptionChange(event) {
+    var tgt = event.currentTarget;
+
+    if (tgt.checked) {
+      this.tableNode.classList.add('show-unsorted-icon');
+    } else {
+      this.tableNode.classList.remove('show-unsorted-icon');
+    }
+  }
+}
+
+// Initialize sortable table buttons
+window.addEventListener('load', function () {
+  var sortableTables = document.querySelectorAll('table.sortable');
+  for (var i = 0; i < sortableTables.length; i++) {
+    new SortableTable(sortableTables[i]);
+  }
+});
+</script>
       <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/post-message-base.js--><script type="text/javascript">// assert that we have a documentMetadata variable
 if (typeof documentMetadata === "undefined") {
     var documentMetadata = {};
@@ -100,28 +369,28 @@ function seedAncestorOrSelfLineFacs(element, facs) {
 }
 </script></head>
    <body>
-      <div class="content"><span class="facs- text-d12t2 line-snippet" data-linefacs="">
-            </span><span class="facs- text-d12t4 line-snippet" data-linefacs="">
-            </span><div class="text" xml:lang="en" lang="en" dir="ltr"><span class="facs- text-d12t6 line-snippet" data-linefacs="">
-               </span><div class="body" data-tei-n="slot"><span class="facs- text-d12t8 line-snippet" data-linefacs="">
-                  </span><span class="facs- text-d12t10 line-snippet" data-linefacs="">
+      <div class="content"><span class="facs- text-d14t2 line-snippet" data-linefacs="">
+            </span><span class="facs- text-d14t4 line-snippet" data-linefacs="">
+            </span><div class="text" xml:lang="en" lang="en" dir="ltr"><span class="facs- text-d14t6 line-snippet" data-linefacs="">
+               </span><div class="body" data-tei-n="slot"><span class="facs- text-d14t8 line-snippet" data-linefacs="">
+                  </span><span class="facs- text-d14t10 line-snippet" data-linefacs="">
                   
-                  </span><span class="facs- text-d12t12 line-snippet" data-linefacs="">
-                  </span><p class="p" xml:lang="de" lang="de" dir="ltr"><span class="facs-fl1.1 text-d12t15 line-snippet" data-linefacs="fl1.1">
-                     Synthetische Urteile </span><hi><span class="facs-fl1.1 text-d12t17 line-snippet" data-linefacs="fl1.1">a priori</span></hi><span class="facs-fl1.1 text-d12t18 line-snippet" data-linefacs="fl1.1"> be</span><span class="facs-fl1.2 text-d12t20 line-snippet" data-linefacs="fl1.2">weisen objektive Realität im Satz über die Sum</span><span class="facs-fl1.3 text-d12t22 line-snippet" data-linefacs="fl1.3">me der Innenwinkel des</span><span class="facs-fl1.4 text-d12t24 line-snippet" data-linefacs="fl1.4">
-                     Dreiecks.</span></p><span class="facs-fl1.4 text-d12t25 line-snippet" data-linefacs="fl1.4">
-                  </span></div><span class="facs-fl1.4 text-d12t26 line-snippet" data-linefacs="fl1.4">
-               </span></div><span class="facs-fl1.4 text-d12t27 line-snippet" data-linefacs="fl1.4">
+                  </span><span class="facs- text-d14t12 line-snippet" data-linefacs="">
+                  </span><p class="p" xml:lang="de" lang="de" dir="ltr"><span class="facs-fl1.1 text-d14t15 line-snippet" data-linefacs="fl1.1">
+                     Synthetische Urteile </span><hi><span class="facs-fl1.1 text-d14t17 line-snippet" data-linefacs="fl1.1">a priori</span></hi><span class="facs-fl1.1 text-d14t18 line-snippet" data-linefacs="fl1.1"> be</span><span class="facs-fl1.2 text-d14t20 line-snippet" data-linefacs="fl1.2">weisen objektive Realität im Satz über die Sum</span><span class="facs-fl1.3 text-d14t22 line-snippet" data-linefacs="fl1.3">me der Innenwinkel des</span><span class="facs-fl1.4 text-d14t24 line-snippet" data-linefacs="fl1.4">
+                     Dreiecks.</span></p><span class="facs-fl1.4 text-d14t25 line-snippet" data-linefacs="fl1.4">
+                  </span></div><span class="facs-fl1.4 text-d14t26 line-snippet" data-linefacs="fl1.4">
+               </span></div><span class="facs-fl1.4 text-d14t27 line-snippet" data-linefacs="fl1.4">
             
-            </span><span class="facs-fl1.4 text-d12t29 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t31 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t33 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t35 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t37 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t39 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t41 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t42 line-snippet" data-linefacs="fl1.4">
-            </span><span class="facs-fl1.4 text-d12t43 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t29 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t31 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t33 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t35 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t37 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t39 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t41 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t42 line-snippet" data-linefacs="fl1.4">
+            </span><span class="facs-fl1.4 text-d14t43 line-snippet" data-linefacs="fl1.4">
             </span></div>
    </body>
    <!--JS from file:/home/runner/work/seed-tei-transformations/seed-tei-transformations/xsl/html/post-size.js--><script type="text/javascript">window.onload = function () {

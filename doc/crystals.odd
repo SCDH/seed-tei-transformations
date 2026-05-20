@@ -346,6 +346,41 @@
 
       </div>
 
+      <div xml:id="registers">
+        <head>Registers</head>
+
+        <p>Listings of persons, places, organization, events etc. are register files. Registers
+          encoded with <gi>listPerson</gi>, <gi>listPlace</gi>, <gi>listOrg</gi>, or
+            <gi>listEvent</gi> can be transformed to table representations.</p>
+
+        <p>These tables are customizable by vectors of column names and of XPath expressions for
+          getting column content.</p>
+
+        <p>What we see here is the table with the default vectors.</p>
+
+        <egXML xmlns="http://www.tei-c.org/ns/Examples" xml:id="register1" template="#simple"
+          transfox="xpr:SEED-Reading-CAF">
+          <listPerson xml:lang="de">
+            <person xml:id="a">
+              <persName xml:lang="fr">Edith Croissant</persName>
+              <idno type="lab">???</idno>
+              <desc>seen on screen</desc>
+            </person>
+            <person xml:id="b">
+              <persName>Mitzi Katz</persName>
+              <desc>walks the dog</desc>
+            </person>
+            <person xml:id="c">
+              <idno xml:base="http://viaf.org/viaf/">123</idno>
+              <idno xml:base="http://bnf.de/gnd/">234</idno>
+              <persName>Dolly</persName>
+              <desc>cloned</desc>
+            </person>
+          </listPerson>
+        </egXML>
+
+      </div>
+
     </body>
     <back>
       <div>
