@@ -31,7 +31,6 @@
         <x:call template="register:table"/>
         <x:expect label="output is a table" test="exists(/table)"/>
         <x:expect label="table has CSS class" test="exists(/table/@class)"/>
-        <x:expect label="table is sortable" test="tokenize(/table/@class) = 'sortable'"/>
         <x:expect label="table is listPerson" test="tokenize(/table/@class) = 'listPerson'"/>
         <x:expect label="table has head" test="exists(/table/thead)"/>
         <x:expect label="table has body" test="exists(/table/tbody)"/>
@@ -63,6 +62,23 @@
         <x:expect label="links of column 4 has 2 items"
             test="(/table/tbody/tr[3]/td[4]//li/a/@href) ! string(.)"
             select="'http://viaf.org/viaf/123', 'http://bnf.de/gnd/234'"/>
+    </x:scenario>
+
+    <x:scenario label="table is sortable with javascript provided by W3C">
+        <x:context select="$persons"/>
+        <x:call template="register:table"/>
+        <x:expect label="table is sortable" test="tokenize(/table/@class) = 'sortable'"/>
+        <x:expect label="column 1 is a number which is important for sorting"
+            test="tokenize(/table/thead/tr/th[1]/@class) = 'num'"/>
+        <x:expect label="column 2 is not a number"
+            test="(tokenize(/table/thead/tr/th[2]/@class) = 'num') => not()"/>
+        <x:expect label="table has clickable heads" test="exists(/table/thead/tr/th/button)"/>
+        <x:expect label="table has clickable heads with hidden aria first"
+            test="exists(/table/thead/tr/th/button/span[@aria-hidden = 'true'])"/>
+        <x:expect label="column 1 is a number which is important for sorting"
+            test="tokenize(/table/tbody/tr[1]/td[1]/@class) = 'num'"/>
+        <x:expect label="column 2 is not a number"
+            test="(tokenize(/table/tbody/tr[1]/td[2]/@class) = 'num') => not()"/>
     </x:scenario>
 
 </x:description>
