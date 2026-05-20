@@ -82,6 +82,9 @@
       <xsl:variable name="html:extra-css" as="xs:anyURI*" select="$app:popup-css"
         visibility="public"/>
 
+      <xsl:variable name="html:extra-js" as="xs:anyURI*"
+        select="resolve-uri('sortable-table.js', static-base-uri())"/>
+
     </xsl:override>
   </xsl:use-package>
 

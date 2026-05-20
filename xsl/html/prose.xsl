@@ -33,6 +33,9 @@
         <xsl:apply-templates mode="text:text"/>
       </xsl:template>
 
+      <xsl:variable name="html:extra-js" as="xs:anyURI*"
+        select="resolve-uri('sortable-table.js', static-base-uri())"/>
+
     </xsl:override>
   </xsl:use-package>
 
