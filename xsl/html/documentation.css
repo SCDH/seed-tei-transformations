@@ -96,3 +96,28 @@ section.transformation h6,
 section.transformation h7 {
     border-bottom: none;
 }
+.toc {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 1em;
+    margin-bottom: 2em;
+    border-radius: 0.5em;
+}
+.toc ul {
+    list-style-type: none;
+    padding-left: 1.5em;
+}
+.toc > ul {
+    padding-left: 0;
+}
+.toc li {
+    margin: 0.2em 0;
+}
+.toc a {
+    text-decoration: none;
+    color: #333;
+}
+.toc a:hover {
+    text-decoration: underline;
+    color: #444;
+}
